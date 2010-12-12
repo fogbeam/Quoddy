@@ -1,7 +1,9 @@
 <html>
-	<head>
+    <head>
 		<title>Welcome to Quoddy</title>
-	</head>
+       	<meta name="layout" content="main" />
+       	<nav:resources />
+    </head>
 	<body>
 		<h1>Welcome to Project Quoddy</h1>
 		
@@ -12,26 +14,6 @@
                  </div>
              </g:hasErrors>		
 		<p />
-		Stuff you might want to do here:
-		<br />
-		<ul>
-			<li><a href="/quoddy2/user/create">Register</a></li>
-			<li><a href="/quoddy2/login">Login</a></li>
-			<g:if test="${session.user != null}">
-				<li><a href="/quoddy2/login/logout">Logout</a></li>
-				<li><a href="/quoddy2/user/editAccount">Edit Account Info</a></li>
-				<li><a href="/quoddy2/user/editProfile">Edit Profile</a></li>
-				<li><a href="/quoddy2/user/list">List All Users</a></li>
-				<li><a href="/quoddy2/user/listFriends">List Friends</a></li>
-				<li><a href="/quoddy2/user/listIFollow">List People I Follow</a></li>
-				<li><a href="/quoddy2/search">Search People</a></li>
-				<li><a href="/quoddy2/search/searchFriends">Search Friends</a></li>
-				<li><a href="/quoddy2/search/searchIFollow">Search People I Follow</a></li>
-				<li><a href="/quoddy2/user/listOpenFriendRequests">List Pending Friend Requests</a></li>
-			</g:if>			
-		</ul>
-		<p />
-		
 		<g:if test="${session.user != null}">
 			<g:form controller="status" action="updateStatus" >
 				<input type="text" name="statusText" />

@@ -21,7 +21,7 @@ public class GroupAttributeMapper implements AttributesMapper
 		Group group = new Group();
    	
 		group.name = (String)attrs.get("cn").get();
-		NamingEnumeration names = attrs.get("uniquemember").getAll();
+		NamingEnumeration<?> names = attrs.get("uniquemember").getAll();
    	
 		while( names.hasMoreElements() ) 
 		{
