@@ -18,7 +18,7 @@ environments {
 	development {
 		dataSource {
 			dbCreate = "update" // one of 'create', 'create-drop','update'
-			url = "jdbc:postgresql:poe1"
+			url = "jdbc:postgresql:quoddy2"
 		}
 	}
 	test {

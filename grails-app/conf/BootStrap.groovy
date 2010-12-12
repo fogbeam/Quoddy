@@ -1,9 +1,12 @@
+import org.fogbeam.quoddy.User 
 import grails.util.Environment;
-import com.fogbeam.poe.User;
 
 class BootStrap {
 
-     def init = { servletContext ->
+	def ldapTemplate;
+	def userService;
+	
+	def init = { servletContext ->
      
 	     switch( Environment.current )
 	     {
@@ -19,7 +22,6 @@ class BootStrap {
 	     
 	     // getClass().classLoader.rootLoader.URLs.each { println it };
 	     
-	     
      }
      
      def destroy = {
@@ -30,47 +32,57 @@ class BootStrap {
 
      void createSomeUsers()
      {
-         if( !User.findByUserId( "prhodes" ))
-         {
-             println "Fresh Database, creating PRHODES user";
-             def user = new User( userId: "prhodes", password: "secret",
-                     fullName: "Phillip Rhodes", email: "prhodes@example.com", bio:"" );
-             
-             if( !user.save() )
-             {
-                 println( "Saving PRHODES user failed!");
-             }
-             
-         }
-         else
-         {
-             println "Existing PRHODES user, skipping...";
-         }     	 
+	 	println "Creating some users!";
      
-         for( int i = 0; i < 20; i++ )
-         {
-             if( !User.findByUserId( "testuser${i}" ))
-             {
-                 println "Fresh Database, creating TESTUSER ${i} user";
-                 def user = new User( userId: "testuser${i}", password: "secret",
-                         fullName: "Test User ${i}", email: "testuser${i}@example.com", bio:"" );
-                 
-                 if( !user.save() )
-                 {
-                     println( "Saving TESTUSER ${i} user failed!");
-                     user.errors.allErrors.each { println it };
-                     
-                 
-                 
-                 }
-                 
-             }
-             else
-             {
-                 println "Existing TESTUSER ${i} user, skipping...";
-             }         	 
-         }
-     }
+		 boolean prhodesFound = false;
+ 
+		 User user = userService.findUserByUserId( "prhodes" );
 
+		 if( user != null )
+		 {
+			  println "Found existing prhodes user!";
 
+		 }
+		 else
+	 	 {	
+			  println "Could not find prhodes";
+			  println "Creating new prhodes user";
+			  User prhodes = new User();
+			  prhodes.uuid = "abc123";
+			  prhodes.displayName = "Phillip Rhodes";
+			  prhodes.firstName = "Phillip";
+			  prhodes.lastName = "Rhodes";
+			  prhodes.email = "motley.crue.fan@gmail.com";
+			  prhodes.userId = "prhodes";
+			  prhodes.password = "secret";
+			  prhodes.bio = "bio";
+			  
+			  userService.createUser( prhodes );
+			 
+			  println "bound user prhodes into LDAP"; 
+		  }
+		  
+		  for( int i = 0; i < 20; i++ )
+		  {
+			  if( userService.findUserByUserId( "testuser${i}" ) == null )
+			  {
+				  println "Fresh Database, creating TESTUSER ${i} user";
+				  def testUser = new User(
+								  userId: "testuser${i}",
+								password: "secret",
+								firstName: "Test",
+								lastName: "User${i}",
+								email: "testuser${i}@example.com",
+								bio:"stuff",
+								displayName: "Test User${i}" );
+				  
+					userService.createUser( testUser );
+			  }
+			  else
+			  {
+				  println "Existing TESTUSER ${i} user, skipping...";
+			  }
+		  }
+		  
+	 }
 } 

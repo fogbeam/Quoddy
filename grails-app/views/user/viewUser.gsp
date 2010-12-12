@@ -32,7 +32,8 @@
 			</dl>
 
 			<!-- Note to Self: this should probably be an async call instead of requiring a full view refresh -->
-			<g:link controller="user" action="addToFriends" params="[userId:user.userId]">add to friends</g:link>
+			<span><g:link controller="user" action="addToFollow" params="[userId:user.userId]">follow</g:link></span>
+			<span><g:link controller="user" action="addToFriends" params="[userId:user.userId]">add to friends</g:link></span>
 						
 		</g:if>
 		
