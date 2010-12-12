@@ -1,7 +1,9 @@
 <html>
 	
 	<head>
-		<title>People I Follow</title>
+		<title>Quoddy: List People I Follow</title>
+        <meta name="layout" content="main"/>
+        <nav:resources />
 	</head>
 	
 	<body>

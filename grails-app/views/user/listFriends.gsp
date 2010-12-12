@@ -1,7 +1,9 @@
 <html>
 	
 	<head>
-		<title>My Friends</title>
+		<title>Quoddy: List Friends</title>
+        <meta name="layout" content="main"/>
+        <nav:resources />
 	</head>
 	
 	<body>

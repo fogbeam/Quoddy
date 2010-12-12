@@ -1,7 +1,9 @@
 <html>
 	
 	<head>
-		<title>View User</title>
+		<title>Quoddy: View User</title>
+        <meta name="layout" content="main"/>
+        <nav:resources />
 	</head>
 	
 	<body>
