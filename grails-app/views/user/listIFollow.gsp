@@ -1,13 +1,14 @@
 <html>
 	
 	<head>
-		<title>My Friends</title>
+		<title>People I Follow</title>
 	</head>
 	
 	<body>
 		<p />
-		<h2>My Friends</h2>
+		<h2>People I Follow</h2>
 		<p />
+		
 		<g:if test="${flash.message}">
 	        <div class="flash">
 	             ${flash.message}
@@ -15,11 +16,11 @@
 	   </g:if>
 
 		<ul>
-			<g:each in="${friends}" var="friend">
+			<g:each in="${ifollow}" var="followee">
 			
 				<!-- display discrete entries here -->
 				<li>
-					<g:link controller="user" action="viewUser" params="[userId:friend.userId]">${friend.fullName}</g:link>
+					<g:link controller="user" action="viewUser" params="[userId:followee.userId]">${followee.fullName}</g:link>
 				</li>
 			</g:each>
 		</ul>
