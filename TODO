@@ -1,17 +1,11 @@
-Implement the beginnings of an actual layout using YUI Grid
-
 Fix the status stuff
 
 Implement minimal profiles
 
 Get rid of the Person / User dichotomy brought over by the prototype LDAP code?
 
-Get the current code merged with the branch that's on GitHub and update everything to
-GitHub.
-
 Sort out the beginnings of the messaging stuff for dealing with events, activity stream, etc.
 
 Get rid of all the hard-coded strings in the new LDAP code (base DN crap, etc.)
 
 Deal with failure to connect to LDAP on startup
-
