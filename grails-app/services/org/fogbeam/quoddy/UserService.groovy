@@ -24,11 +24,6 @@ class UserService {
 
 	def ldapTemplate;
 	
-	public User findUserByUserIdAndPassword( String userId, String password )
-	{
-		throw new RuntimeException( "not implemented yet" );
-	}
-
 	public User findUserByUserId( String userId )
 	{
 		
@@ -45,50 +40,65 @@ class UserService {
 		if( persons != null && persons.size() > 0 ) 
 		{
 			Person p = persons.get(0);
-			user = copyPersonToUser(p);	
+			user = User.findByUserId( userId );
+			
+			user = copyPersonToUser(p, user );	
 		}
+		
 		
 		return user;
 	}	
 	
 	public void createUser( User user ) 
 	{
-		Person person = copyUserToPerson( user );
-		Name dn = PersonBuilder.buildDn( person, "o=quoddy" );
 		
-		ldapTemplate.bind(dn, null, PersonBuilder.buildAttributes(person));
+		/* save the user into the uzer table, we need that for associations with other
+		 * "system things"
+		 */
+		if( user.save() )
+		{
+		
+			Person person = copyUserToPerson( user );
+			Name dn = PersonBuilder.buildDn( person, "o=quoddy" );
+		
+			ldapTemplate.bind(dn, null, PersonBuilder.buildAttributes(person));
 
+			// create corresponding groups...
 		
-		// create corresponding groups...
+			// and a group for followees
+			// create a "follow" group for this user, populate it with somebody or other...
+			Group followGroup = new Group();
+			followGroup.owner = dn.toString();
+			followGroup.name = "FollowGroup/" + person.uid + "/" + person.givenName + " " + person.lastName;
+			Name followGroupDn = GroupBuilder.buildFollowGroupDn( followGroup, "o=quoddy" );
+			ldapTemplate.bind( followGroupDn, null, GroupBuilder.buildAttributes(followGroup));
 		
-		// and a group for followees
-		// create a "follow" group for this user, populate it with somebody or other...
-		Group followGroup = new Group();
-		followGroup.owner = dn.toString();
-		followGroup.name = "FollowGroup/" + person.uid + "/" + person.givenName + " " + person.lastName;
-		Name followGroupDn = GroupBuilder.buildFollowGroupDn( followGroup, "o=quoddy" );
-		ldapTemplate.bind( followGroupDn, null, GroupBuilder.buildAttributes(followGroup));
+			// and a group for confirmed friends
+			Group confirmedFriendsGroup = new Group();
+			confirmedFriendsGroup.owner = dn.toString();
+			confirmedFriendsGroup.name = "ConfirmedFriendsGroup/" + person.uid + "/" + person.givenName + " " + person.lastName;
+			Name confirmedFriendsGroupDn = GroupBuilder.buildConfirmedFriendsGroupDn( confirmedFriendsGroup, "o=quoddy" );
+			ldapTemplate.bind( confirmedFriendsGroupDn, null, GroupBuilder.buildAttributes(confirmedFriendsGroup));
 		
-		// and a group for confirmed friends
-		Group confirmedFriendsGroup = new Group();
-		confirmedFriendsGroup.owner = dn.toString();
-		confirmedFriendsGroup.name = "ConfirmedFriendsGroup/" + person.uid + "/" + person.givenName + " " + person.lastName;
-		Name confirmedFriendsGroupDn = GroupBuilder.buildConfirmedFriendsGroupDn( confirmedFriendsGroup, "o=quoddy" );
-		ldapTemplate.bind( confirmedFriendsGroupDn, null, GroupBuilder.buildAttributes(confirmedFriendsGroup));
-		
-		// and a group for pending friend requests?
-		Group unconfirmedFriendsGroup = new Group();
-		unconfirmedFriendsGroup.owner = dn.toString();
-		unconfirmedFriendsGroup.name = "UnconfirmedFriendsGroup/" + person.uid + "/" + person.givenName + " " + person.lastName;
-		Name unconfirmedFriendsGroupDn = GroupBuilder.buildUnconfirmedFriendsGroupDn( unconfirmedFriendsGroup, "o=quoddy" );
-		ldapTemplate.bind( unconfirmedFriendsGroupDn, null, GroupBuilder.buildAttributes(unconfirmedFriendsGroup));
+			// and a group for pending friend requests?
+			Group unconfirmedFriendsGroup = new Group();
+			unconfirmedFriendsGroup.owner = dn.toString();
+			unconfirmedFriendsGroup.name = "UnconfirmedFriendsGroup/" + person.uid + "/" + person.givenName + " " + person.lastName;
+			Name unconfirmedFriendsGroupDn = GroupBuilder.buildUnconfirmedFriendsGroupDn( unconfirmedFriendsGroup, "o=quoddy" );
+			ldapTemplate.bind( unconfirmedFriendsGroupDn, null, GroupBuilder.buildAttributes(unconfirmedFriendsGroup));
+		}
+		else
+		{
+			throw new RuntimeException( "couldn't create User record for user: ${user.userId}" );
+			user.errors.allErrors.each { println it };
+		}
 	}
 	
 	public User updateUser( User user )
 	{
 		println "about to update user...";
 		
-		// TODO: update using ldapTemplate
+		// update using ldapTemplate
 		Attribute displayNameAttr = new BasicAttribute("displayName");
 		displayNameAttr.add( user.displayName );
 		ModificationItem displayNameItem = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, displayNameAttr);
@@ -117,16 +127,14 @@ class UserService {
 				
 		Person person =  (Person)ldapTemplate.lookup(userToModifyDn, new PersonAttributeMapper() );
 		
-		User modifiedUser = copyPersonToUser( person );
-		
+		user = User.findByUserId( user.userId );
+		User modifiedUser = copyPersonToUser( person, user );
 		return modifiedUser;
 		
 	}
 	
-	
 	public void addToFollow( User destinationUser, User targetUser )
 	{
-		
 		// get the dn of the destination user
 		Name destinationUserDn = PersonBuilder.buildDn( copyUserToPerson(destinationUser), "o=quoddy" );
 		
@@ -303,12 +311,14 @@ class UserService {
 			throw new RuntimeException( e );
 		}	
 		
+		
 		List<User> allUsers = new ArrayList<User>();
 		if( persons != null && persons.size() > 0 )
 		{
 			for( Person person : persons )
 			{
-				User user = copyPersonToUser( person );
+				User user = User.findByUserId( person.uid );
+				user = copyPersonToUser( person, user );	
 				allUsers.add( user );	
 			}	
 		}	
@@ -335,13 +345,73 @@ class UserService {
 		List<Person> members = friendsGroup.members;
 		for( Person person: members ) 
 		{
-			User aUser = copyPersonToUser( person );
+			User aUser = User.findByUserId( person.uid );
+			aUser = copyPersonToUser( person );
 			friends.add( aUser );
 		}
 		
 		return friends;
 	}
 	
+	public List<User> listFollowers( User user )
+	{
+		/* list the users who follow the supplied user */	
+		List<User> followers = new ArrayList<User>();
+		
+		// get every follow group where this user is a member of the follow group, then
+		// retrieve the owner ID.
+		Person p = copyUserToPerson( user );
+		String dnString = PersonBuilder.buildDn( p, "o=quoddy" );
+		AndFilter groupOwnerFilter = new AndFilter();
+		groupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
+		groupOwnerFilter.and(new EqualsFilter("uniquemember", dnString));
+		
+		System.out.println( "looking for followers of: ${dnString}" );
+		
+		List<Group> groups = ldapTemplate.search( "ou=followgroups,ou=groups,o=quoddy", groupOwnerFilter.encode(),
+				 new GroupAttributeMapper(ldapTemplate));
+		
+		
+		for( Group group : groups )
+		{
+			System.out.println( "Follow Group Owner: " + group.owner );
+			
+			
+			AndFilter memberFilter = new AndFilter();
+			memberFilter.and(new EqualsFilter("objectclass", "person"));
+			String ownerString = group.owner;
+			String[] parts = ownerString.split( "," );
+			String memberCn = parts[0];
+			println "memberCn: ${memberCn}";
+			parts = memberCn.split("=" );
+			memberCn = parts[1];
+			println "memberCn: ${memberCn}";
+			memberFilter.and(new EqualsFilter("cn", memberCn  ));
+			
+			List<Person> persons = ldapTemplate.search("ou=people,o=quoddy", memberFilter.encode(),
+					 new PersonAttributeMapper());
+			
+				 
+			if( persons != null && persons.size() > 0 )
+			{
+				println "Found follower";
+				
+				Person person = persons.get(0);
+				user = User.findByUserId( person.uid );	
+				user = copyPersonToUser(person, user );
+			
+				followers.add( user );	
+			}	
+			else
+			{
+				println "Ok, this is wonky";	
+			}
+		}
+		
+		return followers;
+	}
+	
+	/* TODO: load the User object from the db, so we can use it for associations */
 	public List<User> listIFollow( User user )
 	{
 		List<User> iFollow = new ArrayList<User>();
@@ -360,7 +430,9 @@ class UserService {
 		List<Person> members = followGroup.members;
 		for( Person person: members ) 
 		{
-			User aUser = copyPersonToUser( person );
+
+			User aUser = User.findByUserId( person.uid );
+			aUser = copyPersonToUser( person );
 			iFollow.add( aUser );
 		}
 		
@@ -391,6 +463,21 @@ class UserService {
 		}
 		
 		return openFriendRequests;
+	}
+	
+	
+	public User copyPersonToUser( Person person, User user )
+	{
+		user.uuid = person.uuid;
+		user.firstName = person.givenName;
+		user.lastName = person.lastName;
+		user.displayName = person.displayName;
+		user.email = person.mail;
+		user.userId = person.uid;
+		user.password = person.userpassword;
+		
+		return user;
+		
 	}
 	
 	public User copyPersonToUser( Person person )

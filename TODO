@@ -1,8 +1,13 @@
-Fix the status stuff
+Get rid of the Person / User dichotomy brought over by the prototype LDAP code?
+  Note: or, rename Person to LDAPAccount (or something similar), and keep that around as
+  a representation of the LDAP stuff, and return to the notion of a User as our DB level object, where
+  a User can be backed by a LDAPAccount, LocalDBAccount, etc.
 
 Implement minimal profiles
 
-Get rid of the Person / User dichotomy brought over by the prototype LDAP code?
+Fix the status stuff
+
+---
 
 Sort out the beginnings of the messaging stuff for dealing with events, activity stream, etc.
 

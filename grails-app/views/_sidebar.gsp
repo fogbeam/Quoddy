@@ -16,6 +16,7 @@
 			<li><a href="/quoddy2/user/editProfile">Edit Profile</a></li>
 			<li><a href="/quoddy2/user/list">List All Users</a></li>
 			<li><a href="/quoddy2/user/listFriends">List Friends</a></li>
+			<li><a href="/quoddy2/user/listFollowers">List Followers</a></li>
 			<li><a href="/quoddy2/user/listIFollow">List People I Follow</a></li>
 			<li><a href="/quoddy2/search">Search People</a></li>
 			<li><a href="/quoddy2/search/searchFriends">Search Friends</a></li>
