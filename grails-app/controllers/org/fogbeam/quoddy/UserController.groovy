@@ -121,6 +121,23 @@ class UserController {
 		redirect( controller:'home', action:'index')	
 	}
 	
+	def listFollowers =
+	{
+		def user = null;
+		if( !session.user ) 
+		{
+			flash.message = "Must be logged in before you can list followers";
+		}
+		else
+		{
+			user = userService.findUserByUserId( session.user.userId )
+		}
+	
+		List<User> followers = userService.listFollowers( user );
+		
+		[followers:followers];
+	}
+	
 	def listFriends = 
 	{
 

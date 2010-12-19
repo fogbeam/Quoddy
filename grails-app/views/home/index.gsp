@@ -25,7 +25,7 @@
 				<dt>Status:</dt>
 				
 				<g:if test="${user != null}">
-					<dd><div class="myStatus">${user?.currentStatus?.text}</div></dd>
+					<dd><div class="myStatus">${session.user?.currentStatus?.text }</div></dd>
 				</g:if>
 			</dl>
 			<hr />

@@ -24,18 +24,23 @@ class User {
     
     String uuid;
     String userId;
-    String password;
-    String homepage;
-	String firstName;
-	String lastName;
-	String displayName;
-    // String fullName;
-    String bio;
-    String email;
     Date dateCreated;
     Profile profile;
     StatusUpdate currentStatus;
     
+	/* stuff objects of this class "carry around" but aren't persisted as part of the object. 
+	 * This stuff is pulled in from an external source, like, say, LDAP. */
+	String password;
+	String homepage;
+	String firstName;
+	String lastName;
+	String displayName;
+	// String fullName;
+	String bio;
+	String email;
+	static transients = [ "password", "homepage", "firstName", "lastName", "displayName", "bio", "email", "fullName" ]
+	
+	
     static mapping = {
     	table 'uzer'
     }

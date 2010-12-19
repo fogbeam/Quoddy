@@ -26,22 +26,14 @@ class StatusController {
 			
 			println "constructing our new StatusUpdate object...";
 			// construct a status object
+			println "statusText: ${params.statusText}";
 			StatusUpdate newStatus = new StatusUpdate( text: params.statusText, creator: user );
-			
-			// move the old "current status" into the "old status" list
-			StatusUpdate oldStatus = user.currentStatus;
-			if( oldStatus != null )
-			{
-				println "adding oldStatus to old status list...";
-				user.addToOldStatusUpdates( oldStatus );
-			}
 			
 			// set the current status
 			println "setting currentStatus";
 			user.currentStatus = newStatus;
-			
-			println "updating user";
-			userService.updateUser( user );
+			user.save();
+			session.user = user;
 			
 			// TODO: if the user update was successful
 			Activity activity = new Activity(text:newStatus.text);

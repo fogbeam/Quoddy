@@ -39,10 +39,16 @@ class LoginController {
 		boolean loginSucceeded = false;
 		if( user )
 		{
+			println "found user: ${userId} in LDAP";
 			String md5HashSubmitted = LoginController.digestMd5( password );
+			println "md5HashSubmitted: ${md5HashSubmitted}";
 			if( md5HashSubmitted.equals( user.password ))
 			{
 				loginSucceeded = true;	
+			}
+			else
+			{
+				println "login failed on password match.  "	
 			}
 		}
 		else 
