@@ -9,7 +9,8 @@ class HomeController {
     		
     	def userId = params.userId;
     	def user = null;
-    	if( userId != null )
+		def activities = new ArrayList<Activity>();
+		if( userId != null )
     	{
     		user = userService.findUserByUserId( userId );
     	}
@@ -18,11 +19,11 @@ class HomeController {
     		if( session.user != null )
     		{
     			user = userService.findUserByUserId( session.user.userId );
-    		}
+				activities = activityStreamService.getRecentFriendActivitiesForUser( user );
+				
+			}
     	}
     
-    	def activities = activityStreamService.getRecentFriendActivitiesForUser( user );
-    	
     	[user:user, activities:activities];
     }
 }

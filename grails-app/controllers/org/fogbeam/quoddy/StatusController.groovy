@@ -29,10 +29,28 @@ class StatusController {
 			println "statusText: ${params.statusText}";
 			StatusUpdate newStatus = new StatusUpdate( text: params.statusText, creator: user );
 			
+			// put the old "currentStatus" in the oldStatusUpdates collection
+			// addToComments
+			if( user.currentStatus != null )
+			{
+				StatusUpdate previousStatus = user.currentStatus;
+				// TODO: do we need to detach this or something?
+				user.addToOldStatusUpdates( previousStatus );
+			}
+			
 			// set the current status
 			println "setting currentStatus";
 			user.currentStatus = newStatus;
-			user.save();
+			if( !user.save() )
+			{
+				println( "Saving user FAILED");
+				user.errors.allErrors.each { println it };
+			}
+			else
+			{
+				// handle failure to update User	
+			}
+			
 			session.user = user;
 			
 			// TODO: if the user update was successful
@@ -45,4 +63,27 @@ class StatusController {
 		println "redirecting to home:index";
 		redirect( controller:"home", action:"index", params:[userId:user.userId]);
 	}
+
+	def listUpdates = 
+	{
+		User user = null;
+		List<StatusUpdate> updates = new ArrayList<StatusUpdate>();
+		
+		if( !session.user )
+		{
+			flash.message = "Must be logged in before updating status";
+		}
+		else
+		{
+			println "logged in; so proceeding...";
+			
+			// get our user
+			user = userService.findUserByUserId( session.user.userId );
+			
+			updates.addAll( user.oldStatusUpdates.sort { it.dateCreated }.reverse() );
+		}
+		
+		[updates:updates]
+	}	
+	
 }

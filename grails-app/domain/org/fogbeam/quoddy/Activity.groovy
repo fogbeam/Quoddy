@@ -4,4 +4,5 @@ class Activity {
 	
 	String text;
 	User creator;
+	Date dateCreated;
 }
