@@ -40,11 +40,12 @@ class UserService {
 		if( persons != null && persons.size() > 0 ) 
 		{
 			Person p = persons.get(0);
+			println "using userId ${userId}";
 			user = User.findByUserId( userId );
-			
+			println "found user with id = ${user.id}";
 			user = copyPersonToUser(p, user );	
+			println "user.id = ${user.id}";
 		}
-		
 		
 		return user;
 	}	
@@ -345,11 +346,15 @@ class UserService {
 		List<Person> members = friendsGroup.members;
 		for( Person person: members ) 
 		{
+			println "working with userId: ${person.uid}";
 			User aUser = User.findByUserId( person.uid );
-			aUser = copyPersonToUser( person );
+			println "Found aUser with id = ${aUser.id}";
+			aUser = copyPersonToUser( person, aUser );
+			println "after copy, aUser.id = ${aUser.id}";
 			friends.add( aUser );
 		}
 		
+		println "returning friends: ${friends}";
 		return friends;
 	}
 	
@@ -468,6 +473,7 @@ class UserService {
 	
 	public User copyPersonToUser( Person person, User user )
 	{
+		println "got user with id: ${user.id}";
 		user.uuid = person.uuid;
 		user.firstName = person.givenName;
 		user.lastName = person.lastName;
@@ -475,7 +481,7 @@ class UserService {
 		user.email = person.mail;
 		user.userId = person.uid;
 		user.password = person.userpassword;
-		
+		println "returning user with id: ${user.id}";
 		return user;
 		
 	}

@@ -14,3 +14,5 @@ Sort out the beginnings of the messaging stuff for dealing with events, activity
 Get rid of all the hard-coded strings in the new LDAP code (base DN crap, etc.)
 
 Deal with failure to connect to LDAP on startup
+
+Put in an OpenSessionInView filter, so we can use domain classes that do lazy loading in the view layer

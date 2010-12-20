@@ -11,7 +11,6 @@ class User {
 	
     static constraints = {
         userId( size:3..20, unique:true )
-        password( size:6..8 )
         homepage( url:true, nullable:true )
         validator: {passwd, user -> 
                 return passwd != user.userId 
@@ -43,10 +42,11 @@ class User {
 	
     static mapping = {
     	table 'uzer'
+		currentStatus lazy:false; // eagerly fetch the currentStatus
     }
-
+	
     // static hasMany = [savedEntries : Entry, hiddenEntries: Entry];
-    static hasMany = [friends: User, oldStatusUpdates:StatusUpdate]
+    static hasMany = [oldStatusUpdates:StatusUpdate]
     
     // static mappedBy = [savedEntries : "savers", hiddenEntries:"hiders" ];
 

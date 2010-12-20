@@ -14,6 +14,7 @@
 			<li><a href="/quoddy2/login/logout">Logout</a></li>
 			<li><a href="/quoddy2/user/editAccount">Edit Account Info</a></li>
 			<li><a href="/quoddy2/user/editProfile">Edit Profile</a></li>
+			<li><a href="/quoddy2/status/listUpdates">List My Updates</a></li>
 			<li><a href="/quoddy2/user/list">List All Users</a></li>
 			<li><a href="/quoddy2/user/listFriends">List Friends</a></li>
 			<li><a href="/quoddy2/user/listFollowers">List Followers</a></li>
