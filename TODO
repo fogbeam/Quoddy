@@ -5,7 +5,11 @@ Get rid of the Person / User dichotomy brought over by the prototype LDAP code?
 
 Implement minimal profiles
 
-Fix the status stuff
+Implement Groups
+
+Start on Admin console
+
+And the "installer" module
 
 ---
 
