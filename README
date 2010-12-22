@@ -11,3 +11,19 @@ social-graph management, activity-stream, activity profiling, tagging, etc. Prov
 for managing connections and for letting users provide information about themselves, their interests, 
 etc. But unlike Facebook, no silly Pirates vs. Ninjas or Farmville stuff.
 
+How does it work?
+
+Quoddy stores information about users, relationships between those users (eg, "friend", "follower," etc), groups,
+relationships between users and "things" that are of interest to the user, and provides for management of those
+relationships, as well as using those relationships to show a user updates regarding activity within their
+network (of friends, followers and other "things).
+
+Quoddy can also be combined with Neddick (https://github.com/fogbeam/Neddick) and Heceta (https://github.com/fogbeam/Heceta)
+to provide a rich, tightly integrated platform for knowledge discovery, navigation and management.
+
+What about OpenSocial?
+
+Work is currently underway to add OpenSocial container support, using Apache Shindig.  When finished, this work
+will allow a Quoddy instance to host any valid OpenSocial application.
+
+
