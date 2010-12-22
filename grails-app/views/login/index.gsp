@@ -1,7 +1,7 @@
 <html>
 
 	<head>
-		<title>Shelley1: Login</title>
+		<title>Quoddy: Login</title>
 		<meta name="layout" content="main" />
 	     <nav:resources />
 	</head>

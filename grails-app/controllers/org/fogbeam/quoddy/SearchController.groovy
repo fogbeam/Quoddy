@@ -29,6 +29,10 @@ class SearchController {
 	}
 	
 	
+	def showAdvanced =
+	{
+		[]	
+	}
 	
 	def searchUsers = {
 	

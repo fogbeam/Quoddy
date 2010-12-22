@@ -44,42 +44,67 @@
                                    <li class="navigation_active navigation_first">
                                         
                                         <g:if test="${channelName == null }">
-                                             <a href="/quoddy2/">Stuff</a>
+                                             <a href="/quoddy2/home/">Home</a>
                                         </g:if>
                                         <g:else>
-                                             <a href="/quoddy2//">Stuff</a>                                  
+                                             <a href="/quoddy2/home/">Home</a>                                  
                                         </g:else>
                                    </li>
                                    <li class="navigation_active">
                                         <g:if test="${channelName == null }">
-                                             <a href="/quoddy2/home/">More Stuff.</a>
+                                             <a href="/quoddy2/user/listFriends">Friends</a>
                                         </g:if>
                                         <g:else>
-                                             <a href="/quoddy2/">More Stuff</a>                                  
+                                             <a href="/quoddy2/user/listFriends">Friends</a>                                  
+                                        </g:else>
+                                   
+                                   </li>
+                                   <li class="navigation_active">
+                                        <g:if test="${channelName == null }">
+                                             <a href="/quoddy2/user/listFollowers">Followers</a>
+                                        </g:if>
+                                        <g:else>
+                                             <a href="/quoddy2/user/listFollowers">Followers</a>                                  
                                         </g:else>
                                    
                                    </li>
                                    <li class="navigation_active">
                                    <g:if test="${channelName == null }">
-                                        <a href="/quoddy2/">Other Stuff</a>
+                                        <a href="/quoddy2/search/showAdvanced">Advanced Search</a>
                                    </g:if>
                                    <g:else>
-                                        <a href="/quoddy2/">Other Stuff</a>                                  
+                                        <a href="/quoddy2/search/showAdvanced">Advanced Search</a>                                  
                                    </g:else>
                                         
                                    </li>
                                    <li class="navigation_active">
                                         <g:if test="${channelName == null }">
-                                             <a href="/quoddy2/">Hyper Stuff</a>
+                                             <a href="/quoddy2/reports">Reports</a>
                                         </g:if>
                                         <g:else>
-                                             <a href="/quoddy2/">Hyper Stuff</a>                                  
+                                             <a href="/quoddy2/reports">Reports</a>                                  
+                                        </g:else>
+                                   
+                                   </li>                                   
+                                   <li class="navigation_active">
+                                        <g:if test="${channelName == null }">
+                                             <a href="/quoddy2/opensocial">OpenSocial</a>
+                                        </g:if>
+                                        <g:else>
+                                             <a href="/quoddy2/opensocial">OpenSocial</a>                                  
                                         </g:else>
                                    </li>
+                                   <!--
                                    <li class="navigation_active"><a href="/quoddy2/">Saved</a></li>
-                                   <li class="navigation_active"><a href="/quoddy2/">Tags</a></li>
+                                   -->
+                                   <li class="navigation_active"><a href="/quoddy2/tag/list">Tags</a></li>
+                                   
+                                   <!--
                                    <li class="navigation_active"><a href="/quoddy2/">Channels</a></li>
+                                   -->
+                                   
                                    <li class="navigation_active"><a href="/quoddy2/admin/index">Admin</a></li>
+                                   
                                    <li style="float:right;margin-right:100px;">
                                         <g:if test="${session.user}">
                                          <a href="/quoddy2/userHome/index/${session.user.userId}">${session.user.userId}</a>
