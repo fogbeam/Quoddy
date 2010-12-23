@@ -28,9 +28,9 @@ environments {
 		}
 	}
 	production {
-		dataSource {
-			dbCreate = "update"
-			url = "jdbc:hsqldb:file:prodDb;shutdown=true"
+dataSource {
+			dbCreate = "update" // one of 'create', 'create-drop','update'
+			url = "jdbc:postgresql:quoddy2"
 		}
 	}
 }
