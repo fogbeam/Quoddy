@@ -8,11 +8,29 @@
         <link rel="stylesheet" type="text/css" href="/quoddy2/css/reset-min.css">
         <link rel="stylesheet" type="text/css" href="/quoddy2/css/fonts-min.css">             
         <link rel="stylesheet" type="text/css" href="/quoddy2/css/grids-min.css">
-        
-        <g:javascript library="prototype" /> 
-        <g:javascript library="scriptaculous" />
-        <g:javascript library="application" />
-        
+            
+
+		<!-- default container look and feel -->
+		<link rel="stylesheet" href="/quoddy2/css/gadgets.css">
+		<script type="text/javascript" src="../gadgets/js/shindig-container:rpc.js?c=1&debug=1&nocache=1"></script>
+		<script type="text/javascript">
+			var specUrl0 = 'http://www.google.com/ig/modules/horoscope.xml';
+			var specUrl1 = 'http://www.labpixies.com/campaigns/todo/todo.xml';
+
+			// This container lays out and renders gadgets itself.
+
+			function renderGadgets() {
+  			var gadget0 = shindig.container.createGadget({specUrl: specUrl0});
+  			var gadget1 = shindig.container.createGadget({specUrl: specUrl1});
+
+			shindig.container.addGadget(gadget0);
+  			shindig.container.addGadget(gadget1);
+  			shindig.container.layoutManager.setGadgetChromeIds(
+      		['gadget-chrome-x', 'gadget-chrome-y']);
+			shindig.container.renderGadget(gadget0);
+  			shindig.container.renderGadget(gadget1);
+			};
+		</script>
 
         <g:javascript>
                
@@ -21,7 +39,7 @@
         <g:layoutHead />
                 				
     </head>
-    <body>
+    <body onLoad="renderGadgets();" >
     
           <div id="doc3" class="yui-t4">
                <div id="hd">

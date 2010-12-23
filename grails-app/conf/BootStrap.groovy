@@ -15,7 +15,8 @@ class BootStrap {
 	             break;
 	         case Environment.PRODUCTION:
 	             println "No special configuration required";
-	             break;
+				 createSomeUsers();
+				 break;
 	     }     
      
 	     

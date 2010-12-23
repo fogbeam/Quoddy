@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <html>
 
 	<head>
@@ -7,7 +9,9 @@
 	</head>
 	<body>
   		<h2>Quoddy: Test OpenSocial Container</h2>
-  		<div id="gadget-chrome-x" class="gadgets-gadget-chrome"></div>
-  		<div id="gadget-chrome-y" class="gadgets-gadget-chrome"></div>
+		<p>
+  		  <div id="gadget-chrome-x" class="gadgets-gadget-chrome"></div>
+  		  <div id="gadget-chrome-y" class="gadgets-gadget-chrome"></div>
+  		</p>
 	</body>
 </html>
