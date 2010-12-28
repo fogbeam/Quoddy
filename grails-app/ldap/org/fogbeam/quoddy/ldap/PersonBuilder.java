@@ -15,7 +15,7 @@ import sun.misc.BASE64Encoder;
 public class PersonBuilder 
 {
 	
-	protected static Name buildDn(Person p, String BaseDN) 
+	protected static Name buildDn(LDAPPerson p, String BaseDN) 
 	{
 		DistinguishedName dn = new DistinguishedName(BaseDN);
 		dn.add("ou", "people" );
@@ -24,7 +24,7 @@ public class PersonBuilder
 		return dn;
 	}
 	
-	public static Attributes buildAttributes(Person p) 
+	public static Attributes buildAttributes(LDAPPerson p) 
 	{
 	   Attributes attrs = new BasicAttributes();
 	   BasicAttribute ocattr = new BasicAttribute("objectclass");

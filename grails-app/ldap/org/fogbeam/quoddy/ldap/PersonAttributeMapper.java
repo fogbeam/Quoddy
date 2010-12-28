@@ -9,7 +9,7 @@ public class PersonAttributeMapper implements AttributesMapper
 {
 	public Object mapFromAttributes(Attributes attrs) throws NamingException 
    	{		
-		Person person = new Person();
+		LDAPPerson person = new LDAPPerson();
    	
    		person.uuid = (String)attrs.get("cn").get();
    		person.mail = (String)attrs.get("mail").get();

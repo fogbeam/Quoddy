@@ -13,7 +13,7 @@ import org.fogbeam.quoddy.User;
 import org.fogbeam.quoddy.ldap.Group 
 import org.fogbeam.quoddy.ldap.GroupAttributeMapper 
 import org.fogbeam.quoddy.ldap.GroupBuilder 
-import org.fogbeam.quoddy.ldap.Person 
+import org.fogbeam.quoddy.ldap.LDAPPerson 
 import org.fogbeam.quoddy.ldap.PersonAttributeMapper 
 import org.fogbeam.quoddy.ldap.PersonBuilder 
 import org.springframework.ldap.filter.AndFilter;
@@ -33,13 +33,13 @@ class UserService {
 		memberFilter.and(new EqualsFilter("objectclass", "person"));
 		memberFilter.and(new EqualsFilter("uid", userId ));
 		
-		List<Person> persons = ldapTemplate.search("ou=people,o=quoddy", memberFilter.encode(),
+		List<LDAPPerson> persons = ldapTemplate.search("ou=people,o=quoddy", memberFilter.encode(),
 				 new PersonAttributeMapper());
 		
 			 
 		if( persons != null && persons.size() > 0 ) 
 		{
-			Person p = persons.get(0);
+			LDAPPerson p = persons.get(0);
 			println "using userId ${userId}";
 			user = User.findByUserId( userId );
 			println "found user with id = ${user.id}";
@@ -59,7 +59,7 @@ class UserService {
 		if( user.save() )
 		{
 		
-			Person person = copyUserToPerson( user );
+			LDAPPerson person = copyUserToPerson( user );
 			Name dn = PersonBuilder.buildDn( person, "o=quoddy" );
 		
 			ldapTemplate.bind(dn, null, PersonBuilder.buildAttributes(person));
@@ -126,7 +126,7 @@ class UserService {
 		Name userToModifyDn = PersonBuilder.buildDn( copyUserToPerson( user ), "o=quoddy" );
 		ldapTemplate.modifyAttributes( userToModifyDn, modificationItems );
 				
-		Person person =  (Person)ldapTemplate.lookup(userToModifyDn, new PersonAttributeMapper() );
+		LDAPPerson person =  (LDAPPerson)ldapTemplate.lookup(userToModifyDn, new PersonAttributeMapper() );
 		
 		user = User.findByUserId( user.userId );
 		User modifiedUser = copyPersonToUser( person, user );
@@ -297,7 +297,7 @@ class UserService {
 		
 	public List<User> findAllUsers() 
 	{
-		List<Person> persons = null;
+		List<LDAPPerson> persons = null;
 		try {
 		
 			AndFilter memberFilter = new AndFilter();
@@ -316,7 +316,7 @@ class UserService {
 		List<User> allUsers = new ArrayList<User>();
 		if( persons != null && persons.size() > 0 )
 		{
-			for( Person person : persons )
+			for( LDAPPerson person : persons )
 			{
 				User user = User.findByUserId( person.uid );
 				user = copyPersonToUser( person, user );	
@@ -332,7 +332,7 @@ class UserService {
 	{
 		List<User> friends = new ArrayList<User>();
 		
-		Person p = copyUserToPerson( user );
+		LDAPPerson p = copyUserToPerson( user );
 		String dnString = PersonBuilder.buildDn( p, "o=quoddy" );
 		AndFilter groupOwnerFilter = new AndFilter();
 		groupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
@@ -343,8 +343,8 @@ class UserService {
 		
 		Group friendsGroup = groups.get(0);
 		
-		List<Person> members = friendsGroup.members;
-		for( Person person: members ) 
+		List<LDAPPerson> members = friendsGroup.members;
+		for( LDAPPerson person: members ) 
 		{
 			println "working with userId: ${person.uid}";
 			User aUser = User.findByUserId( person.uid );
@@ -365,7 +365,7 @@ class UserService {
 		
 		// get every follow group where this user is a member of the follow group, then
 		// retrieve the owner ID.
-		Person p = copyUserToPerson( user );
+		LDAPPerson p = copyUserToPerson( user );
 		String dnString = PersonBuilder.buildDn( p, "o=quoddy" );
 		AndFilter groupOwnerFilter = new AndFilter();
 		groupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
@@ -393,7 +393,7 @@ class UserService {
 			println "memberCn: ${memberCn}";
 			memberFilter.and(new EqualsFilter("cn", memberCn  ));
 			
-			List<Person> persons = ldapTemplate.search("ou=people,o=quoddy", memberFilter.encode(),
+			List<LDAPPerson> persons = ldapTemplate.search("ou=people,o=quoddy", memberFilter.encode(),
 					 new PersonAttributeMapper());
 			
 				 
@@ -401,7 +401,7 @@ class UserService {
 			{
 				println "Found follower";
 				
-				Person person = persons.get(0);
+				LDAPPerson person = persons.get(0);
 				user = User.findByUserId( person.uid );	
 				user = copyPersonToUser(person, user );
 			
@@ -421,7 +421,7 @@ class UserService {
 	{
 		List<User> iFollow = new ArrayList<User>();
 		
-		Person p = copyUserToPerson( user );
+		LDAPPerson p = copyUserToPerson( user );
 		String dnString = PersonBuilder.buildDn( p, "o=quoddy" );
 		AndFilter groupOwnerFilter = new AndFilter();
 		groupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
@@ -432,8 +432,8 @@ class UserService {
 		
 		Group followGroup = groups.get(0);
 		
-		List<Person> members = followGroup.members;
-		for( Person person: members ) 
+		List<LDAPPerson> members = followGroup.members;
+		for( LDAPPerson person: members ) 
 		{
 
 			User aUser = User.findByUserId( person.uid );
@@ -448,7 +448,7 @@ class UserService {
 	{
 		List<FriendRequest> openFriendRequests = new ArrayList<FriendRequest>();
 		
-		Person p = copyUserToPerson( user );
+		LDAPPerson p = copyUserToPerson( user );
 		String dnString = PersonBuilder.buildDn( p, "o=quoddy" );
 		AndFilter groupOwnerFilter = new AndFilter();
 		groupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
@@ -459,8 +459,8 @@ class UserService {
 		
 		Group unconfirmedFriendsGroup = groups.get(0);
 		
-		List<Person> members = unconfirmedFriendsGroup.members;
-		for( Person person: members )
+		List<LDAPPerson> members = unconfirmedFriendsGroup.members;
+		for( LDAPPerson person: members )
 		{
 			User unconfirmedFriend = copyPersonToUser( person );
 			FriendRequest friendRequest = new FriendRequest( user, unconfirmedFriend);
@@ -471,7 +471,7 @@ class UserService {
 	}
 	
 	
-	public User copyPersonToUser( Person person, User user )
+	public User copyPersonToUser( LDAPPerson person, User user )
 	{
 		println "got user with id: ${user.id}";
 		user.uuid = person.uuid;
@@ -486,7 +486,7 @@ class UserService {
 		
 	}
 	
-	public User copyPersonToUser( Person person )
+	public User copyPersonToUser( LDAPPerson person )
 	{
 		User user = new User();
 		user.uuid = person.uuid;
@@ -500,9 +500,9 @@ class UserService {
 		return user;
 	}	
 	
-	public Person copyUserToPerson( User user )	
+	public LDAPPerson copyUserToPerson( User user )	
 	{
-		Person person = new Person();
+		LDAPPerson person = new LDAPPerson();
 		person.uuid = user.uuid;
 		person.givenName = user.firstName;
 		person.lastName = user.lastName;

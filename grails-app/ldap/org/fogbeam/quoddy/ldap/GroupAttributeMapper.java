@@ -36,7 +36,7 @@ public class GroupAttributeMapper implements AttributesMapper
 			group.memberNames.add(memberName);
 
 			// System.out.println( "looking for dn: " + memberName );
-			Person person =  (Person)ldapTemplate.lookup(memberName, new PersonAttributeMapper() );
+			LDAPPerson person =  (LDAPPerson)ldapTemplate.lookup(memberName, new PersonAttributeMapper() );
    	
 			group.members.add( person );   	
 		}

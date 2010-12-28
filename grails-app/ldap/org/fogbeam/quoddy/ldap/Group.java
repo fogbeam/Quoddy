@@ -9,6 +9,6 @@ public class Group
 	public String name;
 	public String owner;
 	public List<String> memberNames = new ArrayList<String>();
-	public List<Person> members = new ArrayList<Person>();
+	public List<LDAPPerson> members = new ArrayList<LDAPPerson>();
 	
 }

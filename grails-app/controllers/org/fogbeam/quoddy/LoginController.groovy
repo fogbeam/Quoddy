@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import org.fogbeam.quoddy.ldap.Person 
+import org.fogbeam.quoddy.ldap.LDAPPerson 
 import org.fogbeam.quoddy.ldap.PersonAttributeMapper 
 import org.springframework.ldap.core.DistinguishedName 
 import org.springframework.ldap.filter.AndFilter;
