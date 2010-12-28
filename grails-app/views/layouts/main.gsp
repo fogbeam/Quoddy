@@ -4,10 +4,10 @@
           <g:layoutTitle default="Quoddy" />
         </title>
         <nav:resources />
-        <link rel="stylesheet" type="text/css" href="/quoddy2/css/main.css">
-        <link rel="stylesheet" type="text/css" href="/quoddy2/css/reset-min.css">
-        <link rel="stylesheet" type="text/css" href="/quoddy2/css/fonts-min.css">             
-        <link rel="stylesheet" type="text/css" href="/quoddy2/css/grids-min.css">
+        <link rel="stylesheet" type="text/css" href="/css/main.css">
+        <link rel="stylesheet" type="text/css" href="/css/reset-min.css">
+        <link rel="stylesheet" type="text/css" href="/css/fonts-min.css">             
+        <link rel="stylesheet" type="text/css" href="/css/grids-min.css">
         
         <g:javascript library="prototype" /> 
         <g:javascript library="scriptaculous" />
@@ -43,70 +43,70 @@
                                    <li class="navigation_active navigation_first">
                                         
                                         <g:if test="${channelName == null }">
-                                             <a href="/quoddy2/home/">Home</a>
+                                             <a href="/home/">Home</a>
                                         </g:if>
                                         <g:else>
-                                             <a href="/quoddy2/home/">Home</a>                                  
+                                             <a href="/home/">Home</a>                                  
                                         </g:else>
                                    </li>
                                    <li class="navigation_active">
                                         <g:if test="${channelName == null }">
-                                             <a href="/quoddy2/user/listFriends">Friends</a>
+                                             <a href="/user/listFriends">Friends</a>
                                         </g:if>
                                         <g:else>
-                                             <a href="/quoddy2/user/listFriends">Friends</a>                                  
+                                             <a href="/user/listFriends">Friends</a>                                  
                                         </g:else>
                                    
                                    </li>
                                    <li class="navigation_active">
                                         <g:if test="${channelName == null }">
-                                             <a href="/quoddy2/user/listFollowers">Followers</a>
+                                             <a href="/user/listFollowers">Followers</a>
                                         </g:if>
                                         <g:else>
-                                             <a href="/quoddy2/user/listFollowers">Followers</a>                                  
+                                             <a href="/user/listFollowers">Followers</a>                                  
                                         </g:else>
                                    
                                    </li>
                                    <li class="navigation_active">
                                    <g:if test="${channelName == null }">
-                                        <a href="/quoddy2/search/showAdvanced">Advanced Search</a>
+                                        <a href="/search/showAdvanced">Advanced Search</a>
                                    </g:if>
                                    <g:else>
-                                        <a href="/quoddy2/search/showAdvanced">Advanced Search</a>                                  
+                                        <a href="/search/showAdvanced">Advanced Search</a>                                  
                                    </g:else>
                                         
                                    </li>
                                    <li class="navigation_active">
                                         <g:if test="${channelName == null }">
-                                             <a href="/quoddy2/reports">Reports</a>
+                                             <a href="/reports">Reports</a>
                                         </g:if>
                                         <g:else>
-                                             <a href="/quoddy2/reports">Reports</a>                                  
+                                             <a href="/reports">Reports</a>                                  
                                         </g:else>
                                    
                                    </li>                                   
                                    <li class="navigation_active">
                                         <g:if test="${channelName == null }">
-                                             <a href="/quoddy2/opensocial">OpenSocial</a>
+                                             <a href="/opensocial">OpenSocial</a>
                                         </g:if>
                                         <g:else>
-                                             <a href="/quoddy2/opensocial">OpenSocial</a>                                  
+                                             <a href="/opensocial">OpenSocial</a>                                  
                                         </g:else>
                                    </li>
                                    <!--
-                                   <li class="navigation_active"><a href="/quoddy2/">Saved</a></li>
+                                   <li class="navigation_active"><a href="/">Saved</a></li>
                                    -->
-                                   <li class="navigation_active"><a href="/quoddy2/tag/list">Tags</a></li>
+                                   <li class="navigation_active"><a href="/tag/list">Tags</a></li>
                                    
                                    <!--
-                                   <li class="navigation_active"><a href="/quoddy2/">Channels</a></li>
+                                   <li class="navigation_active"><a href="/">Channels</a></li>
                                    -->
                                    
-                                   <li class="navigation_active"><a href="/quoddy2/admin/index">Admin</a></li>
+                                   <li class="navigation_active"><a href="/admin/index">Admin</a></li>
                                    
                                    <li style="float:right;margin-right:100px;">
                                         <g:if test="${session.user}">
-                                         <a href="/quoddy2/userHome/index/${session.user.userId}">${session.user.userId}</a>
+                                         <a href="/userHome/index/${session.user.userId}">${session.user.userId}</a>
                                         </g:if>
                                    </li>
                               </ul>
