@@ -38,6 +38,9 @@ ApacheDS so far.
 
 ##TODO: finish the bit about configuring LDAP.
 
+(IMPORTANT NOTE: LDAP won't always be mandatory.  Once "local accounts" support is finished, any
+use of LDAP will be completely optional.)
+
 There are currently no binary distributions, so you'll have to get the code from source control.  The most direct
 route is to do a 'git clone' on the Quoddy repository on Github.  
 
