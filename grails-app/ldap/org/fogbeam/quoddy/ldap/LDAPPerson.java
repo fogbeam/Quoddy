@@ -1,6 +1,6 @@
 package org.fogbeam.quoddy.ldap;
 
-public class Person 
+public class LDAPPerson 
 {
 	public String uuid;
 	public String givenName;
