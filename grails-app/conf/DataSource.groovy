@@ -1,3 +1,4 @@
+
 dataSource {
 	pooled = true
 	// driverClassName = "org.hsqldb.jdbcDriver"
@@ -6,7 +7,7 @@ dataSource {
 	username = "postgres"
 	// password = ""
 	password = ""
-	logSql = false
+	logSql=false
 }
 hibernate {
     cache.use_second_level_cache=true
@@ -18,7 +19,7 @@ environments {
 	development {
 		dataSource {
 			dbCreate = "update" // one of 'create', 'create-drop','update'
-			url = "jdbc:postgresql:quoddy2"
+			url = "jdbc:postgresql:quoddy2";
 		}
 	}
 	test {
@@ -28,7 +29,7 @@ environments {
 		}
 	}
 	production {
-dataSource {
+		dataSource {
 			dbCreate = "update" // one of 'create', 'create-drop','update'
 			url = "jdbc:postgresql:quoddy2"
 		}

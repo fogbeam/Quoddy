@@ -8,7 +8,9 @@ class BootStrap {
 	
 	def init = { servletContext ->
      
-	     switch( Environment.current )
+		
+		
+		 switch( Environment.current )
 	     {
 	         case Environment.DEVELOPMENT:
 	             createSomeUsers();
