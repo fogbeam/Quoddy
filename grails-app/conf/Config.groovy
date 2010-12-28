@@ -10,6 +10,28 @@
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 
+// TODO: make this QUODDY_HOME or whatever
+def ENV_NAME = "APPNAME_CONFIG"
+if(!grails.config.locations || !(grails.config.locations instanceof List)) 
+{
+	grails.config.locations = []
+}
+if(System.getenv(ENV_NAME)) 
+{
+	println "Including configuration file specified in environment: " + System.getenv(ENV_NAME);
+	grails.config.locations << "file:" + System.getenv(ENV_NAME)
+} 
+else if(System.getProperty(ENV_NAME)) 
+{
+	println "Including configuration file specified on command line: " + System.getProperty(ENV_NAME);
+	grails.config.locations << "file:" + System.getProperty(ENV_NAME)
+} 
+else 
+{
+	println "No external configuration file defined."
+}
+
+
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
