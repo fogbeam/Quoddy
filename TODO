@@ -9,8 +9,15 @@ Start on Admin console
 And the "installer" module
 
 Sort out the beginnings of the messaging stuff for dealing with events, activity stream, etc.
-
+ (have to deal with federation issues, so we can receive events from Neddick and other 3rd
+ party sources as well)
+ 
 Investigate using FlockDB for the social-graph stuff
+
+Implement access control / authorization (using Shiro?)
+
+User-to-user messaging?  Is there really a need for a "lightweight" messaging system, or should we
+just layer on top of existing (email?) infrastructure?  
 
 ---
 Move beyond naive Shindig integration: tie into our backend services for social-graph, etc.
