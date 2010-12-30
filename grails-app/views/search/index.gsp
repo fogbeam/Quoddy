@@ -1,14 +1,13 @@
 <html>
 	
 	<head>
-		<title>User Search Form Goes Here</title>
+		<title>Quoddy: Advanced Search</title>
+		<meta name="layout" content="main" />
+	     <nav:resources />
 	</head>
 	
 	<body>
-		<g:form controller="search" action="searchUsers">
-			<input type="text" name="queryString"/>
-			<input type="submit" name="submitSearch" value="Search" />
-		</g:form>
+		Quoddy: Advanced Search
 	</body>
 	
 </html>

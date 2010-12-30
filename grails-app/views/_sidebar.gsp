@@ -8,7 +8,10 @@
 	Stuff you might want to do here:
 	<br />
 	<ul>
-		<li><a href="/user/create">Register</a></li>
+		<g:if test="${session.enable_self_registration == true}">
+			<li><a href="/user/create">Register</a></li>
+		</g:if>
+		
 		<li><a href="/login">Login</a></li>
 		<g:if test="${session.user != null}">
 			<li><a href="/login/logout">Logout</a></li>
@@ -19,7 +22,7 @@
 			<li><a href="/user/listFriends">List Friends</a></li>
 			<li><a href="/user/listFollowers">List Followers</a></li>
 			<li><a href="/user/listIFollow">List People I Follow</a></li>
-			<li><a href="/search">Search People</a></li>
+			<li><a href="/search/searchPeople">Search People</a></li>
 			<li><a href="/search/searchFriends">Search Friends</a></li>
 			<li><a href="/search/searchIFollow">Search People I Follow</a></li>
 			<li><a href="/user/listOpenFriendRequests">List Pending Friend Requests</a></li>

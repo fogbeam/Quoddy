@@ -165,11 +165,14 @@
         <listener-class>org.codehaus.groovy.grails.web.context.GrailsContextLoaderListener</listener-class>
     </listener>
 
+	<listener>
+		<listener-class>org.fogbeam.quoddy.listeners.QuoddySessionListener</listener-class>
+	</listener>
+
 	<!-- Shindig Listeners -->
 	<listener>
     	<listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener</listener-class>
   	</listener>
-
 	<!-- end Shindig Listeners -->
 
 	<!-- Grails dispatcher servlet -->

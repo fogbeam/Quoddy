@@ -17,7 +17,8 @@ class User {
             }
         profile( nullable: true )
         currentStatus(nullable:true)
-        dateCreated()
+		email(nullable:true)
+		dateCreated()
     }
 
     
@@ -37,7 +38,7 @@ class User {
 	// String fullName;
 	String bio;
 	String email;
-	static transients = [ "password", "homepage", "firstName", "lastName", "displayName", "bio", "email", "fullName" ]
+	static transients = [ "password", "homepage", "displayName", "bio" ]
 	
 	
     static mapping = {
