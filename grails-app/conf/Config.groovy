@@ -33,10 +33,16 @@ else
 }
  
 // backingStore options: "ldap" or "localdb"
-friends.backingStore="ldap";
-groups.backingStore="ldap";
+// for now, assume they have to change in tandem: all "ldap" or all "localdb"
+// we're not yet - if ever - interested in any really bizarre hybrid scenarios on this
+friends.backingStore="localdb";
+groups.backingStore="localdb";
 enable.self.registration=true;
-created.accounts.backingStore="ldap";
+created.accounts.backingStore="localdb";
+
+// TODO: parameters for "is ldap authentication enabled" 
+// and "is local account authentication enabled" etc.
+
 
 
 

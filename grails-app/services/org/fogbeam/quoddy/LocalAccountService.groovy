@@ -1,10 +1,14 @@
 package org.fogbeam.quoddy
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
+import sun.misc.BASE64Encoder;
 
 class LocalAccountService 
 {
-	public User findAccountByUserId( final String userId )
+	public LocalAccount findAccountByUserId( final String userId )
 	{
 		LocalAccount account = LocalAccount.findByUsername( userId );
 		
@@ -13,59 +17,44 @@ class LocalAccountService
 	
 	public void createUser( final User user )
 	{
-		throw new RuntimeException( "not implemented yet" );
+		LocalAccount account = new LocalAccount();
+		account.username = user.userId;
+		account.password = digestMd5( user.password );
+			
+		if( !account.save() )
+		{
+			println( "Saving LocalAccount FAILED");
+			account.errors.allErrors.each { println it };
+		}
 	}
 	
 	public User updateUser( final User user )
 	{
-		throw new RuntimeException( "not implemented yet" );
-	}
-	
-	public void addToFollow( final User destinationUser, final User targetUser )
-	{
-		throw new RuntimeException( "not implemented yet" );
-	}
 
-	/* note: this is a "two way" operation, so to speak.  That is, the initial
-	 * request was half of the overall operation of adding a friend... now that
-	 * the requestee has confirmed, we have to update *both* users to show the
-	 * new confirmed friend connection.  We also have to remove the "pending" request.
-	 */
-	public void confirmFriend( final User currentUser, final User newFriend )
-	{
+		LocalAccount account = LocalAccount.findByUsername( userId );
+		account.password = digestMd5( user.password );
 		
-	throw new RuntimeException( "not implemented yet" );
-		
+		if( !account.save() )
+		{
+			println( "Updating LocalAccount FAILED");
+			account.errors.allErrors.each { println it };
+		}
 	}
 	
-	public void addToFriends( final User currentUser, final User newFriend )
+	private static String digestMd5(final String password)
 	{
-		throw new RuntimeException( "not implemented yet" );
-		
-	}
-		
-	public List<User> findAllUsers()
-	{
-		throw new RuntimeException( "not implemented yet" );
-	}
-
-	public List<User> listFriends( final User user )
-	{
-		throw new RuntimeException( "not implemented yet" );
-	}
-	
-	public List<User> listFollowers( final User user )
-	{
-		throw new RuntimeException( "not implemented yet" );
+		String base64;
+		try
+		{
+			MessageDigest digest = MessageDigest.getInstance("MD5");
+			digest.update(password.getBytes());
+			base64 = new BASE64Encoder().encode(digest.digest());
+		}
+		catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+	  
+		return "{MD5}" + base64;
 	}
 	
-	public List<User> listIFollow( final User user )
-	{
-		throw new RuntimeException( "not implemented yet" );
-	}
-	
-	public List<FriendRequest> listOpenFriendRequests( final User user )
-	{
-		throw new RuntimeException( "not implemented yet" );
-	}
 }
