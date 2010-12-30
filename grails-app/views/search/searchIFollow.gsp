@@ -1,11 +1,14 @@
 <html>
 	
 	<head>
-		<title>Friend Search Form Goes Here</title>
+		<title>Quoddy: Search People I Follow</title>
+		<meta name="layout" content="main" />
+	    <nav:resources />		
 	</head>
 	
 	<body>
-		<g:form controller="search" action="doFriendSearch">
+		<p />
+		<g:form controller="search" action="doIFollowSearch">
 			<input type="text" name="queryString"/>
 			<input type="submit" name="submitSearch" value="Search" />
 		</g:form>

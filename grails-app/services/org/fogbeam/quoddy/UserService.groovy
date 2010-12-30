@@ -22,30 +22,24 @@ import org.springframework.ldap.NameNotFoundException;
 
 class UserService {
 
-	def ldapTemplate;
+	// injected by Spring, might be backed by LDAP version OR by local dB version;
+	// but we should be able to not care which is configured
+	def friendService;
+	
+	// same deal as the friendService...
+	def groupService;
+	
+	// and again...  when finished, this will either be LdapPersonService or LocalAccountService, but we don't care.
+	def accountService;
+	
+	// for now, we'll keep a direct reference to ldapPersonService for creating users to test some stuff that
+	// might break due to other changes.  This has to be taken out once the split between LDAP / Local Accounts
+	// is finished and everything on the LocalAccount side is finished
+	def ldapPersonService;
 	
 	public User findUserByUserId( String userId )
 	{
-		
-		User user = null;
-		
-		AndFilter memberFilter = new AndFilter();
-		memberFilter.and(new EqualsFilter("objectclass", "person"));
-		memberFilter.and(new EqualsFilter("uid", userId ));
-		
-		List<LDAPPerson> persons = ldapTemplate.search("ou=people,o=quoddy", memberFilter.encode(),
-				 new PersonAttributeMapper());
-		
-			 
-		if( persons != null && persons.size() > 0 ) 
-		{
-			LDAPPerson p = persons.get(0);
-			println "using userId ${userId}";
-			user = User.findByUserId( userId );
-			println "found user with id = ${user.id}";
-			user = copyPersonToUser(p, user );	
-			println "user.id = ${user.id}";
-		}
+		User user = User.findByUserId( userId );
 		
 		return user;
 	}	
@@ -54,113 +48,29 @@ class UserService {
 	{
 		
 		/* save the user into the uzer table, we need that for associations with other
-		 * "system things"
-		 */
+		* "system things"
+		*/
 		if( user.save() )
 		{
-		
-			LDAPPerson person = copyUserToPerson( user );
-			Name dn = PersonBuilder.buildDn( person, "o=quoddy" );
-		
-			ldapTemplate.bind(dn, null, PersonBuilder.buildAttributes(person));
-
-			// create corresponding groups...
-		
-			// and a group for followees
-			// create a "follow" group for this user, populate it with somebody or other...
-			Group followGroup = new Group();
-			followGroup.owner = dn.toString();
-			followGroup.name = "FollowGroup/" + person.uid + "/" + person.givenName + " " + person.lastName;
-			Name followGroupDn = GroupBuilder.buildFollowGroupDn( followGroup, "o=quoddy" );
-			ldapTemplate.bind( followGroupDn, null, GroupBuilder.buildAttributes(followGroup));
-		
-			// and a group for confirmed friends
-			Group confirmedFriendsGroup = new Group();
-			confirmedFriendsGroup.owner = dn.toString();
-			confirmedFriendsGroup.name = "ConfirmedFriendsGroup/" + person.uid + "/" + person.givenName + " " + person.lastName;
-			Name confirmedFriendsGroupDn = GroupBuilder.buildConfirmedFriendsGroupDn( confirmedFriendsGroup, "o=quoddy" );
-			ldapTemplate.bind( confirmedFriendsGroupDn, null, GroupBuilder.buildAttributes(confirmedFriendsGroup));
-		
-			// and a group for pending friend requests?
-			Group unconfirmedFriendsGroup = new Group();
-			unconfirmedFriendsGroup.owner = dn.toString();
-			unconfirmedFriendsGroup.name = "UnconfirmedFriendsGroup/" + person.uid + "/" + person.givenName + " " + person.lastName;
-			Name unconfirmedFriendsGroupDn = GroupBuilder.buildUnconfirmedFriendsGroupDn( unconfirmedFriendsGroup, "o=quoddy" );
-			ldapTemplate.bind( unconfirmedFriendsGroupDn, null, GroupBuilder.buildAttributes(unconfirmedFriendsGroup));
+			// accountService.createUser( user );
+			ldapPersonService.createUser( user );
 		}
 		else
 		{
 			throw new RuntimeException( "couldn't create User record for user: ${user.userId}" );
 			user.errors.allErrors.each { println it };
 		}
+		
 	}
 	
 	public User updateUser( User user )
 	{
-		println "about to update user...";
-		
-		// update using ldapTemplate
-		Attribute displayNameAttr = new BasicAttribute("displayName");
-		displayNameAttr.add( user.displayName );
-		ModificationItem displayNameItem = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, displayNameAttr);
-				
-		Attribute snAttr = new BasicAttribute("sn");
-		snAttr.add( user.lastName );
-		ModificationItem snItem = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, snAttr);
-		
-		Attribute givenNameAttr = new BasicAttribute("givenName");
-		givenNameAttr.add( user.firstName );
-		ModificationItem givenNameItem = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, givenNameAttr);
-		
-		Attribute mailAttr = new BasicAttribute("mail");
-		mailAttr.add( user.email );
-		ModificationItem mailItem = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mailAttr);
-		
-		Attribute descriptionAttr = new BasicAttribute("description");
-		descriptionAttr.add( user.bio );
-		ModificationItem descriptionItem = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, descriptionAttr);
-
-		ModificationItem[] modificationItems = 
-			[displayNameItem, snItem, givenNameItem, mailItem, descriptionItem] as ModificationItem[];
-		
-		Name userToModifyDn = PersonBuilder.buildDn( copyUserToPerson( user ), "o=quoddy" );
-		ldapTemplate.modifyAttributes( userToModifyDn, modificationItems );
-				
-		LDAPPerson person =  (LDAPPerson)ldapTemplate.lookup(userToModifyDn, new PersonAttributeMapper() );
-		
-		user = User.findByUserId( user.userId );
-		User modifiedUser = copyPersonToUser( person, user );
-		return modifiedUser;
-		
+		throw new RuntimeException( "not implemented yet" );
 	}
 	
 	public void addToFollow( User destinationUser, User targetUser )
 	{
-		// get the dn of the destination user
-		Name destinationUserDn = PersonBuilder.buildDn( copyUserToPerson(destinationUser), "o=quoddy" );
-		
-		String dnString = destinationUserDn.toString();
-		
-		// search for the group in the followgroups tree, with that user as the owner		
-		AndFilter groupOwnerFilter = new AndFilter();
-		groupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
-		groupOwnerFilter.and(new EqualsFilter("owner", dnString));
-		
-		List<Group> groups = ldapTemplate.search( "ou=followgroups,ou=groups,o=quoddy", groupOwnerFilter.encode(),
-				 new GroupAttributeMapper(ldapTemplate));
-		
-		Group followGroup = groups.get(0);
-		
-		Name followGroupDn = GroupBuilder.buildFollowGroupDn( followGroup, "o=quoddy" );
-		
-		// add a new uniquemember attribute with the dn of the targetuser
-		Attribute attr = new BasicAttribute("uniquemember");
-		attr.add( PersonBuilder.buildDn( copyUserToPerson(targetUser), "o=quoddy").toString() );
-		
-		// create a modificationitem and update the attributes to add the new
-		// uniquemember attribute...
-		ModificationItem item = new ModificationItem(DirContext.ADD_ATTRIBUTE, attr);
-		ldapTemplate.modifyAttributes(followGroupDn, [item] as ModificationItem[] );
+		friendService.addToFollow( destinationUser, targetUser );	
 	}
 
 	/* note: this is a "two way" operation, so to speak.  That is, the initial
@@ -170,349 +80,73 @@ class UserService {
 	 */
 	public void confirmFriend( User currentUser, User newFriend )
 	{
-		
-		// currentUser is the one confirming a request, newFriend is the one
-		// who requested it originally.  So, remove the "pending" request from
-		// currentUser, and then insert an entry for newUser into currentUser's
-		// "confirmed friends" group and an entry for currentUser into newUser's
-		// "confirmed friends" group.
-		
-		// get the DNs of the Users
-		Name currentUserDn = PersonBuilder.buildDn( copyUserToPerson(currentUser), "o=quoddy" );
-		Name newFriendDn = PersonBuilder.buildDn( copyUserToPerson(newFriend), "o=quoddy" );
-		
-		// search for the group in the unconfirmedfriends tree, with  currentUser as the owner
-		AndFilter unconfirmedGroupOwnerFilter = new AndFilter();
-		unconfirmedGroupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
-		unconfirmedGroupOwnerFilter.and(new EqualsFilter("owner", currentUserDn.toString() ));
-		
-		List<Group> unconfirmedGroups = ldapTemplate.search( "ou=unconfirmedfriends,ou=groups,o=quoddy", unconfirmedGroupOwnerFilter.encode(),
-				 new GroupAttributeMapper(ldapTemplate));
-		
-		Group unconfirmedFriendsGroup = unconfirmedGroups.get(0);
-		
-		Name unconfirmedFriendsGroupDn = GroupBuilder.buildUnconfirmedFriendsGroupDn( unconfirmedFriendsGroup, , "o=quoddy" );
-		println "unconfirmedFriendsGroupDn: ${unconfirmedFriendsGroupDn}";
-		
-		Attribute removePendingAttr = new BasicAttribute("uniquemember");
-		removePendingAttr.add( newFriendDn.toString() );
-		
-		// create a modificationitem and update the attributes to add the new
-		// uniquemember attribute...
-		ModificationItem removePendingItem = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, removePendingAttr);
-		
-		println "remove pending friend request";
-		ldapTemplate.modifyAttributes(unconfirmedFriendsGroupDn, [removePendingItem] as ModificationItem[] );
-		
-		
-		// search for the group in the confirmedfriends tree, with currentUser as the owner
-		AndFilter currentUserConfirmedGroupOwnerFilter = new AndFilter();
-		currentUserConfirmedGroupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
-		currentUserConfirmedGroupOwnerFilter.and(new EqualsFilter("owner", currentUserDn.toString() ));
-		
-		List<Group> currentUserConfirmedGroups = ldapTemplate.search( "ou=confirmedfriends,ou=groups,o=quoddy", currentUserConfirmedGroupOwnerFilter.encode(),
-				 new GroupAttributeMapper(ldapTemplate));
-		
-		Group currentUserConfirmedFriendsGroup = currentUserConfirmedGroups.get(0);
-		
-		Name currentUserConfirmedFriendsGroupDn = GroupBuilder.buildConfirmedFriendsGroupDn( currentUserConfirmedFriendsGroup, , "o=quoddy" );
-		println "currentUserConfirmedFriendsGroupDn: ${currentUserConfirmedFriendsGroupDn}";
-		
-		// add a new uniquemember attribute with the dn of newFriend
-		Attribute currentUserConfirmedAttr = new BasicAttribute("uniquemember");
-		currentUserConfirmedAttr.add( newFriendDn.toString() );
-		
-		// create a modificationitem and update the attributes to add the new
-		// uniquemember attribute...
-		ModificationItem currentUserConfirmedItem = new ModificationItem(DirContext.ADD_ATTRIBUTE, currentUserConfirmedAttr);
-		
-		println "calling modifyAttributes";
-		ldapTemplate.modifyAttributes(currentUserConfirmedFriendsGroupDn, [currentUserConfirmedItem] as ModificationItem[] );
-		
-		
-		// search for the group in the confirmedFriends tree, with newFriend as the owner
-		AndFilter newFriendConfirmedGroupOwnerFilter = new AndFilter();
-		newFriendConfirmedGroupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
-		newFriendConfirmedGroupOwnerFilter.and(new EqualsFilter("owner", newFriendDn.toString() ));
-		
-		List<Group> newFriendConfirmedGroups = ldapTemplate.search( "ou=confirmedfriends,ou=groups,o=quoddy", newFriendConfirmedGroupOwnerFilter.encode(),
-				 new GroupAttributeMapper(ldapTemplate));
-		
-		Group newFriendConfirmedFriendsGroup = newFriendConfirmedGroups.get(0);
-		
-		Name newFriendConfirmedFriendsGroupDn = GroupBuilder.buildConfirmedFriendsGroupDn( newFriendConfirmedFriendsGroup, , "o=quoddy" );
-		println "newFriendConfirmedFriendsGroupDn: ${newFriendConfirmedFriendsGroupDn}";
-		
-		// add a new uniquemember attribute with the dn of currentUser
-		Attribute newFriendConfirmedAttr = new BasicAttribute("uniquemember");
-		newFriendConfirmedAttr.add( currentUserDn.toString() );
-		
-		// create a modificationitem and update the attributes to add the new
-		// uniquemember attribute...
-		ModificationItem newFriendConfirmedItem = new ModificationItem(DirContext.ADD_ATTRIBUTE, newFriendConfirmedAttr);
-		
-		println "calling modifyAttributes";
-		ldapTemplate.modifyAttributes(newFriendConfirmedFriendsGroupDn, [newFriendConfirmedItem] as ModificationItem[] );
+		friendService.confirmFriend( currentUser, newFriend );
 		
 	}
 	
 	public void addToFriends( User currentUser, User newFriend )
 	{
-		
-		println "UserService.addTofriends: ${currentUser.userId} / ${newFriend.userId}";
-		
-		// get the dn of the destination user
-		Name newFriendDn = PersonBuilder.buildDn( copyUserToPerson(newFriend), "o=quoddy" );
-		
-		String dnString = newFriendDn.toString();
-		println "dnString: ${dnString}";
-		
-		// search for the group in the unconfirmedfriends tree, with that user as the owner
-		AndFilter groupOwnerFilter = new AndFilter();
-		groupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
-		groupOwnerFilter.and(new EqualsFilter("owner", dnString));
-		
-		List<Group> groups = ldapTemplate.search( "ou=unconfirmedfriends,ou=groups,o=quoddy", groupOwnerFilter.encode(),
-				 new GroupAttributeMapper(ldapTemplate));
-		
-		Group friendsGroup = groups.get(0);
-		
-		Name friendsGroupDn = GroupBuilder.buildUnconfirmedFriendsGroupDn( friendsGroup, , "o=quoddy" );
-		println "friendsGroupDn: ${friendsGroupDn}";
-		
-		// add a new uniquemember attribute with the dn of the currentuser
-		Attribute attr = new BasicAttribute("uniquemember");
-		String name = PersonBuilder.buildDn( copyUserToPerson(currentUser), "o=quoddy").toString();
-		println "name: ${name}";
-		attr.add( name );
-		
-		// create a modificationitem and update the attributes to add the new
-		// uniquemember attribute...
-		ModificationItem item = new ModificationItem(DirContext.ADD_ATTRIBUTE, attr);
-		
-		println "calling modifyAttributes";
-		ldapTemplate.modifyAttributes(friendsGroupDn, [item] as ModificationItem[] );
-		
+		friendService.addToFriends( currentUser, newFriend );
 	}
 		
 	public List<User> findAllUsers() 
 	{
-		List<LDAPPerson> persons = null;
-		try {
-		
-			AndFilter memberFilter = new AndFilter();
-			memberFilter.and(new EqualsFilter("objectclass", "person"));
-			
-			persons = ldapTemplate.search("ou=people,o=quoddy", memberFilter.encode(),
-					 new PersonAttributeMapper());
-			
+		List<User> users = new ArrayList<User>();
+		List<User> temp = User.findAll();
+		if( temp )
+		{
+			users.addAll( temp );	
 		}
-		catch( NameNotFoundException e )
-		{
-			throw new RuntimeException( e );
-		}	
-		
-		
-		List<User> allUsers = new ArrayList<User>();
-		if( persons != null && persons.size() > 0 )
-		{
-			for( LDAPPerson person : persons )
-			{
-				User user = User.findByUserId( person.uid );
-				user = copyPersonToUser( person, user );	
-				allUsers.add( user );	
-			}	
-		}	
-		
-		
-		return allUsers;
+	
+		return users;	
 	}
 
 	public List<User> listFriends( User user ) 
 	{
 		List<User> friends = new ArrayList<User>();
-		
-		LDAPPerson p = copyUserToPerson( user );
-		String dnString = PersonBuilder.buildDn( p, "o=quoddy" );
-		AndFilter groupOwnerFilter = new AndFilter();
-		groupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
-		groupOwnerFilter.and(new EqualsFilter("owner", dnString));
-		
-		List<Group> groups = ldapTemplate.search("ou=confirmedfriends,ou=groups,o=quoddy", groupOwnerFilter.encode(),
-				 new GroupAttributeMapper(ldapTemplate));
-		
-		Group friendsGroup = groups.get(0);
-		
-		List<LDAPPerson> members = friendsGroup.members;
-		for( LDAPPerson person: members ) 
+		List<User> temp = friendService.listFriends( user );
+		if( temp )
 		{
-			println "working with userId: ${person.uid}";
-			User aUser = User.findByUserId( person.uid );
-			println "Found aUser with id = ${aUser.id}";
-			aUser = copyPersonToUser( person, aUser );
-			println "after copy, aUser.id = ${aUser.id}";
-			friends.add( aUser );
+			friends.addAll( temp );
 		}
-		
-		println "returning friends: ${friends}";
-		return friends;
-	}
 	
+		return friends;	
+	}
+		// ---
 	public List<User> listFollowers( User user )
 	{
-		/* list the users who follow the supplied user */	
 		List<User> followers = new ArrayList<User>();
-		
-		// get every follow group where this user is a member of the follow group, then
-		// retrieve the owner ID.
-		LDAPPerson p = copyUserToPerson( user );
-		String dnString = PersonBuilder.buildDn( p, "o=quoddy" );
-		AndFilter groupOwnerFilter = new AndFilter();
-		groupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
-		groupOwnerFilter.and(new EqualsFilter("uniquemember", dnString));
-		
-		System.out.println( "looking for followers of: ${dnString}" );
-		
-		List<Group> groups = ldapTemplate.search( "ou=followgroups,ou=groups,o=quoddy", groupOwnerFilter.encode(),
-				 new GroupAttributeMapper(ldapTemplate));
-		
-		
-		for( Group group : groups )
+		List<User> temp = friendService.listFollowers( user );
+		if( temp )
 		{
-			System.out.println( "Follow Group Owner: " + group.owner );
-			
-			
-			AndFilter memberFilter = new AndFilter();
-			memberFilter.and(new EqualsFilter("objectclass", "person"));
-			String ownerString = group.owner;
-			String[] parts = ownerString.split( "," );
-			String memberCn = parts[0];
-			println "memberCn: ${memberCn}";
-			parts = memberCn.split("=" );
-			memberCn = parts[1];
-			println "memberCn: ${memberCn}";
-			memberFilter.and(new EqualsFilter("cn", memberCn  ));
-			
-			List<LDAPPerson> persons = ldapTemplate.search("ou=people,o=quoddy", memberFilter.encode(),
-					 new PersonAttributeMapper());
-			
-				 
-			if( persons != null && persons.size() > 0 )
-			{
-				println "Found follower";
-				
-				LDAPPerson person = persons.get(0);
-				user = User.findByUserId( person.uid );	
-				user = copyPersonToUser(person, user );
-			
-				followers.add( user );	
-			}	
-			else
-			{
-				println "Ok, this is wonky";	
-			}
+			followers.addAll( temp );
 		}
-		
+	
 		return followers;
 	}
 	
-	/* TODO: load the User object from the db, so we can use it for associations */
 	public List<User> listIFollow( User user )
 	{
 		List<User> iFollow = new ArrayList<User>();
-		
-		LDAPPerson p = copyUserToPerson( user );
-		String dnString = PersonBuilder.buildDn( p, "o=quoddy" );
-		AndFilter groupOwnerFilter = new AndFilter();
-		groupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
-		groupOwnerFilter.and(new EqualsFilter("owner", dnString));
-		
-		List<Group> groups = ldapTemplate.search( "ou=followgroups,ou=groups,o=quoddy", groupOwnerFilter.encode(),
-				 new GroupAttributeMapper(ldapTemplate));
-		
-		Group followGroup = groups.get(0);
-		
-		List<LDAPPerson> members = followGroup.members;
-		for( LDAPPerson person: members ) 
+		List<User> temp = friendService.listIFollow( user );
+		if( temp )
 		{
-
-			User aUser = User.findByUserId( person.uid );
-			aUser = copyPersonToUser( person );
-			iFollow.add( aUser );
+			iFollow.addAll( temp );
 		}
-		
+	
 		return iFollow;
 	}
 	
 	public List<FriendRequest> listOpenFriendRequests( User user )
 	{
-		List<FriendRequest> openFriendRequests = new ArrayList<FriendRequest>();
+		List<FriendRequest> openRequests = new ArrayList<FriendRequest>();
 		
-		LDAPPerson p = copyUserToPerson( user );
-		String dnString = PersonBuilder.buildDn( p, "o=quoddy" );
-		AndFilter groupOwnerFilter = new AndFilter();
-		groupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
-		groupOwnerFilter.and(new EqualsFilter("owner", dnString));
-		
-		List<Group> groups = ldapTemplate.search( "ou=unconfirmedfriends,ou=groups,o=quoddy", groupOwnerFilter.encode(),
-				 new GroupAttributeMapper(ldapTemplate));
-		
-		Group unconfirmedFriendsGroup = groups.get(0);
-		
-		List<LDAPPerson> members = unconfirmedFriendsGroup.members;
-		for( LDAPPerson person: members )
+		List<FriendRequest> temp = friendService.listOpenFriendRequests( user );
+		if( temp )
 		{
-			User unconfirmedFriend = copyPersonToUser( person );
-			FriendRequest friendRequest = new FriendRequest( user, unconfirmedFriend);
-			openFriendRequests.add( friendRequest );
+			openRequests.addAll( temp );	
 		}
 		
-		return openFriendRequests;
-	}
-	
-	
-	public User copyPersonToUser( LDAPPerson person, User user )
-	{
-		println "got user with id: ${user.id}";
-		user.uuid = person.uuid;
-		user.firstName = person.givenName;
-		user.lastName = person.lastName;
-		user.displayName = person.displayName;
-		user.email = person.mail;
-		user.userId = person.uid;
-		user.password = person.userpassword;
-		println "returning user with id: ${user.id}";
-		return user;
-		
-	}
-	
-	public User copyPersonToUser( LDAPPerson person )
-	{
-		User user = new User();
-		user.uuid = person.uuid;
-		user.firstName = person.givenName;
-		user.lastName = person.lastName;
-		user.displayName = person.displayName;
-		user.email = person.mail;
-		user.userId = person.uid;
-		user.password = person.userpassword;
-		
-		return user;
+		return openRequests;
 	}	
-	
-	public LDAPPerson copyUserToPerson( User user )	
-	{
-		LDAPPerson person = new LDAPPerson();
-		person.uuid = user.uuid;
-		person.givenName = user.firstName;
-		person.lastName = user.lastName;
-		person.displayName = user.displayName;
-		person.mail = user.email;
-		person.uid = user.userId;
-		person.userpassword = user.password;
-		person.description = user.bio;
-		
-		return person;	
-	}
-	
 }

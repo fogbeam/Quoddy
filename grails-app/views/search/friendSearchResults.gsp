@@ -1,7 +1,9 @@
 <html>
 	
 	<head>
-		<title>Friend Search Results Go Here</title>
+		<title>Quoddy: Friend Search Results</title>
+		<meta name="layout" content="main" />
+	    <nav:resources />		
 	</head>
 	
 	<body>

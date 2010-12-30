@@ -16,7 +16,7 @@ import sun.misc.BASE64Encoder;
 class LoginController {
 
 	
-	def userService;
+	def loginService;
 	
     def index = { }
     
@@ -27,36 +27,23 @@ class LoginController {
     	
 		User user = null;
 		
-		try {
+
 			
-			user = userService.findUserByUserId( userId );
-		}
-		catch( NameNotFoundException e )
-		{
-			e.printStackTrace();
-		}
+		// do login through login service, which might ultimately be authenticating
+		// against an LDAP backend, a local DB backend, or something else.
+		// NOTE: if we want to allow flexibility in configuring authentication
+		// backends, using JAAS or whatever, how do we manage acquiring the
+		// proper credentials when we don't know all the steps in the auth
+		// process in advance?  We'd need to hand in a Handler that can return
+		// results to the browser (kinda ugly) or get a list of required
+		// credentials in advance, drive the user through any multi-step stuff
+		// then submit the credentials.
 		
-		boolean loginSucceeded = false;
+		user = loginService.doUserLogin( userId, password );
+
+				
 		if( user )
 		{
-			println "found user: ${userId} in LDAP";
-			String md5HashSubmitted = LoginController.digestMd5( password );
-			println "md5HashSubmitted: ${md5HashSubmitted}";
-			if( md5HashSubmitted.equals( user.password ))
-			{
-				loginSucceeded = true;	
-			}
-			else
-			{
-				println "login failed on password match.  "	
-			}
-		}
-		else 
-		{
-		}
-		
-		if( loginSucceeded )
-    	{
     		session.user = user;
     		redirect( controller:'home', action:'index')
     	}
@@ -71,20 +58,4 @@ class LoginController {
     	session.user = null;
     	redirect( uri:'/');
     }
-
-	private static String digestMd5(final String password)
-	{
-		String base64;
-		try
-		{
-			MessageDigest digest = MessageDigest.getInstance("MD5");
-			digest.update(password.getBytes());
-			base64 = new BASE64Encoder().encode(digest.digest());
-		}
-		catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
-		}
-	  
-		return "{MD5}" + base64;
-	}
 }

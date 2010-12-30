@@ -1,6 +1,6 @@
 package org.fogbeam.quoddy
 
-class LDAPPersonService 
+class ProfileService 
 {
-
+	
 }

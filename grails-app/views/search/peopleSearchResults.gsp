@@ -1,14 +1,14 @@
 <html>
 	
 	<head>
-		<title>Quoddy: People I Follow Search Results</title>
+		<title>Quoddy: People Search Results</title>
 		<meta name="layout" content="main" />
-	    <nav:resources />		
+	     <nav:resources />		
 	</head>
 	
 	<body>
 		<p />
-		Matching People I Follow:
+		Matching People:
 		<p />
 		<ul>
 			<g:each in="${allUsers}" var="user">

@@ -1,5 +1,7 @@
 package org.fogbeam.quoddy
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
+
 class UserController {
 
 	def userService;
@@ -27,10 +29,16 @@ class UserController {
     def registerUser = 
 	{ UserRegistrationCommand urc ->
     
+		if( CH.config.enable.self.registration != true )
+		{
+			redirect( controller:'home', action:'index')
+			return;
+		}
+		
 	    if( urc.hasErrors() )
         {
                 flash.user = urc;
-                redirect( action:"register2" );
+                redirect( action:"create" );
         }
         else
         {
@@ -175,9 +183,20 @@ class UserController {
 	}
 	
 	def create = 
-	{
+	{   
+		println "enable self reg? "
+		println CH.config.enable.self.registration;
 		
-		[]	
+		if( CH.config.enable.self.registration != true )
+		{
+			println "self registration is disabled";
+			// if self registration isn't turned on, just bounce to the front-page here
+			redirect( controller:'home', action:'index')
+		}
+		else
+		{
+			render(view:'create' );
+		}
 	}
 
 	def list = 

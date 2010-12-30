@@ -20,12 +20,16 @@ import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.Version 
 import org.fogbeam.quoddy.User;
 
-class SearchController {
+class SearchController 
+{
 
 	def userService;
 	
-	def index = {
-			
+	def index = 
+	{
+		println "WTF?";
+		
+		[]		
 	}
 	
 	
@@ -34,7 +38,8 @@ class SearchController {
 		[]	
 	}
 	
-	def searchUsers = {
+	def searchUsers = 
+	{
 	
 		// search users using supplied parameters and return the
 		// model for rendering...				
@@ -68,11 +73,54 @@ class SearchController {
 		render( view:'userSearchResults', model:[allUsers:users]);
 	}
 
-	def searchIFollow = {
+	def searchIFollow = 
+	{
 		
 	}
 	
-	def doIFollowSearch = {
+	def doPeopleSearch =
+	{
+		
+		// search users using supplied parameters and return the
+		// model for rendering...
+		String queryString = params.queryString;
+		println "searching People, queryString: ${queryString}";
+				
+		
+		File indexDir = new File( "/development/lucene_indexes/quoddy/person_index" );
+		Directory fsDir = FSDirectory.open( indexDir );
+		
+		IndexSearcher searcher = new IndexSearcher( fsDir );
+
+		BooleanQuery outerQuery = new BooleanQuery();
+		
+		QueryParser queryParser = new QueryParser(Version.LUCENE_30, "fullName", new StandardAnalyzer(Version.LUCENE_30));
+		Query userQuery = queryParser.parse(queryString);
+		
+		TopDocs hits = searcher.search( userQuery, 20);
+		
+		def users = new ArrayList<User>();
+		ScoreDoc[] docs = hits.scoreDocs;
+		for( ScoreDoc doc : docs )
+		{
+			Document result = searcher.doc( doc.doc );
+			String userId = result.get("userId")
+			println( userId + " " + result.get("fullName"));
+		
+			users.add( userService.findUserByUserId(userId));
+		
+		}
+		
+		println "found some users: ${users.size()}";
+		
+		
+		println "done"
+		render( view:'peopleSearchResults', model:[allUsers:users]);
+		
+	}
+	
+	def doIFollowSearch = 
+	{
 		
 		println "Searching IFollow";
 		
@@ -141,7 +189,11 @@ class SearchController {
 	def searchFriends = {
 	
 	}
+
+	def searchPeople = {
 	
+	}
+		
 	def doFriendSearch = {
 		println "Searching Friends";	
 		
@@ -212,7 +264,7 @@ class SearchController {
 		
 		// build the search index using Lucene
 		List<User> users = userService.findAllUsers();
-		
+		println "reindexing ${users.size()} users";
 		Directory indexDir = new NIOFSDirectory( new java.io.File( "/development/lucene_indexes/quoddy/person_index" ) );
 		IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.LIMITED);
 		writer.setUseCompoundFile(false);		
@@ -253,6 +305,9 @@ class SearchController {
 		
 		writer.optimize();
 		writer.close();		
+		
+		println "done";
+		render( "<html><head><title>Index Rebuilt</head><body><h1>Index Rebuilt</h1></body></html>" );
 		
 	}
 }
