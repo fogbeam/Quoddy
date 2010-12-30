@@ -27,6 +27,7 @@ beans = {
 			break;
 		
 		default:
+		
 			// ???
 			break;
 	}
@@ -44,8 +45,37 @@ beans = {
 			break;
 		
 		default:
+		
 			// ???
 			break;
 	}
+
+	// define userService and toggle the accountService we pass in, based on the
+	// value of 'created.accounts.backingStore'	
+	switch( CH.config.created.accounts.backingStore )
+	{
+		case "ldap":
+			accountService(org.fogbeam.quoddy.LdapPersonService){
+				ldapTemplate = ref("ldapTemplate")
+			}
+			break;
+			
+		case "localdb":
+			accountService(org.fogbeam.quoddy.LocalAccountService)
+			break;
+			
+		default:
 		
+			// ???
+			break;
+	}
+	
+	userService(org.fogbeam.quoddy.UserService)
+	{
+		accountService = ref("accountService" )
+		friendService = ref( "friendService" )
+		groupService = ref( "groupService" )
+	}
+	
+	
 }

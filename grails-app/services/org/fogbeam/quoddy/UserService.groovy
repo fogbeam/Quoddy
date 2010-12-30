@@ -2,23 +2,9 @@ package org.fogbeam.quoddy;
 
 import java.util.List;
 
-import javax.naming.directory.Attribute;
-import javax.naming.directory.BasicAttribute;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.ModificationItem;
 
-import javax.naming.Name;
 
 import org.fogbeam.quoddy.User;
-import org.fogbeam.quoddy.ldap.Group 
-import org.fogbeam.quoddy.ldap.GroupAttributeMapper 
-import org.fogbeam.quoddy.ldap.GroupBuilder 
-import org.fogbeam.quoddy.ldap.LDAPPerson 
-import org.fogbeam.quoddy.ldap.PersonAttributeMapper 
-import org.fogbeam.quoddy.ldap.PersonBuilder 
-import org.springframework.ldap.filter.AndFilter;
-import org.springframework.ldap.filter.EqualsFilter 
-import org.springframework.ldap.NameNotFoundException;
 
 class UserService {
 
@@ -31,11 +17,6 @@ class UserService {
 	
 	// and again...  when finished, this will either be LdapPersonService or LocalAccountService, but we don't care.
 	def accountService;
-	
-	// for now, we'll keep a direct reference to ldapPersonService for creating users to test some stuff that
-	// might break due to other changes.  This has to be taken out once the split between LDAP / Local Accounts
-	// is finished and everything on the LocalAccount side is finished
-	def ldapPersonService;
 	
 	public User findUserByUserId( String userId )
 	{
@@ -52,8 +33,8 @@ class UserService {
 		*/
 		if( user.save() )
 		{
-			// accountService.createUser( user );
-			ldapPersonService.createUser( user );
+			accountService.createUser( user );
+			// ldapPersonService.createUser( user );
 		}
 		else
 		{

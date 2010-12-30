@@ -1,3 +1,4 @@
+
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts
 
@@ -30,10 +31,13 @@ else
 {
 	println "No external configuration file defined."
 }
-
+ 
+// backingStore options: "ldap" or "localdb"
 friends.backingStore="ldap";
 groups.backingStore="ldap";
 enable.self.registration=true;
+created.accounts.backingStore="ldap";
+
 
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
