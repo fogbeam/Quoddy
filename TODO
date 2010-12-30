@@ -1,9 +1,4 @@
-Integrate Shindig
-
-Get rid of the Person / User dichotomy brought over by the prototype LDAP code?
-  Note: or, rename Person to LDAPAccount (or something similar), and keep that around as
-  a representation of the LDAP stuff, and return to the notion of a User as our DB level object, where
-  a User can be backed by a LDAPAccount, LocalDBAccount, etc.
+Fix problem with status updates showing up for the wrong user
 
 Implement minimal profiles
 
@@ -13,12 +8,21 @@ Start on Admin console
 
 And the "installer" module
 
----
-
 Sort out the beginnings of the messaging stuff for dealing with events, activity stream, etc.
+
+Investigate using FlockDB for the social-graph stuff
+
+---
+Move beyond naive Shindig integration: tie into our backend services for social-graph, etc.
 
 Get rid of all the hard-coded strings in the new LDAP code (base DN crap, etc.)
 
 Deal with failure to connect to LDAP on startup
 
 Put in an OpenSessionInView filter, so we can use domain classes that do lazy loading in the view layer
+
+Make a screencast illustrating basic usage.
+
+Post some more screenshots to the blog.
+
+Start to spiffy up the UI with AJAXy goodness, and rework the design to be a little cleaner.
