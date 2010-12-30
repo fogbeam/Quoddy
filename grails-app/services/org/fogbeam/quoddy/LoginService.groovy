@@ -30,7 +30,7 @@ class LoginService
 				println "login successful";
 				
 				// now find a User that matches this account
-				user = userService.findUserByUserId( account.userName );
+				user = userService.findUserByUserId( account.username );
 				
 			}
 			else
