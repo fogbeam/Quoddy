@@ -1,5 +1,7 @@
 Fix problem with status updates showing up for the wrong user
 
+Rework the "friends/followers" stuff in terms of the LocalAccount model
+
 Implement minimal profiles
 
 Implement Groups
