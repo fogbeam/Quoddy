@@ -21,13 +21,12 @@ class User {
 		dateCreated()
     }
 
-    
     String uuid;
     String userId;
     Date dateCreated;
     Profile profile;
-    StatusUpdate currentStatus;
-    
+    StatusUpdate currentStatus;	
+	
 	/* stuff objects of this class "carry around" but aren't persisted as part of the object. 
 	 * This stuff is pulled in from an external source, like, say, LDAP. */
 	String password;
@@ -38,7 +37,7 @@ class User {
 	// String fullName;
 	String bio;
 	String email;
-	static transients = [ "password", "homepage", "displayName", "bio" ]
+	static transients = [ "password", "homepage", "displayName", "bio",  ]
 	
 	
     static mapping = {
