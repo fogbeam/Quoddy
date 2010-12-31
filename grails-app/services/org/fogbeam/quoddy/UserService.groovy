@@ -38,8 +38,9 @@ class UserService {
 		}
 		else
 		{
-			throw new RuntimeException( "couldn't create User record for user: ${user.userId}" );
 			user.errors.allErrors.each { println it };
+			throw new RuntimeException( "couldn't create User record for user: ${user.userId}" );
+			
 		}
 		
 	}
