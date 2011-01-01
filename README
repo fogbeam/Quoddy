@@ -28,6 +28,11 @@ will allow a Quoddy instance to host any valid OpenSocial application.
 
 How to build & run Quoddy?
 
+(IMPORTANT NOTE: This is under very heavy development, is very much "pre-alpha" and is nowhere near
+ready to use for anything.  It does (usually) build, compile and run and there is useful functionality
+implement (or partly implemented).  But the only real reason to run this now is if you're interested in
+hacking on it.  If you're looking for something "ready to deploy," well... we're not there yet. Sorry) 
+
 First, you'll need Grails (and associated dependencies, such as a JVM) installed and
 working.  If you can run the 'grails' command from the command line, you are ready to go.
 Quoddy is currently based on Grails 1.3.3; making it work with different versions may take
