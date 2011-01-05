@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Fix problem with status updates showing up for the wrong user
+=======
+LDAP User import
+>>>>>>> master
 
 Implement minimal profiles
 
