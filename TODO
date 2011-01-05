@@ -1,8 +1,8 @@
-
 Fix problem with status updates showing up for the wrong user
 
-
 Implement minimal profiles
+
+LDAP User import
 
 Implement Groups
 
