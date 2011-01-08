@@ -12,8 +12,20 @@ beans = {
 		password="secret"
 	}   
 
+	// the LDAP server we use if we're using LDAP as the backing store for
+	// accounts
 	ldapTemplate(org.springframework.ldap.core.LdapTemplate, ref("contextSource"))
-
+	
+	// for looking up LDAP users in "import" mode.  NOTE: this whole deal needs
+	// a lot of reworking & rethinking to deal with all the different potential
+	// configurations... is LDAP a "read only" service being used only as an authSource?
+	// Or do we create accounts in LDAP?  Is there one LDAP server or two (or more)?
+	// etc...  for now we're assuming the simple case just to get stuff up and running, but
+	// this could get complicated.
+	ldapPersonService(org.fogbeam.quoddy.LdapPersonService){
+				ldapTemplate = ref("ldapTemplate")
+			}
+	
 	switch( CH.config.friends.backingStore )
 	{
 		case "ldap":

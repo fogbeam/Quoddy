@@ -44,7 +44,18 @@ class UserService {
 		}
 		
 	}
-	
+
+	public void importUser( User user )
+	{
+		// this is a User with an external authSource, so all we create is the entry in the uzer table
+		// we don't create an account here.
+		if( !user.save() )
+		{
+			user.errors.allErrors.each { println it };
+			throw new RuntimeException( "couldn't create User record for user: ${user.userId}" );
+		}	
+	}
+		
 	public User updateUser( User user )
 	{
 		throw new RuntimeException( "not implemented yet" );

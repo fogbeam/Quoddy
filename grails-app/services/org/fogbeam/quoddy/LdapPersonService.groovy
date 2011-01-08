@@ -42,6 +42,28 @@ class LdapPersonService
 		return person;
 	}
 	
+	public LDAPPerson findPersonByCn( final String cn )
+	{
+		
+		LDAPPerson person = null;
+		
+		AndFilter memberFilter = new AndFilter();
+		memberFilter.and(new EqualsFilter("objectclass", "person"));
+		memberFilter.and(new EqualsFilter("cn", cn ));
+		
+		List<LDAPPerson> persons = ldapTemplate.search("ou=people,o=quoddy", memberFilter.encode(),
+				 new PersonAttributeMapper());
+		
+			 
+		if( persons != null && persons.size() > 0 )
+		{
+			person = persons.get(0);
+		}
+		
+		return person;
+	}
+	
+	
 	public void createUser( User user )
 	{		
 		LDAPPerson person = copyUserToPerson( user );
@@ -157,50 +179,5 @@ class LdapPersonService
 		person.description = user.bio;
 		
 		return person;
-	}
-
-	/* This is from before, when we were basically assuming that the LDAP store was more or
-	 * less the canonical representation of users in the system.  Now we're looking at the internal
-	 * user table as the main listing of users, and LDAP is just another backing source for authentication
-	 * and (possibly) profile/group information.  But if they don't exist in the uzer table, they aren't
-	 * a user.  So commenting this out until we can see if any of this needs to be salvaged for some
-	 * other purpose.  If this is still here in 30 days, delete it.  SPR 12-29-2010 
-	 **/
-	 /*
-	public List<User> findAllUsers()
-	{
-		List<LDAPPerson> persons = null;
-		try {
-		
-			AndFilter memberFilter = new AndFilter();
-			memberFilter.and(new EqualsFilter("objectclass", "person"));
-			
-			persons = ldapTemplate.search("ou=people,o=quoddy", memberFilter.encode(),
-					 new PersonAttributeMapper());
-			
-		}
-		catch( NameNotFoundException e )
-		{
-			throw new RuntimeException( e );
-		}
-		
-		
-		List<User> allUsers = new ArrayList<User>();
-		if( persons != null && persons.size() > 0 )
-		{
-			for( LDAPPerson person : persons )
-			{
-				User user = User.findByUserId( person.uid );
-				user = copyPersonToUser( person, user );
-				allUsers.add( user );
-			}
-		}
-		
-		
-		return allUsers;
-	}
-	
-	
-	  */
-	
+	}	
 }

@@ -31,20 +31,19 @@ else
 {
 	println "No external configuration file defined."
 }
- 
+
+
 // backingStore options: "ldap" or "localdb"
 // for now, assume they have to change in tandem: all "ldap" or all "localdb"
 // we're not yet - if ever - interested in any really bizarre hybrid scenarios on this
+
 friends.backingStore="localdb";
 groups.backingStore="localdb";
 enable.self.registration=true;
 created.accounts.backingStore="localdb";
-
-// TODO: parameters for "is ldap authentication enabled" 
+// TODO: parameters for "is ldap authentication enabled"
 // and "is local account authentication enabled" etc.
-
-
-
+ 
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
