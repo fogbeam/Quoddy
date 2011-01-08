@@ -1,12 +1,18 @@
-Implement minimal profiles
+Implement minimal profiles (bug #40)
 
-LDAP User import
+Implement Groups (user associations) (bug #41)
 
-Implement Groups
+Build first cut of the Admin console (bug #43) 
 
-Start on Admin console
+Build first cut of the "installer" module (bug #42)
 
-And the "installer" module
+Get rid of all the hard-coded strings in the new LDAP code (base DN crap, etc.)
+
+Deal with failure to connect to LDAP on startup
+
+Put in an OpenSessionInView filter, so we can use domain classes that do lazy loading in the view layer
+
+---
 
 Sort out the beginnings of the messaging stuff for dealing with events, activity stream, etc.
  (have to deal with federation issues, so we can receive events from Neddick and other 3rd
@@ -21,12 +27,6 @@ just layer on top of existing (email?) infrastructure?
 
 ---
 Move beyond naive Shindig integration: tie into our backend services for social-graph, etc.
-
-Get rid of all the hard-coded strings in the new LDAP code (base DN crap, etc.)
-
-Deal with failure to connect to LDAP on startup
-
-Put in an OpenSessionInView filter, so we can use domain classes that do lazy loading in the view layer
 
 Make a screencast illustrating basic usage.
 
