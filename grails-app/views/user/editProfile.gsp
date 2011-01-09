@@ -18,9 +18,13 @@
 
              <g:form action="saveProfile">
              
-             	<g:hiddenField name="uuid" value="${user?.uuid}" />
+             	<g:hiddenField name="uuid" value="${userToEdit?.uuid}" />
                  <dl>
-                     <dt><g:submitButton name="saveProfile" value="Save"/></dt>
+                 	
+                 	<dt>Summary:</dt>
+                 	<dd><g:textField name="summary" value="${userToEdit?.profile?.summary}" /></dd>
+                    <dt>&nbsp;</dt>
+                    <dd><g:submitButton name="saveProfile" value="Save"/></dd>
                  </dl>
 
              </g:form>

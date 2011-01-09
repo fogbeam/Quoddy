@@ -5,6 +5,7 @@ import java.util.List;
 
 
 import org.fogbeam.quoddy.User;
+import org.fogbeam.quoddy.profile.Profile 
 
 class UserService {
 
@@ -25,12 +26,25 @@ class UserService {
 		return user;
 	}	
 	
+	public User findUserByUuid( final String uuid )
+	{
+		User user = User.findByUuid( uuid );
+		
+		return user;
+			
+	}
+	
 	public void createUser( User user ) 
 	{
 		
 		/* save the user into the uzer table, we need that for associations with other
 		* "system things"
 		*/
+		if( user.profile == null )
+		{
+			user.profile = new Profile();	
+		}
+		
 		if( user.save() )
 		{
 			accountService.createUser( user );
@@ -49,6 +63,12 @@ class UserService {
 	{
 		// this is a User with an external authSource, so all we create is the entry in the uzer table
 		// we don't create an account here.
+		
+		if( user.profile == null )
+		{
+			user.profile = new Profile();
+		}
+		
 		if( !user.save() )
 		{
 			user.errors.allErrors.each { println it };
