@@ -1,10 +1,12 @@
 package org.fogbeam.quoddy
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
+import org.fogbeam.quoddy.profile.Profile 
 
 class UserController {
 
 	def userService;
+	def profileService;
 	def scaffold = true;
 
 	def viewUser = 
@@ -210,7 +212,33 @@ class UserController {
 	
 	def editProfile = 
 	{
+		String userId;
+		if( session.user )
+		{
+			userId = session.user.userId;
+		}
+		else
+		{
+			// error, must be logged in to do this...	
+		}
 		
+		User user = userService.findUserByUserId( userId );
+		
+		[userToEdit:user];
+	}
+	
+	def saveProfile =
+	{
+		
+		String uuid = params.uuid;
+		User user = userService.findUserByUuid( uuid );
+		Profile profile = user.profile;
+		
+		profile.summary = params.summary;
+		
+		profileService.updateProfile( profile );
+		
+		redirect(controller:"user",action:"viewUser", params:[userId:user.userId]);
 	}
 	
 	def editAccount = 
