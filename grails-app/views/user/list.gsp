@@ -16,11 +16,11 @@
 	   </g:if>
 
 		<ul>
-			<g:each in="${users}" var="user">
+			<g:each in="${users}" var="aUser">
 			
 				<!-- display discrete entries here -->
 				<li>
-					<g:link controller="user" action="viewUser" params="[userId:user.userId]">${user.fullName}</g:link>
+					<g:link controller="user" action="viewUser" params="[userId:aUser.userId]"> ${aUser.fullName} </g:link>
 				</li>
 			</g:each>
 		</ul>

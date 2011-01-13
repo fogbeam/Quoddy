@@ -33,18 +33,13 @@ ready to use for anything.  It does (usually) build, compile and run and there i
 implement (or partly implemented).  But the only real reason to run this now is if you're interested in
 hacking on it.  If you're looking for something "ready to deploy," well... we're not there yet. Sorry) 
 
-First, you'll need Grails (and associated dependencies, such as a JVM) installed and
+First, you'll need Groovy and Grails (and associated dependencies, such as a JVM) installed and
 working.  If you can run the 'grails' command from the command line, you are ready to go.
-Quoddy is currently based on Grails 1.3.3; making it work with different versions may take
-some effort.
+Quoddy is currently based on Grails 1.3.6; making it work with different versions may take
+some effort.  We develop with the latest version of Groovy (1.7.6 at the moment.)
 
-Next, you'll need an LDAP server installed and running.  We've only tested against
-ApacheDS so far.  
-
-##TODO: finish the bit about configuring LDAP.
-
-(IMPORTANT NOTE: LDAP won't always be mandatory.  Once "local accounts" support is finished, any
-use of LDAP will be completely optional.)
+(IMPORTANT NOTE: an LDAP server is no longer required to run Quoddy.  LDAP support for Users is
+strictly optional.)
 
 There are currently no binary distributions, so you'll have to get the code from source control.  The most direct
 route is to do a 'git clone' on the Quoddy repository on Github.  
@@ -60,3 +55,5 @@ http://localhost:8080/ and you should get the Quoddy homepage.
 
 You can login as testuser1 with a password of 'secret', or you can modify Bootstrap.groovy to create
 different default users.
+
+For help, see the screwpile-dev Google Group, or check #screwpile on Freenode.net IRC.
