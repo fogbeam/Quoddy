@@ -204,9 +204,11 @@ class UserController {
 	def list = 
 	{
 	
-		List<User> users = userService.findAllUsers();
+		List<User> allusers = userService.findAllUsers();
 		
-		[users:users];
+		println "Found ${allusers.size()} users\n";
+		
+		[users:allusers];
 	}
 		
 	
