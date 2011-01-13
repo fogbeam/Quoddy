@@ -7,6 +7,8 @@
 	<classpathentry kind="src" path="grails-app/services"/>
 	<classpathentry kind="src" path="grails-app/ldap"/>
 	<classpathentry kind="src" path="grails-app/shindig"/>
+	<classpathentry kind="src" path="test/unit"/>
+	<classpathentry kind="src" path="test/integration"/>
 	<classpathentry kind="lib" path="lib/activation.jar"/>
 	<classpathentry kind="lib" path="lib/commons-math-2.1.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-core-3.0.1.jar"/>

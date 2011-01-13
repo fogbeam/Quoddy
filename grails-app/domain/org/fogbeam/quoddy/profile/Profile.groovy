@@ -84,6 +84,6 @@ class Profile {
 					organizations:OrganizationAssociation, employmentHistory:HistoricalEmployer, \
 					educationHistory:EducationalExperience, links:String, contactAddresses:String, favorites: Favorite ];
 	
-	static belongsTo = [owner:User];
-				
+	static belongsTo = [owner:User];	
+					
 }

@@ -23,6 +23,41 @@
                  	
                  	<dt>Summary:</dt>
                  	<dd><g:textField name="summary" value="${userToEdit?.profile?.summary}" /></dd>
+                    <dt>Birthday (mm/dd/yyyy)</dt>
+                    <dd>
+ 	                   	<g:textField name="birthDayOfMonth" value="${userToEdit?.profile?.birthDayOfMonth}" />
+    	               	<g:textField name="birthMonth" value="${userToEdit?.profile?.birthMonth}" />
+        	            <g:textField name="birthYear" value="${userToEdit?.profile?.birthYear}" />
+                    </dd>
+                    <dt>Sex</dt>
+                    <dd><g:textField name="sex" value="${userToEdit?.profile?.sex}" /></dd>
+                    
+                    <!--  other fields -->
+                    <dt>Location:</dt>
+                    <dd>&nbsp;</dd>
+                    <dt>Hometown:</dt>
+                    <dd>&nbsp;</dd>
+                    <dt>Languages:</dt>
+                    <dd>&nbsp;</dd>
+                    <dt>Interests:</dt>
+                    <dd>&nbsp;</dd>
+                    <dt>Skills:</dt>
+                    <dd>&nbsp;</dd>
+                    <dt>Groups & Organizations</dt>
+                    <dd>&nbsp;</dd>
+                    <dt>Employment History</dt>
+                    <dd>&nbsp;</dd>
+                    <dt>Educational Hisotry</dt>
+                    <dd>&nbsp;</dd>
+                    <dt>Contact Addresses:</dt>
+                    <dd>&nbsp;</dd>
+                    <dt>Favorites:</dt>
+                    <dd></dd>
+                    <dt>Projects:</dt>
+                    <dd>&nbsp;</dd>
+                    
+                    
+                    
                     <dt>&nbsp;</dt>
                     <dd><g:submitButton name="saveProfile" value="Save"/></dd>
                  </dl>

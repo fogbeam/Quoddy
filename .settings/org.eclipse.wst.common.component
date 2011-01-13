@@ -4,5 +4,7 @@
         <wb-resource deploy-path="/" source-path="/grails-app/shindig"/>
         <wb-resource deploy-path="/" source-path="/grails-app/src"/>
         <wb-resource deploy-path="/" source-path="/grails-app/listeners"/>
+        <wb-resource deploy-path="/" source-path="/test/unit"/>
+        <wb-resource deploy-path="/" source-path="/test/integration"/>
     </wb-module>
 </project-modules>

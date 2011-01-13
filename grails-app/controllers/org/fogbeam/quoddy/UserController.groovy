@@ -234,11 +234,18 @@ class UserController {
 		User user = userService.findUserByUuid( uuid );
 		Profile profile = user.profile;
 		
-		profile.summary = params.summary;
+
+		profile.birthMonth = Integer.parseInt( params.birthMonth );
+		profile.birthDayOfMonth = Integer.parseInt( params.birthDayOfMonth );
+		profile.birthYear = Integer.parseInt( params.birthYear );
+		
+		// sex?
+		// TODO: sex
 		
 		profileService.updateProfile( profile );
 		
-		redirect(controller:"user",action:"viewUser", params:[userId:user.userId]);
+		// userHome/index/prhodes
+		redirect(controller:"userHome",action:"index", params:[id:user.userId]);
 	}
 	
 	def editAccount = 
