@@ -2,12 +2,12 @@
 
 <taglib xmlns="http://java.sun.com/xml/ns/j2ee"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
-    version="2.0">
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+    version="2.1">
     
-  <description>JSTL 1.1 i18n-capable formatting library</description>
+  <description>JSTL 1.2 i18n-capable formatting library</description>
   <display-name>JSTL fmt</display-name>
-  <tlib-version>1.1</tlib-version>
+  <tlib-version>1.2</tlib-version>
   <short-name>fmt</short-name>
   <uri>http://java.sun.com/jsp/jstl/fmt</uri>
 
