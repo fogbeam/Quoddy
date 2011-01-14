@@ -85,5 +85,11 @@ class Profile {
 					educationHistory:EducationalExperience, links:String, contactAddresses:String, favorites: Favorite ];
 	
 	static belongsTo = [owner:User];	
-					
+
+	public String getUserUuid()
+	{
+		return owner?.uuid;	
+	}
+	
+	public void setUserUuid( String userUuid ) {}					
 }

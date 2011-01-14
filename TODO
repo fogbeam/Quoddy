@@ -16,6 +16,10 @@ Put in an OpenSessionInView filter, so we can use domain classes that do lazy lo
 
 ---
 
+Put profile fields into Lucene index
+
+push notice to activity stream when profile changes are made?
+
 Sort out the beginnings of the messaging stuff for dealing with events, activity stream, etc.
  (have to deal with federation issues, so we can receive events from Neddick and other 3rd
  party sources as well)

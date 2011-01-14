@@ -9,6 +9,8 @@ class UserController {
 	def profileService;
 	def scaffold = true;
 
+	def sexOptions = [new SexOption( id:1, text:"Male" ), new SexOption( id:2, text:"Female" ) ];
+	
 	def viewUser = 
 	{
 		
@@ -225,26 +227,56 @@ class UserController {
 		}
 		
 		User user = userService.findUserByUserId( userId );
-		
-		[userToEdit:user];
+		UserProfileCommand upc = new UserProfileCommand(user.profile);
+		[profileToEdit:upc, sexOptions:sexOptions];
 	}
 	
 	def saveProfile =
-	{
+	{ 
+		UserProfileCommand upc ->
 		
-		String uuid = params.uuid;
+		String uuid = upc.userUuid;
+		println "Looking for user by uuid: $uuid";
 		User user = userService.findUserByUuid( uuid );
 		Profile profile = user.profile;
 		
-
-		profile.birthMonth = Integer.parseInt( params.birthMonth );
-		profile.birthDayOfMonth = Integer.parseInt( params.birthDayOfMonth );
-		profile.birthYear = Integer.parseInt( params.birthYear );
+		profile.summary = upc.summary;
+		if( upc.birthMonth )
+		{
+			profile.birthMonth = Integer.parseInt( upc.birthMonth );
+		}
+		if( upc.birthDayOfMonth )
+		{
+			profile.birthDayOfMonth = Integer.parseInt( upc.birthDayOfMonth );
+		}
+		if( upc.birthYear )
+		{
+			profile.birthYear = Integer.parseInt( upc.birthYear );
+		}
 		
-		// sex?
-		// TODO: sex
+		if( upc.sex )
+		{
+			println "sex: ${upc.sex}";
+			profile.sex = Integer.parseInt( upc.sex );
+		}
+				
+		println "location: ${upc.location}";
+		profile.location = upc.location;
+		println "hometown: ${upc.hometown}";
+		profile.hometown = upc.hometown;
 		
-		profileService.updateProfile( profile );
+		
+		try
+		{
+			profileService.updateProfile( profile );
+		}
+		catch( Exception e )
+		{
+			return[profileToEdit:upc ];		
+		}
+		
+		// reload user to get changes?
+		user = userService.findUserByUuid( uuid );
 		
 		// userHome/index/prhodes
 		redirect(controller:"userHome",action:"index", params:[id:user.userId]);
@@ -307,6 +339,46 @@ class UserController {
 	
 }
 
+class UserProfileCommand
+{
+	public UserProfileCommand()
+	{
+		
+	}
+	
+	public UserProfileCommand( Profile profile )
+	{
+		this.userUuid = profile.owner.uuid;		
+		this.sex = profile.sex;
+		this.birthDayOfMonth = profile.birthDayOfMonth;
+		this.birthMonth = profile.birthMonth;
+		this.birthYear = profile.birthYear;
+		this.summary = profile.summary;
+		this.location = profile.location;
+		this.hometown = profile.hometown;
+	}
+	
+	String userUuid;
+	String sex;
+	String birthYear;
+	String birthMonth;
+	String birthDayOfMonth;
+	String summary;
+	String location;
+	String hometown;
+	String languages;
+	String interests;
+	String skills;
+	String groupsOrgs;
+	String employmentHistory;
+	String educationHistory;
+	String links;
+	String contactAddresses;
+	String favorites;
+	String projects;
+			
+}
+
 class UserRegistrationCommand
 {
 	String uuid;
@@ -344,3 +416,8 @@ class UserRegistrationCommand
 	}
 }
 
+class SexOption
+{
+	int id;
+	String text;	
+}
