@@ -1,6 +1,7 @@
 package org.fogbeam.quoddy
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
+import org.fogbeam.quoddy.profile.HistoricalEmployer 
 import org.fogbeam.quoddy.profile.Profile 
 
 class UserController {
@@ -10,6 +11,18 @@ class UserController {
 	def scaffold = true;
 
 	def sexOptions = [new SexOption( id:1, text:"Male" ), new SexOption( id:2, text:"Female" ) ];
+	def months = [ new Month( id:1, text:"January" ),
+				   new Month( id:2, text:"February" ),
+				   new Month( id:3, text:"March" ),
+				   new Month( id:4, text:"April" ),
+				   new Month( id:5, text:"May" ),
+				   new Month( id:6, text:"June" ),
+				   new Month( id:7, text:"July" ),
+				   new Month( id:8, text:"August" ),
+				   new Month( id:9, text:"September" ),
+				   new Month( id:10, text:"October" ),
+				   new Month( id:11, text:"November" ),
+				   new Month( id:12, text:"December" ) ];
 	
 	def viewUser = 
 	{
@@ -228,12 +241,14 @@ class UserController {
 		
 		User user = userService.findUserByUserId( userId );
 		UserProfileCommand upc = new UserProfileCommand(user.profile);
-		[profileToEdit:upc, sexOptions:sexOptions];
+		[profileToEdit:upc, sexOptions:sexOptions, months:months];
 	}
 	
 	def saveProfile =
 	{ 
 		UserProfileCommand upc ->
+		
+		println params;
 		
 		String uuid = upc.userUuid;
 		println "Looking for user by uuid: $uuid";
@@ -264,6 +279,29 @@ class UserController {
 		profile.location = upc.location;
 		println "hometown: ${upc.hometown}";
 		profile.hometown = upc.hometown;
+		
+		String contactAddresses = upc.contactAddresses;
+		// println "contactAddresses: ${contactAddresses}\n";
+		contactAddresses = contactAddresses.replace( "\r\n", ", " );
+		// println "contactAddresses2: ${contactAddresses2}\n";
+		
+		String[] contactAddresses2 = contactAddresses.split( "," );
+		for( String contactAddressStr : contactAddresses2 )
+		{
+			profile.addToContactAddresses( contactAddressStr.trim() );	
+		}
+		
+		
+		def emp1v = params.'employment[1]';
+		println "emp1v: ${emp1v}";
+		HistoricalEmployer emp1 = new HistoricalEmployer( companyName: emp1v.companyName,
+														  monthFrom: emp1v.monthFrom,
+														  yearFrom: emp1v.yearFrom,
+														  monthTo: emp1v.monthTo,
+														  yearTo: emp1v.yearTo,
+														  title: emp1v.title,
+														  description: emp1v.description );
+		profile.addToEmploymentHistory( emp1 );
 		
 		
 		try
@@ -356,6 +394,44 @@ class UserProfileCommand
 		this.summary = profile.summary;
 		this.location = profile.location;
 		this.hometown = profile.hometown;
+		
+		StringBuffer contactAddressBuf = new StringBuffer();
+		// deal with contact addresses...
+		Set<String> contactAddressSet = profile.contactAddresses;
+		if( contactAddressSet )
+		{
+			int contactAddressCount = contactAddressSet.size();
+			println "contactAddressCount: $contactAddressCount";
+			int i = 0;
+			for( String contactAddress : contactAddressSet )
+			{	i++;
+				if( !contactAddress.trim().isEmpty())
+				{
+					println "appending: \"" + contactAddress.trim() + "\"";
+					contactAddressBuf.append( contactAddress.trim() )
+				
+				
+					if( i < contactAddressCount )
+					{
+						contactAddressBuf.append( "\r\n" );
+					}
+				}
+				
+			}
+		
+			this.contactAddresses = contactAddressBuf.toString();	
+		}
+		
+		println "Setting this.employmentHistory to: ${profile.employmentHistory}\n";
+		if( profile.employmentHistory != null && profile.employmentHistory.size() > 0 )
+		{
+			this.employerCount = profile.employmentHistory.size();
+			this.employmentHistory = profile.employmentHistory;
+		}
+		else
+		{
+			this.employerCount = 0;
+		}	
 	}
 	
 	String userUuid;
@@ -370,7 +446,8 @@ class UserProfileCommand
 	String interests;
 	String skills;
 	String groupsOrgs;
-	String employmentHistory;
+	Set<HistoricalEmployer> employmentHistory;
+	Integer employerCount;
 	String educationHistory;
 	String links;
 	String contactAddresses;
@@ -417,6 +494,12 @@ class UserRegistrationCommand
 }
 
 class SexOption
+{
+	int id;
+	String text;	
+}
+
+class Month
 {
 	int id;
 	String text;	
