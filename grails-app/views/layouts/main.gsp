@@ -8,9 +8,11 @@
         <link rel="stylesheet" type="text/css" href="/css/reset-min.css">
         <link rel="stylesheet" type="text/css" href="/css/fonts-min.css">             
         <link rel="stylesheet" type="text/css" href="/css/grids-min.css">
-        
+        <!--  
         <g:javascript library="prototype" /> 
         <g:javascript library="scriptaculous" />
+        -->
+        <g:javascript library="jquery" plugin="jquery"/>
         <g:javascript library="application" />
         
 

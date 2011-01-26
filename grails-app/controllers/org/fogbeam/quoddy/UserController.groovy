@@ -248,7 +248,7 @@ class UserController {
 	{ 
 		UserProfileCommand upc ->
 		
-		println params;
+	// 	println params;
 		
 		String uuid = upc.userUuid;
 		println "Looking for user by uuid: $uuid";
@@ -271,13 +271,13 @@ class UserController {
 		
 		if( upc.sex )
 		{
-			println "sex: ${upc.sex}";
+			// println "sex: ${upc.sex}";
 			profile.sex = Integer.parseInt( upc.sex );
 		}
 				
-		println "location: ${upc.location}";
+		// println "location: ${upc.location}";
 		profile.location = upc.location;
-		println "hometown: ${upc.hometown}";
+		// println "hometown: ${upc.hometown}";
 		profile.hometown = upc.hometown;
 		
 		String contactAddresses = upc.contactAddresses;
@@ -291,18 +291,63 @@ class UserController {
 			profile.addToContactAddresses( contactAddressStr.trim() );	
 		}
 		
-		
-		def emp1v = params.'employment[1]';
-		println "emp1v: ${emp1v}";
-		HistoricalEmployer emp1 = new HistoricalEmployer( companyName: emp1v.companyName,
-														  monthFrom: emp1v.monthFrom,
-														  yearFrom: emp1v.yearFrom,
-														  monthTo: emp1v.monthTo,
-														  yearTo: emp1v.yearTo,
-														  title: emp1v.title,
-														  description: emp1v.description );
-		profile.addToEmploymentHistory( emp1 );
-		
+		Set paramsNames = params.keySet();
+		paramsNames.each { 
+			if( it.startsWith( "employment[" ) && it.endsWith( "]" ))
+			{
+				println it;
+				def emp1v = params.get( it );
+				
+				// is there an ID? Is it valid?  If so, update existing record for profile
+				String histEmpIdStr = emp1v.historicalEmploymentId;
+				Integer histEmpId = Integer.parseInt(histEmpIdStr);
+				
+				println "histEmpId: ${histEmpId}";
+				
+				if( histEmpId > 0 )
+				{
+					// TODO: use a service for this?
+					HistoricalEmployer existingHistEmp = HistoricalEmployer.findById( histEmpId );
+					existingHistEmp.companyName = emp1v.companyName;
+					existingHistEmp.monthTo = emp1v.monthTo;
+					existingHistEmp.monthFrom = emp1v.monthFrom;
+					existingHistEmp.yearTo = emp1v.yearTo;
+					existingHistEmp.yearFrom = emp1v.yearFrom;
+					existingHistEmp.title = emp1v.title;
+					existingHistEmp.description = emp1v.description;
+					
+					if( !existingHistEmp.save() )
+					{
+						println "updating histemp record failed!";	
+					}
+					
+					
+				}
+				// else, create new record and attach to profile
+				else
+				{
+					println "creating new HistoricalEmployer record";
+					println "emp1v: ${emp1v}\n";
+					
+					HistoricalEmployer emp1 = new HistoricalEmployer( companyName: emp1v.companyName,
+																		monthTo: emp1v.monthTo,
+																		monthFrom: emp1v.monthFrom,
+																		yearTo: emp1v.yearTo,
+																		yearFrom: emp1v.yearFrom,
+																		title: emp1v.title,
+																		description: emp1v.description );
+					if( !emp1.save() )
+					{
+						println "Saving new HistoricalEmployer Record failed";
+						emp1.errors.allErrors.each { println it };
+					}
+					
+					profile.addToEmploymentHistory( emp1 );
+					println "added emp1 to profile";
+				}
+			}
+		};
+	
 		
 		try
 		{
