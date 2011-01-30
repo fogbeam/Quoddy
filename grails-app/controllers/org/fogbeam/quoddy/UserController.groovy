@@ -1,8 +1,11 @@
-package org.fogbeam.quoddy
+package org.fogbeam.quoddy;
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
+import java.text.SimpleDateFormat 
+import org.fogbeam.quoddy.profile.ContactAddress 
+import org.fogbeam.quoddy.profile.EducationalExperience 
 import org.fogbeam.quoddy.profile.HistoricalEmployer 
-import org.fogbeam.quoddy.profile.Profile 
+import org.fogbeam.quoddy.profile.Profile;
+
 
 class UserController {
 
@@ -24,6 +27,47 @@ class UserController {
 				   new Month( id:11, text:"November" ),
 				   new Month( id:12, text:"December" ) ];
 	
+	def days = [ new Day( id:1, text:"01"),
+				new Day( id:2, text:"02"),
+				new Day( id:3, text:"03"),
+				new Day( id:4, text:"04"),
+				new Day( id:5, text:"05"),
+				new Day( id:6, text:"06"),
+				new Day( id:7, text:"07"),
+				new Day( id:8, text:"08"),
+				new Day( id:9, text:"09"),
+				new Day( id:10, text:"10"),
+				new Day( id:11, text:"11"),
+				new Day( id:12, text:"12"),
+				new Day( id:13, text:"13"),
+				new Day( id:14, text:"14"),
+				new Day( id:15, text:"15"),
+				new Day( id:16, text:"16"),
+				new Day( id:17, text:"17"),
+				new Day( id:18, text:"18"),
+				new Day( id:19, text:"19"),
+				new Day( id:20, text:"20"),
+				new Day( id:21, text:"21"),
+				new Day( id:22, text:"22"),
+				new Day( id:23, text:"23"),
+				new Day( id:24, text:"24"),
+				new Day( id:25, text:"25"),
+				new Day( id:26, text:"26"),
+				new Day( id:27, text:"27"),
+				new Day( id:28, text:"28"),
+				new Day( id:29, text:"29"),
+				new Day( id:30, text:"30"),
+				new Day( id:31, text:"31")
+			];		   
+		
+	def contactTypes = [ new ContactTypeOption( id: ContactAddress.AOL_IM, text: "AOL IM"),
+						new ContactTypeOption( id: ContactAddress.JABBER_IM, text: "Jabber (XMPP)"),
+						new ContactTypeOption( id: ContactAddress.YAHOO_IM, text: "Yahoo IM"),
+						new ContactTypeOption( id: ContactAddress.MSN_IM, text: "MSN Messenger"),
+						new ContactTypeOption( id: ContactAddress.TWITTER, text: "Twitter"),
+						new ContactTypeOption( id: ContactAddress.EMAIL, text: "Email" )
+			];	
+		   
 	def viewUser = 
 	{
 		
@@ -240,18 +284,22 @@ class UserController {
 		}
 		
 		User user = userService.findUserByUserId( userId );
-		UserProfileCommand upc = new UserProfileCommand(user.profile);
-		[profileToEdit:upc, sexOptions:sexOptions, months:months];
+		UserProfileCommand upc = new UserProfileCommand(user.profile, months );
+		[profileToEdit:upc, sexOptions:sexOptions, months:months, days:days,
+			contactTypes:contactTypes];
 	}
 	
 	def saveProfile =
 	{ 
 		UserProfileCommand upc ->
 		
-	// 	println params;
+		println "params: $params";
+		println "\n";
+		println "upc: $upc";
+		println "\n";
 		
 		String uuid = upc.userUuid;
-		println "Looking for user by uuid: $uuid";
+		// println "Looking for user by uuid: $uuid";
 		User user = userService.findUserByUuid( uuid );
 		Profile profile = user.profile;
 		
@@ -280,39 +328,51 @@ class UserController {
 		// println "hometown: ${upc.hometown}";
 		profile.hometown = upc.hometown;
 		
-		String contactAddresses = upc.contactAddresses;
-		// println "contactAddresses: ${contactAddresses}\n";
-		contactAddresses = contactAddresses.replace( "\r\n", ", " );
-		// println "contactAddresses2: ${contactAddresses2}\n";
-		
-		String[] contactAddresses2 = contactAddresses.split( "," );
-		for( String contactAddressStr : contactAddresses2 )
-		{
-			profile.addToContactAddresses( contactAddressStr.trim() );	
-		}
-		
 		Set paramsNames = params.keySet();
 		paramsNames.each { 
 			if( it.startsWith( "employment[" ) && it.endsWith( "]" ))
 			{
-				println it;
 				def emp1v = params.get( it );
 				
 				// is there an ID? Is it valid?  If so, update existing record for profile
 				String histEmpIdStr = emp1v.historicalEmploymentId;
 				Integer histEmpId = Integer.parseInt(histEmpIdStr);
-				
-				println "histEmpId: ${histEmpId}";
-				
+							
 				if( histEmpId > 0 )
 				{
 					// TODO: use a service for this?
+					String monthTo = null;
+					String monthFrom = null;
+					String yearTo = null;
+					String yearFrom = null;
+					
+					if( emp1v.monthTo && !emp1v.monthTo.isEmpty() )
+					{
+						monthTo = emp1v.monthTo;
+					}
+
+					if( emp1v.monthFrom && !emp1v.monthFrom.isEmpty() )
+					{
+						monthFrom = emp1v.monthFrom;
+					}
+										
+					if( emp1v.yearTo && !emp1v.yearTo.isEmpty() )
+					{
+						yearTo = emp1v.yearTo;
+					}
+
+					if( emp1v.yearFrom && !emp1v.yearFrom.isEmpty() )
+					{
+						yearFrom = emp1v.yearFrom;
+					}
+					
+					
 					HistoricalEmployer existingHistEmp = HistoricalEmployer.findById( histEmpId );
 					existingHistEmp.companyName = emp1v.companyName;
-					existingHistEmp.monthTo = emp1v.monthTo;
-					existingHistEmp.monthFrom = emp1v.monthFrom;
-					existingHistEmp.yearTo = emp1v.yearTo;
-					existingHistEmp.yearFrom = emp1v.yearFrom;
+					existingHistEmp.monthTo = monthTo;
+					existingHistEmp.monthFrom = monthFrom;
+					existingHistEmp.yearTo = yearTo;
+					existingHistEmp.yearFrom = yearFrom;
 					existingHistEmp.title = emp1v.title;
 					existingHistEmp.description = emp1v.description;
 					
@@ -327,13 +387,37 @@ class UserController {
 				else
 				{
 					println "creating new HistoricalEmployer record";
-					println "emp1v: ${emp1v}\n";
+					// println "emp1v: ${emp1v}\n";
+					String monthTo = null;
+					String monthFrom = null;
+					String yearTo = null;
+					String yearFrom = null;
 					
+					if( emp1v.monthTo && !emp1v.monthTo.isEmpty() )
+					{
+						monthTo = emp1v.monthTo;
+					}
+
+					if( emp1v.monthFrom && !emp1v.monthFrom.isEmpty() )
+					{
+						monthFrom = emp1v.monthFrom;
+					}
+										
+					if( emp1v.yearTo && !emp1v.yearTo.isEmpty() )
+					{
+						yearTo = emp1v.yearTo;
+					}
+
+					if( emp1v.yearFrom && !emp1v.yearFrom.isEmpty() )
+					{
+						yearFrom = emp1v.yearFrom;
+					}
+										
 					HistoricalEmployer emp1 = new HistoricalEmployer( companyName: emp1v.companyName,
-																		monthTo: emp1v.monthTo,
-																		monthFrom: emp1v.monthFrom,
-																		yearTo: emp1v.yearTo,
-																		yearFrom: emp1v.yearFrom,
+																		monthTo: monthTo,
+																		monthFrom: monthFrom,
+																		yearTo: yearTo,
+																		yearFrom: yearFrom,
 																		title: emp1v.title,
 																		description: emp1v.description );
 					if( !emp1.save() )
@@ -346,8 +430,104 @@ class UserController {
 					println "added emp1 to profile";
 				}
 			}
-		};
+			else if( it.startsWith( "contactAddress[" ) && it.endsWith( "]" ))
+			{
+				def contactAddress = params.get( it );
+				
+				println contactAddress;
+				
+				// is there an ID? Is it valid?  If so, update existing record for profile
+				String contactAddressIdStr = contactAddress.contactAddressId;
+				Integer contactAddressId = Integer.parseInt(contactAddressIdStr);
+				if( contactAddressId > 0 )
+				{
+					// TODO: use a service for this?
+					ContactAddress existingContactAddress = ContactAddress.findById( contactAddressId );
+					if( contactAddress.serviceType != null )
+					{
+						existingContactAddress.serviceType = Integer.parseInt( contactAddress.serviceType );
+						existingContactAddress.address = contactAddress.address;
+					}
+					
+					if( !existingContactAddress.save() )
+					{
+						println "updating contact address record failed!";
+					}
+					
+					
+				}
+				// else, create new record and attach to profile
+				else
+				{
+					ContactAddress newContactAddress = new ContactAddress( serviceType: Integer.parseInt( contactAddress.type ),
+																			address: contactAddress.address );
+
+					if( !newContactAddress.save() )
+					{
+						println "Saving new ContactAddress Record failed";
+						newContactAddress.errors.allErrors.each { println it };
+					}
+					else
+					{
+						println "newContactAddress saved";	
+					}
+					
+					println "newContactAddress: ${newContactAddress}";
+					
+					profile.addToContactAddresses( newContactAddress );														
+					println "added newContactAddress to profile";
+					
+				}
+			}
+			else if( it.startsWith( "education[" ) && it.endsWith( "]" ))
+			{
+				
+				def educationalHistory = params.get( it );
+				
+				println "\n\neducationalHistory: ${educationalHistory}\n\n";
+								
+				// is there an ID? Is it valid?  If so, update existing record for profile
+				String educationalExperienceIdStr = educationalHistory.educationalExperienceId;
+				Integer educationalExperienceId = Integer.parseInt(educationalExperienceIdStr);
+				if( educationalExperienceId > 0 )
+				{
+					// TODO: use a service for this?
+					EducationalExperience existingEducationalExperience = EducationalExperience.findById( educationalExperienceId );
 	
+					// TODO: update fields
+					existingEducationalExperience.institutionName = educationalHistory.institutionName;
+					
+					if( !existingEducationalExperience.save() )
+					{
+						println "updating educational experience record failed!";
+					}
+					
+					
+				}
+				// else, create new record and attach to profile
+				else
+				{
+					EducationalExperience newEducationalExperience = new EducationalExperience( institutionName: educationalHistory.institutionName );
+
+					if( !newEducationalExperience.save() )
+					{
+						println "Saving new EducationalExperience Record failed";
+						newEducationalExperience.errors.allErrors.each { println it };
+					}
+					else
+					{
+						println "newEducationalExperience saved";
+					}
+					
+					println "newEducationalExperience: ${newEducationalExperience}";
+					
+					profile.addToEducationHistory( newEducationalExperience );
+					println "added newEducationalExperience to profile";
+					
+				}
+			}
+		};
+
 		
 		try
 		{
@@ -429,8 +609,16 @@ class UserProfileCommand
 		
 	}
 	
-	public UserProfileCommand( Profile profile )
+	/* note: work out the validation rules for dates on historical employment stuff.
+	 * If you enter a month for FROM or TO, you must enter a year? If you enter a year,
+	 * you may leave month blank (We'll default to Jan 1 of the year for sorting purposes?)
+	 * If you enter a TO date, you must enter a FROM date.  Again, entering a month requires
+	 * entering a corresponding year, but you can put a year without a month. 
+	 */
+	
+	public UserProfileCommand( Profile profile, List months )
 	{
+		
 		this.userUuid = profile.owner.uuid;		
 		this.sex = profile.sex;
 		this.birthDayOfMonth = profile.birthDayOfMonth;
@@ -439,44 +627,298 @@ class UserProfileCommand
 		this.summary = profile.summary;
 		this.location = profile.location;
 		this.hometown = profile.hometown;
+		this.months = months;
+		this.contactAddresses = new ArrayList<ContactAddress>();
+		this.educationHistory = new ArrayList<EducationalExperience>();
 		
-		StringBuffer contactAddressBuf = new StringBuffer();
 		// deal with contact addresses...
-		Set<String> contactAddressSet = profile.contactAddresses;
+		Set<ContactAddress> contactAddressSet = profile.contactAddresses;
+		
 		if( contactAddressSet )
 		{
-			int contactAddressCount = contactAddressSet.size();
-			println "contactAddressCount: $contactAddressCount";
-			int i = 0;
-			for( String contactAddress : contactAddressSet )
-			{	i++;
-				if( !contactAddress.trim().isEmpty())
-				{
-					println "appending: \"" + contactAddress.trim() + "\"";
-					contactAddressBuf.append( contactAddress.trim() )
-				
-				
-					if( i < contactAddressCount )
-					{
-						contactAddressBuf.append( "\r\n" );
-					}
-				}
-				
-			}
-		
-			this.contactAddresses = contactAddressBuf.toString();	
+			this.contactAddressCount = contactAddressSet.size();
+			this.contactAddresses.addAll( contactAddressSet );
+		}
+		else
+		{
+			this.contactAddressCount = 0;	
 		}
 		
 		println "Setting this.employmentHistory to: ${profile.employmentHistory}\n";
 		if( profile.employmentHistory != null && profile.employmentHistory.size() > 0 )
 		{
 			this.employerCount = profile.employmentHistory.size();
-			this.employmentHistory = profile.employmentHistory;
+			
+			List<HistoricalEmployer> sortedEmploymentHistory = new ArrayList<HistoricalEmployer>();
+			
+			// sort the employment history set
+			
+			sortedEmploymentHistory = profile.employmentHistory.sort { o1, o2 ->
+				
+				println "o1: \n" + o1;
+				println "o2: \n" + o2;
+				
+				String monthTo1;
+				String monthTo2;
+				String monthFrom1;
+				String monthFrom2;
+				String yearTo1;
+				String yearTo2;
+				String yearFrom1;
+				String yearFrom2;
+				
+				if( o1.monthTo != null )
+				{
+					monthTo1 = months.getAt( Integer.parseInt( o1.monthTo ) -1 ).text;
+				}
+				else
+				{
+					monthTo1 = "January";
+				}
+				
+				if( o2.monthTo != null )
+				{
+					monthTo2 = months.getAt( Integer.parseInt( o2.monthTo ) -1 ).text;
+				}
+				else
+				{
+					monthTo2 = "January";
+				}
+				
+				if( o1.monthFrom != null )
+				{
+					monthFrom1 = months.getAt( Integer.parseInt( o1.monthFrom ) -1 ).text;
+				}
+				else
+				{
+					monthFrom1 = "January";
+				}
+				
+				if( o2.monthFrom != null )
+				{
+					monthFrom2 = months.getAt( Integer.parseInt( o2.monthFrom ) -1 ).text;	
+				}
+				else
+				{
+					monthFrom2 = "January";
+				}
+				
+				if( o1.yearTo != null )
+				{
+					yearTo1 = o1.yearTo;
+				}
+				
+				if( o2.yearTo != null )
+				{
+					yearTo2 = o2.yearTo;
+				}
+				
+				if( o1.yearFrom != null )
+				{
+					yearFrom1 = o1.yearFrom;
+				}
+				
+				if( o2.yearFrom != null )
+				{
+					yearFrom2 = o2.yearFrom;
+				}
+				
+				
+				Date fromDate1 = null;
+				Date fromDate2 = null;
+				Date toDate1 = null;
+				Date toDate2 = null;
+				if( monthFrom1 && yearFrom1 )
+				{
+					fromDate1 = dateFormat.parse( "$monthFrom1 $yearFrom1" );
+				}
+				else
+				{
+					println "NOT setting fromDate1!";	
+				}
+				
+				if( monthFrom2 && yearFrom2 )
+				{	
+					fromDate2 = dateFormat.parse( "$monthFrom2 $yearFrom2" );
+				}
+				else
+				{
+					println "NOT setting fromDate2!  monthFrom2: $monthFrom2, yearFrom2: $yearFrom2";
+				}
+				
+				if( monthTo1 && yearTo1 )
+				{
+					toDate1 = dateFormat.parse( "$monthTo1 $yearTo1" );
+				}
+				else
+				{
+					println "NOT setting toDate1!";
+				}
+				
+				if( monthTo2 && yearTo2 )
+				{
+					toDate2 = dateFormat.parse( "$monthTo2 $yearTo2" );
+				}
+				else
+				{
+					println "NOT setting toDate2!";
+				}
+				
+				// the possible scenarios we have to deal with? but default values above
+				// eliminate what?
+
+				// if there's start date and end date for both
+				if( fromDate1 && toDate1 && fromDate2 && toDate2 )
+				{
+					println "have all data";
+					
+					// whichever began first should appear earlier in the sort order.
+					// if began at the same time?
+					if( !fromDate1.equals( fromDate2 ))
+					{
+						println "1. fromDates are NOT equal";
+						
+						if( fromDate1.getTime() < fromDate2.getTime() )
+						{
+							println "fromDate1 < fromDate 2, ret 1";
+							return 1;	
+						}
+						else
+						{
+							println "fromDate1 > fromDate2, ret -1";
+							return -1;	
+						}
+					}
+					else
+					{
+						println "fromDates are the SAME";
+						
+						// they started at the same time, but we have end dates for both, how
+						// would we factor that into the sort order?
+						if( toDate1.getTime() < toDate2.getTime() )
+						{
+							println "toDate1 < toDate2, ret 1";
+							return 1;	
+						}
+						else if( toDate1.getTime() > toDate2.getTime() )
+						{
+							println "toDate1 > toDate2, ret -1";
+							return -1;	
+						}
+						else
+						{
+							println "toDate1 == toDate2, ret 0";
+							return 0;	
+						}
+					}	
+				}
+
+				// if there's a start date but no end date for both
+				else if( fromDate1 && fromDate2 && (!toDate1 && !toDate2))
+				{
+					println "there's a start date but no end date for both";
+					
+					if( fromDate1.getTime() < fromDate2.getTime() )
+					{
+						return 1;	
+					}	
+					else if( fromDate1.getTime() > fromDate2.getTime())
+					{
+						return -1;	
+					}
+					else
+					{
+						return 0;	
+					}
+				}
+				
+				// if there's a start date but no end date for o1
+				else if( fromDate1 && !toDate1 )
+				{
+					println "there's a start date but no end date for o1";
+					
+					// implies there is a endDate for o2, right?	
+					if( fromDate1.getTime() < fromDate2.getTime())
+					{
+						return 1;	
+					}
+					else if( fromDate1.getTime() > fromDate2.getTime())
+					{
+						return -1;
+					}
+					else
+					{
+						// use the presence of a toDate to break the tie?	
+						return -1;
+					}
+				}
+				
+				// if there's a start date but no end date for o2
+				else if( fromDate2 && !toDate2 )
+				{
+					println "there's a start date but no end date for o2";
+					// implies there is an endDate for o1, right?
+					if( fromDate1.getTime() < fromDate2.getTime())
+					{
+						return 1;
+					}
+					else if( fromDate1.getTime() > fromDate2.getTime())
+					{
+						return -1;
+					}
+					else
+					{
+						// use the presence of a toDate to break the tie?
+						return 1;
+					}
+				}
+				
+				// o1 has no dates at all, but o2 does
+				else if( !fromDate1 && !toDate1 && fromDate2 && toDate2 )
+				{
+					return 1;
+				}
+				// o2 has no dates at all, but o1 does
+				else if( fromDate1 && toDate1 && !fromDate2 && !toDate2 )
+				{
+					return -1;
+				}
+				// if there's no dates for either?
+				else if( !fromDate1 && !toDate1 && !fromDate2 && !toDate2 )
+				{
+					
+					println "there's no dates for either?";
+					return 1;
+				}				
+				
+				else
+				{
+					println "WTF?!?";
+					// has to be an error, can we ignore with some default handling? Since this is just sorting for
+					// display purposes, probably yes.	
+					return 1;
+				}
+			}
+			
+			this.employmentHistory = sortedEmploymentHistory;
 		}
 		else
 		{
 			this.employerCount = 0;
 		}	
+
+		// deal with contact addresses...
+		Set<EducationalExperience> educationHistorySet = profile.educationHistory;
+		
+		if( educationHistorySet )
+		{
+			this.educationHistoryCount = educationHistorySet.size();
+			this.educationHistory.addAll( educationHistorySet );
+		}
+		else
+		{
+			this.educationHistoryCount = 0;	
+		}		
 	}
 	
 	String userUuid;
@@ -491,14 +933,19 @@ class UserProfileCommand
 	String interests;
 	String skills;
 	String groupsOrgs;
-	Set<HistoricalEmployer> employmentHistory;
+	List<HistoricalEmployer> employmentHistory;
 	Integer employerCount;
-	String educationHistory;
+	List<EducationalExperience> educationHistory;
+	Integer educationHistoryCount;
 	String links;
-	String contactAddresses;
+	// String contactAddresses;
+	List<ContactAddress> contactAddresses;
+	Integer contactAddressCount;
 	String favorites;
 	String projects;
-			
+	List months;
+	
+	SimpleDateFormat dateFormat = new SimpleDateFormat( "MMM yyyy" );
 }
 
 class UserRegistrationCommand
@@ -544,7 +991,19 @@ class SexOption
 	String text;	
 }
 
+class ContactTypeOption
+{
+	int id;
+	String text;	
+}
+
 class Month
+{
+	int id;
+	String text;	
+}
+
+class Day
 {
 	int id;
 	String text;	
