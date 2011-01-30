@@ -8,7 +8,7 @@
 			var educationHistoryBlocks = 0;
 			function addEducationHistoryBlock()
 			{
-				alert( 'hi' );
+				// alert( 'hi' );
 
 				if( educationHistoryBlocks == 0 )
 				{
@@ -45,12 +45,44 @@
 						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].institutionName" );
 						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].institutionName" );	
 					}
+					else if( $(this).attr('name').indexOf( ".yearFrom" ) != -1 )
+					{
+						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].yearFrom" );
+						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].yearFrom" );	
+					}
+					else if( $(this).attr('name').indexOf( ".yearTo" ) != -1 )
+					{
+						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].yearTo" );
+						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].yearTo" );	
+					}
+					else if( $(this).attr('name').indexOf( ".major" ) != -1 )
+					{
+						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].major" );
+						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].major" );	
+					}					
 					else if( $(this).attr('name').indexOf( ".educationalExperienceId" ) != -1 )
 					{
 						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].educationalExperienceId" );
 						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].educationalExperienceId" );	
 					}					
 				});
+
+				// do the same thing for the <select> fields
+				var $selectKids = edFieldset.find('select');
+				$.each( $selectKids, function(index) 
+				{						
+					if( $(this).attr('name').indexOf( ".monthFrom" ) != -1 )
+					{
+						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].monthFrom" );
+						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].monthFrom" );
+					}
+					else if( $(this).attr('name').indexOf( ".monthTo" ) != -1 )
+					{
+						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].monthTo" );
+						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].monthTo" );
+					}	
+				});
+
 
 				edFieldset.appendTo( "div#educationHistory" );				
 				return false;
@@ -369,9 +401,9 @@
 							<tr>
 								<td>Time Period:</td>
 								<td><g:select name="employment[0].monthFrom" from="${months}" value="tbd" optionKey="id"
-								   noSelection="${['null':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[0].yearFrom" />
+								   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[0].yearFrom" />
 								   to <g:select name="employment[0].monthTo" from="${months}" value="tbd" optionKey="id"
-								   noSelection="${['null':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[0].yearTo" />
+								   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[0].yearTo" />
 								</td>
 							</tr>
 							   <tr>
@@ -405,6 +437,19 @@
 				                    			<td>Institution Name:</td>
 												<td><g:textField name="education[${edStatus}].institutionName" value="${education.institutionName}"/></td>
 				                    		</tr>
+				                    		
+				                    		<tr>
+												<td>Time Period:</td>
+												<td><g:select name="education[${edStatus}].monthFrom" from="${months}" value="${education.monthFrom}" optionKey="id"
+												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[${edStatus}].yearFrom" value="${education.yearFrom}"/>
+												   to <g:select name="education[${edStatus}].monthTo" from="${months}" value="${education.monthTo}" optionKey="id"
+												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[${edStatus}].yearTo" value="${education.yearTo}"/>
+												</td>
+											</tr>
+											<tr>
+												<td>Major / Course of Study: </td>
+												<td><g:textField name="education[${edStatus}].major" id="education[${edStatus}].major" value="${education.courseOfStudy}" /></td>
+											</tr>
 				                    	</table>
 				                    	<input type="hidden" id="education[${edStatus}].educationalExperienceId" name="education[${edStatus}].educationalExperienceId" value="${education.id}" />
 									</fieldset>
@@ -420,6 +465,18 @@
 				                    			<td>Institution Name:</td>
 												<td><g:textField name="education[0].institutionName" value=""/></td>
 				                    		</tr>
+				                    		<tr>
+												<td>Time Period:</td>
+												<td><g:select name="education[0].monthFrom" from="${months}" value="tbd" optionKey="id"
+												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[0].yearFrom" />
+												   to <g:select name="education[0].monthTo" from="${months}" value="tbd" optionKey="id"
+												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[0].yearTo" />
+												</td>
+											</tr>
+											<tr>
+												<td>Major / Course of Study: </td>
+												<td><g:textField name="education[0].major" id="education[0].major" /></td>
+											</tr>
 				                    	</table>
 				                    	<input type="hidden" id="education[0].educationalExperienceId" name="education[0].educationalExperienceId" value="-1" />
 								</fieldset>
@@ -450,6 +507,20 @@
             	<td>Institution Name:</td>
 				<td><g:textField name="education[?].institutionName" value=""/></td>
           	</tr>
+
+           	<tr>
+				<td>Time Period:</td>
+				<td><g:select name="education[?].monthFrom" from="${months}" value="tbd" optionKey="id"
+				   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[?].yearFrom" />
+				   to <g:select name="education[?].monthTo" from="${months}" value="tbd" optionKey="id"
+				   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[?].yearTo" />
+				</td>
+			</tr>
+			<tr>
+				<td>Major / Course of Study: </td>
+				<td><g:textField name="education[?].major" id="education[?].major" /></td>
+			</tr>
+
        	</table>
         <input type="hidden" id="education[?].educationalExperienceId" name="education[?].educationalExperienceId" value="-1" />
 	</fieldset>
@@ -485,9 +556,9 @@
 				<tr>
 					<td>Time Period:</td>
 					<td><g:select name="employment[?].monthFrom" from="${months}" value="" optionKey="id"
-					   noSelection="${['null':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[?].yearFrom" />
+					   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[?].yearFrom" />
 					   to <g:select name="employment[?].monthTo" from="${months}" value="" optionKey="id"
-					   noSelection="${['null':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[?].yearTo" />
+					   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[?].yearTo" />
 					</td>
 				</tr>
 				<tr>

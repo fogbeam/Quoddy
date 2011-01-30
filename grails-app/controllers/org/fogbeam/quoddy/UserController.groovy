@@ -4,7 +4,10 @@ import java.text.SimpleDateFormat
 import org.fogbeam.quoddy.profile.ContactAddress 
 import org.fogbeam.quoddy.profile.EducationalExperience 
 import org.fogbeam.quoddy.profile.HistoricalEmployer 
+import org.fogbeam.quoddy.profile.Interest 
+import org.fogbeam.quoddy.profile.OrganizationAssociation 
 import org.fogbeam.quoddy.profile.Profile;
+import org.fogbeam.quoddy.profile.Skill 
 
 
 class UserController {
@@ -293,10 +296,10 @@ class UserController {
 	{ 
 		UserProfileCommand upc ->
 		
-		println "params: $params";
-		println "\n";
-		println "upc: $upc";
-		println "\n";
+		// println "params: $params";
+		// println "\n";
+		// println "upc: $upc";
+		// println "\n";
 		
 		String uuid = upc.userUuid;
 		// println "Looking for user by uuid: $uuid";
@@ -386,7 +389,7 @@ class UserController {
 				// else, create new record and attach to profile
 				else
 				{
-					println "creating new HistoricalEmployer record";
+					// println "creating new HistoricalEmployer record";
 					// println "emp1v: ${emp1v}\n";
 					String monthTo = null;
 					String monthFrom = null;
@@ -427,14 +430,14 @@ class UserController {
 					}
 					
 					profile.addToEmploymentHistory( emp1 );
-					println "added emp1 to profile";
+					// println "added emp1 to profile";
 				}
 			}
 			else if( it.startsWith( "contactAddress[" ) && it.endsWith( "]" ))
 			{
 				def contactAddress = params.get( it );
 				
-				println contactAddress;
+				// println contactAddress;
 				
 				// is there an ID? Is it valid?  If so, update existing record for profile
 				String contactAddressIdStr = contactAddress.contactAddressId;
@@ -472,10 +475,10 @@ class UserController {
 						println "newContactAddress saved";	
 					}
 					
-					println "newContactAddress: ${newContactAddress}";
+					// println "newContactAddress: ${newContactAddress}";
 					
 					profile.addToContactAddresses( newContactAddress );														
-					println "added newContactAddress to profile";
+					// println "added newContactAddress to profile";
 					
 				}
 			}
@@ -484,7 +487,7 @@ class UserController {
 				
 				def educationalHistory = params.get( it );
 				
-				println "\n\neducationalHistory: ${educationalHistory}\n\n";
+				// println "\n\neducationalHistory: ${educationalHistory}\n\n";
 								
 				// is there an ID? Is it valid?  If so, update existing record for profile
 				String educationalExperienceIdStr = educationalHistory.educationalExperienceId;
@@ -494,8 +497,25 @@ class UserController {
 					// TODO: use a service for this?
 					EducationalExperience existingEducationalExperience = EducationalExperience.findById( educationalExperienceId );
 	
-					// TODO: update fields
 					existingEducationalExperience.institutionName = educationalHistory.institutionName;
+					existingEducationalExperience.monthFrom = ( educationalHistory.monthFrom != null &&
+																!educationalHistory.monthFrom.isEmpty() ) ? educationalHistory.monthFrom: null;
+					
+					existingEducationalExperience.yearFrom = ( educationalHistory.yearFrom != null &&
+																!educationalHistory.yearFrom.isEmpty() ) ? educationalHistory.yearFrom: null;
+					
+					existingEducationalExperience.monthTo = ( educationalHistory.monthTo != null &&
+																!educationalHistory.monthTo.isEmpty() ) ? educationalHistory.monthTo: null;
+					
+					existingEducationalExperience.yearTo = ( educationalHistory.yearTo != null &&
+																!educationalHistory.yearTo.isEmpty() ) ? educationalHistory.yearTo: null;
+					
+					existingEducationalExperience.courseOfStudy = ( educationalHistory.major != null &&
+																!educationalHistory.major.isEmpty() ) ? educationalHistory.major: null;
+					
+					existingEducationalExperience.description = ( educationalHistory.description != null &&
+																!educationalHistory.description.isEmpty() ) ? educationalHistory.description: null;
+					
 					
 					if( !existingEducationalExperience.save() )
 					{
@@ -507,7 +527,33 @@ class UserController {
 				// else, create new record and attach to profile
 				else
 				{
-					EducationalExperience newEducationalExperience = new EducationalExperience( institutionName: educationalHistory.institutionName );
+					String monthFrom = ( educationalHistory.monthFrom != null &&
+						!educationalHistory.monthFrom.isEmpty() ) ? educationalHistory.monthFrom: null;
+
+					String yearFrom = ( educationalHistory.yearFrom != null &&
+						!educationalHistory.yearFrom.isEmpty() ) ? educationalHistory.yearFrom: null;
+
+					String monthTo = ( educationalHistory.monthTo != null &&
+						!educationalHistory.monthTo.isEmpty() ) ? educationalHistory.monthTo: null;
+
+					String yearTo = ( educationalHistory.yearTo != null &&
+						!educationalHistory.yearTo.isEmpty() ) ? educationalHistory.yearTo: null;
+
+					String courseOfStudy = ( educationalHistory.major != null &&
+						!educationalHistory.major.isEmpty() ) ? educationalHistory.major: null;
+
+					String description = ( educationalHistory.description != null &&
+						!educationalHistory.description.isEmpty() ) ? educationalHistory.description: null;
+
+					
+					EducationalExperience newEducationalExperience = 
+							new EducationalExperience( institutionName: educationalHistory.institutionName,
+														monthFrom: monthFrom,
+														yearFrom: yearFrom,
+														monthTo: monthTo,
+														yearTo: yearTo,
+														courseOfStudy: courseOfStudy,
+														description: description );
 
 					if( !newEducationalExperience.save() )
 					{
@@ -519,15 +565,100 @@ class UserController {
 						println "newEducationalExperience saved";
 					}
 					
-					println "newEducationalExperience: ${newEducationalExperience}";
+					// println "newEducationalExperience: ${newEducationalExperience}";
 					
 					profile.addToEducationHistory( newEducationalExperience );
-					println "added newEducationalExperience to profile";
+					// println "added newEducationalExperience to profile";
 					
 				}
 			}
 		};
 
+		// upc.interests
+		println "Interests: " + upc.interests;
+		String[] interestsLines = upc.interests.split("\n" );
+		for( String interestLine : interestsLines )
+        {
+			// TODO: deal with duplicates
+			
+			if( interestLine.contains("," ))
+			{
+				// TODO: deal with comma separted values
+			}
+			else
+			{
+				
+				Interest interest = Interest.findByName( interestLine );
+				if( !interest )
+				{
+					interest = new Interest( name: interestLine );
+					if( !interest.save() )
+					{
+						throw new RuntimeException( "FAIL" );
+					}
+						
+				}
+				
+				profile.addToInterests( interest );
+			}
+		}
+		
+		
+		
+		// upc.skills
+		println "Skills: " + upc.skills;
+		String[] skillsLines = upc.skills.split("\n" );
+		for( String skillsLine : skillsLines )
+		{
+			if( skillsLine.contains("," ))
+			{
+				// TODO: deal with comma separted values
+			}
+			else
+			{
+				
+				
+				Skill skill = Skill.findByName( skillsLine );
+				if( !skill )
+				{
+					skill = new Skill( name: skillsLine );
+					if( !skill.save() )
+					{
+						throw new RuntimeException( "FAIL" );
+					}
+						
+				}
+				
+				profile.addToSkills( skill );
+			}
+		}
+		
+		
+		// upc.groupsOrgs
+		println "GroupsOrgs: " + upc.groupsOrgs;
+		String[] groupsOrgsLines = upc.groupsOrgs.split("\n" );
+		for( String groupsOrgLine : groupsOrgsLines )
+		{
+			if( groupsOrgLine.contains("," ))
+			{
+				// TODO: deal with comma separted values
+			}
+			else
+			{
+				OrganizationAssociation org = OrganizationAssociation.findByName( groupsOrgLine );
+				if( !org )
+				{
+					org = new OrganizationAssociation( name: groupsOrgLine );
+					if( !org.save() )
+					{
+						throw new RuntimeException( "FAIL" );
+					}
+						
+				}
+				
+				profile.addToOrganizations( org );
+			}
+		}
 		
 		try
 		{
@@ -644,16 +775,7 @@ class UserProfileCommand
 			this.contactAddressCount = 0;	
 		}
 		
-		println "Setting this.employmentHistory to: ${profile.employmentHistory}\n";
-		if( profile.employmentHistory != null && profile.employmentHistory.size() > 0 )
-		{
-			this.employerCount = profile.employmentHistory.size();
-			
-			List<HistoricalEmployer> sortedEmploymentHistory = new ArrayList<HistoricalEmployer>();
-			
-			// sort the employment history set
-			
-			sortedEmploymentHistory = profile.employmentHistory.sort { o1, o2 ->
+		def sortClosure = { o1, o2 ->
 				
 				println "o1: \n" + o1;
 				println "o2: \n" + o2;
@@ -899,6 +1021,18 @@ class UserProfileCommand
 					return 1;
 				}
 			}
+		
+		
+		println "Setting this.employmentHistory to: ${profile.employmentHistory}\n";
+		if( profile.employmentHistory != null && profile.employmentHistory.size() > 0 )
+		{
+			this.employerCount = profile.employmentHistory.size();
+			
+			List<HistoricalEmployer> sortedEmploymentHistory = new ArrayList<HistoricalEmployer>();
+			
+			// sort the employment history set
+			
+			sortedEmploymentHistory = profile.employmentHistory.sort( sortClosure ); 
 			
 			this.employmentHistory = sortedEmploymentHistory;
 		}
@@ -913,12 +1047,37 @@ class UserProfileCommand
 		if( educationHistorySet )
 		{
 			this.educationHistoryCount = educationHistorySet.size();
-			this.educationHistory.addAll( educationHistorySet );
+			
+			List<EducationalExperience> sortedEducationalHistory = new ArrayList<EducationalExperience>();
+			
+			sortedEducationalHistory = educationHistorySet.sort( sortClosure );
+			
+			this.educationHistory = sortedEducationalHistory;
 		}
 		else
 		{
 			this.educationHistoryCount = 0;	
 		}		
+	
+		Set<Interest> interests = profile.interests;
+		for( Interest interest: interests )
+		{
+			this.interests += ( interest.name + "\n" );	
+		}
+		
+		// TODO: deal with skills
+		Set<Skill> skills = profile.skills;
+		for( Skill skill: skills )
+		{
+			this.skills += (skill.name + "\n");
+		}
+		
+		// TODO: deal with groupsOrgs	
+		Set<OrganizationAssociation> organizations = profile.organizations;
+		for( OrganizationAssociation organization: organizations )
+		{
+			this.groupsOrgs += (organization.name + "\n");
+		}
 	}
 	
 	String userUuid;
@@ -930,9 +1089,9 @@ class UserProfileCommand
 	String location;
 	String hometown;
 	String languages;
-	String interests;
-	String skills;
-	String groupsOrgs;
+	String interests = "";
+	String skills = "";
+	String groupsOrgs = "";
 	List<HistoricalEmployer> employmentHistory;
 	Integer employerCount;
 	List<EducationalExperience> educationHistory;
