@@ -69,7 +69,7 @@ class Profile {
 	Set<String> links;
 	
 	// contact addresses (Twitter, XMPP, AIM, Yahoo, Phone, etc)
-	Set<String> contactAddresses;
+	Set<ContactAddress> contactAddresses;
 	
 	// favorites (books, TV shows, movies, etc)
 	Set<Favorite> favorites;
@@ -82,7 +82,7 @@ class Profile {
 	
 	static hasMany = [languages:Language, interests:Interest, skills:Skill, \
 					organizations:OrganizationAssociation, employmentHistory:HistoricalEmployer, \
-					educationHistory:EducationalExperience, links:String, contactAddresses:String, favorites: Favorite ];
+					educationHistory:EducationalExperience, links:String, contactAddresses:ContactAddress, favorites: Favorite ];
 	
 	static belongsTo = [owner:User];	
 
