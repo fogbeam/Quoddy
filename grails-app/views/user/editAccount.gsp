@@ -22,10 +22,10 @@
                  <dl>
                      <dt>User Id</dt>
                      <dd><g:textField name="userId" value="${user?.userId}"/></dd>                     
-                     <dt>First Name</dt>
+					 <dt>First Name</dt>
                      <dd><g:textField name="firstName" value="${user?.firstName}"/></dd>
                      <dt>Last Name</dt>
-                     <dd><g:textField name="lastName" value="${user?.lastName}"/></dd>
+              		 <dd><g:textField name="lastName" value="${user?.lastName}"/></dd>
                      <dt>Display Name</dt>
                      <dd><g:textField name="displayName" value="${user?.displayName}"/></dd>
                      <dt>Bio</dt>
