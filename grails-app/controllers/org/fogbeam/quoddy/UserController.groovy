@@ -70,7 +70,11 @@ class UserController {
 						new ContactTypeOption( id: ContactAddress.TWITTER, text: "Twitter"),
 						new ContactTypeOption( id: ContactAddress.EMAIL, text: "Email" )
 			];	
-		   
+
+	def sampleForm = {
+		[]	
+	}	
+				   
 	def viewUser = 
 	{
 		
