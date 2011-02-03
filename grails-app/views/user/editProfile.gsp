@@ -10,14 +10,27 @@
 				color: white;
 			}
         	
-        	form {
-				background: lightgrey;
+        	h1 {
+        		color: black;
+        	}
+        	
+        	.yearInput {
+        		width:45px;
+        	}
+        	
+        	form#profileForm {
+				// background: lightgrey;
 				padding: 10px;
-				width: 500px;
+				width: 600px;
 				/* -moz-border-radius-bottomleft: 10px;
 				-moz-border-radius-bottomright: 10px; */
 				border-radius-bottomleft: 10px;
 				border-radius-bottomright: 10px;
+			}
+			
+			form#profileForm > div {
+				padding-top: 7px;
+				padding-bottom: 6px;
 			}
 			
 			form label {
@@ -45,22 +58,53 @@
 				clear: left;
 			}
 			
+			label + div {
+				clear: left;
+			}
+			
 			div > input, div > select {
 				margin: 3px;
 				padding: 4px;
-				color: #FF4500;
+				// color: #FF4500;
+				color: black;
 			}
 			
 			select > option {
 				padding: 4px;
-				color: #FF4500;	
+				// color: #FF4500;
+				color: black;	
 			}
 			
 			label + input, label + select, label + textarea {
-				background: darkgrey;
-				color: #FF4500;
+				// background: darkgrey;
+				// color: #FF4500;
+				color: black;
 				border: 0;
 			}
+			
+			form > div > textarea {
+				clear: left;
+				color: black;
+				border: solid thin black;
+			}
+			
+			textarea, input, select {
+				color: black;
+				border: thin solid black;
+			}
+			
+			tr {
+				margin-top: 5px;
+				margin-bottom: 5px;
+			}
+			
+			td {
+				color: black;
+			}
+        
+ 			form > div > a {
+ 				color: red;
+        	}
         
         </style>
     	<script type="text/javascript">
@@ -312,7 +356,7 @@
                  </div>
              </g:hasErrors>
 
-             <g:form action="saveProfile">
+             <g:form action="saveProfile" name="profileForm" >
              		<g:hiddenField name="userUuid" value="${profileToEdit?.userUuid}" />
                  
                  <!--  former begin <dl> -->
@@ -331,7 +375,7 @@
     	            	<g:select name="birthMonth" from="${months}" value="${profileToEdit.birthMonth}" optionKey="id" 
 			       							noSelection="${['':'Choose...']}" optionValue="text" />   	
         	            
-        	            <g:textField name="birthYear" value="${profileToEdit?.birthYear}" />
+        	            <g:textField name="birthYear" value="${profileToEdit?.birthYear}" class="yearInput" />
                     </div>
                     
                     
@@ -410,19 +454,24 @@
                     
                     <div>
                     	<label for="interests">Interests:</label>
-                    	<g:textArea name="interests" value="${profileToEdit?.interests}" rows="5" cols="40"/>
+                    	<div>		
+ 		                   	<g:textArea name="interests" value="${profileToEdit?.interests}" rows="5" cols="40"/>
+      					</div>
       				</div>
       
       				<div>
                     	<label for="skills">Skills:</label>
-                    	<g:textArea name="skills" value="${profileToEdit?.skills}" rows="5" cols="40"/>
+                    	<div>	
+                    		<g:textArea name="skills" value="${profileToEdit?.skills}" rows="5" cols="40"/>
+      					</div>
       				</div>
       
       				<div>
                     	<label for="groupsOrgs">Groups & Organizations:</label>
-                    	<g:textArea name="groupsOrgs" value="${profileToEdit?.groupsOrgs}" rows="5" cols="40"/>
+                    	<div>
+                    		<g:textArea name="groupsOrgs" value="${profileToEdit?.groupsOrgs}" rows="5" cols="40"/>
+	                	</div>
 	                </div>
-	                
 	                <div>
 	                	<label for="employmentHistory">Employment History:</label>            
             			<div id="employmentHistory">
@@ -446,9 +495,9 @@
 				                    		<tr>
 				                    			<td>Time Period:</td>
 												<td><g:select name="employment[${iStatus}].monthFrom" from="${months}" value="${employment.monthFrom}" optionKey="id" 
-				       							noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[${iStatus}].yearFrom" value="${employment.yearFrom}"/>
+				       							noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[${iStatus}].yearFrom" value="${employment.yearFrom}" class="yearInput" />
 				       							to <g:select name="employment[${iStatus}].monthTo" from="${months}" value="${employment.monthFrom}" optionKey="id" 
-				       							noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[${iStatus}].yearTo" value="${employment.yearTo}"/>
+				       							noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[${iStatus}].yearTo" value="${employment.yearTo}" class="yearInput" />
 				       							</td>
 											</tr>
 				       						<tr>
@@ -475,9 +524,9 @@
 										<tr>
 											<td>Time Period:</td>
 											<td><g:select name="employment[0].monthFrom" from="${months}" value="tbd" optionKey="id"
-								   				noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[0].yearFrom" />
+								   				noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[0].yearFrom" class="yearInput" />
 								   				to <g:select name="employment[0].monthTo" from="${months}" value="tbd" optionKey="id"
-								   					noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[0].yearTo" />
+								   					noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[0].yearTo" class="yearInput" />
 											</td>
 										</tr>
 							   			<tr>
@@ -512,9 +561,9 @@
 				                    		<tr>
 												<td>Time Period:</td>
 												<td><g:select name="education[${edStatus}].monthFrom" from="${months}" value="${education.monthFrom}" optionKey="id"
-												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[${edStatus}].yearFrom" value="${education.yearFrom}"/>
+												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[${edStatus}].yearFrom" value="${education.yearFrom}" class="yearInput"/>
 												   to <g:select name="education[${edStatus}].monthTo" from="${months}" value="${education.monthTo}" optionKey="id"
-												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[${edStatus}].yearTo" value="${education.yearTo}"/>
+												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[${edStatus}].yearTo" value="${education.yearTo}" class="yearInput" />
 												</td>
 											</tr>
 											<tr>
@@ -536,9 +585,9 @@
 				                    		<tr>
 												<td>Time Period:</td>
 												<td><g:select name="education[0].monthFrom" from="${months}" value="tbd" optionKey="id"
-												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[0].yearFrom" />
+												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[0].yearFrom" class="yearInput" />
 												   to <g:select name="education[0].monthTo" from="${months}" value="tbd" optionKey="id"
-												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[0].yearTo" />
+												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[0].yearTo" class="yearInput" />
 												</td>
 											</tr>
 											<tr>
@@ -576,9 +625,9 @@
            	<tr>
 				<td>Time Period:</td>
 				<td><g:select name="education[?].monthFrom" from="${months}" value="tbd" optionKey="id"
-				   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[?].yearFrom" />
+				   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[?].yearFrom" class="yearInput" />
 				   to <g:select name="education[?].monthTo" from="${months}" value="tbd" optionKey="id"
-				   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[?].yearTo" />
+				   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[?].yearTo" class="yearInput" />
 				</td>
 			</tr>
 			<tr>
@@ -621,9 +670,9 @@
 				<tr>
 					<td>Time Period:</td>
 					<td><g:select name="employment[?].monthFrom" from="${months}" value="" optionKey="id"
-					   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[?].yearFrom" />
+					   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[?].yearFrom" class="yearInput" />
 					   to <g:select name="employment[?].monthTo" from="${months}" value="" optionKey="id"
-					   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[?].yearTo" />
+					   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[?].yearTo" class="yearInput" />
 					</td>
 				</tr>
 				<tr>
