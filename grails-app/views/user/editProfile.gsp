@@ -37,7 +37,7 @@
 				display: block;
 				font-weight: bold;
 				margin: 5px;
-				width: 225px;
+				width: 175px;
 				text-align: right;
 				background: black;
 			}
@@ -62,6 +62,21 @@
 				clear: left;
 			}
 			
+			fieldset > div {
+				clear: left;
+			}
+			
+			fieldset > div > label {
+				float: left;
+			}
+			
+			div#contactAddresses {
+				display: block;
+				position: relative;
+				right: -192px;
+				top: -33px;
+			}
+			
 			div > input, div > select {
 				margin: 3px;
 				padding: 4px;
@@ -79,33 +94,60 @@
 				// background: darkgrey;
 				// color: #FF4500;
 				color: black;
-				border: 0;
+				border: 1px solid black;
 			}
 			
 			form > div > textarea {
 				clear: left;
 				color: black;
+				padding: 5px;
 				border: solid thin black;
+			}
+			
+			form > div > div {
+				clear: left;
+			}
+			
+			form > div > div > textarea {
+				clear: left;
+			}
+			
+			fieldset div textarea {
+				padding: 5px;
 			}
 			
 			textarea, input, select {
 				color: black;
 				border: thin solid black;
 			}
-			
-			tr {
-				margin-top: 5px;
-				margin-bottom: 5px;
-			}
-			
-			td {
-				color: black;
-			}
         
  			form > div > a {
  				color: red;
         	}
         
+        	div#educationHistory fieldset div label {
+        		background: #808080;
+        	}
+        	
+        	div#educationHistory fieldset {
+        		margin-top: 30px;
+        	}
+        	
+        	div#employmentHistory fieldset div label {
+        		background: #808080;
+        	}
+        	
+        	div#employmentHistory fieldset {
+        		margin-top: 30px;
+        	}
+        	
+        	.contactAddressPositionFOO {
+        		/* float: right; */
+        		position: relative;
+        		top: 5px;
+        		right: -30px;
+        	}
+        	
         </style>
     	<script type="text/javascript">
 
@@ -368,19 +410,21 @@
                    
 					<div>
 					                   
-                    	<label>Birthday (mm/dd/yyyy)</label>
+                    	<label>Birthday:</label>
                     	<g:select name="birthDayOfMonth" from="${days}" value="${profileToEdit.birthDayOfMonth}" optionKey="id" 
 			       							noSelection="${['':'Choose...']}" optionValue="text" />
                         	            
     	            	<g:select name="birthMonth" from="${months}" value="${profileToEdit.birthMonth}" optionKey="id" 
 			       							noSelection="${['':'Choose...']}" optionValue="text" />   	
         	            
-        	            <g:textField name="birthYear" value="${profileToEdit?.birthYear}" class="yearInput" />
+        	            <!-- <g:textField name="birthYear" value="${profileToEdit?.birthYear}" class="yearInput" /> -->
+        	            <g:select name="birthYear" from="${years}" value="${profileToEdit.birthYear}" optionKey="id" 
+			       							noSelection="${['':'Choose...']}" optionValue="text" /> 
                     </div>
                     
                     
                     <div>
-                    	<label for="sex" >Sex</label>
+                    	<label for="sex" >Sex:</label>
                     	<g:select name="sex" from="${sexOptions}" value="${profileToEdit?.sex}" optionKey="id" 
        						noSelection="${['':'Select One...']}" optionValue="text" />
                     </div>
@@ -406,39 +450,34 @@
 	                 		<g:if test="${profileToEdit.contactAddressCount > 0}">
 			                    <g:each status="caStatus" in="${profileToEdit?.contactAddresses}" var="contactAddress">
 									<fieldset id="contactAddress${caStatus}">
-	                    				<table>
-	                    				<tr>				
-	                    					<td>
+	                    				<div class="contactAddressPosition" >				
 	                    						<g:select name="contactAddress[${caStatus}].serviceType" from="${contactTypes}" value="${contactAddress.serviceType}" optionKey="id" 
 	       										noSelection="${['':'Select One...']}" optionValue="text" />
-	                    					</td>
-	                    					<td>
+	                    					
 	                    						<g:textField name="contactAddress[${caStatus}].address" value="${contactAddress.address}" />
-	                    					</td>
-	                    				</tr>
-	                    				</table>
-	                   				<input type="hidden" id="contactAddress[${caStatus}].contactAddressId" name="contactAddress[${caStatus}].contactAddressId" value="${contactAddress.id}" />
+	                    				</div>
+	                    				
+	                   					<input type="hidden" id="contactAddress[${caStatus}].contactAddressId" name="contactAddress[${caStatus}].contactAddressId" value="${contactAddress.id}" />
 	                   				</fieldset>
 	                   			</g:each>
 	                   		</g:if>
 	                   		<g:else>
 	                			<fieldset id="contactAddress0">
-	                    			<table>
-	                    				<tr>
-			                    			<td>
+	                    			
+	                    				<div class="contactAddressPosition" >
+			                    			
 			                    				<g:select name="contactAddress[0].serviceType" from="${contactTypes}" value="" optionKey="id" 
 	       										noSelection="${['':'Select One...']}" optionValue="text" />
-	       									</td>
-	       									<td>
+	       										
 	                    						<g:textField name="contactAddress[0].address" value="" />
-	                    					</td>
-	                    				</tr>
-	                    			</table>	
+	                    						
+	                    				</div>
+	                    			
 									<input type="hidden" id="contactAddress[0].contactAddressId" name="contactAddress[0].contactAddressId" value="-1" />
 	                   			</fieldset>
 	                   		</g:else>
                    		</div>
-    					<a href="#" onclick="return addContactAddressBlock();" style="font-size:24pt;">+</a>
+    					<a href="#" onclick="return addContactAddressBlock();" style="font-size:12pt;text-decoration:none;">add another</a>
                    	</div>
                     
                                        
@@ -453,24 +492,20 @@
                     -->
                     
                     <div>
-                    	<label for="interests">Interests:</label>
-                    	<div>		
+                    	<label for="interests">Interests:</label>		
  		                   	<g:textArea name="interests" value="${profileToEdit?.interests}" rows="5" cols="40"/>
-      					</div>
       				</div>
       
       				<div>
                     	<label for="skills">Skills:</label>
-                    	<div>	
+                    		
                     		<g:textArea name="skills" value="${profileToEdit?.skills}" rows="5" cols="40"/>
-      					</div>
+      					
       				</div>
       
       				<div>
                     	<label for="groupsOrgs">Groups & Organizations:</label>
-                    	<div>
                     		<g:textArea name="groupsOrgs" value="${profileToEdit?.groupsOrgs}" rows="5" cols="40"/>
-	                	</div>
 	                </div>
 	                <div>
 	                	<label for="employmentHistory">Employment History:</label>            
@@ -483,30 +518,29 @@
 		                    	<g:each status="iStatus" in="${profileToEdit?.employmentHistory}" var="employment">
 
 									<fieldset id="employer${iStatus}">
-									  	<table>
-				                    		<tr>
-				                    			<td>Company Name:</td>
-												<td><g:textField name="employment[${iStatus}].companyName" value="${employment.companyName}"/></td>
-				                    		</tr>
-				                    		<tr>
-				                    			<td>Title:</td>
-												<td><g:textField name="employment[${iStatus}].title" value="${employment.title}"/></td>
-				                    		</tr>
-				                    		<tr>
-				                    			<td>Time Period:</td>
-												<td><g:select name="employment[${iStatus}].monthFrom" from="${months}" value="${employment.monthFrom}" optionKey="id" 
-				       							noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[${iStatus}].yearFrom" value="${employment.yearFrom}" class="yearInput" />
-				       							to <g:select name="employment[${iStatus}].monthTo" from="${months}" value="${employment.monthFrom}" optionKey="id" 
-				       							noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[${iStatus}].yearTo" value="${employment.yearTo}" class="yearInput" />
-				       							</td>
-											</tr>
-				       						<tr>
-				       							<td>Description:</td>
-												<td><g:textArea name="employment[${iStatus}].description" value="${employment.description}" rows="5" cols="40"/></td>
-				       						</tr>
-				                    		
-				                    	</table>
-			                    		<input type="hidden" id="employment[${iStatus}].historicalEmploymentId" name="employment[${iStatus}].historicalEmploymentId" value="${employment.id}" />
+
+			                    		<div>
+			                    			<label for="employment[${iStatus}].companyName">Company Name:</label>
+											<g:textField name="employment[${iStatus}].companyName" value="${employment.companyName}"/>
+			                    		</div>
+			                    		<div>
+			                    			<label for="employment[${iStatus}].title">Title:</label>
+											<g:textField name="employment[${iStatus}].title" value="${employment.title}"/>
+			                    		</div>
+			                    		<div>
+			                    			<label for="employment[${iStatus}].monthFrom">Time Period:</label>
+											<g:select name="employment[${iStatus}].monthFrom" from="${months}" value="${employment.monthFrom}" optionKey="id" 
+			       							noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[${iStatus}].yearFrom" value="${employment.yearFrom}" class="yearInput" />
+			       							to <g:select name="employment[${iStatus}].monthTo" from="${months}" value="${employment.monthFrom}" optionKey="id" 
+			       							noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[${iStatus}].yearTo" value="${employment.yearTo}" class="yearInput" />
+										</div>
+			       						<div>
+			       							<label for="employment[${iStatus}].description">Description:</label>
+											<g:textArea name="employment[${iStatus}].description" value="${employment.description}" rows="5" cols="40"/>
+			       						</div>
+										<div>
+				                    		<input type="hidden" id="employment[${iStatus}].historicalEmploymentId" name="employment[${iStatus}].historicalEmploymentId" value="${employment.id}" />
+				                    	</div>
 									</fieldset>
 
 								</g:each>      
@@ -514,30 +548,33 @@
 							<g:else>
 								<fieldset id="employer0">
 					
-									<table>
-										<tr>
-											<td>Company Name:</td><td><g:textField name="employment[0].companyName" /></td>
-										</tr>
-										<tr>
-										<td>Title:</td><td><g:textField name="employment[0].title" /></td>
-										</tr>
-										<tr>
-											<td>Time Period:</td>
-											<td><g:select name="employment[0].monthFrom" from="${months}" value="tbd" optionKey="id"
-								   				noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[0].yearFrom" class="yearInput" />
-								   				to <g:select name="employment[0].monthTo" from="${months}" value="tbd" optionKey="id"
-								   					noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[0].yearTo" class="yearInput" />
-											</td>
-										</tr>
-							   			<tr>
-								   			<td>Description:</td><td><g:textArea name="employment[0].description" value="" rows="5" cols="40"/></td>
-							   			</tr>
-									</table>
-					   				<input type="hidden" id="employment[0].historicalEmploymentId" name="" value="-1" />
+									<div>
+										<label for="employment[0].companyName">Company Name:</label>
+										<g:textField name="employment[0].companyName" />
+									</div>
+									<div>
+										<label for="employment[0].title">Title:</label>
+										<g:textField name="employment[0].title" />
+									</div>
+									<div>
+										<label for="employment[0].monthFrom">Time Period:</label>
+										<g:select name="employment[0].monthFrom" from="${months}" value="tbd" optionKey="id"
+							   				noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[0].yearFrom" class="yearInput" />
+							   				to <g:select name="employment[0].monthTo" from="${months}" value="tbd" optionKey="id"
+							   					noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[0].yearTo" class="yearInput" />
+									</div>
+						   			<div>
+							   			<label for="employment[0].description">Description:</label>
+							   			<g:textArea name="employment[0].description" value="" rows="5" cols="40"/>
+						   			</div>
+									<div>
+					   					<input type="hidden" id="employment[0].historicalEmploymentId" name="" value="-1" />
+					   				</div>
+					   				
 								</fieldset>
 							</g:else>
 						</div>
-						<a href="#" onclick="return addEmploymentBlock();" style="font-size:24pt;">+</a>
+						<a href="#" onclick="return addEmploymentBlock();" style="font-size:12pt;text-decoration:none;">add another</a>
                     </div>
 
 
@@ -552,54 +589,56 @@
 		                    	<g:each status="edStatus" in="${profileToEdit?.educationHistory}" var="education">
 
 									<fieldset id="education${edStatus}">
-									  	<table>
-				                    		<tr>
-				                    			<td>Institution Name:</td>
-												<td><g:textField name="education[${edStatus}].institutionName" value="${education.institutionName}"/></td>
-				                    		</tr>
-				                    		
-				                    		<tr>
-												<td>Time Period:</td>
-												<td><g:select name="education[${edStatus}].monthFrom" from="${months}" value="${education.monthFrom}" optionKey="id"
-												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[${edStatus}].yearFrom" value="${education.yearFrom}" class="yearInput"/>
-												   to <g:select name="education[${edStatus}].monthTo" from="${months}" value="${education.monthTo}" optionKey="id"
-												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[${edStatus}].yearTo" value="${education.yearTo}" class="yearInput" />
-												</td>
-											</tr>
-											<tr>
-												<td>Major / Course of Study: </td>
-												<td><g:textField name="education[${edStatus}].major" id="education[${edStatus}].major" value="${education.courseOfStudy}" /></td>
-											</tr>
-				                    	</table>
-				                    	<input type="hidden" id="education[${edStatus}].educationalExperienceId" name="education[${edStatus}].educationalExperienceId" value="${education.id}" />
+										<div>
+											<label for="education[${edStatus}].institutionName">Institution Name:</label>
+											<g:textField name="education[${edStatus}].institutionName" value="${education.institutionName}"/>
+										</div>
+										
+										<div>
+											<label for="education[${edStatus}].monthFrom">Time Period:</label>
+											<g:select name="education[${edStatus}].monthFrom" from="${months}" value="${education.monthFrom}" optionKey="id"
+											   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[${edStatus}].yearFrom" value="${education.yearFrom}" class="yearInput"/>
+		   										to <g:select name="education[${edStatus}].monthTo" from="${months}" value="${education.monthTo}" optionKey="id"
+		   										noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[${edStatus}].yearTo" value="${education.yearTo}" class="yearInput" />
+										</div>
+
+										<div>
+											<label for="education[${edStatus}].major">Major / Course of Study:</label>
+											<g:textField name="education[${edStatus}].major" id="education[${edStatus}].major" value="${education.courseOfStudy}" />
+										</div>
+										<div>
+					                    	<input type="hidden" id="education[${edStatus}].educationalExperienceId" name="education[${edStatus}].educationalExperienceId" value="${education.id}" />
+										</div>
 									</fieldset>
 								</g:each>
 							</g:if>
 							<g:else>
 								<fieldset id="education0">
-									  	<table>
-				                    		<tr>
-				                    			<td>Institution Name:</td>
-												<td><g:textField name="education[0].institutionName" value=""/></td>
-				                    		</tr>
-				                    		<tr>
-												<td>Time Period:</td>
-												<td><g:select name="education[0].monthFrom" from="${months}" value="tbd" optionKey="id"
-												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[0].yearFrom" class="yearInput" />
-												   to <g:select name="education[0].monthTo" from="${months}" value="tbd" optionKey="id"
-												   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[0].yearTo" class="yearInput" />
-												</td>
-											</tr>
-											<tr>
-												<td>Major / Course of Study: </td>
-												<td><g:textField name="education[0].major" id="education[0].major" /></td>
-											</tr>
-				                    	</table>
+									 <div>
+				                    		<label for="education[0].institutionName">Institution Name:</label>
+											<g:textField name="education[0].institutionName" value="" />
+				                    </div>
+				                    <div>
+				                    		
+											<label for="education[0].monthFrom">Time Period:</label>
+											<g:select name="education[0].monthFrom" from="${months}" value="tbd" optionKey="id"
+											   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[0].yearFrom" class="yearInput" />
+											   to <g:select name="education[0].monthTo" from="${months}" value="tbd" optionKey="id"
+											   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[0].yearTo" class="yearInput" />
+									</div>
+									<div>
+											
+											<label for="education[0].major">Major / Course of Study:</label>
+											<g:textField name="education[0].major" id="education[0].major" />
+										
+									</div>
+				                   	<div>
 				                    	<input type="hidden" id="education[0].educationalExperienceId" name="education[0].educationalExperienceId" value="-1" />
+				                    </div>
 								</fieldset>							
 							</g:else>
 						</div>
-						<a href="#" onclick="return addEducationHistoryBlock();" style="font-size:24pt;">+</a>					
+						<a href="#" onclick="return addEducationHistoryBlock();" style="font-size:12pt;text-decoration:none;">add another</a>					
 					</div>
 
 					<!-- 
@@ -616,71 +655,67 @@
     
     <!-- hidden template fieldset for educational history -->
 	<fieldset id="educationHistoryTemplate" style="display:none;">
-	  	<table>
-        	<tr>
-            	<td>Institution Name:</td>
-				<td><g:textField name="education[?].institutionName" value=""/></td>
-          	</tr>
+		<div>
+            	<label for="education[?].institutionName">Institution Name:</label>
+				<g:textField name="education[?].institutionName" value=""/>
+      	</div>
 
-           	<tr>
-				<td>Time Period:</td>
-				<td><g:select name="education[?].monthFrom" from="${months}" value="tbd" optionKey="id"
-				   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[?].yearFrom" class="yearInput" />
-				   to <g:select name="education[?].monthTo" from="${months}" value="tbd" optionKey="id"
-				   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[?].yearTo" class="yearInput" />
-				</td>
-			</tr>
-			<tr>
-				<td>Major / Course of Study: </td>
-				<td><g:textField name="education[?].major" id="education[?].major" /></td>
-			</tr>
-
-       	</table>
-        <input type="hidden" id="education[?].educationalExperienceId" name="education[?].educationalExperienceId" value="-1" />
+        <div>
+			<label for="education[?].monthFrom">Time Period:</label>
+			<g:select name="education[?].monthFrom" from="${months}" value="tbd" optionKey="id"
+			   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[?].yearFrom" class="yearInput" />
+			   to <g:select name="education[?].monthTo" from="${months}" value="tbd" optionKey="id"
+			   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="education[?].yearTo" class="yearInput" />
+			
+		</div>
+		<div>
+			<label for="education[?].major">Major / Course of Study:</label>
+			<g:textField name="education[?].major" id="education[?].major" />
+		</div>
+		<div>	
+        	<input type="hidden" id="education[?].educationalExperienceId" name="education[?].educationalExperienceId" value="-1" />
+        </div>
 	</fieldset>
     
     <!-- hidden template fieldset for contact address -->
     <fieldset id="contactAddressTemplate" style="display:none;">
-     	<table>
-      		<tr>
-        		<td>
+     	
+      		<div>
         			<g:select name="contactAddress[?].serviceType" from="${contactTypes}" value="" optionKey="id" 
 						noSelection="${['':'Select One...']}" optionValue="text" />
-				</td>
-				<td>
+						
       				<g:textField name="contactAddress[?].address" value="" />
-      			</td>
-      		</tr>
-      	</table>
-      	<input type="hidden" id="contactAddress[?].contactAddressId" name="contactAddress[?].contactAddressId" value="-1" />     	
+      		</div>
+      		<div>
+		      	<input type="hidden" id="contactAddress[?].contactAddressId" name="contactAddress[?].contactAddressId" value="-1" />
+	      	</div>     	
     </fieldset>
     
 	<!-- hidden template fieldset for employment history -->
 	<fieldset id="employmentHistoryTemplate" style="display:none;" >
 			
-			<table>
-				<tr>
-					<td>Company Name:</td>
-					<td><g:textField name="employment[?].companyName" /></td>
-				</tr>
-				<tr>
-					<td>Title:</td>
-					<td><g:textField name="employment[?].title" /></td>
-				</tr>
-				<tr>
-					<td>Time Period:</td>
-					<td><g:select name="employment[?].monthFrom" from="${months}" value="" optionKey="id"
-					   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[?].yearFrom" class="yearInput" />
-					   to <g:select name="employment[?].monthTo" from="${months}" value="" optionKey="id"
-					   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[?].yearTo" class="yearInput" />
-					</td>
-				</tr>
-				<tr>
-					   <td>Description:</td>
-					   <td><g:textArea name="employment[?].description" value="" rows="5" cols="40"/></td>
-				   </tr>
-				</table>
-			<input type="hidden" id="employment[?].historicalEmploymentId" name="employment[?].historicalEmploymentId" value="-1" />   
+			<div>
+				<label for="employment[?].companyName">Company Name:</label>
+				<g:textField name="employment[?].companyName" />
+			</div>
+			<div>
+				<label for="employment[?].title">Title:</label>
+				<g:textField name="employment[?].title" />
+			</div>
+			<div>
+				<label for="employment[?].monthFrom">Time Period:</label>
+				<g:select name="employment[?].monthFrom" from="${months}" value="" optionKey="id"
+				   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[?].yearFrom" class="yearInput" />
+				   to <g:select name="employment[?].monthTo" from="${months}" value="" optionKey="id"
+				   noSelection="${['':'Choose...']}" optionValue="text" /> &nbsp; <g:textField name="employment[?].yearTo" class="yearInput" />
+			</div>
+			<div>
+				   <label for="employment[?].description">Description:</label>
+				   <g:textArea name="employment[?].description" value="" rows="5" cols="40"/>
+			</div>
+			<div>
+				<input type="hidden" id="employment[?].historicalEmploymentId" name="employment[?].historicalEmploymentId" value="-1" />   
+			</div>
 		</fieldset>
 	
 	</body>

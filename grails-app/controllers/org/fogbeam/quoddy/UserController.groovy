@@ -17,6 +17,14 @@ class UserController {
 	def scaffold = true;
 
 	def sexOptions = [new SexOption( id:1, text:"Male" ), new SexOption( id:2, text:"Female" ) ];
+	def years =	 {
+					def alist = [];
+					(1900 .. 2011).each { num ->
+						alist.add( new Year( id: num, text: "${num}" ) ); 
+						}
+					return alist;
+				 }.call();
+			
 	def months = [ new Month( id:1, text:"January" ),
 				   new Month( id:2, text:"February" ),
 				   new Month( id:3, text:"March" ),
@@ -292,7 +300,7 @@ class UserController {
 		
 		User user = userService.findUserByUserId( userId );
 		UserProfileCommand upc = new UserProfileCommand(user.profile, months );
-		[profileToEdit:upc, sexOptions:sexOptions, months:months, days:days,
+		[profileToEdit:upc, sexOptions:sexOptions, years:years, months:months, days:days,
 			contactTypes:contactTypes];
 	}
 	
@@ -1167,6 +1175,12 @@ class Month
 }
 
 class Day
+{
+	int id;
+	String text;	
+}
+
+class Year
 {
 	int id;
 	String text;	
