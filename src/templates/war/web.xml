@@ -18,6 +18,7 @@
 	<!-- Shindig configuration -->
 	<!-- If you have your own Guice module(s), put them here as a colon-separated list. -->
 	<!-- Note that any extras modules are optional -->
+	<!--
 	<context-param>
 		<param-name>guice-modules</param-name>
 	    <param-value>
@@ -33,6 +34,7 @@
 	      org.apache.shindig.extras.as.ActivityStreamsGuiceModule
 	    </param-value>
 	</context-param>
+	-->
 	
   	<!-- 
   		Syntax: <key>=<value> separated by a newline
@@ -46,6 +48,7 @@
   
 	  	Make sure you escape all HTML values for the web.xml to be parsed correctly.
   	-->
+   	<!-- 
    	<context-param>
   		<param-name>system.properties</param-name>
      	<param-value>
@@ -55,7 +58,8 @@
     	shindig.port=
     	
  		</param-value>
-  	</context-param> 		
+  	</context-param>
+  	--> 		
 	<!-- end Shindig configuration -->
 
 	<filter>
@@ -78,7 +82,7 @@
 
 	<!-- Shindig Filters -->
 
-
+	<!--
     <filter>
         <filter-name>ShiroFilter</filter-name>
         <filter-class>org.apache.shiro.web.servlet.IniShiroFilter</filter-class>
@@ -116,6 +120,8 @@
     	<filter-name>etagFilter</filter-name>
     	<filter-class>org.apache.shindig.gadgets.servlet.ETagFilter</filter-class>
   	</filter>
+  	-->
+  	
 	<!-- end Shindig Filters -->
 
 	<filter-mapping>
@@ -130,6 +136,7 @@
 
 	<!-- Shindig Filter Mappings -->
 
+	<!--
 	<filter-mapping>
 	    <filter-name>ShiroFilter</filter-name>
 	    <url-pattern>/oauth/authorize</url-pattern>
@@ -155,6 +162,7 @@
 	  <filter-name>etagFilter</filter-name>
 	  <url-pattern>*</url-pattern>
 	</filter-mapping>
+	-->
 	<!-- end Shindig Filter Mappings -->
 
     <listener>
@@ -168,11 +176,18 @@
 	<listener>
 		<listener-class>org.fogbeam.quoddy.listeners.QuoddySessionListener</listener-class>
 	</listener>
+	
+	<listener>
+		<listener-class>org.fogbeam.quoddy.listeners.UITestSessionListener</listener-class>
+	</listener>
 
 	<!-- Shindig Listeners -->
+	<!--
 	<listener>
     	<listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener</listener-class>
   	</listener>
+  	-->
+  	
 	<!-- end Shindig Listeners -->
 
 	<!-- Grails dispatcher servlet -->
@@ -191,6 +206,7 @@
 
 	<!-- Shindig Servlets -->
 	<!-- Render a Gadget -->
+  	<!--
   	<servlet>
     	<servlet-name>xml-to-html</servlet-name>
     	<servlet-class>
@@ -205,7 +221,6 @@
 	  </servlet-class>
 	</servlet>
 
-	<!-- Proxy -->
 	<servlet>
 	  <servlet-name>proxy</servlet-name>
 	  <servlet-class>
@@ -213,7 +228,6 @@
 	  </servlet-class>
 	</servlet>
 	
-	<!-- makeRequest -->
 	<servlet>
 	  <servlet-name>makeRequest</servlet-name>
 	  <servlet-class>
@@ -221,7 +235,6 @@
 	  </servlet-class>
 	</servlet>
 	
-	<!-- Concat -->
 	<servlet>
 	  <servlet-name>concat</servlet-name>
 	  <servlet-class>
@@ -229,7 +242,6 @@
 	  </servlet-class>
 	</servlet>
 	
-	<!-- OAuth callback -->
 	<servlet>
 	  <servlet-name>oauthCallback</servlet-name>
 	  <servlet-class>
@@ -237,15 +249,13 @@
 	  </servlet-class>
 	</servlet>
 	
-	<!-- Metadata RPC -->
 	<servlet>
 	  <servlet-name>metadata</servlet-name>
 	  <servlet-class>
 	    org.apache.shindig.gadgets.servlet.RpcServlet
 	  </servlet-class>
 	</servlet>
-	
-	<!-- javascript serving -->
+
 	<servlet>
 	  <servlet-name>js</servlet-name>
 	  <servlet-class>org.apache.shindig.gadgets.servlet.JsServlet</servlet-class>
@@ -262,7 +272,6 @@
 	  </init-param>
 	</servlet>
 	
-	<!-- Serve social RPC api -->
 	<servlet>
 	  <servlet-name>jsonRpcServlet</servlet-name>
 	  <servlet-class>
@@ -274,13 +283,15 @@
 	  </init-param>
 	</servlet>
 	
-	<!-- Serve sample OAuth apis -->
+
 	<servlet>
 	  <servlet-name>sampleOAuth</servlet-name>
 	  <servlet-class>
 	    org.apache.shindig.social.sample.oauth.SampleOAuthServlet
 	  </servlet-class>
 	</servlet>	
+	-->
+	
 	<!-- end Shindig Servlets -->
 
 	<servlet-mapping>
@@ -289,6 +300,7 @@
 	</servlet-mapping>
 
 	<!-- Shindig Servlet Mappings -->
+	<!--
 	<servlet-mapping>
 	  <servlet-name>js</servlet-name>
 	  <url-pattern>/gadgets/js/*</url-pattern>
@@ -347,6 +359,7 @@
 	  <servlet-name>sampleOAuth</servlet-name>
 	  <url-pattern>/oauth/*</url-pattern>
 	</servlet-mapping>
+	-->
 	
 	<!-- end Shindig Servlet Mappings -->
 
