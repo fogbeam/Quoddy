@@ -6,7 +6,6 @@
 	<classpathentry kind="src" path="grails-app/domain"/>
 	<classpathentry kind="src" path="grails-app/services"/>
 	<classpathentry kind="src" path="grails-app/ldap"/>
-	<classpathentry kind="src" path="grails-app/shindig"/>
 	<classpathentry kind="src" path="test/unit"/>
 	<classpathentry kind="src" path="test/integration"/>
 	<classpathentry kind="lib" path="lib/activation.jar"/>
@@ -64,13 +63,6 @@
 	<classpathentry kind="lib" path="lib/oauth-consumer-20090617.jar"/>
 	<classpathentry kind="lib" path="lib/oauth-httpclient4-20090913.jar"/>
 	<classpathentry kind="lib" path="lib/oauth-provider-20100527.jar"/>
-	<classpathentry kind="lib" path="lib/shindig-common-3.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/shindig-extras-3.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/shindig-features-3.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/shindig-gadgets-3.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/shindig-social-api-3.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/shiro-core-1.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/shiro-web-1.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.5.6.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-jdk14-1.5.6.jar"/>
 	<classpathentry kind="src" path="grails-app/src"/>
@@ -78,22 +70,52 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry kind="con" path="com.springsource.sts.grails.core.CLASSPATH_CONTAINER"/>
-	<classpathentry kind="src" path="navigation-1.1.1-grails-app-taglib">
+	<classpathentry kind="src" path=".link_to_grails_plugins/navigation-1.1.1/grails-app/taglib">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="navigation-1.1.1-grails-app-services">
+	<classpathentry kind="src" path=".link_to_grails_plugins/navigation-1.1.1/grails-app/services">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="navigation-1.1.1-grails-app-i18n">
+	<classpathentry kind="src" path=".link_to_grails_plugins/navigation-1.1.1/grails-app/i18n">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="tomcat-1.3.3-src-groovy">
+	<classpathentry kind="src" path=".link_to_grails_plugins/code-coverage-1.2/grails-app/i18n">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/grails-app/taglib">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/grails-app/services">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/grails-app/conf">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/grails-app/i18n">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/src/groovy">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/tomcat-1.3.7.BUILD-SNAPSHOT/src/groovy">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
