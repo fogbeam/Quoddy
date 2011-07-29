@@ -7,3 +7,168 @@
 }
 
 ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list-style-type:none;margin:0;padding:0 .5em 0 0;}
+
+.a-Eo-T {
+		background-color: #2D2D2D;
+  		font-size: 12pt;
+  		font-weight:bold;
+  		// color: #2D2D2D;
+  		min-width: 960px;
+}
+
+#gbg {
+  		position: absolute;
+  		padding-right: 5px;
+  		right: 0;
+  		width: 50%;
+  		color: #818181;
+  		background-color: #2D2D2D;
+  		// background-color: #818181;
+  		text-align: right;
+}
+	
+#gbz {
+  		position: absolute;
+  		left: 0;
+  		padding-left: 5px;
+  		width: 50%;
+  		color: #818181;
+  		background-color: #2D2D2D;
+  		// background-color: #818181;
+}
+
+#gbz, #gbg {
+	padding-top:8px;		
+  		height: 25px;
+  		top: 0;
+  		white-space: nowrap;
+  		z-index: 1000;
+}
+
+#header {
+	margin-top: 30px;
+	padding-top: 1px;
+	font-size:14pt;
+	font-weight: bold;
+	background: #F1F1F1;
+	height: 87px;
+}
+
+#body {
+
+	margin: auto; /* center in viewport */
+    width: 1440px;
+    // height: 900px;
+    padding-top: 5px;
+	padding-right:3px;
+	padding-left: 3px;
+    clear: both;
+    background-color: #FAFDF7;
+    // #FAFDF1;
+    // #E3FAF1;
+    // #FFFFF1;
+    // #FF9900
+    // #f0ead6; 
+}
+	
+#logo {
+	margin-left: 125px;
+	padding-top: 20px;
+	float: left;
+}
+	
+#icons {
+	padding-top: 20px;
+}
+	
+#searchbox {
+	margin-left: 330px;
+	padding-top: 16px;
+}
+	
+#searchbox .searchbox {
+	width: 500px;
+}
+	
+#updateStatusForm {
+	margin-top: 1px;
+	padding-top: 3px;
+	width: 350px;
+}
+	
+#statusText {
+	padding-top: 1px;
+	margin-top: 7px;
+	margin-left: 22px;
+	width: 500px;
+	height: 25px;
+	margin-bottom:8px;
+}
+	
+#searchBtn {
+	height: 25px;
+}
+
+#updateStatusSubmit {
+	height: 28px;
+	margin-left: 22px;
+}
+
+#gbw ul {
+	list-style-type:none;
+	display:inline;
+}
+
+#gbw ul li {
+	float: left;
+	margin-left: 4px;
+	margin-right: 4px;
+}
+
+#bodyContent {
+	padding-left: 7px;
+	padding-right: 7px;
+    border-left: 1px solid #E2ECFC;
+    border-right: 1px solid #E2ECFC;
+    border-bottom: 1px solid #E2ECFC;
+	// min-height: 900px;
+}
+
+.aseWrapper {
+	padding-top: 10px;
+    // border-top: 5px solid #E2ECFC;
+    border-bottom: 2px solid #E2ECFC;
+}
+
+.activityStreamEntry {
+	text-align:left;	
+}
+
+.aseTitleBar {
+	margin-bottom:10px;
+}
+
+.aseAvatarBlock {
+	float:left; 
+	width:100px;
+}
+
+.aseClear {
+	clear:both;
+}
+
+.aseFooter {
+	margin-left: 100px;
+	margin-top: 20px;
+	padding-bottom: 4px;
+}
+
+#messageCount {
+	margin-top:20px;
+}
+
+#activityStream {
+	margin-top:15px;
+	border-top: 1px solid black;
+
+}

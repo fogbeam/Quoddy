@@ -24,6 +24,17 @@ add redirect to default page on session expiration
 Figure out how to re-integrate the Shingdig (and/or Rave) stuff, without actually embedding their code
 into the Grails project...
 
+Don't display "add to friends" link when user is already your friend
+ -- same for "follow" link
+ 
+ Add ability to view a specific user's feed ("wall", whatever) with an "about" link
+ that displays their profile, etc.
+
+Don't display that "edit profile" link unless a user is logged in.
+
+Don't display most of that top menu bar stuff, unless a user is logged in. 
+
+
 
 # Only push messages onto queues based on relationships - DONE
 
