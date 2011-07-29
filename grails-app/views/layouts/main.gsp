@@ -4,145 +4,91 @@
           <g:layoutTitle default="Quoddy" />
         </title>
         <nav:resources />
-        <link rel="stylesheet" type="text/css" href="/css/main.css">
+        <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'main.css')}" />
+        <!-- 
         <link rel="stylesheet" type="text/css" href="/css/reset-min.css">
         <link rel="stylesheet" type="text/css" href="/css/fonts-min.css">             
         <link rel="stylesheet" type="text/css" href="/css/grids-min.css">
-        <!--  
-        <g:javascript library="prototype" /> 
-        <g:javascript library="scriptaculous" />
-        -->
-        <g:javascript library="jquery" plugin="jquery"/>
-        <g:javascript library="application" />
+		-->
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssbase/base-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssfonts/fonts-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" />
+		
+        <g:javascript library="jquery-1.4" />
+        <g:javascript library="jquery.timers-1.2" />
+        <!-- <g:javascript library="application" />  -->
         
-
-        <g:javascript>
-               
-        </g:javascript>         
+	    <script type="text/javascript">
+        	<g:render template="/javascript/application.js"/>
+    	</script>
         
         <g:layoutHead />
                 				
     </head>
     <body>
     
-          <div id="doc3" class="yui-t4">
-               <div id="hd">
-                    
-                    <!-- TODO: replace this with a template gsp -->
-                    
-                    <!-- header -->
-                    <div style="background-color:cfe3ff;height:65px" >
-                         
-                         <center>
-                              <h1 style="font-size:15pt;">Welcome to Quoddy</h1>
-                         </center>
-                         
-                         <!-- nav -->
-                         <div style="position:relative;margin-left:150px;">
-                              <ul class="navigation" id="navigation_tabs">
-                                   
-                                   
-                                   <li class="navigation_active navigation_first">
-                                        
-                                        <g:if test="${channelName == null }">
-                                             <a href="/home/">Home</a>
-                                        </g:if>
-                                        <g:else>
-                                             <a href="/home/">Home</a>                                  
-                                        </g:else>
-                                   </li>
-                                   <li class="navigation_active">
-                                        <g:if test="${channelName == null }">
-                                             <a href="/user/listFriends">Friends</a>
-                                        </g:if>
-                                        <g:else>
-                                             <a href="/user/listFriends">Friends</a>                                  
-                                        </g:else>
-                                   
-                                   </li>
-                                   <li class="navigation_active">
-                                        <g:if test="${channelName == null }">
-                                             <a href="/user/listFollowers">Followers</a>
-                                        </g:if>
-                                        <g:else>
-                                             <a href="/user/listFollowers">Followers</a>                                  
-                                        </g:else>
-                                   
-                                   </li>
-                                   <li class="navigation_active">
-                                   <g:if test="${channelName == null }">
-                                        <a href="/search/showAdvanced">Advanced Search</a>
-                                   </g:if>
-                                   <g:else>
-                                        <a href="/search/showAdvanced">Advanced Search</a>                                  
-                                   </g:else>
-                                        
-                                   </li>
-                                   <li class="navigation_active">
-                                        <g:if test="${channelName == null }">
-                                             <a href="/reports">Reports</a>
-                                        </g:if>
-                                        <g:else>
-                                             <a href="/reports">Reports</a>                                  
-                                        </g:else>
-                                   
-                                   </li>                                   
-                                   <li class="navigation_active">
-                                        <g:if test="${channelName == null }">
-                                             <a href="/opensocial">OpenSocial</a>
-                                        </g:if>
-                                        <g:else>
-                                             <a href="/opensocial">OpenSocial</a>                                  
-                                        </g:else>
-                                   </li>
-                                   <!--
-                                   <li class="navigation_active"><a href="/">Saved</a></li>
-                                   -->
-                                   <li class="navigation_active"><a href="/tag/list">Tags</a></li>
-                                   
-                                   <!--
-                                   <li class="navigation_active"><a href="/">Channels</a></li>
-                                   -->
-                                   
-                                   <li class="navigation_active"><a href="/admin/index">Admin</a></li>
-                                   
-                                   <li style="float:right;margin-right:100px;">
-                                        <g:if test="${session.user}">
-                                         <a href="/userHome/index/${session.user.userId}">${session.user.userId}</a>
-                                        </g:if>
-                                   </li>
-                              </ul>
-
-                         </div>
-
-                    </div>
-               </div> 
-               <div id="bd">
-                     <div id="yui-main">
-                         <div class="yui-b">
-                              
-                              <!-- layout main content area -->
-                              <g:layoutBody />             
-                                    
-                         </div>
-                     </div>
-                     <div class="yui-b">
-                     
-                         <!-- layout sidebar -->
-                         <g:render template="/sidebar" />
-                     
-                     </div>
-               </div> 
+    	<div id="gbw" class="a-Eo-T">
+    		<div id="gbz">
+    			<ul>
+    				<li><a href="#">Email</a></li>
+    				<li><a href="${createLink(controller:'user', action:'listFriends')}">Friends</a></li>
+    				<li><a href="${createLink(controller:'user', action:'listFollowers')}">Followers</a></li>
+    				<li><a href="#">Reports</a></li>
+    				<li><a href="#">Calendar</a></li>
+    				<li><a href="#">Apps</a></li>
+    			</ul>
+    		</div>
+    		<div id="gbg">
+    			<a href="${createLink(controller:'user', action:'editProfile')}">Edit Profile</a>
+    		</div>
+    	</div>
+    	
+    	<div id="header">
+    		<div id="logo"><a href="${createLink(controller:'home', action:'index')}"><img src="${resource(dir:'images',file:'logo2.png')}" width="171" height="53" /></a></div>
+    		<div id="icons"></div>
+    		<div id="searchbox">
+    		     <g:form controller="search" action="doSearch" method="GET">
+          			<input name="queryString" type="text" class="searchbox" />
+          			<input type="submit" value="Search" id="searchBtn" />
+     			</g:form>
+    		
+    		</div>
+    		
+    	</div>
+    	
+       	<div id="body" class="yui3-g">
+            
+			<div class="yui3-u-5-24">
+ 
+ 				<p style="font-weight:bold;float:right;margin-right:45px;">
+ 					<g:render template="/leftSidebar" />				
+ 				</p>
+ 				
+        	</div>
+        	
+        	<div class="yui3-u-7-12">
+        	
+	    		<!-- layout main content area -->
+	    	   	<g:layoutBody /> 
+ 
+        	</div>
+    	
+    		<div class="yui3-u-5-24">
+    		
+	    		<p style="font-weight:bold;float:left;margin-left:45px;">
+	    			<g:render template="/rightSidebar" />	    		
+	    		</p>
+    		</div>
+    	</div> <!--  "body" -->
                
-               <div id="ft">
+       	<div id="footer">
                     
-                    <!-- TODO: replace this with a template gsp -->
-                    
-                    <!-- footer -->
-                    <div>
-                         <center>Footer for Quoddy</center>
-                    </div>
-               </div> 
-          </div>            
+            <!-- TODO: replace this with a template gsp -->
+            <!-- footer -->
+            <div>
+                 <center>Footer for Quoddy</center>
+           	</div>
+       	</div>      
     </body>	
 </html>

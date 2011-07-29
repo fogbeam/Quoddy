@@ -2,46 +2,36 @@
     <head>
 		<title>Welcome to Quoddy</title>
        	<meta name="layout" content="main" />
-       	<nav:resources />
     </head>
 	<body>
-		<h1>Welcome to Project Quoddy</h1>
-		
-		<p />
-             <g:hasErrors>
-                 <div class="errors">
-                    <g:renderErrors bean="${flash.user}" as="list" />
-                 </div>
-             </g:hasErrors>		
-		<p />
-		<g:if test="${session.user != null}">
-			<g:form controller="status" action="updateStatus" >
-				<input type="text" name="statusText" />
-				<input type="submit" value="Update Status" />
-			</g:form>
-			<br />
+		<div id="bodyContent">	
 			
-			<dl>
-				<dt>Status:</dt>
+			<g:if test="${session.user != null}">
+				<g:form name="updateStatusForm" controller="status" action="updateStatus" >
+					<input type="text" id="statusText" name="statusText" />
+					<input id="updateStatusSubmit" type="submit" value="Update Status" />
+				</g:form>
 				
-				<g:if test="${user != null}">
-					<dd><div class="myStatus">${session.user?.currentStatus?.text }</div></dd>
-				</g:if>
-			</dl>
-			<hr />
-			<h2>Activity Stream</h2>
-			<p />
-			<g:if test="${activities != null}">
+            	
+            	<!--  we should have a collection available to render, with the statusupdates for this
+            	User, that exist when this page is loaded.  Once we're loaded, we'll update an "available posts"
+            	message with AJAX and provide an AJAX powered "update" link that will refresh this view
+            	using JQuery's AJAX support. -->
+            	<div id="messageCount">
+            		<a href="#" id="refreshMessagesLink">0 messages pending</a>
+            	</div>
+            	
+            	<g:if test="${session.user != null}">
+					<g:if test="${activities != null}">
 			
-				<div id="activityStream">
-					<dl>
-						<g:each in="${activities}" var="activity">
-							<dd><span class="activityStreamEntry">${activity.text}</span></dd>
-						</g:each>
-					</dl>
-				</div>
-			
-			</g:if>
-		</g:if>
+						<div id="activityStream">
+							
+							<g:render template="/activityStream" model="['activityStream':activityStream]" />
+							
+						</div>
+					</g:if>
+            	</g:if>
+            </g:if>
+    	</div>
 	</body>
 </html>

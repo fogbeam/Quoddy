@@ -1,13 +1,17 @@
 package org.fogbeam.quoddy;
 
-import java.text.SimpleDateFormat 
-import org.fogbeam.quoddy.profile.ContactAddress 
-import org.fogbeam.quoddy.profile.EducationalExperience 
-import org.fogbeam.quoddy.profile.HistoricalEmployer 
-import org.fogbeam.quoddy.profile.Interest 
-import org.fogbeam.quoddy.profile.OrganizationAssociation 
-import org.fogbeam.quoddy.profile.Profile;
-import org.fogbeam.quoddy.profile.Skill 
+import java.text.SimpleDateFormat
+
+import org.apache.commons.io.FilenameUtils
+import org.fogbeam.quoddy.profile.ContactAddress
+import org.fogbeam.quoddy.profile.EducationalExperience
+import org.fogbeam.quoddy.profile.HistoricalEmployer
+import org.fogbeam.quoddy.profile.Interest
+import org.fogbeam.quoddy.profile.OrganizationAssociation
+import org.fogbeam.quoddy.profile.Profile
+import org.fogbeam.quoddy.profile.Skill
+import org.springframework.web.multipart.MultipartHttpServletRequest
+import org.springframework.web.multipart.commons.CommonsMultipartFile
 
 
 class UserController {
@@ -317,6 +321,49 @@ class UserController {
 		// println "Looking for user by uuid: $uuid";
 		User user = userService.findUserByUuid( uuid );
 		Profile profile = user.profile;
+		if(request instanceof MultipartHttpServletRequest)
+		{
+			println "is multipart";
+			MultipartHttpServletRequest mpr = (MultipartHttpServletRequest)request;
+		  	CommonsMultipartFile f = (CommonsMultipartFile) mpr.getFile("your_photo");
+		  	/* def f = request.getFile('myFile')*/
+		  	if(!f.empty) {
+				  
+				  // f.transferTo( new File("/tmp/myfile.png") );
+		  	
+				  /* copy image to a known location for user profile pictures, and
+				   * resize to thumbnails, etc. as appropriate
+				   */
+				  
+				  File profilePicFile = new File("./profilepics/${user.userId}/${user.userId}_profile.jpg");
+				  if( !profilePicFile.exists() )
+				  {
+					  	File parentDir = profilePicFile.getParentFile();
+						if( !parentDir.exists() )
+						{
+							parentDir.mkdirs();
+						}
+						profilePicFile.createNewFile();  
+				  }
+
+				  f.transferTo( profilePicFile  );
+				  
+				  def convert = ["/usr/bin/convert","/opt/local/bin/convert"].find( { new File(it as String).exists() });
+				  File thumbnail = new File( profilePicFile.getParentFile(), FilenameUtils.getBaseName(profilePicFile.getName()) + "_thumbnail48x48.jpg" );
+				  ProcessBuilder pb = new ProcessBuilder()
+						  .command(convert, profilePicFile.getName(), "-thumbnail", "48x48!", thumbnail.getName()).directory(profilePicFile.getParentFile());
+				  
+				  int result = pb.start().waitFor()
+				  
+				  if( result != 0 ){
+					throw new RuntimeException("thumbnail generation failured, return code:" + result);
+				  }
+			  }
+		}
+		else 
+		{
+			println "not multipart";	
+		}
 		
 		profile.summary = upc.summary;
 		if( upc.birthMonth )
@@ -351,8 +398,12 @@ class UserController {
 				
 				// is there an ID? Is it valid?  If so, update existing record for profile
 				String histEmpIdStr = emp1v.historicalEmploymentId;
-				Integer histEmpId = Integer.parseInt(histEmpIdStr);
-							
+				Integer histEmpId = 0;
+				if( histEmpIdStr )
+				{
+					histEmpId = Integer.parseInt(histEmpIdStr);
+				}
+				
 				if( histEmpId > 0 )
 				{
 					// TODO: use a service for this?
@@ -474,24 +525,27 @@ class UserController {
 				// else, create new record and attach to profile
 				else
 				{
-					ContactAddress newContactAddress = new ContactAddress( serviceType: Integer.parseInt( contactAddress.type ),
+					if( contactAddress.type && contactAddress.address )
+					{
+					
+						ContactAddress newContactAddress = new ContactAddress( serviceType: Integer.parseInt( contactAddress.type ),
 																			address: contactAddress.address );
 
-					if( !newContactAddress.save() )
-					{
-						println "Saving new ContactAddress Record failed";
-						newContactAddress.errors.allErrors.each { println it };
+						if( !newContactAddress.save() )
+						{
+							println "Saving new ContactAddress Record failed";
+							newContactAddress.errors.allErrors.each { println it };
+						}
+					    else
+					    {
+							println "newContactAddress saved";	
+					    }
+					
+						// println "newContactAddress: ${newContactAddress}";
+					
+						profile.addToContactAddresses( newContactAddress );														
+						// println "added newContactAddress to profile";
 					}
-					else
-					{
-						println "newContactAddress saved";	
-					}
-					
-					// println "newContactAddress: ${newContactAddress}";
-					
-					profile.addToContactAddresses( newContactAddress );														
-					// println "added newContactAddress to profile";
-					
 				}
 			}
 			else if( it.startsWith( "education[" ) && it.endsWith( "]" ))
@@ -595,7 +649,7 @@ class UserController {
 			
 			if( interestLine.contains("," ))
 			{
-				// TODO: deal with comma separted values
+				// TODO: deal with comma separated values
 			}
 			else
 			{

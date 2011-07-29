@@ -7,8 +7,7 @@
 	</head>
 	
 	<body>
-	
-		view MY details here.  And put in an <a href="/user/editProfile">Edit Profile</a> button.
+		view MY details here.  And put in an <a href="${link(controller:'user', action:'editProfile')}">Edit Profile</a> button.
 		
 		<hr />
 		<div>

@@ -20,7 +20,7 @@ class HomeController {
     		{
     			user = userService.findUserByUserId( session.user.userId );
 				// activities = activityStreamService.getRecentFriendActivitiesForUser( user );
-				
+				activities = activityStreamService.getRecentActivitiesForUser( user, 25 );
 			}
     	}
     

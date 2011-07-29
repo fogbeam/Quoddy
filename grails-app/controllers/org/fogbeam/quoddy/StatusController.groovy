@@ -8,6 +8,7 @@ class StatusController {
 
 	def userService;
 	def activityStreamService;
+	def jmsService;
 	
 	def updateStatus = {
 		
@@ -54,9 +55,20 @@ class StatusController {
 			session.user = user;
 			
 			// TODO: if the user update was successful
+			def originTime = new Date().getTime();
 			Activity activity = new Activity(text:newStatus.text);
 			activity.creator = user;
+			activity.originTime = originTime;
 			activityStreamService.saveActivity( activity );
+			
+			
+			Map msg = new HashMap();
+			msg.creator = activity.creator.userId;
+			msg.text = newStatus.text;
+			msg.originTime = originTime;
+			
+			println "sending message to JMS";
+			jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );
 			
 		}
 		

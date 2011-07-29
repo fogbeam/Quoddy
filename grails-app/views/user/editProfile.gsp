@@ -392,16 +392,16 @@
               <!-- start body content -->
               <h1>Edit Profile</h1>
 
-             <g:hasErrors>
-                 <div class="errors">
-                    <g:renderErrors bean="${flash.user}" as="list" />
-                 </div>
-             </g:hasErrors>
-
-             <g:form action="saveProfile" name="profileForm" >
+             <g:form action="saveProfile" name="profileForm" enctype="multipart/form-data" >
              		<g:hiddenField name="userUuid" value="${profileToEdit?.userUuid}" />
                  
                  <!--  former begin <dl> -->
+
+					<!-- photo -->
+					<div>
+						<label for="your_photo">Your profile photo</label>
+						<input type="file" name="your_photo" id="your_photo" value="" />
+					</div>
                  
                  	<div>
  	                	<label for="summary">Summary:</label>
@@ -417,7 +417,6 @@
     	            	<g:select name="birthMonth" from="${months}" value="${profileToEdit.birthMonth}" optionKey="id" 
 			       							noSelection="${['':'Choose...']}" optionValue="text" />   	
         	            
-        	            <!-- <g:textField name="birthYear" value="${profileToEdit?.birthYear}" class="yearInput" /> -->
         	            <g:select name="birthYear" from="${years}" value="${profileToEdit.birthYear}" optionKey="id" 
 			       							noSelection="${['':'Choose...']}" optionValue="text" /> 
                     </div>
@@ -479,17 +478,6 @@
                    		</div>
     					<a href="#" onclick="return addContactAddressBlock();" style="font-size:12pt;text-decoration:none;">add another</a>
                    	</div>
-                    
-                                       
-                    <!--
-                    <dt>Favorites:</dt>
-                    <dd><g:textArea name="favorites" value="${profileToEdit?.favorites}" rows="5" cols="40"/></dd>
-                    -->
-                    
-                    <!--
-                    <dt>Languages:</dt>
-                    <dd><g:textArea name="languages" value="${profileToEdit?.languages}" rows="5" cols="40"/></dd>
-                    -->
                     
                     <div>
                     	<label for="interests">Interests:</label>		
@@ -640,24 +628,19 @@
 						</div>
 						<a href="#" onclick="return addEducationHistoryBlock();" style="font-size:12pt;text-decoration:none;">add another</a>					
 					</div>
-
-					<!-- 
-                    <dt>Projects:</dt>
-                    <dd><g:textArea name="projects" value="${profileToEdit?.projects}" rows="5" cols="40"/></dd>
-                    -->
-                    
+					
+					
                		<div>     
                     	<g:submitButton name="saveProfile" value="Save"/>
                  	</div>
-                 <!-- former end </dl> -->
+                 	
              </g:form>
           </div>
     
-    <!-- hidden template fieldset for educational history -->
 	<fieldset id="educationHistoryTemplate" style="display:none;">
 		<div>
             	<label for="education[?].institutionName">Institution Name:</label>
-				<g:textField name="education[?].institutionName" value=""/>
+				<g:textField name="education[?].institutionName" value="" />
       	</div>
 
         <div>
@@ -677,7 +660,6 @@
         </div>
 	</fieldset>
     
-    <!-- hidden template fieldset for contact address -->
     <fieldset id="contactAddressTemplate" style="display:none;">
      	
       		<div>
@@ -691,7 +673,6 @@
 	      	</div>     	
     </fieldset>
     
-	<!-- hidden template fieldset for employment history -->
 	<fieldset id="employmentHistoryTemplate" style="display:none;" >
 			
 			<div>
