@@ -1,4 +1,5 @@
 import org.fogbeam.quoddy.User 
+import org.fogbeam.quoddy.profile.Profile;
 import grails.util.Environment;
 
 class BootStrap {
@@ -60,6 +61,10 @@ class BootStrap {
 			  prhodes.password = "secret";
 			  prhodes.bio = "bio";
 			  
+			  Profile profile = new Profile();
+			  profile.userUuid = "abc123";
+			  prhodes.profile = profile;
+			  
 			  userService.createUser( prhodes );
 			 
 			  println "bound user prhodes into LDAP"; 
@@ -79,6 +84,10 @@ class BootStrap {
 								bio:"stuff",
 								displayName: "Test User${i}" );
 				  
+					Profile profile = new Profile();
+					profile.userUuid = testUser.uuid;
+					testUser.profile = profile;
+							
 					userService.createUser( testUser );
 			  }
 			  else
