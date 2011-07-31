@@ -62,7 +62,8 @@ class BootStrap {
 			  prhodes.bio = "bio";
 			  
 			  Profile profile = new Profile();
-			  profile.userUuid = "abc123";
+			  // profile.userUuid = "abc123";
+			  profile.setOwner( prhodes );
 			  prhodes.profile = profile;
 			  
 			  userService.createUser( prhodes );
@@ -85,7 +86,8 @@ class BootStrap {
 								displayName: "Test User${i}" );
 				  
 					Profile profile = new Profile();
-					profile.userUuid = testUser.uuid;
+					// profile.userUuid = testUser.uuid;
+					profile.setOwner( testUser );
 					testUser.profile = profile;
 							
 					userService.createUser( testUser );
