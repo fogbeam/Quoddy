@@ -5,6 +5,7 @@
         </title>
         <nav:resources />
         <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'main.css')}" />
+        <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'bootstrap.min.css')}" />
         <!-- 
         <link rel="stylesheet" type="text/css" href="/css/reset-min.css">
         <link rel="stylesheet" type="text/css" href="/css/fonts-min.css">             
