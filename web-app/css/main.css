@@ -1,3 +1,12 @@
+/* theme */
+
+body {overflow-x: hidden; overflow-y:auto;}
+
+#body, #header {
+	background: #e0e1e3 url('../images/bg.png') repeat; 
+}
+
+
 .usertext {
  color:gray;
  background-color:#f0f0f0;
@@ -33,8 +42,6 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
   		padding-left: 5px;
   		width: 50%;
   		color: #818181;
-  		background-color: #2D2D2D;
-  		// background-color: #818181;
 }
 
 #gbz, #gbg {
@@ -50,7 +57,6 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 	padding-top: 1px;
 	font-size:14pt;
 	font-weight: bold;
-	background: #F1F1F1;
 	height: 87px;
 }
 
@@ -58,17 +64,11 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 
 	margin: auto; /* center in viewport */
     width: 1440px;
-    // height: 900px;
     padding-top: 5px;
 	padding-right:3px;
 	padding-left: 3px;
     clear: both;
     background-color: #FAFDF7;
-    // #FAFDF1;
-    // #E3FAF1;
-    // #FFFFF1;
-    // #FF9900
-    // #f0ead6; 
 }
 	
 #logo {
