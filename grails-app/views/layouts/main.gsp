@@ -6,17 +6,12 @@
         <nav:resources />
         <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'main.css')}" />
         <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'bootstrap.min.css')}" />
-        <!-- 
         <link rel="stylesheet" type="text/css" href="/css/reset-min.css">
         <link rel="stylesheet" type="text/css" href="/css/fonts-min.css">             
         <link rel="stylesheet" type="text/css" href="/css/grids-min.css">
-		-->
-		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css" />
-        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssbase/base-min.css" />
-        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssfonts/fonts-min.css" />
         <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" />
-		
-        <g:javascript library="jquery-1.4" />
+       
+			  <g:javascript library="jquery-1.4" />
         <g:javascript library="jquery.timers-1.2" />
         <!-- <g:javascript library="application" />  -->
         
@@ -28,10 +23,13 @@
                 				
     </head>
     <body>
-    
-    	<div id="gbw" class="a-Eo-T">
-    		<div id="gbz">
-    			<ul>
+   
+<!-- begin customizable header -->
+ 
+    	<div id="gbw" class="headerNavContainer">
+				<div class="headerNav">
+    			<ul class="customNav">
+						<li><h1>Quoddy</h1></li>
     				<li><a href="#">Email</a></li>
     				<li><a href="${createLink(controller:'user', action:'listFriends')}">Friends</a></li>
     				<li><a href="${createLink(controller:'user', action:'listFollowers')}">Followers</a></li>
@@ -39,10 +37,10 @@
     				<li><a href="#">Calendar</a></li>
     				<li><a href="#">Apps</a></li>
     			</ul>
-    		</div>
-    		<div id="gbg">
-    			<a href="${createLink(controller:'user', action:'editProfile')}">Edit Profile</a>
-    		</div>
+					<div id="gbg" class="settingsNav">
+						<a href="${createLink(controller:'user', action:'editProfile')}">Edit Profile</a>
+					</div>
+				</div>
     	</div>
     	
     	<div id="header">
