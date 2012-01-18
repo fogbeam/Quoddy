@@ -1,9 +1,13 @@
 package org.fogbeam.quoddy
 
+import org.codehaus.jackson.map.ObjectMapper
+import org.fogbeam.quoddy.integration.activitystream.ActivityStreamEntry
+
 
 class ActivityStreamController 
 {
 	def activityStreamService;
+	def activityStreamTransformerService;
 	def userService;
 	def jmsService;
 	def eventQueueService;
@@ -72,6 +76,7 @@ class ActivityStreamController
 		else
 		{
 			println "logged in; so proceeding...";
+			// def originTime = new Date().getTime();
 			
 			// get our user
 			user = userService.findUserByUserId( session.user.userId );
@@ -105,16 +110,20 @@ class ActivityStreamController
 			
 			session.user = user;
 			
-			def originTime = new Date().getTime();
-			Activity activity = new Activity(text:newStatus.text);
-			activity.creator = user;
-			activity.originTime = originTime;
+
+			Activity activity = new Activity(content:newStatus.text);
+			activity.title = "Internal Activity";
+			activity.url = new URL( "http://www.example.com" );
+			activity.verb = "status_update";
+			activity.userActor = user;
+			activity.published = new Date(); // set published to "now"
 			activityStreamService.saveActivity( activity );
 			
 			Map msg = new HashMap();
-			msg.creator = activity.creator.userId;
+			msg.creator = activity.userActor.userId;
 			msg.text = newStatus.text;
-			msg.originTime = originTime;
+			// msg.published = activity.published;
+			msg.originTime = activity.dateCreated.time;
 			
 			println "sending message to JMS";
 			jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );
@@ -124,5 +133,51 @@ class ActivityStreamController
 		println( "returning status 200" );
 		render( "OK");
 		
-	}	
+	}
+	
+	def index = {
+		
+		switch(request.method){
+			case "POST":
+				// def originTime = new Date().getTime();
+			  println "Create\n"
+			  // String json = request.reader.text;
+			  String json = params.activityJson;
+			  println("Got json:\n " + json );
+			  
+			  ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
+			  
+			  // convert from JSON to Groovy classes
+			  ActivityStreamEntry streamEntry = mapper.readValue(json, ActivityStreamEntry.class);
+			  
+			  // map to our internal representation and save / msg
+			  Activity activity = activityStreamTransformerService.getActivity( streamEntry );
+			  activityStreamService.saveActivity( activity );
+			  
+			  // send notification message
+			  Map msg = new HashMap();
+			  msg.creator = activity.userActor.userId;
+			  msg.text = activity.content;
+			  // msg.published = activity.published;
+			  msg.originTime = activity.dateCreated.time;
+			  
+			  println "sending message to JMS";
+			  jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );
+			  
+			  // println streamEntry.toString();
+			  
+			  break
+			case "GET":
+			  println "Retrieve\n"
+			  break
+			case "PUT":
+			  println "Update\n"
+			  break
+			case "DELETE":
+			  println "Delete\n"
+			  break
+		  }
+		
+		render "OK";
+	}
 }

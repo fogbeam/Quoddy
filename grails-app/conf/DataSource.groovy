@@ -5,8 +5,8 @@ dataSource {
 	driverClassName = "org.postgresql.Driver"
 	// username = "sa"
 	username = "postgres"
-	// password = ""
 	password = ""
+	// password = ""
 	logSql=false
 }
 hibernate {
@@ -20,6 +20,8 @@ environments {
 		dataSource {
 			dbCreate = "update" // one of 'create', 'create-drop','update'
 			url = "jdbc:postgresql:quoddy2";
+			// dbCreate = "create-drop"
+			// url = "jdbc:hsqldb:mem:devDb
 		}
 	}
 	test {

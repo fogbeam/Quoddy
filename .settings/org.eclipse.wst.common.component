@@ -5,5 +5,10 @@
         <wb-resource deploy-path="/" source-path="/grails-app/listeners"/>
         <wb-resource deploy-path="/" source-path="/test/unit"/>
         <wb-resource deploy-path="/" source-path="/test/integration"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jms-1.2/grails-app/utils"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jms-1.2/grails-app/services"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jms-1.2/src/java"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jms-1.2/src/groovy"/>
+        <wb-resource deploy-path="/" source-path="/src/groovy"/>
     </wb-module>
 </project-modules>

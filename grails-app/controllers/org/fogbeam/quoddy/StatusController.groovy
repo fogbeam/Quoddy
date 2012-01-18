@@ -1,4 +1,4 @@
-package org.fogbeam.quoddy
+package org.fogbeam.quoddy;
 
 import org.fogbeam.quoddy.Activity;
 import org.fogbeam.quoddy.StatusUpdate;
@@ -14,11 +14,11 @@ class StatusController {
 		
 		User user = null;
 		
-		if( !session.user ) 
+		if( !session.user )
 		{
 			flash.message = "Must be logged in before updating status";
 		}
-		else 
+		else
 		{
 			println "logged in; so proceeding...";
 			
@@ -49,7 +49,7 @@ class StatusController {
 			}
 			else
 			{
-				// handle failure to update User	
+				// handle failure to update User
 			}
 			
 			session.user = user;
@@ -76,7 +76,7 @@ class StatusController {
 		redirect( controller:"home", action:"index", params:[userId:user.userId]);
 	}
 
-	def listUpdates = 
+	def listUpdates =
 	{
 		User user = null;
 		List<StatusUpdate> updates = new ArrayList<StatusUpdate>();
@@ -96,6 +96,6 @@ class StatusController {
 		}
 		
 		[updates:updates]
-	}	
+	}
 	
 }

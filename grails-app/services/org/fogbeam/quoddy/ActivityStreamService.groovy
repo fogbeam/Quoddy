@@ -39,11 +39,16 @@ class ActivityStreamService {
 	public void saveActivity( Activity activity )
 	{
 		println "about to save activity...";
-		if( !activity.save() )
+		if( !activity.save(flush:true) )
 		{
 			println( "Saving activity FAILED");
 			activity.errors.allErrors.each { println it };
 		}
+		else 
+		{
+			println "Successfully saved Activity: ${activity.id}";	
+		}
+		
 	}
 
 	
@@ -107,7 +112,8 @@ class ActivityStreamService {
 		
 		println "Messages to read from queue: ${msgsToRead}";
 		
-		long oldestOriginTime = Long.MAX_VALUE;
+		// long oldestOriginTime = Long.MAX_VALUE;
+		long oldestOriginTime = new Date().getTime();
 		
 		// NOTE: we could avoid iterating over this list again by returning the "oldest message time"
 		// as part of this call.  But it'll mean wrapping this stuff up into an object of some
@@ -123,6 +129,7 @@ class ActivityStreamService {
 		}
 		
 		println "oldestOriginTime: ${oldestOriginTime}";
+		println "as date: " + new Date( oldestOriginTime);
 		
 		// convert our messages to Activity instances and
 		// put them in this list...
@@ -139,9 +146,9 @@ class ActivityStreamService {
 			Activity activity = new Activity();
 			
 			// println "msg class: " + msg?.getClass().getName();
-			activity.creator = userService.findUserByUserId( msg.creator ); 
-			activity.text = msg.text;
-			activity.originTime = msg.originTime;
+			activity.userActor = userService.findUserByUserId( msg.creator ); 
+			activity.content = msg.text;
+			activity.dateCreated = new Date( msg.originTime );
 			recentActivities.add( activity );	
 		}
 		
@@ -170,9 +177,10 @@ class ActivityStreamService {
 			Date cutoffDate = cal.getTime();
 			
 			println "Using ${cutoffDate} as cutoffDate";
+			println "Using ${new Date(oldestOriginTime)} as oldestOriginTime";
 						
 			List<User> friends = userService.listFriends( user );
-			if( friends != null && friends.size() > 0 ) 
+			if( friends != null && friends.size() >= 0 ) 
 			{
 				println "Found ${friends.size()} friends";
 				List<Integer> friendIds = new ArrayList<Integer>();
@@ -183,10 +191,15 @@ class ActivityStreamService {
 					friendIds.add( id );
 				}
 			
-			
+				
+				// for the purpose of this query, treat a user as their own friend... that is, we
+				// will want to read Activities created by this user (we see out own updates in our
+				// own feed)
+				friendIds.add( user.id );
+				
 				List<Activity> queryResults = 
-					Activity.executeQuery( "select activity from Activity as activity where activity.dateCreated >= :cutoffDate and activity.creator.id in (:friendIds) and activity.originTime < :oldestOriginTime order by activity.dateCreated desc",
-						['cutoffDate':cutoffDate, 'oldestOriginTime':oldestOriginTime, 'friendIds':friendIds], ['max': recordsToRetrieve ]);
+					Activity.executeQuery( "select activity from Activity as activity where activity.dateCreated >= :cutoffDate and activity.userActor.id in (:friendIds) and activity.dateCreated < :oldestOriginTime order by activity.dateCreated desc",
+						['cutoffDate':cutoffDate, 'oldestOriginTime':new Date(oldestOriginTime), 'friendIds':friendIds], ['max': recordsToRetrieve ]);
 			
 					println "adding ${queryResults.size()} activities read from DB";
 					recentActivities.addAll( queryResults );
