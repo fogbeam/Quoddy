@@ -8,6 +8,7 @@
 	<classpathentry kind="src" path="grails-app/ldap"/>
 	<classpathentry kind="src" path="test/unit"/>
 	<classpathentry kind="src" path="test/integration"/>
+	<classpathentry kind="src" path="src/groovy"/>
 	<classpathentry kind="lib" path="lib/activation.jar"/>
 	<classpathentry kind="lib" path="lib/commons-math-2.1.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-core-3.0.1.jar"/>
@@ -17,7 +18,6 @@
 	<classpathentry kind="lib" path="lib/commons-lang-2.5.jar"/>
 	<classpathentry kind="lib" path="lib/commons-pool-1.5.4.jar"/>
 	<classpathentry kind="lib" path="lib/ldapbp-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-1.2.9.jar"/>
 	<classpathentry kind="lib" path="lib/org.springframework.asm-3.0.5.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/org.springframework.expression-3.0.5.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/spring-beans-3.0.5.RELEASE.jar"/>
@@ -85,6 +85,26 @@
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/jms-1.2/grails-app/utils">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/jms-1.2/grails-app/services">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/jms-1.2/src/java">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/jms-1.2/src/groovy">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/code-coverage-1.2/grails-app/i18n">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
@@ -120,5 +140,63 @@
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/usr/java/junit3.8.1/junit.jar"/>
+	<classpathentry kind="lib" path="lib/arq-2.8.7.jar"/>
+	<classpathentry kind="lib" path="lib/concurrent.jar"/>
+	<classpathentry kind="lib" path="lib/iri-0.8.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-aop-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-appclient.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-aspect-jdk50-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-common-core.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-deployers-client-spi.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-deployers-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-deployers-core-spi.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-deployers-core.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-deployment.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-ejb3-common-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-ejb3-core-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-ejb3-ext-api.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-ejb3-proxy-clustered-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-ejb3-proxy-impl-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-ejb3-proxy-spi-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-ejb3-security-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-ha-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-ha-legacy-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-iiop-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-integration.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-j2se.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-javaee.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-jsr77-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-logging-jdk.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-logging-log4j.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-logging-spi.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-main-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-mdr.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-messaging-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-remoting.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-security-spi.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-serialization.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-srp-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-system-client.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-system-jmx-client.jar"/>
+	<classpathentry kind="lib" path="lib/jbosscx-client.jar"/>
+	<classpathentry kind="lib" path="lib/jbossjts-integration.jar"/>
+	<classpathentry kind="lib" path="lib/jbossjts.jar"/>
+	<classpathentry kind="lib" path="lib/jbosssx-as-client.jar"/>
+	<classpathentry kind="lib" path="lib/jbosssx-client.jar"/>
+	<classpathentry kind="lib" path="lib/jena-2.6.4.jar"/>
+	<classpathentry kind="lib" path="lib/jmx-client.jar"/>
+	<classpathentry kind="lib" path="lib/jmx-invoker-adaptor-client.jar"/>
+	<classpathentry kind="lib" path="lib/jnp-client.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="lib/sample.jar"/>
+	<classpathentry kind="lib" path="lib/shiro-core-1.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/shiro-web-1.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/stax-api-1.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/trove.jar"/>
+	<classpathentry kind="lib" path="lib/wstx-asl-3.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/xercesImpl-2.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-all-1.9.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

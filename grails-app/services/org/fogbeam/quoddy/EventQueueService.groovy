@@ -17,10 +17,6 @@ class EventQueueService
 		
 		// now, figure out which user(s) are interested in this message, and put it on
 		// all the appropriate queues
-		
-		
-		// NOTE: in this prototype version, we'll assume anybody who is logged in
-		// is interested in messages from every other user (note: except themselves)
 		Set<Map.Entry<String, Deque<Map>>> entries = eventQueues.entrySet();
 		println "got entrySet from eventQueues object: ${entries}";
 		for( Map.Entry<String, Deque<Map>> entry : entries )
@@ -30,50 +26,51 @@ class EventQueueService
 			
 			String key = entry.getKey();
 			
-			// don't put the message on the queue for the user who sent it
-			if( !key.equalsIgnoreCase( msg.creator )) 
-			{
 			
-				// TODO: don't offer message unless the owner of this queue
-				// and the event creator, are friends.
-				println "msg creator: ${msg.creator}";
-				User msgCreator = userService.findUserByUserId( msg.creator );
-				if( msgCreator )
-				{	
-					println "found User object for ${msgCreator.userId}";
-				}	
-				
-				FriendCollection friendCollection = FriendCollection.findByOwnerUuid( msgCreator.uuid );
-				if( friendCollection ) 
+			// TODO: don't offer message unless the owner of this queue
+			// and the event creator, are friends (or the owner *is* the creator)
+			println "msg creator: ${msg.creator}";
+			User msgCreator = userService.findUserByUserId( msg.creator );
+			if( msgCreator )
+			{
+				println "found User object for ${msgCreator.userId}";
+			}
+			
+			FriendCollection friendCollection = FriendCollection.findByOwnerUuid( msgCreator.uuid );
+			if( friendCollection )
+			{
+				println "got a valid friends collection for ${msgCreator.userId}";
+			}
+			
+			Set<String> friends = friendCollection.friends;
+			if( friends )
+			{
+				println "got valid friends set: ${friends}";
+				for( String friend : friends )
 				{
-					println "got a valid friends collection for ${msgCreator.userId}";
-				}
-				
-				Set<String> friends = friendCollection.friends;
-				if( friends ) 
-				{
-					println "got valid friends set: ${friends}";	
-					for( String friend : friends )
-					{
-						println "friend: ${friend}";	
-					}
-				}
-				User targetUser = userService.findUserByUserId( key ); 
-				if( friends.contains( targetUser.uuid ))
-				{
-					println "match found, offering message";
-					Deque<Map> userQueue = entry.getValue();
-					if( msg instanceof Map )
-					{
-						println "MapMessage being offered";
-						userQueue.offerFirst( msg );
-					}
-					else
-					{
-						println "WTF is this? ${msg}";	
-					}	 
+					println "friend: ${friend}";
 				}
 			}
+			User targetUser = userService.findUserByUserId( key );
+			if( friends.contains( targetUser.uuid ) || msgCreator.uuid.equals( targetUser.uuid ) )
+			{
+				println "match found, offering message";
+				Deque<Map> userQueue = entry.getValue();
+				if( msg instanceof Map )
+				{
+					println "MapMessage being offered";
+					userQueue.offerFirst( msg );
+				}
+				else
+				{
+					println "WTF is this? ${msg}";
+				}
+			}
+			
+			
+			
+			
+			
 		}
 		println "done processing eventQueue instances";
 	}
