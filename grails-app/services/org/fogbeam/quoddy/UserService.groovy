@@ -1,11 +1,8 @@
 package org.fogbeam.quoddy;
 
-import java.util.List;
+import java.util.List
 
-
-
-import org.fogbeam.quoddy.User;
-import org.fogbeam.quoddy.profile.Profile 
+import org.fogbeam.quoddy.profile.Profile
 
 class UserService {
 
@@ -49,6 +46,17 @@ class UserService {
 		{
 			accountService.createUser( user );
 			// ldapPersonService.createUser( user );
+			// create system defined Stream entries for this newly created user
+			UserStream defaultStream = new UserStream();
+			defaultStream.name = "Default";
+			defaultStream.definedBy = UserStream.DEFINED_SYSTEM;
+			defaultStream.owner = user;
+			
+			if( !defaultStream.save())
+			{
+				defaultStream.errors.allErrors.each { println it };
+				throw new RuntimeException( "couldn't create Default UserStream record for user: ${user.userId}" );
+			}
 		}
 		else
 		{
