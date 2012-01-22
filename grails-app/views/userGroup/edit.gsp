@@ -14,6 +14,8 @@
 			<g:hiddenField name="groupId" value="${groupToEdit.id}" />
 			<label for="groupName">Name:</label> <g:textField name="groupName" value="${groupToEdit.name}"/>
 			<br />
+			<label for="groupDescription">Description:</label> <g:textField name="groupDescription" value="${groupToEdit.description}"/>
+			<br/>
 			<g:submitButton name="Save" />
 		</g:form>
 	</body>

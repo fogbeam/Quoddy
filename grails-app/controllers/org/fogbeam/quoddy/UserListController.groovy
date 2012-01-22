@@ -47,6 +47,7 @@ class UserListController
 			UserList listToCreate = new UserList();
 		
 			listToCreate.name = params.listName;
+			listToCreate.description = params.listDescription;
 			listToCreate.owner = user;
 			
 			listToCreate.save();
@@ -80,6 +81,7 @@ class UserListController
 		listToEdit = UserList.findById( listId );
 		
 		listToEdit.name = params.listName;
+		listToEdit.description = params.listDescription;
 		listToEdit.save();
 		
 		redirect(controller:"userList", action:"index");

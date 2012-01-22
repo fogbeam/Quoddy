@@ -42,7 +42,7 @@
 			<ul style="margin-left:25px;margin-top:15px;">
 				<g:each var="group" in="${userGroups}">
 					<li>
-						<g:link controller="home" action="index" params="[groupId:group.id]" >${group.name}</g:link>
+						<g:link controller="userGroup" action="display" params="[groupId:group.id]" >${group.name}</g:link>
 					</li>
 				</g:each>
 		  	</ul>				

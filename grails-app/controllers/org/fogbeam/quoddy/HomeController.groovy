@@ -38,7 +38,7 @@ class HomeController {
 				def tempUserLists = userListService.getListsForUser( user );
 				userLists.addAll( tempUserLists );
 				
-				def tempUserGroups = userGroupService.getGroupsForUser( user );
+				def tempUserGroups = userGroupService.getGroupsOwnedByUser( user );
 				userGroups.addAll( tempUserGroups );
 				
 				

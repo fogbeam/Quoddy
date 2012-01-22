@@ -14,6 +14,8 @@
 			<g:hiddenField name="listId" value="${listToEdit.id}" />
 			<label for="listName">Name:</label> <g:textField name="listName" value="${listToEdit.name}"/>
 			<br />
+			<label for="listDescription">Description:</label> <g:textField name="listDescription" value="${listToEdit.description}"/>
+			<br />
 			<g:submitButton name="Save" />
 		</g:form>
 	</body>

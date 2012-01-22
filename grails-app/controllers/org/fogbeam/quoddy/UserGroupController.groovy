@@ -11,17 +11,27 @@ class UserGroupController
 	{
 		User user = null;
 		
-		def userGroups = new ArrayList<UserGroup>();
+		def userOwnedGroups = new ArrayList<UserGroup>();
+		def userMembershipGroups = new ArrayList<UserGroup>();
 		
 		if( session.user != null )
 		{
 			user = userService.findUserByUserId( session.user.userId );
 		
 		
-			def tempUserGroups = userGroupService.getGroupsForUser( user );
-			userGroups.addAll( tempUserGroups );
+			def tempUserOwnedGroups = userGroupService.getGroupsOwnedByUser( user );
+			if( tempUserOwnedGroups )
+			{
+				userOwnedGroups.addAll( tempUserOwnedGroups );
+			}
 			
-			[user:user, userGroups:userGroups ];
+			def tempUserMembershipGroups = userGroupService.getGroupsWhereUserIsMember(user); 
+			if( tempUserMembershipGroups )
+			{
+				userMembershipGroups.addAll( tempUserMembershipGroups );
+			}
+			
+			[user:user, userOwnedGroups:userOwnedGroups, userMembershipGroups:userMembershipGroups ];
 	  
 			
 		}
@@ -47,9 +57,14 @@ class UserGroupController
 			UserGroup groupToCreate = new UserGroup();
 		
 			groupToCreate.name = params.groupName;
+			groupToCreate.description = params.groupDescription;
 			groupToCreate.owner = user;
 			
-			groupToCreate.save();
+			if( ! groupToCreate.save() )
+			{
+				println( "Saving UserGroup FAILED");
+				groupToCreate.errors.allErrors.each { println it };
+			}
 		
 			redirect(controller:"userGroup", action:"index");
 		}
@@ -80,8 +95,58 @@ class UserGroupController
 		groupToEdit = UserGroup.findById( groupId );
 		
 		groupToEdit.name = params.groupName;
-		groupToEdit.save();
+		groupToEdit.description = params.groupDescription;
+		if( !groupToEdit.requireJoinConfirmation )
+		{
+			groupToEdit.requireJoinConfirmation = false;
+		}
+		if( ! groupToEdit.save(flush:true) )
+		{
+			println( "Saving UserGroup FAILED");
+			groupToEdit.errors.allErrors.each { println it };
+		}
+		
+		// TODO: deal with requireJoinConfirmation
+		
 		
 		redirect(controller:"userGroup", action:"index");
 	}
+
+	def display = 
+	{
+		
+		// println "Doing display with params: ${params}";
+		
+		UserGroup group = UserGroup.findById( params.groupId );
+		
+		[group:group];	
+	}	
+
+	def joinGroup =
+	{
+		// TODO: find group, see if joinConfirmation is required, 
+		// and add user to group OR add pending group request
+		// for the group owner / admin
+		
+		// TODO: create group Membership
+		String groupId = params.groupId;
+		String userId = session.user.id;
+		
+		println "doing joinGroup with groupId = ${groupId} and userId = ${userId}";
+		User user = User.findById( userId );
+		UserGroup group = UserGroup.findById( groupId );
+		
+		group.addToGroupMembers( user );
+		
+		redirect( controller:"userGroup", action:"display", params:['groupId':groupId]);	
+	}
+	
+	
+	def list =
+	{
+		List<UserGroup> allGroups = userGroupService.getAllGroups();
+		
+		[allGroups: allGroups];	
+	}
+			
 }
