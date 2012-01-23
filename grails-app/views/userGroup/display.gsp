@@ -15,9 +15,24 @@
 				params="[groupId:group.id]">Join This Group</g:link>
 		
 		<p />
-		More stuff goes here...
-		<p />
+        <g:if test="${session.user != null}">
+  
+			<g:form name="postToGroupForm" controller="userGroup" action="postToGroup" >
+				<g:hiddenField name="groupId" value="${group.id}" />
+				<input type="text" id="statusText" name="statusText" />
+				<input id="postToGroupSubmit" type="submit" value="Post To Group" />
+			</g:form>      
+        
+        	<p />
+        
+			<g:if test="${activities != null}">
 
-		
+				<div id="activityStream">
+				
+					<g:render template="/ugroupStream" />
+				
+				</div>
+			</g:if>
+		</g:if>
 	</body>
 </html>

@@ -4,12 +4,19 @@ import java.util.Date;
 
 class UserGroup
 {
+	
+	public UserGroup()
+	{
+		this.uuid = java.util.UUID.randomUUID().toString();
+	}
+	
 	static constraints = 
 	{	
 		description(nullable:true);	
 	}
 	
 	String 	name;
+	String 	uuid;
 	String 	description;
 	Boolean requireJoinConfirmation = false;
 	User 	owner;

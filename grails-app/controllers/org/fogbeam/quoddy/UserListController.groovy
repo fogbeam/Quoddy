@@ -50,7 +50,11 @@ class UserListController
 			listToCreate.description = params.listDescription;
 			listToCreate.owner = user;
 			
-			listToCreate.save();
+			if( !listToCreate.save() )
+			{
+				println( "Saving UserList FAILED");
+				listToCreate.errors.allErrors.each { println it };
+			}
 		
 			redirect(controller:"userList", action:"index");
 		}
@@ -82,7 +86,14 @@ class UserListController
 		
 		listToEdit.name = params.listName;
 		listToEdit.description = params.listDescription;
-		listToEdit.save();
+		
+		if( !listToEdit.save() )
+		{
+			println( "Saving UserList FAILED");
+			listToEdit.errors.allErrors.each { println it };
+		}
+		
+		
 		
 		redirect(controller:"userList", action:"index");
 	}

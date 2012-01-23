@@ -2,6 +2,7 @@ package org.fogbeam.quoddy
 
 class UserGroupController
 {
+	def activityStreamService;
 	def userService;
 	def userStreamService;
 	def userListService;
@@ -116,10 +117,14 @@ class UserGroupController
 	{
 		
 		// println "Doing display with params: ${params}";
+		def activities = new ArrayList<Activity>();
 		
 		UserGroup group = UserGroup.findById( params.groupId );
 		
-		[group:group];	
+		activities = userGroupService.getRecentActivitiesForGroup( group, 25 ); 
+		
+		
+		[group:group, activities:activities];	
 	}	
 
 	def joinGroup =
@@ -148,5 +153,59 @@ class UserGroupController
 		
 		[allGroups: allGroups];	
 	}
+
+	def postToGroup =
+	{
+		println "Posting to group: ${params.groupId}, with statusText: ${params.statusText}";		
+		def groupId = params.groupId;
+		
+		if( session.user )
+		{
 			
+			println "logged in; so proceeding...";
+			
+			// get our user
+			User user = userService.findUserByUserId( session.user.userId );
+			
+			// get our UserGroup
+			UserGroup group = userGroupService.findByGroupId( Integer.parseInt( groupId ) ); 
+			
+			println "constructing our new StatusUpdate object...";
+			// construct a status object
+			println "statusText: ${params.statusText}";
+			StatusUpdate newStatus = new StatusUpdate( text: params.statusText, creator: user );
+			
+			if( !newStatus.save() )
+			{
+				println "Save StatusUpdate FAILED!";
+					
+			}
+			
+			Activity activity = new Activity(content:newStatus.text);
+			activity.title = "Internal Activity";
+			activity.url = new URL( "http://www.example.com" );
+			activity.verb = "status_update";
+			activity.userActor = user;
+			activity.published = new Date(); // set published to "now"
+			activity.targetUuid = group.uuid;
+			activityStreamService.saveActivity( activity );
+			
+			// Map msg = new HashMap();
+			// msg.creator = activity.userActor.userId;
+			// msg.text = newStatus.text;
+			// msg.published = activity.published;
+			// msg.originTime = activity.dateCreated.time;
+			
+			// println "sending message to JMS";
+			// jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );
+				
+		
+		}
+		else
+		{
+				
+		}
+		redirect( controller:"userGroup", action:"display", params:['groupId':groupId]);
+	}
+				
 }

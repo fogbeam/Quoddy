@@ -4,12 +4,19 @@ import java.util.Date;
 
 class UserList
 {
+	
+	public UserList()
+	{
+		this.uuid = java.util.UUID.randomUUID().toString();
+	}
+	
 	static constraints = 
 	{
 		description(nullable:true);
 	}
 	
 	String 	name;
+	String 	uuid;
 	String 	description;
 	User 	owner;
 	Date 	dateCreated;

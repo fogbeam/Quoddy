@@ -10,9 +10,16 @@ class UserStream
 	public static final String DEFINED_USER = "DEFINED_BY_USER";
 	public static final String DEFINED_SYSTEM = "DEFINED_BY_SYSTEM";
 	
+	
+	public UserStream()
+	{
+		this.uuid = java.util.UUID.randomUUID().toString();
+	}
+	
 	static constraints = {}
 	
 	String 	name;
+	String 	uuid;
 	String 	definedBy;
 	User 	owner;
 	Date 	dateCreated;

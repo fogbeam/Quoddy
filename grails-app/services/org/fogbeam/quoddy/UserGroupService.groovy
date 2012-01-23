@@ -1,9 +1,17 @@
 package org.fogbeam.quoddy
 
-import java.util.List;
+import java.util.List
 
 class UserGroupService
 {
+	
+	public UserGroup findByGroupId( final Integer groupId )
+	{
+		UserGroup group = UserGroup.findById( groupId );
+		
+		return group;	
+	}
+	
 	public List<UserGroup> getGroupsOwnedByUser( final User user )
 	{
 		List<UserGroup> groups = new ArrayList<UserGroup>();
@@ -62,5 +70,33 @@ class UserGroupService
 		
 		return groups;
 	}
+
+	
+	public List<Activity> getRecentActivitiesForGroup( final UserGroup group, final int maxCount )
+	{
+		println "getRecentActivitiesForGroup: ${group.id} - ${maxCount}";
+			
+		List<Activity> recentActivities = new ArrayList<Activity>();
 		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR_OF_DAY, -600 );
+		Date cutoffDate = cal.getTime();
+		
+		println "Using ${cutoffDate} as cutoffDate";
+
+		
+		List<Activity> queryResults =
+			Activity.executeQuery( "select activity from Activity as activity where activity.dateCreated >= :cutoffDate and activity.targetUuid = :targetUuid order by activity.dateCreated desc",
+			['cutoffDate':cutoffDate, 'targetUuid':group.uuid], ['max': maxCount ]);
+
+		if( queryResults )
+		{
+			println "adding ${queryResults.size()} activities read from DB";
+			recentActivities.addAll( queryResults );	
+		}
+		
+		
+		return recentActivities;
+				
+	}
 }
