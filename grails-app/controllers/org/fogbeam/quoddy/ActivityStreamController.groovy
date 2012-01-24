@@ -63,77 +63,6 @@ class ActivityStreamController
 		
 		
 	}
-
-	def submitUpdate =
-	{
-		User user = null;
-		
-		if( !session.user )
-		{
-			println "Must be logged in before updating status";
-			flash.message = "Must be logged in before updating status";
-		}
-		else
-		{
-			println "logged in; so proceeding...";
-			// def originTime = new Date().getTime();
-			
-			// get our user
-			user = userService.findUserByUserId( session.user.userId );
-			
-			println "constructing our new StatusUpdate object...";
-			// construct a status object
-			println "statusText: ${params.statusText}";
-			StatusUpdate newStatus = new StatusUpdate( text: params.statusText, creator: user );
-			
-			// put the old "currentStatus" in the oldStatusUpdates collection
-			// addToComments
-			if( user.currentStatus != null )
-			{
-				StatusUpdate previousStatus = user.currentStatus;
-				// TODO: do we need to detach this or something?
-				user.addToOldStatusUpdates( previousStatus );
-			}
-			
-			// set the current status
-			println "setting currentStatus";
-			user.currentStatus = newStatus;
-			if( !user.save() )
-			{
-				println( "Saving user FAILED");
-				user.errors.allErrors.each { println it };
-			}
-			else
-			{
-				// handle failure to update User
-			}
-			
-			session.user = user;
-			
-
-			Activity activity = new Activity(content:newStatus.text);
-			activity.title = "Internal Activity";
-			activity.url = new URL( "http://www.example.com" );
-			activity.verb = "status_update";
-			activity.userActor = user;
-			activity.published = new Date(); // set published to "now"
-			activityStreamService.saveActivity( activity );
-			
-			Map msg = new HashMap();
-			msg.creator = activity.userActor.userId;
-			msg.text = newStatus.text;
-			// msg.published = activity.published;
-			msg.originTime = activity.dateCreated.time;
-			
-			println "sending message to JMS";
-			jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );
-				
-		}
-		
-		println( "returning status 200" );
-		render( "OK");
-		
-	}
 	
 	def index = {
 		
@@ -158,6 +87,7 @@ class ActivityStreamController
 			  Map msg = new HashMap();
 			  msg.creator = activity.userActor.userId;
 			  msg.text = activity.content;
+			  msg.targetUuid = activity.targetUuid;
 			  // msg.published = activity.published;
 			  msg.originTime = activity.dateCreated.time;
 			  

@@ -8,34 +8,6 @@ class ActivityStreamService {
 	def jmsService;
 	def eventQueueService;
 	
-	/*
-	public List<Activity> getRecentFriendActivitiesForUser( User user )
-	{
-		List<Activity> recentActivities = new ArrayList<Activity>();
-		
-		List<User> friends = userService.listFriends( user );
-		println "Found ${friends.size()} friends";
-		List<Integer> friendIds = new ArrayList<Integer>();
-		for( User friend: friends )
-		{
-			def id = friend.id;
-			println( "Adding friend id: ${id}, userId: ${friend.userId} to list" );
-			friendIds.add( id );	
-		}
-		
-		// Entry.executeQuery( "select entry from Entry as entry, User as user where user.userId = ? and entry not in elements(user.hiddenEntries) order by entry.dateCreated desc", [user.userId] )
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.HOUR_OF_DAY, -82 );
-		Date cutoffDate = cal.getTime();
-		
-		println "Using ${cutoffDate} as cutoffDate";
-		
-		List<Activity> queryResults = Activity.executeQuery( "select activity from Activity as activity where activity.dateCreated >= :cutoffDate and activity.creator.id in (:friendIds)",  ['cutoffDate':cutoffDate, 'friendIds':friendIds]);
-		recentActivities.addAll( queryResults );
-		return recentActivities;
-	}
-	*/
-
 	public void saveActivity( Activity activity )
 	{
 		println "about to save activity...";
@@ -196,10 +168,14 @@ class ActivityStreamService {
 				// will want to read Activities created by this user (we see out own updates in our
 				// own feed)
 				friendIds.add( user.id );
-				
+				ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 				List<Activity> queryResults = 
-					Activity.executeQuery( "select activity from Activity as activity where activity.dateCreated >= :cutoffDate and activity.userActor.id in (:friendIds) and activity.dateCreated < :oldestOriginTime order by activity.dateCreated desc",
-						['cutoffDate':cutoffDate, 'oldestOriginTime':new Date(oldestOriginTime), 'friendIds':friendIds], ['max': recordsToRetrieve ]);
+					Activity.executeQuery( "select activity from Activity as activity where activity.dateCreated >= :cutoffDate and activity.userActor.id in (:friendIds) and activity.dateCreated < :oldestOriginTime and activity.targetUuid = :targetUuid order by activity.dateCreated desc",
+						['cutoffDate':cutoffDate, 
+						 'oldestOriginTime':new Date(oldestOriginTime), 
+						 'friendIds':friendIds, 
+						 'targetUuid':streamPublic.uuid], 
+					    ['max': recordsToRetrieve ]);
 			
 					println "adding ${queryResults.size()} activities read from DB";
 					recentActivities.addAll( queryResults );

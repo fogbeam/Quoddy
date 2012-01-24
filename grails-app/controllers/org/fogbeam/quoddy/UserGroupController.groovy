@@ -195,6 +195,7 @@ class UserGroupController
 			// msg.text = newStatus.text;
 			// msg.published = activity.published;
 			// msg.originTime = activity.dateCreated.time;
+			// msg.targetUuid = activity.targetUuid;
 			
 			// println "sending message to JMS";
 			// jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );

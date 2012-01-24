@@ -57,6 +57,8 @@ class StatusController {
 			// TODO: if the user update was successful
 			def originTime = new Date().getTime();
 			Activity activity = new Activity(text:newStatus.text);
+			ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
+			activity.targetUuid = streamPublic.uuid;
 			activity.creator = user;
 			activity.originTime = originTime;
 			activityStreamService.saveActivity( activity );
@@ -66,6 +68,7 @@ class StatusController {
 			msg.creator = activity.creator.userId;
 			msg.text = newStatus.text;
 			msg.originTime = originTime;
+			msg.targetUuid = activity.targetUuid;
 			
 			println "sending message to JMS";
 			jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );

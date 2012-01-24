@@ -1,6 +1,8 @@
-import org.fogbeam.quoddy.User 
-import org.fogbeam.quoddy.profile.Profile;
-import grails.util.Environment;
+import grails.util.Environment
+
+import org.fogbeam.quoddy.ShareTarget
+import org.fogbeam.quoddy.User
+import org.fogbeam.quoddy.profile.Profile
 
 class BootStrap {
 
@@ -15,10 +17,12 @@ class BootStrap {
 	     {
 	         case Environment.DEVELOPMENT:
 	             createSomeUsers();
+				 createShareTargets();
 	             break;
 	         case Environment.PRODUCTION:
 	             println "No special configuration required";
 				 createSomeUsers();
+				 createShareTargets();
 				 break;
 	     }     
      
@@ -34,6 +38,21 @@ class BootStrap {
     	
      }
 
+	 void createShareTargets()
+	 {
+		 ShareTarget streamPublicTarget = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
+		 if( !streamPublicTarget ) {
+			 println "Creating new ${ShareTarget.STREAM_PUBLIC} ShareTarget";
+			 streamPublicTarget = new ShareTarget();
+			 streamPublicTarget.name = ShareTarget.STREAM_PUBLIC;
+			 streamPublicTarget.save();
+		 }
+		 else 
+		 {
+		 	println "Found existing ${ShareTarget.STREAM_PUBLIC} ShareTarget"; 
+		 }
+	 }
+	 
      void createSomeUsers()
      {
 	 	println "Creating some users!";

@@ -1,6 +1,6 @@
 package org.fogbeam.quoddy
 
-import java.util.Set;
+import java.util.Set
 
 class EventQueueService 
 {	
@@ -25,6 +25,20 @@ class EventQueueService
 			println "key: ${entry.getKey()}";
 			
 			String key = entry.getKey();
+			
+			
+			// TODO: deal with the case where the post was to a UserGroup, not
+			// a direct stream post.  In that case, we only offer it to a user if
+			// that user is also a member of the same group?
+			// BUT, for now, let's just implement it so that we only offer
+			// messages that were to the public stream.  We'll come back to deal with
+			// common group membership and other scenarios later.
+			def streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC);
+			
+			if( ! msg.targetUuid.equals( streamPublic.uuid ))
+			{
+				return;
+			}
 			
 			
 			// TODO: don't offer message unless the owner of this queue
