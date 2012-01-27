@@ -11,19 +11,33 @@ class UserListController
 	{
 		User user = null;
 		
+		def systemDefinedStreams = new ArrayList<UserStream>();
+		def userDefinedStreams = new ArrayList<UserStream>(); 
 		def userLists = new ArrayList<UserList>();
+		def userGroups = new ArrayList<UserGroup>();
 		
 		if( session.user != null )
 		{
 			user = userService.findUserByUserId( session.user.userId );
 		
 		
+			def tempSysStreams = userStreamService.getSystemDefinedStreamsForUser( user );
+			systemDefinedStreams.addAll( tempSysStreams );
+			def tempUserStreams = userStreamService.getUserDefinedStreamsForUser( user );
+			userDefinedStreams.addAll( tempUserStreams );
+				
 			def tempUserLists = userListService.getListsForUser( user );
 			userLists.addAll( tempUserLists );
+				
+			def tempUserGroups = userGroupService.getGroupsOwnedByUser( user );
+			userGroups.addAll( tempUserGroups );
 			
-			[user:user, userLists:userLists ];
+			[user:user, 
+			  sysDefinedStreams:systemDefinedStreams, 
+			  userDefinedStreams:userDefinedStreams,
+			  userLists:userLists,
+			  userGroups:userGroups ];
 	  
-			
 		}
 		else
 		{
@@ -97,4 +111,68 @@ class UserListController
 		
 		redirect(controller:"userList", action:"index");
 	}
+
+	def editWizardFlow =
+	{
+		start {
+			action {
+				def listId = params.listId;
+				println "Editing UserList with id: ${listId}";
+				UserList listToEdit = null;
+				listToEdit = UserList.findById( listId );
+		
+				[listToEdit:listToEdit];	
+			}
+			on("success").to("editWizardOne")
+		  }
+		
+		  /* a view state to bring up our GSP */
+		 editWizardOne {
+			 on("stage2") {
+			 	
+				 println "transitioning to stage2";
+				
+				 UserList listToEdit = flow.listToEdit;
+				 listToEdit.name = params.listName;
+				 listToEdit.description = params.listDescription;
+				
+				 // TODO: lookup all users who aren't already part of this UserList
+				 // and return them
+				 List<User> availableUsers = new ArrayList<User>();
+				 def queryResults = userListService.getEligibleUsersForList( listToEdit );
+				 if( queryResults )
+				 {
+				 	availableUsers.addAll( queryResults );
+				 }
+				 
+				 [availableUsers:availableUsers]
+			 }.to("editWizardTwo")
+		 }
+		 
+		 editWizardTwo {
+			 on("finishWizard"){
+			 	println "finishing Wizard";
+			 }.to("finish")
+		 }
+		 
+		 /* an action state to do the final save/update on the object */
+		 finish {
+			 action {
+				 println "update using params: ${params}"
+				 def listId = params.listId;
+				 UserList listToEdit = flow.listToEdit;
+			 
+				 if( !listToEdit.save() )
+				 {
+					 println( "Saving UserList FAILED");
+					 listToEdit.errors.allErrors.each { println it };
+				 }
+			 }
+			 
+			 redirect(controller:"userList", action:"index");
+			 	 
+		}
+	}	
+	
+	
 }

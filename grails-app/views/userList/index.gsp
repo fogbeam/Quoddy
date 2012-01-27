@@ -13,7 +13,7 @@
 		<p />
 		<ul style="margin-left:25px;margin-top:40px;">
 			<g:each var="list" in="${userLists}">
-				<li><g:link controller="userList" action="edit" id="${list.id}" >${list.name}</g:link> </li>
+				<li><g:link controller="userList" action="editWizard" event="start" params="[listId:list.id]" >${list.name}</g:link> </li>
 			</g:each>
 		</ul>		
 	</body>

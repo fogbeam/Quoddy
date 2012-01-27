@@ -32,5 +32,17 @@ class UserListService
 		return lists;
 	}
 
+	public List<User> getEligibleUsersForList( final UserList list )
+	{
+		List<User> eligibleUsers = new ArrayList<User>();
+		
+		// TODO: actually implement this query...
+		def temp = User.findAll();
+		
+		eligibleUsers.addAll( temp ); 
+		
+		return eligibleUsers;
+			
+	}	
 	
 }

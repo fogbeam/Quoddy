@@ -45,7 +45,8 @@ class HomeController {
 			}
     	}
     
-    	[user:user, activities:activities, 
+    	[user:user, 
+		  activities:activities, 
 		  sysDefinedStreams:systemDefinedStreams, 
 		  userDefinedStreams:userDefinedStreams,
 		  userLists:userLists,

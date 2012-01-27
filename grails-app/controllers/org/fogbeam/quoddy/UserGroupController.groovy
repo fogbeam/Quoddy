@@ -15,6 +15,11 @@ class UserGroupController
 		def userOwnedGroups = new ArrayList<UserGroup>();
 		def userMembershipGroups = new ArrayList<UserGroup>();
 		
+		def systemDefinedStreams = new ArrayList<UserStream>();
+		def userDefinedStreams = new ArrayList<UserStream>();
+		def userLists = new ArrayList<UserList>();
+		def userGroups = new ArrayList<UserGroup>();
+		
 		if( session.user != null )
 		{
 			user = userService.findUserByUserId( session.user.userId );
@@ -31,10 +36,27 @@ class UserGroupController
 			{
 				userMembershipGroups.addAll( tempUserMembershipGroups );
 			}
+		
+			def tempSysStreams = userStreamService.getSystemDefinedStreamsForUser( user );
+			systemDefinedStreams.addAll( tempSysStreams );
+			def tempUserStreams = userStreamService.getUserDefinedStreamsForUser( user );
+			userDefinedStreams.addAll( tempUserStreams );
 			
-			[user:user, userOwnedGroups:userOwnedGroups, userMembershipGroups:userMembershipGroups ];
+			def tempUserLists = userListService.getListsForUser( user );
+			userLists.addAll( tempUserLists );
+			
+			def tempUserGroups = userGroupService.getGroupsOwnedByUser( user );
+			userGroups.addAll( tempUserGroups );
+			
+				
+			[user:user, 
+			  userOwnedGroups:userOwnedGroups, 
+			  userMembershipGroups:userMembershipGroups,
+			  sysDefinedStreams:systemDefinedStreams, 
+			  userDefinedStreams:userDefinedStreams,
+			  userLists:userLists,
+			  userGroups:userGroups ];
 	  
-			
 		}
 		else
 		{

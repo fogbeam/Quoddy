@@ -1,6 +1,9 @@
 package org.fogbeam.quoddy.profile
 
-class Interest {
+import java.io.Serializable;
+
+class Interest implements Serializable
+{
 	
 	int id;
 	String name;

@@ -3,6 +3,7 @@ package org.fogbeam.quoddy
 class UserStreamController
 {
 	def userService;
+	def activityStreamService;
 	def userStreamService;
 	def userListService;
 	def userGroupService;
@@ -13,6 +14,10 @@ class UserStreamController
 		
 		def systemDefinedStreams = new ArrayList<UserStream>();
 		def userDefinedStreams = new ArrayList<UserStream>();
+
+		def userLists = new ArrayList<UserList>();
+		def userGroups = new ArrayList<UserGroup>();
+		
 		
 		if( session.user != null )
 		{
@@ -24,10 +29,19 @@ class UserStreamController
 			def tempUserStreams = userStreamService.getUserDefinedStreamsForUser( user );
 			userDefinedStreams.addAll( tempUserStreams );
 			
-			[user:user, sysDefinedStreams:systemDefinedStreams,
-			  userDefinedStreams:userDefinedStreams];
-	  
 			
+			def tempUserLists = userListService.getListsForUser( user );
+			userLists.addAll( tempUserLists );
+			
+			def tempUserGroups = userGroupService.getGroupsOwnedByUser( user );
+			userGroups.addAll( tempUserGroups );
+			
+			[user:user, 
+			  sysDefinedStreams:systemDefinedStreams,
+			  userDefinedStreams:userDefinedStreams,
+			  userLists:userLists,
+			  userGroups:userGroups];
+	  
 		}
 		else
 		{

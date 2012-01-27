@@ -1,6 +1,9 @@
 package org.fogbeam.quoddy.profile
 
-class EducationalExperience {
+import java.io.Serializable;
+
+class EducationalExperience implements Serializable
+{
 
 	static constraints = {
 		institutionName(nullable:true)

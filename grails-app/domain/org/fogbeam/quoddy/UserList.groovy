@@ -2,7 +2,7 @@ package org.fogbeam.quoddy
 
 import java.util.Date;
 
-class UserList
+class UserList implements Serializable
 {
 	
 	public UserList()

@@ -1,5 +1,8 @@
 package org.fogbeam.quoddy.profile
 
-class Favorite {
+import java.io.Serializable;
+
+class Favorite implements Serializable
+{
 
 }

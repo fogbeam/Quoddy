@@ -11,9 +11,12 @@
         <link rel="stylesheet" type="text/css" href="/css/grids-min.css">
         <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" />
        
-			  <g:javascript library="jquery-1.4" />
+        
+        <g:javascript library="jquery-1.4" />
         <g:javascript library="jquery.timers-1.2" />
-        <!-- <g:javascript library="application" />  -->
+        <g:javascript>
+          var $j = jQuery.noConflict();
+        </g:javascript>
         
 	    <script type="text/javascript">
         	<g:render template="/javascript/application.js"/>

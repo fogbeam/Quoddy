@@ -1,6 +1,8 @@
 package org.fogbeam.quoddy.profile
 
-class ContactAddress 
+import java.io.Serializable;
+
+class ContactAddress implements Serializable
 {
 	public static final int JABBER_IM = 1;
 	public static final int YAHOO_IM = 2;

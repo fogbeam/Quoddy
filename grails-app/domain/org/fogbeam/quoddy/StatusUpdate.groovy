@@ -1,6 +1,9 @@
 package org.fogbeam.quoddy
 
-class StatusUpdate {
+import java.io.Serializable;
+
+class StatusUpdate implements Serializable
+{
 
 	String text;
 	User creator;

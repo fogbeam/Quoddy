@@ -1,6 +1,8 @@
 package org.fogbeam.quoddy.profile
 
-class Language 
+import java.io.Serializable;
+
+class Language implements Serializable
 {
 	
 }
