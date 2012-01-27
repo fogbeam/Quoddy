@@ -2,7 +2,8 @@ package org.fogbeam.quoddy;
 
 import org.fogbeam.quoddy.profile.Profile 
 
-class User {
+class User implements Serializable
+{
 
 	public User()
 	{

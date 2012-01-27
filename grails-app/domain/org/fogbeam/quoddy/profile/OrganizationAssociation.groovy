@@ -1,6 +1,9 @@
 package org.fogbeam.quoddy.profile
 
-class OrganizationAssociation {
+import java.io.Serializable;
+
+class OrganizationAssociation implements Serializable
+{
 
 	int id;
 	String name;

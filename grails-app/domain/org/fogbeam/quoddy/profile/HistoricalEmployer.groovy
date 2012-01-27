@@ -1,6 +1,8 @@
 package org.fogbeam.quoddy.profile
 
-class HistoricalEmployer 
+import java.io.Serializable;
+
+class HistoricalEmployer implements Serializable
 {
 	static constraints = {
 		monthFrom(nullable:true)

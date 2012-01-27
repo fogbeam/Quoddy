@@ -21,6 +21,7 @@
 			<li><a href="${createLink(controller:'search', action:'searchFriends')}">Search Friends</a></li>
 			<li><a href="${createLink(controller:'search', action:'searchIFollow')}">Search People I Follow</a></li>
 			<li><a href="${createLink(controller:'user', action:'listOpenFriendRequests')}">List Pending Friend Requests</a></li>
+			<li><a href="${createLink(controller:'userGroup', action:'list')}">List All Groups</a></li>
 		</g:if>			
 	</ul>
 </div>

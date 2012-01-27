@@ -26,7 +26,7 @@
 			
 						<div id="activityStream">
 							
-							<g:render template="/activityStream" model="['activityStream':activityStream]" />
+							<g:render template="/activityStream" />
 							
 						</div>
 					</g:if>

@@ -8,12 +8,44 @@
 	</div>
 	<div style="border-top: 3px solid #E2ECFC; margin-left:130px; height: 200px; clear:both;margin-top:45px;">
 		<g:if test="${session.user}">
-			Streams
+			<g:link controller="userStream" action="index" >Streams</g:link>
+			<ul style="margin-left:25px;margin-top:15px;">
+				<g:each var="stream" in="${sysDefinedStreams}">
+					<li>
+						<g:link controller="home" action="index" params="[streamId:stream.id]" >${stream.name}</g:link>
+					</li>
+				</g:each>
+				<g:each var="stream" in="${userDefinedStreams}">
+					<li>
+						<g:link controller="home" action="index" params="[streamId:stream.id]" >${stream.name}</g:link>
+					</li>
+				</g:each> 
+		  	</ul>
 		</g:if>
 	</div>
 	<div style="border-top: 3px solid #E2ECFC; margin-left:130px; height: 200px;">
 		<g:if test="${session.user}">
-			Groups
+			<g:link controller="userList" action="index" >Lists</g:link>
+			<ul style="margin-left:25px;margin-top:15px;">
+				<g:each var="list" in="${userLists}">
+					<li>
+						<g:link controller="home" action="index" params="[listId:list.id]" >${list.name}</g:link>
+					</li>
+				</g:each>
+		  	</ul>			
+		</g:if>
+	</div>
+	
+	<div style="border-top: 3px solid #E2ECFC; margin-left:130px; height: 200px;">
+		<g:if test="${session.user}">
+			<g:link controller="userGroup" action="index" >Groups</g:link>
+			<ul style="margin-left:25px;margin-top:15px;">
+				<g:each var="group" in="${userGroups}">
+					<li>
+						<g:link controller="userGroup" action="display" params="[groupId:group.id]" >${group.name}</g:link>
+					</li>
+				</g:each>
+		  	</ul>				
 		</g:if>
 	</div>
 </div>

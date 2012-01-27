@@ -1,9 +1,12 @@
 package org.fogbeam.quoddy.profile;
 
+import java.io.Serializable;
+
 import org.fogbeam.quoddy.User;
 import org.fogbeam.quoddy.images.Photograph 
 
-class Profile {
+class Profile implements Serializable 
+{
 
 	
 	static constraints = {
