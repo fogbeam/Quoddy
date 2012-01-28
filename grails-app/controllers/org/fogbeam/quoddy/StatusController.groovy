@@ -55,20 +55,26 @@ class StatusController {
 			session.user = user;
 			
 			// TODO: if the user update was successful
-			def originTime = new Date().getTime();
-			Activity activity = new Activity(text:newStatus.text);
+			Activity activity = new Activity(content:newStatus.text);
 			ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
+
+			
+			activity.title = "Internal Activity";
+			activity.url = new URL( "http://www.example.com" );
+			activity.verb = "status_update";
+			activity.published = new Date(); // set published to "now"
 			activity.targetUuid = streamPublic.uuid;
-			activity.creator = user;
-			activity.originTime = originTime;
+			activity.userActor = user;
+			
 			activityStreamService.saveActivity( activity );
 			
 			
 			Map msg = new HashMap();
-			msg.creator = activity.creator.userId;
+			msg.creator = activity.userActor.userId;
 			msg.text = newStatus.text;
-			msg.originTime = originTime;
 			msg.targetUuid = activity.targetUuid;
+			msg.originTime = activity.dateCreated.time;
+			
 			
 			println "sending message to JMS";
 			jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );

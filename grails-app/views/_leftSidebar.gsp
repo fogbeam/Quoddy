@@ -29,7 +29,7 @@
 			<ul style="margin-left:25px;margin-top:15px;">
 				<g:each var="list" in="${userLists}">
 					<li>
-						<g:link controller="home" action="index" params="[listId:list.id]" >${list.name}</g:link>
+						<g:link controller="userList" action="display" params="[listId:list.id]" >${list.name}</g:link>
 					</li>
 				</g:each>
 		  	</ul>			

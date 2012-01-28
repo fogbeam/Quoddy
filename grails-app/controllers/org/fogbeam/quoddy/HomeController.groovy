@@ -20,31 +20,41 @@ class HomeController {
 		
 		if( userId != null )
     	{
+			println "getting User by userId: ${userId}";
     		user = userService.findUserByUserId( userId );
     	}
     	else
     	{
+			println "Looking up User in session";
+			
     		if( session.user != null )
     		{
+				println "Found User in Session";
     			user = userService.findUserByUserId( session.user.userId );
-				// activities = activityStreamService.getRecentFriendActivitiesForUser( user );
-				activities = activityStreamService.getRecentActivitiesForUser( user, 25 );
-				
-				def tempSysStreams = userStreamService.getSystemDefinedStreamsForUser( user );
-				systemDefinedStreams.addAll( tempSysStreams );
-				def tempUserStreams = userStreamService.getUserDefinedStreamsForUser( user );
-				userDefinedStreams.addAll( tempUserStreams );
-				
-				def tempUserLists = userListService.getListsForUser( user );
-				userLists.addAll( tempUserLists );
-				
-				def tempUserGroups = userGroupService.getAllGroupsForUser( user );
-				userGroups.addAll( tempUserGroups );
-				
-				
+    		}
+			else
+			{
+				println "No user in Session";
 			}
     	}
-    
+		
+		// activities = activityStreamService.getRecentFriendActivitiesForUser( user );
+		if( user )
+		{
+			activities = activityStreamService.getRecentActivitiesForUser( user, 25 );
+				
+			def tempSysStreams = userStreamService.getSystemDefinedStreamsForUser( user );
+			systemDefinedStreams.addAll( tempSysStreams );
+			def tempUserStreams = userStreamService.getUserDefinedStreamsForUser( user );
+			userDefinedStreams.addAll( tempUserStreams );
+		
+			def tempUserLists = userListService.getListsForUser( user );
+			userLists.addAll( tempUserLists );
+		
+			def tempUserGroups = userGroupService.getAllGroupsForUser( user );
+			userGroups.addAll( tempUserGroups );
+		}	
+		    
     	[user:user, 
 		  activities:activities, 
 		  sysDefinedStreams:systemDefinedStreams, 

@@ -43,45 +43,48 @@ class UserListController
 		{
 			// TODO: not logged in, deal with this...	
 		}
-	}
-
-/*
-	def create = 
-	{
-		[];	
-	}
+	}	
 	
-	def save = 
+	def display = 
 	{
 		
-		// TODO: implement this...
-		println "save using params: ${params}"
 		if( session.user != null )
 		{
 			def user = userService.findUserByUserId( session.user.userId );
-			UserList listToCreate = new UserList();
-		
-			listToCreate.name = params.listName;
-			listToCreate.description = params.listDescription;
-			listToCreate.owner = user;
+			// println "Doing display with params: ${params}";
+			def activities = new ArrayList<Activity>();
 			
-			if( !listToCreate.save() )
-			{
-				println( "Saving UserList FAILED");
-				listToCreate.errors.allErrors.each { println it };
-			}
-		
-			redirect(controller:"userList", action:"index");
+			def systemDefinedStreams = new ArrayList<UserStream>();
+			def userDefinedStreams = new ArrayList<UserStream>();
+			def userLists = new ArrayList<UserList>();
+			def userGroups = new ArrayList<UserGroup>();
+			
+			def tempSysStreams = userStreamService.getSystemDefinedStreamsForUser( user );
+			systemDefinedStreams.addAll( tempSysStreams );
+			def tempUserStreams = userStreamService.getUserDefinedStreamsForUser( user );
+			userDefinedStreams.addAll( tempUserStreams );
+			
+			def tempUserLists = userListService.getListsForUser( user );
+			userLists.addAll( tempUserLists );
+			
+			List<UserGroup> tempUserGroups = userGroupService.getAllGroupsForUser( user );
+			userGroups.addAll( tempUserGroups );						
+			
+			UserList list = UserList.findById( params.listId );
+			
+			activities = userListService.getRecentActivitiesForList( list, 25 ); 
+			
+			[ activities:activities,
+			  sysDefinedStreams:systemDefinedStreams, 
+			  userDefinedStreams:userDefinedStreams,
+			  userLists:userLists,
+			  userGroups:userGroups ];	
 		}
 		else
 		{
-			// not logged in, deal with this...	
+			redirect( controller:"home", action:"index");	
 		}
 	}
-	
-
-*/
-	
 	
 	def createWizardFlow =
 	{
