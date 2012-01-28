@@ -138,15 +138,43 @@ class UserGroupController
 	def display = 
 	{
 		
-		// println "Doing display with params: ${params}";
-		def activities = new ArrayList<Activity>();
-		
-		UserGroup group = UserGroup.findById( params.groupId );
-		
-		activities = userGroupService.getRecentActivitiesForGroup( group, 25 ); 
-		
-		
-		[group:group, activities:activities];	
+		if( session.user != null )
+		{
+			def user = userService.findUserByUserId( session.user.userId );
+			// println "Doing display with params: ${params}";
+			def activities = new ArrayList<Activity>();
+			
+			def systemDefinedStreams = new ArrayList<UserStream>();
+			def userDefinedStreams = new ArrayList<UserStream>();
+			def userLists = new ArrayList<UserList>();
+			def userGroups = new ArrayList<UserGroup>();
+			
+			def tempSysStreams = userStreamService.getSystemDefinedStreamsForUser( user );
+			systemDefinedStreams.addAll( tempSysStreams );
+			def tempUserStreams = userStreamService.getUserDefinedStreamsForUser( user );
+			userDefinedStreams.addAll( tempUserStreams );
+			
+			def tempUserLists = userListService.getListsForUser( user );
+			userLists.addAll( tempUserLists );
+			
+			def tempUserGroups = userGroupService.getGroupsOwnedByUser( user );
+			userGroups.addAll( tempUserGroups );
+			
+			
+			UserGroup group = UserGroup.findById( params.groupId );
+			activities = userGroupService.getRecentActivitiesForGroup( group, 25 ); 
+			
+			[ group:group, 
+			  activities:activities,
+			  sysDefinedStreams:systemDefinedStreams, 
+			  userDefinedStreams:userDefinedStreams,
+			  userLists:userLists,
+			  userGroups:userGroups ];	
+		}
+		else
+		{
+			redirect( controller:"home", action:"index");	
+		}
 	}	
 
 	def joinGroup =
