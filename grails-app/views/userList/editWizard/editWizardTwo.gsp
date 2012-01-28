@@ -19,7 +19,7 @@
               <label for="users">Selected Users</label>
             </div>
     	    <div style="float:left;margin-top:35px;margin-left:-85px;">                               
-              <g:select name="users" from="${listToEdit.members}" optionKey="id" optionValue="displayName" multiple="true">
+              <g:select name="users" from="${listToEdit.members}" optionKey="id" optionValue="fullName" multiple="true">
               </g:select> 
         	</div>
          

@@ -152,6 +152,7 @@ class UserListController
 		 editWizardTwo {
 			 on("finishWizard"){
 			 	println "finishing Wizard";
+				[];
 			 }.to("finish")
 		 }
 		 
@@ -162,17 +163,53 @@ class UserListController
 				 def listId = params.listId;
 				 UserList listToEdit = flow.listToEdit;
 			 
+				 /* deal with usersToRemove and usersToAdd here */
+				 println "dealing with usersToRemove";
+				 def usersToRemove = params.list('usersToRemove');
+				 for( String userToRemove : usersToRemove )
+				 {
+					 
+					 log.debug( "removing user: ${userToRemove}" );
+					 
+					 User removeMeUser = listToEdit.members.find { it.id == Integer.parseInt(userToRemove) }
+					 if( removeMeUser )
+					 {
+						 log.debug( "calling removeFromMembers using user: ${removeMeUser}");
+						 listToEdit.removeFromMembers( removeMeUser );
+					 }
+					 else
+					 {
+						 log.warn( "problem finding user instance for ${userToRemove}" );
+					 }
+				 }
+				 
+				 
+				 if( !listToEdit.save() )
+				 {
+					 println( "Saving UserList FAILED");
+					 listToEdit.errors.allErrors.each { println it };
+				 }
+				 
+				 println( "dealing with users to add" );
+				 def usersToAdd = params.list( 'usersToAdd');
+				 for( String userToAdd : usersToAdd )
+				 {
+					 log.debug( "adding user: ${userToAdd}" );
+					 User addMeUser = User.findById( userToAdd );
+					 listToEdit.addToMembers( addMeUser );
+				 }
+			 
 				 if( !listToEdit.save() )
 				 {
 					 println( "Saving UserList FAILED");
 					 listToEdit.errors.allErrors.each { println it };
 				 }
 			 }
-			 
+			 on("success").to("exitWizard");
+		}
+		 
+		exitWizard {
 			 redirect(controller:"userList", action:"index");
-			 	 
 		}
 	}	
-	
-	
 }

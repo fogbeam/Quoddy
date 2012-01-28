@@ -35,7 +35,7 @@ class User implements Serializable
 	String firstName;
 	String lastName;
 	String displayName;
-	// String fullName;
+	// String fullName;  // see below
 	String bio;
 	String email;
 	static transients = [ "password", "homepage", "displayName", "bio",  ]
