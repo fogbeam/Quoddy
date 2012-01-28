@@ -9,10 +9,19 @@
 	<body>
 	
 		<h3>Display GROUP</h3>
-		<g:link controller="userGroup" 
+		<g:if test="${userIsGroupMember}" >
+			<g:link controller="userGroup" 
+				action="leaveGroup" 
+				style="float:right;color:orange;margin-right:200px;margin-bottom:10px;"
+				params="[groupId:group.id]">Leave This Group</g:link>
+		</g:if>
+		<g:else>
+			<g:link controller="userGroup" 
 				action="joinGroup" 
 				style="float:right;color:orange;margin-right:200px;margin-bottom:10px;"
 				params="[groupId:group.id]">Join This Group</g:link>
+
+		</g:else>
 		
 		<p />
         <g:if test="${session.user != null}">

@@ -157,14 +157,25 @@ class UserGroupController
 			def tempUserLists = userListService.getListsForUser( user );
 			userLists.addAll( tempUserLists );
 			
-			def tempUserGroups = userGroupService.getAllGroupsForUser( user );
-			userGroups.addAll( tempUserGroups );
-			
+			List<UserGroup> tempUserGroups = userGroupService.getAllGroupsForUser( user );
+			userGroups.addAll( tempUserGroups );						
 			
 			UserGroup group = UserGroup.findById( params.groupId );
+			
+			// check that this group is not one of the ones that the user either
+			// owns or is a member of
+			boolean userIsGroupMember = false;
+			userGroups.each {
+				if( it.id == group.id ){
+					userIsGroupMember = true;
+					return;
+				}
+			}
+			
 			activities = userGroupService.getRecentActivitiesForGroup( group, 25 ); 
 			
 			[ group:group, 
+			  userIsGroupMember:userIsGroupMember,
 			  activities:activities,
 			  sysDefinedStreams:systemDefinedStreams, 
 			  userDefinedStreams:userDefinedStreams,
