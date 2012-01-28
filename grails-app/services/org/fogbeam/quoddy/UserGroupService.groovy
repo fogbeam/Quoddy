@@ -71,6 +71,21 @@ class UserGroupService
 		return groups;
 	}
 
+	// get all groups where the User is the Owner OR is a member
+	public List<UserGroup> getAllGroupsForUser( final User user )
+	{
+		List<UserGroup> groups = new ArrayList<UserGroup>();
+		
+		List<UserGroup> tempGroups = UserGroup.executeQuery( "select ugroup from UserGroup as ugroup, User as user where user = ? and ( ugroup.owner = user OR user in elements (ugroup.groupMembers))", [user] );
+
+		if( tempGroups )
+		{
+			groups.addAll( tempGroups );
+		}
+		
+		
+		return groups;
+	}
 	
 	public List<Activity> getRecentActivitiesForGroup( final UserGroup group, final int maxCount )
 	{

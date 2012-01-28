@@ -33,7 +33,7 @@ class UserStreamController
 			def tempUserLists = userListService.getListsForUser( user );
 			userLists.addAll( tempUserLists );
 			
-			def tempUserGroups = userGroupService.getGroupsOwnedByUser( user );
+			def tempUserGroups = userGroupService.getAllGroupsForUser( user );
 			userGroups.addAll( tempUserGroups );
 			
 			[user:user, 
