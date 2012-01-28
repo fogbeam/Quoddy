@@ -36,10 +36,9 @@ class UserListService
 	{
 		List<User> eligibleUsers = new ArrayList<User>();
 		
-		// TODO: actually implement this query...
-		def temp = User.findAll();
+		def queryResults = User.executeQuery( "select user from User as user, UserList as list where user not in elements(list.members) and user <> list.owner" );
 		
-		eligibleUsers.addAll( temp ); 
+		eligibleUsers.addAll( queryResults ); 
 		
 		return eligibleUsers;
 			
