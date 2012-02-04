@@ -10,5 +10,11 @@
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jms-1.2/src/java"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jms-1.2/src/groovy"/>
         <wb-resource deploy-path="/" source-path="/src/groovy"/>
+        <wb-resource deploy-path="/" source-path="/grails-app/jobs"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/quartz-1.0-SNAPSHOT/grails-app/services"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/quartz-1.0-SNAPSHOT/grails-app/conf"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/quartz-1.0-SNAPSHOT/grails-app/i18n"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/quartz-1.0-SNAPSHOT/src/java"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/quartz-1.0-SNAPSHOT/src/groovy"/>
     </wb-module>
 </project-modules>
