@@ -1,5 +1,7 @@
 package org.fogbeam.quoddy
 
+import org.fogbeam.quoddy.EventBase;
+
 /* TODO: map the fields of this class to the activitystrea.ms protocol */
 /* SPEC: http://activitystrea.ms/specs/json/1.0/ */
 /*
@@ -147,7 +149,8 @@ Following is a simple, minimal example of a JSON serialized activity:
 	url 					JSON [RFC4627] String				An IRI [RFC3987] identifying a resource providing an HTML representation of the object. An object MAY contain a url property 
  
 */
-class Activity {
+class Activity extends EventBase
+{
 
 	public Activity()
 	{
@@ -194,6 +197,8 @@ class Activity {
 		dateCreated()
 	}
 	
+	static transients = ['templateName'];
+	
 	String 	content;
 	Date	published;
 	String	title;
@@ -236,4 +241,12 @@ class Activity {
 	String	providerUrl;
 
 	Date 	dateCreated;
+	
+	
+	public String getTemplateName()
+	{
+		return "/renderActivity";
+	}
+	
+	
 }
