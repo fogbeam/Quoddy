@@ -38,9 +38,11 @@ class HomeController {
 			}
     	}
 		
-		// activities = activityStreamService.getRecentFriendActivitiesForUser( user );
 		if( user )
 		{
+			// TODO: this should take the selected UserStream into account when
+			// determining what activities to include in the activities list
+			
 			activities = activityStreamService.getRecentActivitiesForUser( user, 25 );
 				
 			def tempSysStreams = userStreamService.getSystemDefinedStreamsForUser( user );

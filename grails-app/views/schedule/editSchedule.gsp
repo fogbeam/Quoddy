@@ -41,8 +41,8 @@
             		</tr>
             	</g:each> 
             </table>
-			<div style="margin-top:8px;">
-				<g:link controller="schedule" id="${jobFullName}" action="createTrigger" params="[jobName:jobName,jobGroup:jobGroup]">add new trigger</g:link>
+			<div style="margin-top:8px;">  <!-- params="[jobName:jobName,jobGroup:jobGroup]" -->
+				<g:link controller="schedule" id="${jobFullName}" action="createTrigger">add new trigger</g:link>
 			</div>
         </div>
     </body>

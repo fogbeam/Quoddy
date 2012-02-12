@@ -34,7 +34,7 @@ class ScheduleController {
 
 	def editSchedule =
 	{
-		log.debug( "received id: ${params.id}" );
+		println( "editSchedule received id: ${params.id}" );
 	
 		List<String> jobGroups = jobManagerService.quartzScheduler.getJobGroupNames();
 		def triggers = null;
@@ -47,8 +47,11 @@ class ScheduleController {
 			{
 				JobDetail detail = jobManagerService.quartzScheduler.getJobDetail(aJobName, aJobGroup);
 				
+				println "detail: ${detail}";
+				
 				if( detail.fullName.contains( params.id ))
-				{			
+				{
+					println "found a match for ${detail.fullName}";			
 					triggers = jobManagerService.quartzScheduler.getTriggersOfJob(aJobName, aJobGroup);
 					jobName = aJobName;
 					jobGroup = aJobGroup;
