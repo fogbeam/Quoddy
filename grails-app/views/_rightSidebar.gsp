@@ -23,6 +23,7 @@
 			<li><a href="${createLink(controller:'user', action:'listOpenFriendRequests')}">List Pending Friend Requests</a></li>
 			<li><a href="${createLink(controller:'userGroup', action:'list')}">List All Groups</a></li>
 			<li><a href="${createLink(controller:'schedule', action:'index')}">Manage Scheduled Jobs</a></li>
+			<li><a href="${createLink(controller:'calendar', action:'index')}">Manage Calendar Feeds</a></li>
 		</g:if>			
 	</ul>
 </div>

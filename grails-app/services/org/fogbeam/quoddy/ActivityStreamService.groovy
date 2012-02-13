@@ -118,7 +118,7 @@ class ActivityStreamService {
 			Activity activity = new Activity();
 			
 			// println "msg class: " + msg?.getClass().getName();
-			activity.userActor = userService.findUserByUserId( msg.creator ); 
+			activity.owner = userService.findUserByUserId( msg.creator ); 
 			activity.content = msg.text;
 			activity.dateCreated = new Date( msg.originTime );
 			recentActivities.add( activity );	
@@ -169,8 +169,8 @@ class ActivityStreamService {
 				// own feed)
 				friendIds.add( user.id );
 				ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
-				List<Activity> queryResults = 
-					Activity.executeQuery( "select activity from Activity as activity where activity.dateCreated >= :cutoffDate and activity.userActor.id in (:friendIds) and activity.dateCreated < :oldestOriginTime and activity.targetUuid = :targetUuid order by activity.dateCreated desc",
+				List<EventBase> queryResults = 
+					EventBase.executeQuery( "select event from EventBase as event where event.effectiveDate >= :cutoffDate and event.owner.id in (:friendIds) and event.effectiveDate < :oldestOriginTime and event.targetUuid = :targetUuid order by event.effectiveDate desc",
 						['cutoffDate':cutoffDate, 
 						 'oldestOriginTime':new Date(oldestOriginTime), 
 						 'friendIds':friendIds, 

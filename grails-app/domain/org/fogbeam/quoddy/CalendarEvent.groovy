@@ -38,7 +38,7 @@ class CalendarEvent extends EventBase
 	Date lastModified;
 	String uid;
 
-	User owner;
+
 	String uuid;
 	Date dateCreated;
 

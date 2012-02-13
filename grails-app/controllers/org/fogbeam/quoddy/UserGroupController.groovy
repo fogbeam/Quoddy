@@ -246,13 +246,20 @@ class UserGroupController
 			activity.title = "Internal Activity";
 			activity.url = new URL( "http://www.example.com" );
 			activity.verb = "status_update";
-			activity.userActor = user;
+			activity.owner = user;
 			activity.published = new Date(); // set published to "now"
 			activity.targetUuid = group.uuid;
+						
+			// NOTE: we added "name" to EventBase, but how is it really going
+			// to be used?  Do we *really* need this??
+			activity.name = activity.title;
+			activity.effectiveDate = activity.published;
+			
 			activityStreamService.saveActivity( activity );
 			
+			
 			// Map msg = new HashMap();
-			// msg.creator = activity.userActor.userId;
+			// msg.creator = activity.owner.userId;
 			// msg.text = newStatus.text;
 			// msg.published = activity.published;
 			// msg.originTime = activity.dateCreated.time;

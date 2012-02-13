@@ -64,13 +64,18 @@ class StatusController {
 			activity.verb = "status_update";
 			activity.published = new Date(); // set published to "now"
 			activity.targetUuid = streamPublic.uuid;
-			activity.userActor = user;
+			activity.owner = user;
+			
+			// NOTE: we added "name" to EventBase, but how is it really going
+			// to be used?  Do we *really* need this??
+			activity.name = activity.title;
+			activity.effectiveDate = activity.published;
 			
 			activityStreamService.saveActivity( activity );
 			
 			
 			Map msg = new HashMap();
-			msg.creator = activity.userActor.userId;
+			msg.creator = activity.owner.userId;
 			msg.text = newStatus.text;
 			msg.targetUuid = activity.targetUuid;
 			msg.originTime = activity.dateCreated.time;

@@ -1,22 +1,5 @@
 <g:each in="${activities}" var="activity">
-
-	<div class="aseWrapper">
-		
-		<div class="aseAvatarBlock">
-			<img src="${createLink(controller:'profilePic',action:'thumbnail',id:activity.userActor.userId)}" />
-		</div>
-		<div class="aseTitleBar"> <!-- http://localhost:8080/quoddy/user/viewUser?userId=testuser2 -->
-			<a href="${createLink(controller:'user', action:'viewUser', params:[userId:activity.userActor.userId])}">${activity.userActor.fullName}</a>
-		</div>
-		<div class="activityStreamEntry"> 
-			${activity.content}
-		</div>
-		<div class="aseClear" >
-		</div>
-		<div class="aseFooter" >
-			<g:formatDate date="${activity.dateCreated}" type="datetime" style="LONG" timeStyle="SHORT"/>
-		</div>
-	</div>
+	<g:render template="${activity.templateName}" var="item" bean="${activity}" />
 </g:each>
 
 <div class="activityStreamFooter" style="clear:both;">

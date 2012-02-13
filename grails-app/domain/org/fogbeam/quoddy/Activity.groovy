@@ -162,8 +162,6 @@ class Activity extends EventBase
 		updated(nullable:true);
 		icon(nullable:true);
 		
-		userActor(nullable:true);
-		
 		actorUuid(nullable:true);
 		actorUrl(nullable:true);
 		actorContent(nullable:true);
@@ -207,8 +205,6 @@ class Activity extends EventBase
 	String	verb;
 	URL 	icon;
 	String 	uuid;
-	
-	User 	userActor;
 
 	String 	actorUuid;
 	String 	actorUrl;
@@ -228,7 +224,6 @@ class Activity extends EventBase
 	String	objectImageHeight;
 	String	objectImageWidth;
 		
-	String	targetUuid;
 	String	targetUrl;
 	String	targetContent;
 	String	targetDisplayName;

@@ -62,7 +62,7 @@ class UserListService
 		List<Activity> queryResults =
 			Activity.executeQuery( 
 					"select activity from Activity as activity, UserList as ulist where activity.dateCreated >= :cutoffDate " + 
-					" and activity.userActor in elements(ulist.members) and ulist = :thelist order by activity.dateCreated desc",
+					" and activity.owner in elements(ulist.members) and ulist = :thelist order by activity.dateCreated desc",
               ['cutoffDate':cutoffDate, 'thelist':list], ['max': maxCount ]);
 			
 		if( queryResults )

@@ -35,8 +35,12 @@ class ActivityStreamTransformerService
 		}
 		
 		activity.published = sdf.parse( eventPublishedDate );
-		
+		activity.effectiveDate = activity.published;
 		activity.verb = entry.verb;
+		
+		// NOTE: we added "name" to EventBase, but how is it really going
+		// to be used?  Do we *really* need this??
+		activity.name = activity.title;
 		
 		// do user translation
 		println "Looking for user ${entry.actor.id}";
@@ -44,7 +48,7 @@ class ActivityStreamTransformerService
 		if( userActor )
 		{
 			println "Found user: ${userActor}";
-			activity.userActor = userActor; 
+			activity.owner = userActor; 
 		}
 		else
 		{

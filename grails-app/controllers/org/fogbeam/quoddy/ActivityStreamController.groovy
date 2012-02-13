@@ -85,7 +85,7 @@ class ActivityStreamController
 			  
 			  // send notification message
 			  Map msg = new HashMap();
-			  msg.creator = activity.userActor.userId;
+			  msg.creator = activity.owner.userId;
 			  msg.text = activity.content;
 			  msg.targetUuid = activity.targetUuid;
 			  // msg.published = activity.published;
