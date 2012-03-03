@@ -13,10 +13,12 @@
        
         
         <g:javascript library="jquery-1.4" />
-        <g:javascript library="jquery.timers-1.2" />
         <g:javascript>
           var $j = jQuery.noConflict();
         </g:javascript>
+
+        <g:javascript library="dropdown" />
+        <g:javascript library="jquery.timers-1.2" />
         
 	    <script type="text/javascript">
         	<g:render template="/javascript/application.js"/>
@@ -32,7 +34,7 @@
     	<div id="gbw" class="headerNavContainer">
 				<div class="headerNav">
     			<ul class="customNav">
-						<li><h1>Quoddy</h1></li>
+						<li><h1><a href="${createLink(controller:'home', action:'index')}">Quoddy</a></h1></li>
     				<li><a href="#">Email</a></li>
     				<li><a href="${createLink(controller:'user', action:'listFriends')}">Friends</a></li>
     				<li><a href="${createLink(controller:'user', action:'listFollowers')}">Followers</a></li>
@@ -40,24 +42,31 @@
     				<li><a href="#">Calendar</a></li>
     				<li><a href="#">Apps</a></li>
     			</ul>
-					<div id="gbg" class="settingsNav">
-						<a href="${createLink(controller:'user', action:'editProfile')}">Edit Profile</a>
+					<div id="gbg" class="settingsNav navBar">
+						<ul>
+							<li><a href="#">Home</a></li>
+							<li class="dropdown" id="menu1"><a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">My Account<b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li><a href="${createLink(controller:'user', action:'editAccount')}">Edit Account Info</a></li>
+									<li><a href="${createLink(controller:'user', action:'editProfile')}">Edit Profile</a></li>
+									<li class="divider"></li>
+									<li><a href="#">Separated link</a></li>
+								</ul>
+							</li>
+							<g:if test="${session.enable_self_registration == true}">
+							<!-- /user/create -->
+							<li><a href="${createLink(controller:'user', action:'create')}">Register</a></li>
+							</g:if>
+							<li><a href="${createLink(controller:'login') }">Login</a></li>
+								<g:if test="${session.user != null}">
+							<li><a href="${createLink(controller:'login', action:'logout')}">Logout</a></li>
+							</g:if>
+						</ul>	
+
 					</div>
 				</div>
-    	</div>
+			</div>
     	
-    	<div id="header">
-    		<div id="logo"><a href="${createLink(controller:'home', action:'index')}"><img src="${resource(dir:'images',file:'logo2.png')}" width="171" height="53" /></a></div>
-    		<div id="icons"></div>
-    		<div id="searchbox">
-    		     <g:form controller="search" action="doSearch" method="GET">
-          			<input name="queryString" type="text" class="searchbox" />
-          			<input type="submit" value="Search" id="searchBtn" />
-     			</g:form>
-    		
-    		</div>
-    		
-    	</div>
     	
        	<div id="body" class="yui3-g">
             
@@ -72,6 +81,10 @@
         	<div class="yui3-u-7-12">
         	
 	    		<!-- layout main content area -->
+          <g:form controller="search" action="doSearch" method="GET">
+                <input name="queryString" type="text" class="searchbox" />
+                <input type="submit" value="Search" id="searchBtn" />
+          </g:form>
 	    	   	<g:layoutBody /> 
  
         	</div>
