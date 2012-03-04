@@ -6,13 +6,13 @@
         <nav:resources />
         <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'main.css')}" />
         <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'bootstrap.min.css')}" />
-        <link rel="stylesheet" type="text/css" href="/css/reset-min.css">
-        <link rel="stylesheet" type="text/css" href="/css/fonts-min.css">             
-        <link rel="stylesheet" type="text/css" href="/css/grids-min.css">
-        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" />
+        <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'reset-min.css')}" />
+        <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'fonts-min.css')}" />             
+        <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'grids-min.css')}" />
+        <!-- <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" /> -->
        
         
-        <g:javascript library="jquery-1.7.min" />
+        <g:javascript library="jquery-1.7.1.min" />
         <g:javascript>
           var $j = jQuery.noConflict();
         </g:javascript>
