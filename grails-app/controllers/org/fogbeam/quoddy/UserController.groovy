@@ -13,6 +13,7 @@ import org.fogbeam.quoddy.profile.Skill
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.commons.CommonsMultipartFile
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
 
 class UserController {
 
