@@ -12,7 +12,7 @@
         <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" />
        
         
-        <g:javascript library="jquery-1.4" />
+        <g:javascript library="jquery-1.7.min" />
         <g:javascript>
           var $j = jQuery.noConflict();
         </g:javascript>
