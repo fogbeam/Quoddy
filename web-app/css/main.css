@@ -19,7 +19,6 @@ body {overflow-x: hidden; overflow-y:auto;}
 }
 
 .headerNav ul.customNav {
-	display: inline;
 	list-style-type: none;
 	color: #fefefe;
 }
