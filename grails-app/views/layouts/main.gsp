@@ -6,11 +6,6 @@
         <nav:resources />
         <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'main.css')}" />
         <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'bootstrap.min.css')}" />
-        <!-- 
-        <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'reset-min.css')}" />
-        <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'fonts-min.css')}" /> 
-        <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'grids-min.css')}" />
-        -->
         
         <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" />
         
@@ -18,9 +13,15 @@
         
         <g:javascript library="jquery-1.7.1.min" />
         <g:javascript>
-          var $j = jQuery.noConflict();
+				<script type="text/javascript">
+          var $j = jQuery.noConflict();	
+				</script>
         </g:javascript>
-
+				<g:javascript>
+				<script type="text/javascript">
+					$j('.dropdown-toggle').dropdown();
+				</script>
+				</g:javascript>
         <g:javascript library="dropdown" />
         <g:javascript library="jquery.timers-1.2" />
         
@@ -46,10 +47,10 @@
     				<li><a href="#">Calendar</a></li>
     				<li><a href="#">Apps</a></li>
     			</ul>
-					<div id="gbg" class="settingsNav navBar">
+					<div id="gbg" class="settingsNav navbar">
 						<ul>
 							<li><a href="#">Home</a></li>
-							<li class="dropdown" id="menu1"><a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">My Account<b class="caret"></b></a>
+							<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">My Account<b class="caret"></b></a>
 								<ul class="dropdown-menu">
 									<li><a href="${createLink(controller:'user', action:'editAccount')}">Edit Account Info</a></li>
 									<li><a href="${createLink(controller:'user', action:'editProfile')}">Edit Profile</a></li>
