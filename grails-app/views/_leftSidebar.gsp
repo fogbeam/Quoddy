@@ -48,5 +48,19 @@
 		  	</ul>				
 		</g:if>
 	</div>
+	
+	<div style="border-top: 3px solid #E2ECFC; margin-left:130px; height: 200px;">
+		<g:if test="${session.user}">
+			<g:link controller="eventSubscription" action="index" >Subscriptions</g:link>
+			<ul style="margin-left:25px;margin-top:15px;">
+				<g:each var="subscription" in="${eventSubscriptions}">
+					<li>
+						<g:link controller="eventSubscription" action="display" params="[eventSubscriptionId:subscription.id]" >${subscription.name}</g:link>
+					</li>
+				</g:each>
+		  	</ul>				
+		</g:if>
+	</div>	
+	
 </div>
  				
