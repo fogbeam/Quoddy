@@ -1,4 +1,4 @@
-<html>
+EventSubscription subscriptionToCreate = flow.subscriptionToCreate;<html>
 	
 	<head>
 		<title>Quoddy: Display SUBSCRIPTION</title>
