@@ -120,6 +120,69 @@ class EventSubscriptionController
 	
 	def editWizardFlow =
 	{
-		[];
-	}		
+		start {
+			action {
+				def subscriptionId = params.subscriptionId;
+				println "Editing EventSubscription with id: ${subscriptionId}";	
+				EventSubscription subscriptionToEdit = null;
+				subscriptionToEdit = EventSubscription.findById( subscriptionId );
+				[subscriptionToEdit: subscriptionToEdit];
+			}
+			on("success").to( "editWizardOne" )
+		}
+		
+		editWizardOne {
+			on("stage2") {
+				
+				println "transitioning to stage2";
+				
+				EventSubscription subscriptionToEdit = flow.subscriptionToEdit;
+				subscriptionToEdit.name = params.subscriptionName;
+				subscriptionToEdit.description = params.subscriptionDescription;
+					
+			}.to( "editWizardTwo" );
+			
+		}
+		
+		editWizardTwo {
+			on( "finishWizard" ) {
+				println "finishing wizard";
+				[];	
+			}.to( "finish" );	
+		}
+		
+		/* an action state to do the final save/update on the object */
+		finish {
+			action {
+				println "update using params: ${params}"
+				
+				def subscriptionId = params.subscriptionId;
+				EventSubscription subscriptionToEdit = flow.subscriptionToEdit;
+				
+				subscriptionToEdit.xQueryExpression = params.xQueryExpression;
+				
+				if( !subscriptionToEdit.save() )
+				{
+					println( "Saving EventSubscription FAILED");
+					subscriptionToEdit.errors.allErrors.each { println it };
+				}
+				
+			}
+			on("success").to("exitWizard");
+		}
+	
+		exitWizard {
+			redirect(controller:"eventSubscription", action:"index");
+		}
+	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
 }
