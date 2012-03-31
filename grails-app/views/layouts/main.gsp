@@ -48,24 +48,23 @@
     				<li><a href="#">Apps</a></li>
     			</ul>
 					<div id="gbg" class="settingsNav navbar">
-						<ul>
+						<ul class="topLevel">
 							<li><a href="#">Home</a></li>
 							<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">My Account<b class="caret"></b></a>
 								<ul class="dropdown-menu">
 									<li><a href="${createLink(controller:'user', action:'editAccount')}">Edit Account Info</a></li>
 									<li><a href="${createLink(controller:'user', action:'editProfile')}">Edit Profile</a></li>
 									<li class="divider"></li>
-									<li><a href="#">Separated link</a></li>
+										<g:if test="${session.enable_self_registration == true}">
+										<!-- /user/create -->
+											<li><a href="${createLink(controller:'user', action:'create')}">Register</a></li>
+										</g:if>
+											<li><a href="${createLink(controller:'login') }">Login</a></li>
+										<g:if test="${session.user != null}">
+											<li><a href="${createLink(controller:'login', action:'logout')}">Logout</a></li>
+										</g:if>
 								</ul>
 							</li>
-							<g:if test="${session.enable_self_registration == true}">
-							<!-- /user/create -->
-							<li><a href="${createLink(controller:'user', action:'create')}">Register</a></li>
-							</g:if>
-							<li><a href="${createLink(controller:'login') }">Login</a></li>
-								<g:if test="${session.user != null}">
-							<li><a href="${createLink(controller:'login', action:'logout')}">Logout</a></li>
-							</g:if>
 						</ul>	
 
 					</div>

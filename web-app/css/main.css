@@ -23,21 +23,15 @@ body {overflow-x: hidden; overflow-y:auto;}
 	color: #fefefe;
 }
 
-.headerNav ul.customNav h1 {
-	margin-right: 6px;
+.headerNav ul.customNav h1 a {
+	position:relative;
+	top: -10px;
 }
 
 .settingsNav a, .settingsNav a:hover,
 .headerNav ul.customNav h1,
 .headerNav ul.customNav a {
 	color: #fefefe;
-}
-
-.settingsNav a,
-.headerNav ul.customNav a {
-	margin: 10px 0px 0 10px;
-	display: block;
-	font-size: 14px;
 }
 
 .settingsNav {
@@ -61,14 +55,8 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 }
 
 #body {
-
-	margin: auto; /* center in viewport */
-    width: 1440px;
-    padding-top: 5px;
-	padding-right:3px;
-	padding-left: 3px;
-    clear: both;
-    background-color: #FAFDF7;
+	margin: auto;
+	padding: 1em;
 }
 	
 #logo {
@@ -118,10 +106,19 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 	list-style-type:none;
 }
 
-#gbw ul li {
+#gbw ul.customNav li {
 	float: left;
-	margin-left: 4px;
-	margin-right: 4px;
+	margin:10px;
+	font-size:14px;
+	display:block;
+}
+
+.topLevel > li,
+.customNav ul > li {
+	margin: 10px;
+	font-size:14px;
+	display:block;
+	float:left;
 }
 
 #bodyContent {
