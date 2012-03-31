@@ -49,9 +49,30 @@
     			</ul>
 					<div id="gbg" class="settingsNav navbar">
 						<ul class="topLevel">
-							<li><a href="#">Home</a></li>
+							<li>
+								<div class="searchBoxContainer">
+									<g:form controller="search" action="doSearch" method="GET">
+                   <input name="queryString" type="text" class="searchbox" /> 
+                   <!-- <input type="submit" value="Search" id="searchBtn" /> -->
+                   <div class="btn-group">
+                      <button data-toggle="dropdown" class="btn dropdown-toggle btn-small">Search <span class="caret"></span></button>
+                       <ul class="dropdown-menu">
+                         <li><a href="${createLink(controller:'search', action:'searchPeople')}">People</a></li>
+                         <li><a href="${createLink(controller:'search', action:'searchFriends')}">Friends</a></li>
+                         <li><a href="${createLink(controller:'search', action:'searchIFollow')}">People I Follow</a></li>
+                         <li class="divider"></li>
+                         <li><a href="#">Everything</a></li>
+                       </ul>
+                   </div>
+              </g:form>
+             </div>
+						</li>
 							<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">My Account<b class="caret"></b></a>
 								<ul class="dropdown-menu">
+									<li><a href="${createLink(controller:'user', action:'listOpenFriendRequests')}">Pending Friend Requests</a></li>
+									<li><a href="${createLink(controller:'schedule', action:'index')}">Manage Scheduled Jobs</a></li>
+									<li><a href="${createLink(controller:'calendar', action:'index')}">Manage Calendar Feeds</a></li>
+									<li class="divider"></li>
 									<li><a href="${createLink(controller:'user', action:'editAccount')}">Edit Account Info</a></li>
 									<li><a href="${createLink(controller:'user', action:'editProfile')}">Edit Profile</a></li>
 									<li class="divider"></li>
@@ -71,34 +92,20 @@
 				</div>
 			</div>
     	
-    	
-       	<div id="body" class="yui3-g">
-            
-			<div class="yui3-u-5-24">
- 
- 				<p style="font-weight:bold;float:right;margin-right:45px;">
+    	<div id="body">
+			
+			<!-- left sidenav, global -->
+
+ 				<div class="leftContentNav">
  					<g:render template="/leftSidebar" />				
- 				</p>
- 				
-        	</div>
-        	
-        	<div class="yui3-u-7-12">
-        	
+ 				</div>
+ 			
 	    		<!-- layout main content area -->
-          <g:form controller="search" action="doSearch" method="GET">
-                <input name="queryString" type="text" class="searchbox" />
-                <input type="submit" value="Search" id="searchBtn" />
-          </g:form>
-	    	   	<g:layoutBody /> 
+	    	  
+				<g:layoutBody /> 
  
         	</div>
     	
-    		<div class="yui3-u-5-24">
-    		
-	    		<p style="font-weight:bold;float:left;margin-left:45px;">
-	    			<g:render template="/rightSidebar" />	    		
-	    		</p>
-    		</div>
     	</div> <!--  "body" -->
                
        	<div id="footer">

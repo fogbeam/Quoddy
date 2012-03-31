@@ -5,11 +5,11 @@
     </head>
 	<body>
 		<div id="bodyContent">	
-			
+			<h2>Post a new update</h2>	
 			<g:if test="${session.user != null}">
 				<g:form name="updateStatusForm" controller="status" action="updateStatus" >
 					<input type="text" id="statusText" name="statusText" />
-					<input id="updateStatusSubmit" type="submit" value="Update Status" />
+					<input class="btn btn-primary btn-large" id="updateStatusSubmit" type="submit" value="Update Status" />
 				</g:form>
 				
             	
