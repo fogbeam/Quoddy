@@ -1,11 +1,17 @@
-<div style="padding-top:25px;">
+<div class="hero-unit">
+    <g:if test="${session.user}">  <!-- /profilePic/thumbnail?userId=${session.user.userId} -->
+      <img style="float:left;" src="${createLink(controller:'profilePic',action:'thumbnail',id:session.user.userId)}" />
+      <h3>${session.user.fullName} <span><a href="${createLink(controller:'status', action:'listUpdates')}">My updates &rarr;</a></span></h3>
+    </g:if>
+    <p><ul style="margin-left:16px; margin-bottom:24px;"><li>Are there any attributes we'd like to expose here?</li></ul>
+		<p>Manage Connections:</p>
+    <p><a class="btn btn-info selected" href="${createLink(controller:'user', action:'listFriends')}">All Friends</a></p>
+		<p><a class="btn btn-primary" href="${createLink(controller:'user', action:'listFollowers')}">All Followers</a></p>
+		<p><a class="btn btn-success" href="${createLink(controller:'user', action:'listIFollow')}">People I follow</a></p>
+		<p><a class="btn btn-inverse" href="${createLink(controller:'userGroup', action:'list')}">All Groups</a></p>
+		<p><a class="btn" href="${createLink(controller:'user', action:'list')}">All Users</a></p>
+</div>   
 	
-	<div style="margin-left:130px;">
-		<g:if test="${session.user}">  <!-- /profilePic/thumbnail?userId=${session.user.userId} -->
-			<img style="float:left;" src="${createLink(controller:'profilePic',action:'thumbnail',id:session.user.userId)}" />
-			<div style="font-weight:bold;margin-left:60px;padding-top:11px;">${session.user.fullName}</div>
-		</g:if>
-	</div>
 	<div style="border-top: 3px solid #E2ECFC; margin-left:130px; height: 200px; clear:both;margin-top:45px;">
 		<g:if test="${session.user}">
 			<g:link controller="userStream" action="index" >Streams</g:link>

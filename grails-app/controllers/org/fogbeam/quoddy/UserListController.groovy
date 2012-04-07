@@ -196,7 +196,7 @@ class UserListController
 				 }
 				 
 				 [availableUsers:availableUsers]
-			 }.to("editWizardTwo")
+			 }.to("editWizardTwo");
 		 }
 		 
 		 editWizardTwo {

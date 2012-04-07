@@ -34,5 +34,5 @@ class EventSubscription implements Serializable
 	public String toString()
 	{
 		return "EventSubscription[ uuid: ${uuid}, name: ${name}, owner: ${owner.userId}, xQuery: ${xQueryExpression}]";	
-	}	
+	}		
 }

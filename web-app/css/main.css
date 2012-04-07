@@ -2,7 +2,7 @@
 
 body {overflow-x: hidden; overflow-y:auto;}
 
-#body, #header {
+body, #header {
 	background: #e0e1e3 url('../images/theme/bg.png') repeat; 
 }
 
@@ -57,48 +57,53 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 #body {
 	margin: auto;
 	padding: 1em;
+	min-width: 900px;
+	max-width: 1140px;
+}
+
+.leftContentNav {
+	float: left; width: 260px; margin-right: 30px;
+}	
+
+.leftContentNav .hero-unit {
+    background-color: #F5F5F5;
+    border-radius: 6px 6px 6px 6px;
+    margin-bottom: 30px;
+    padding: 30px;
+    width: 200px;
 }
 	
-#logo {
-	margin-left: 125px;
-	padding-top: 20px;
-	float: left;
+.leftContentNav .hero-unit h3 span {
+	font-size:11px; display:block;
 }
-	
-#icons {
-	padding-top: 20px;
+
+.leftContentNav .hero-unit img {
+	border: solid 10px #fefefe; margin-bottom: 6px; width: 180px; height: 150px;
 }
-	
-#searchbox {
-	margin-left: 330px;
-	padding-top: 16px;
+
+.leftContentNav .hero-unit ul {
+	margin-left:16px; margin-bottom:24px;
 }
-	
-#searchbox .searchbox {
-	width: 500px;
+
+.leftContentNav .hero-unit p a.btn {
+	width: auto;
 }
-	
+
+#updateStatusForm:before, #updateStatusForm:after {content:" "; clear:both; display:block; }
 #updateStatusForm {
-	margin-top: 1px;
-	padding-top: 3px;
-	width: 350px;
+	clear:both;
 }
 	
 #statusText {
-	padding-top: 1px;
-	margin-top: 7px;
-	margin-left: 22px;
-	width: 500px;
-	height: 25px;
-	margin-bottom:8px;
+	width:750px;
+	padding:18px;
+	margin: 8px 0;
 }
 	
 #searchBtn {
-	height: 25px;
 }
 
 #updateStatusSubmit {
-	height: 28px;
 	margin-left: 22px;
 }
 
@@ -122,13 +127,16 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 }
 
 #bodyContent {
-	padding-left: 7px;
-	padding-right: 7px;
-    border-left: 1px solid #E2ECFC;
-    border-right: 1px solid #E2ECFC;
-    border-bottom: 1px solid #E2ECFC;
-	// min-height: 900px;
+	width: auto;
+	float:left;
 }
+
+
+.searchBoxContainer {width:286px; margin-top:-3px; float:left;}
+.searchBoxContainer input {padding:12px;}
+.searchBoxContainer .btn-group {float: right; position: relative; left: -14px;}
+.searchBoxContainer .btn-group button {    font-size: 11px; margin-top: -4px !important; left:-6px; padding: 4px 6px; }
+
 
 .aseWrapper {
 	padding-top: 10px;
@@ -160,6 +168,8 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 	padding-bottom: 4px;
 }
 
+
+
 #messageCount {
 	margin-top:20px;
 }
@@ -170,4 +180,4 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 
 }
 
-/* dropdown */
+#footer {clear:both;}
