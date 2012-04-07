@@ -90,6 +90,8 @@ class ActivityStreamController
 			  msg.targetUuid = activity.targetUuid;
 			  // msg.published = activity.published;
 			  msg.originTime = activity.dateCreated.time;
+			  // TODO: figure out what to do with "effectiveDate" here
+			  msg.effectiveDate = msg.originTime;
 			  
 			  println "sending message to JMS";
 			  jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );

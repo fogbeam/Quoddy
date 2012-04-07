@@ -94,9 +94,9 @@ class ActivityStreamService {
 		for( Map msg : messages )
 		{
 			println "msg.originTime: ${msg.originTime}";
-			if( msg.originTime < oldestOriginTime )
+			if( msg.effectiveDate < oldestOriginTime )
 			{
-				oldestOriginTime = msg.originTime;
+				oldestOriginTime = msg.effectiveDate;
 			}
 		}
 		

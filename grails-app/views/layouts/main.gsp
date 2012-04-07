@@ -13,16 +13,14 @@
         
         <g:javascript library="jquery-1.7.1.min" />
         <g:javascript>
-				<script type="text/javascript">
           var $j = jQuery.noConflict();	
-				</script>
         </g:javascript>
-				<g:javascript>
-				<script type="text/javascript">
-					$j('.dropdown-toggle').dropdown();
-				</script>
-				</g:javascript>
+        
         <g:javascript library="dropdown" />
+		<g:javascript>
+			 $j('.dropdown-toggle').dropdown();
+		</g:javascript>
+
         <g:javascript library="jquery.timers-1.2" />
         
 	    <script type="text/javascript">
