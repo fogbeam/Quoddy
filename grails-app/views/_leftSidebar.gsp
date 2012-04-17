@@ -12,13 +12,15 @@
 		<p><a class="btn" href="${createLink(controller:'user', action:'list')}">All Users</a></p>
 </div>   
 	
-	<div style="border-top: 3px solid #E2ECFC; margin-left:130px; height: 200px; clear:both;margin-top:45px;">
+	<div class="hero-unit">
 		<g:if test="${session.user}">
-			<g:link controller="userStream" action="index" >Streams</g:link>
-			<ul style="margin-left:25px;margin-top:15px;">
+		<h3>Streams</h3>
+			<g:link controller="userStream" action="index" class="btn manageStreams"><i class="icon-cog"></i></g:link>
+			<p>What are streams? Add some instructions.</p>
+			<ul>
 				<g:each var="stream" in="${sysDefinedStreams}">
 					<li>
-						<g:link controller="home" action="index" params="[streamId:stream.id]" >${stream.name}</g:link>
+						<g:link controller="home" action="index" params="[streamId:stream.id]">${stream.name}</g:link>
 					</li>
 				</g:each>
 				<g:each var="stream" in="${userDefinedStreams}">
@@ -28,11 +30,10 @@
 				</g:each> 
 		  	</ul>
 		</g:if>
-	</div>
-	<div style="border-top: 3px solid #E2ECFC; margin-left:130px; height: 200px;">
 		<g:if test="${session.user}">
-			<g:link controller="userList" action="index" >Lists</g:link>
-			<ul style="margin-left:25px;margin-top:15px;">
+		<h3>Lists</h3>
+			<g:link controller="userList" action="index" class="btn manageStreams"><i class="icon-cog"></i></g:link>
+			<ul>
 				<g:each var="list" in="${userLists}">
 					<li>
 						<g:link controller="userList" action="display" params="[listId:list.id]" >${list.name}</g:link>
@@ -40,12 +41,10 @@
 				</g:each>
 		  	</ul>			
 		</g:if>
-	</div>
-	
-	<div style="border-top: 3px solid #E2ECFC; margin-left:130px; height: 200px;">
 		<g:if test="${session.user}">
-			<g:link controller="userGroup" action="index" >Groups</g:link>
-			<ul style="margin-left:25px;margin-top:15px;">
+		<h3>Groups</h3>
+			<g:link controller="userGroup" action="index" class="manageStreams btn"><i class="icon-cog"></i></g:link>
+			<ul>
 				<g:each var="group" in="${userGroups}">
 					<li>
 						<g:link controller="userGroup" action="display" params="[groupId:group.id]" >${group.name}</g:link>
@@ -53,11 +52,9 @@
 				</g:each>
 		  	</ul>				
 		</g:if>
-	</div>
-	
-	<div style="border-top: 3px solid #E2ECFC; margin-left:130px; height: 200px;">
 		<g:if test="${session.user}">
-			<g:link controller="eventSubscription" action="index" >Subscriptions</g:link>
+		<h3>Subscriptions</h3>
+			<g:link controller="eventSubscription" action="index" class="btn manageStreams"><i class="icon-cog"></i></g:link>
 			<ul style="margin-left:25px;margin-top:15px;">
 				<g:each var="subscription" in="${eventSubscriptions}">
 					<li>
@@ -67,6 +64,4 @@
 		  	</ul>				
 		</g:if>
 	</div>	
-	
 </div>
- 				
