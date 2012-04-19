@@ -6,7 +6,7 @@ import org.fogbeam.quoddy.integration.activitystream.ActivityStreamEntry
 
 class ActivityStreamController 
 {
-	def activityStreamService;
+	def eventStreamService;
 	def activityStreamTransformerService;
 	def userService;
 	def jmsService;
@@ -51,8 +51,8 @@ class ActivityStreamController
 		if( user != null )
 		{
 			user = userService.findUserByUserId( session.user.userId );
-			// activities = activityStreamService.getRecentFriendActivitiesForUser( user );
-			activities = activityStreamService.getRecentActivitiesForUser( user, 25 * Integer.parseInt( page ) );
+			// activities = eventStreamService.getRecentFriendActivitiesForUser( user );
+			activities = eventStreamService.getRecentActivitiesForUser( user, 25 * Integer.parseInt( page ) );
 		}
 		else
 		{
@@ -81,7 +81,7 @@ class ActivityStreamController
 			  
 			  // map to our internal representation and save / msg
 			  Activity activity = activityStreamTransformerService.getActivity( streamEntry );
-			  activityStreamService.saveActivity( activity );
+			  eventStreamService.saveActivity( activity );
 			  
 			  // send notification message
 			  Map msg = new HashMap();

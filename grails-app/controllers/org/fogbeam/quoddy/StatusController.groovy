@@ -7,7 +7,7 @@ import org.fogbeam.quoddy.User;
 class StatusController {
 
 	def userService;
-	def activityStreamService;
+	def eventStreamService;
 	def jmsService;
 	
 	def updateStatus = {
@@ -71,7 +71,7 @@ class StatusController {
 			activity.name = activity.title;
 			activity.effectiveDate = activity.published;
 			
-			activityStreamService.saveActivity( activity );
+			eventStreamService.saveActivity( activity );
 			
 			
 			Map msg = new HashMap();

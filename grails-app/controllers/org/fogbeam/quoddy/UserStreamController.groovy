@@ -3,7 +3,7 @@ package org.fogbeam.quoddy
 class UserStreamController
 {
 	def userService;
-	def activityStreamService;
+	def eventStreamService;
 	def userStreamService;
 	def userListService;
 	def userGroupService;

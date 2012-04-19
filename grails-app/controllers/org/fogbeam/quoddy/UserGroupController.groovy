@@ -2,7 +2,7 @@ package org.fogbeam.quoddy
 
 class UserGroupController
 {
-	def activityStreamService;
+	def eventStreamService;
 	def userService;
 	def userStreamService;
 	def userListService;
@@ -255,7 +255,7 @@ class UserGroupController
 			activity.name = activity.title;
 			activity.effectiveDate = activity.published;
 			
-			activityStreamService.saveActivity( activity );
+			eventStreamService.saveActivity( activity );
 			
 			
 			// Map msg = new HashMap();

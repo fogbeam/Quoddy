@@ -2,7 +2,7 @@ package org.fogbeam.quoddy;
 
 import java.util.Calendar
 
-class ActivityStreamService {
+class EventStreamService {
 
 	def userService;
 	def jmsService;
@@ -103,9 +103,11 @@ class ActivityStreamService {
 		println "oldestOriginTime: ${oldestOriginTime}";
 		println "as date: " + new Date( oldestOriginTime);
 		
-		// convert our messages to Activity instances and
+		// TODO: convert our messages to instances of the appropriate type
 		// put them in this list...
+		// List<EventBase> ...
 		List<Activity> recentActivities = new ArrayList<Activity>();
+		List<EventBase> recentEvents = new ArrayList<EventBase>();
 		
 		// NOTE: we wouldn't really want to iterate over this list here... better
 		// to build up this list above, and never bother storing the JMS Message instances
