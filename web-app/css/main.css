@@ -89,6 +89,15 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 	width: auto;
 }
 
+.btn.manageStreams {
+    float: right;
+    margin-right: -12px;
+    margin-top: -26px;
+}
+
+.btn.manageStreams i {
+	font-size: 16px;
+}
 #updateStatusForm:before, #updateStatusForm:after {content:" "; clear:both; display:block; }
 #updateStatusForm {
 	clear:both;

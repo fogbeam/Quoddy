@@ -6,9 +6,9 @@
         <nav:resources />
         <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'main.css')}" />
         <link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css', file:'bootstrap.min.css')}" />
+				<link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css/FontAwesome/css', file:'font-awesome.css')}">        
         
         <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" />
-        
        
         
         <g:javascript library="jquery-1.7.1.min" />
