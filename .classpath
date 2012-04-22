@@ -12,6 +12,7 @@
 	<classpathentry kind="src" path="grails-app/jobs"/>
 	<classpathentry kind="src" path="src/java"/>
 	<classpathentry kind="src" path="grails-app/resources"/>
+	<classpathentry kind="src" path="grails-app/taglib"/>
 	<classpathentry kind="lib" path="lib/activation.jar"/>
 	<classpathentry kind="lib" path="lib/commons-math-2.1.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-core-3.0.1.jar"/>
@@ -246,5 +247,18 @@
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/exist-fluent.jar"/>
+	<classpathentry kind="lib" path="lib/exist-optional.jar"/>
+	<classpathentry kind="lib" path="lib/exist.jar"/>
+	<classpathentry kind="lib" path="lib/excalibur-cli-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jgroups-all-2.2.6.jar"/>
+	<classpathentry kind="lib" path="lib/jline-0.9.94.jar"/>
+	<classpathentry kind="lib" path="lib/xmldb.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-client-3.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-common-3.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-server-3.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/serializer.jar"/>
+	<classpathentry kind="lib" path="lib/xalan.jar"/>
+	<classpathentry kind="lib" path="lib/ws-commons-util-1.0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

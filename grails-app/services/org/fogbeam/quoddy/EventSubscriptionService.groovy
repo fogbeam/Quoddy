@@ -41,18 +41,18 @@ class EventSubscriptionService
 				this.saveEvent( subEvent );
 				
 				println "sending message to JMS";
-				Map uiNotificationMsg = new HashMap();
-				uiNotificationMsg.creator = subEvent.owner.userId;
-				uiNotificationMsg.text = "Business Event Subscription";
-				uiNotificationMsg.targetUuid = subEvent.targetUuid;
+				// Map uiNotificationMsg = new HashMap();
+				// uiNotificationMsg.creator = subEvent.owner.userId;
+				// uiNotificationMsg.text = "Business Event Subscription";
+				// uiNotificationMsg.targetUuid = subEvent.targetUuid;
 				// msg.published = activity.published;
-				uiNotificationMsg.originTime = subEvent.dateCreated.time;
+				// uiNotificationMsg.originTime = subEvent.dateCreated.time;
 				// TODO: figure out what to do with "effectiveDate" here
-				uiNotificationMsg.effectiveDate = subEvent.dateCreated.time;
+				// uiNotificationMsg.effectiveDate = subEvent.dateCreated.time;
 				
+				// uiNotificationMsg.actualEvent = subEvent;
 				
-				jmsService.send( queue: 'uitestActivityQueue', uiNotificationMsg, 'standard', null );
-					
+				jmsService.send( queue: 'uitestActivityQueue', /* uiNotificationMsg */ subEvent, 'standard', null );
 			}
 			   
 			   

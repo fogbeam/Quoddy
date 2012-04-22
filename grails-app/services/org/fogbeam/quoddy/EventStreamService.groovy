@@ -7,6 +7,7 @@ class EventStreamService {
 	def userService;
 	def jmsService;
 	def eventQueueService;
+	def existDBService;
 	
 	public void saveActivity( Activity activity )
 	{
@@ -90,43 +91,41 @@ class EventStreamService {
 		// NOTE: we could avoid iterating over this list again by returning the "oldest message time"
 		// as part of this call.  But it'll mean wrapping this stuff up into an object of some
 		// sort, or returning a Map of Maps instead of a List of Maps
-		List<Map> messages = eventQueueService.getMessagesForUser( user.userId, msgsToRead );
-		for( Map msg : messages )
+		List<EventBase> messages = eventQueueService.getMessagesForUser( user.userId, msgsToRead );
+		for( EventBase msg : messages )
 		{
-			println "msg.originTime: ${msg.originTime}";
-			if( msg.effectiveDate < oldestOriginTime )
+			// println "msg.originTime: ${msg.originTime}";
+			if( msg.effectiveDate.time < oldestOriginTime )
 			{
-				oldestOriginTime = msg.effectiveDate;
+				oldestOriginTime = msg.effectiveDate.time;
 			}
 		}
 		
 		println "oldestOriginTime: ${oldestOriginTime}";
 		println "as date: " + new Date( oldestOriginTime);
 		
-		// TODO: convert our messages to instances of the appropriate type
-		// put them in this list...
-		// List<EventBase> ...
-		List<Activity> recentActivities = new ArrayList<Activity>();
 		List<EventBase> recentEvents = new ArrayList<EventBase>();
 		
 		// NOTE: we wouldn't really want to iterate over this list here... better
 		// to build up this list above, and never bother storing the JMS Message instances
 		// at all...  but for now, just to get something so we can prototype the
 		// behavior up through the UI...
+		
+		// TODO: now that we are passing notifications for different kinds of
+		// events through this mechanism, this has to be smarter... It can't just
+		// conver everything to an activity, it has to convert to Activity, SubscriptionEvent,
+		// CalendarEvent, etc., depending on what the notification is for.
 		for( int i = 0; i < messages.size(); i++ )
 		{
-			Map msg = messages.get(i);
-			println "got message: ${msg} off of queue";
-			Activity activity = new Activity();
+			EventBase event = messages.get(i);
+			// println "got message: ${msg} off of queue";
 			
-			// println "msg class: " + msg?.getClass().getName();
-			activity.owner = userService.findUserByUserId( msg.creator ); 
-			activity.content = msg.text;
-			activity.dateCreated = new Date( msg.originTime );
-			recentActivities.add( activity );	
+			event = existDBService.populateSubscriptionEventWithXmlDoc( event );
+			
+			recentEvents.add( event );				
 		}
 		
-		println "recentActivities.size() = ${recentActivities.size()}"
+		println "recentEvents.size() = ${recentEvents.size()}"
 		
 		/* NOTE: here, we need to make sure we don't retrieve anything NEWER than the OLDEST
 		 * message we may have in hand - that we received from the queue.  Otherwise, we risk
@@ -167,7 +166,7 @@ class EventStreamService {
 			
 				
 				// for the purpose of this query, treat a user as their own friend... that is, we
-				// will want to read Activities created by this user (we see out own updates in our
+				// will want to read Activities created by this user (we see our own updates in our
 				// own feed)
 				friendIds.add( user.id );
 				ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
@@ -180,7 +179,13 @@ class EventStreamService {
 					    ['max': recordsToRetrieve ]);
 			
 					println "adding ${queryResults.size()} activities read from DB";
-					recentActivities.addAll( queryResults );
+					for( EventBase event : queryResults ) {
+						
+						println "Populating XML into SubscriptionEvents";
+						
+						event = existDBService.populateSubscriptionEventWithXmlDoc( event );
+						recentEvents.add( event );
+					}
 			}
 			else
 			{
@@ -192,7 +197,7 @@ class EventStreamService {
 			println "Reading NO messages from DB";	
 		}
 		
-		println "recentActivities.size() = ${recentActivities.size()}";
-		return recentActivities;
+		println "recentEvents.size() = ${recentEvents.size()}";
+		return recentEvents;
 	}	
 }

@@ -2,7 +2,7 @@ package org.fogbeam.quoddy
 
 import java.util.Set
 
-import javax.jms.MapMessage
+import javax.jms.Message
 
 class EventQueueService 
 {	
@@ -15,7 +15,7 @@ class EventQueueService
 	
 	def onMessage(msg)
 	{
-		// println "Message class: ${msg.class}";
+		println "Message class: ${msg.class}";
 		println "Received message from JMS: ${msg}";
 		
 		
@@ -38,8 +38,8 @@ class EventQueueService
 			// messages that were to the public stream.  We'll come back to deal with
 			// common group membership and other scenarios later.
 			def streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC);
-			
-			if( ! msg.getString( 'targetUuid').equals( streamPublic.uuid ))
+			EventBase event = (EventBase)msg.getObject();
+			if( ! event.targetUuid.equals( streamPublic.uuid ))
 			{
 				return;
 			}
@@ -48,14 +48,14 @@ class EventQueueService
 			// TODO: don't offer message unless the owner of this queue
 			// and the event creator, are friends (or the owner *is* the creator)
 			// println "msg creator: ${msg.getString( 'creator')}";
-			User msgCreator = userService.findUserByUserId( msg.getString( 'creator') );
+			User msgCreator = userService.findUserByUserId( event.owner.userId );
 			if( msgCreator )
 			{
 				println "found User object for ${msgCreator.userId}";
 			}
 			else
 			{
-				println( "No User for ${msg.getString('creator')}");	
+				println( "No User for ${event.owner.userId}");	
 			}
 			
 			FriendCollection friendCollection = FriendCollection.findByOwnerUuid( msgCreator.uuid );
@@ -78,21 +78,21 @@ class EventQueueService
 			{
 				println "match found, offering message";
 				Deque<Map> userQueue = entry.getValue();
-				if( msg instanceof MapMessage )
+				if( msg instanceof Message )
 				{
-					println "MapMessage being offered";
+					println "Message being offered";
 					
-					Map internalMsg = new HashMap();
+					// Map internalMsg = new HashMap();
 					// TODO: turn this into a plain old Map
-					Enumeration mapNames = msg.getMapNames();
-					while( mapNames.hasMoreElements())
-					{
-						String name = mapNames.nextElement();
-						internalMsg.put( name, msg.getObject(name)); 	
-					}
+					// Enumeration mapNames = msg.getMapNames();
+					// while( mapNames.hasMoreElements())
+					// {
+						// String name = mapNames.nextElement();
+						// internalMsg.put( name, msg.getObject(name)); 	
+					// }
 					
 					println "putting message on user queue for user ${key}";
-					userQueue.offerFirst( internalMsg );
+					userQueue.offerFirst( event );
 				}
 				else
 				{
@@ -106,7 +106,7 @@ class EventQueueService
 	
 	public long getQueueSizeForUser( final String userId )
 	{
-		println "getting queue size for user: ${userId}";
+		// println "getting queue size for user: ${userId}";
 		
 		long queueSize = 0;
 		Deque<Map> userQueue = eventQueues.get( userId ); 
@@ -115,15 +115,15 @@ class EventQueueService
 			queueSize = userQueue.size();
 		}
 		
-		println "Queue size for user: ${userId} = ${queueSize}";
+		// println "Queue size for user: ${userId} = ${queueSize}";
 		
 		return queueSize;	
 	}
 	
-	public List<Map> getMessagesForUser( final String userId, final int msgCount )
+	public List<EventBase> getMessagesForUser( final String userId, final int msgCount )
 	{
 		println "getting messages for user: ${userId}, msgCount: ${msgCount}";
-		List<Map> messages = new ArrayList<Map>();
+		List<EventBase> messages = new ArrayList<Map>();
 		Deque<Map> userQueue = eventQueues.get( userId );
 		if( userQueue != null )
 		{
@@ -131,7 +131,7 @@ class EventQueueService
 			for( int i = 0; i < msgCount; i++ )
 			{
 				// get message from queue, put it in return set	
-				Map msg = userQueue.pollFirst();
+				EventBase msg = userQueue.pollFirst();
 				messages.add( msg ); 
 			}
 		}

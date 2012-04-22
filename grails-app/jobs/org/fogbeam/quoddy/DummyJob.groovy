@@ -19,7 +19,7 @@ class DummyJob
 		Date now = new Date();
 		SimpleDateFormat sdf = SimpleDateFormat.getDateTimeInstance();
 		
-		println( "TRIGGER: sending rebuild cache message: ${sdf.format( now )}" );
+		// println( "TRIGGER: sending rebuild cache message: ${sdf.format( now )}" );
 
 	}
 }

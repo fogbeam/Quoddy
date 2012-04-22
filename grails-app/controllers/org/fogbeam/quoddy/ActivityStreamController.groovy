@@ -19,7 +19,6 @@ class ActivityStreamController
 		// XXX more recent updates waiting
 		// or something along those lines...
 		long queueSize = 0;
-		// List messages = jmsService.browse(queue: "uitestActivityQueue", "standard", null );
 		if( session.user != null )
 		{
 			// println "checking queueSize for user: ${session.user.userId}";
@@ -47,19 +46,19 @@ class ActivityStreamController
 			page = "1";
 		}
 		println "getContentHtml requested page: ${page}";
-		def activities = new ArrayList<Activity>();
+		def events = new ArrayList<EventBase>();
 		if( user != null )
 		{
 			user = userService.findUserByUserId( session.user.userId );
 			// activities = eventStreamService.getRecentFriendActivitiesForUser( user );
-			activities = eventStreamService.getRecentActivitiesForUser( user, 25 * Integer.parseInt( page ) );
+			events = eventStreamService.getRecentActivitiesForUser( user, 25 * Integer.parseInt( page ) );
 		}
 		else
 		{
 			// don't do anything if we don't have a user
 		}
 		
-		render(template:"/activityStream",model:[activities:activities]);
+		render(template:"/activityStream",model:[activities:events]);
 		
 		
 	}
@@ -84,17 +83,19 @@ class ActivityStreamController
 			  eventStreamService.saveActivity( activity );
 			  
 			  // send notification message
-			  Map msg = new HashMap();
-			  msg.creator = activity.owner.userId;
-			  msg.text = activity.content;
-			  msg.targetUuid = activity.targetUuid;
+			  // Map msg = new HashMap();
+			  // msg.creator = activity.owner.userId;
+			  // msg.text = activity.content;
+			  // msg.targetUuid = activity.targetUuid;
 			  // msg.published = activity.published;
-			  msg.originTime = activity.dateCreated.time;
+			  // msg.originTime = activity.dateCreated.time;
 			  // TODO: figure out what to do with "effectiveDate" here
-			  msg.effectiveDate = msg.originTime;
+			  // msg.effectiveDate = msg.originTime;
+			  
+			  // msg.actualEvent = activity;
 			  
 			  println "sending message to JMS";
-			  jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );
+			  jmsService.send( queue: 'uitestActivityQueue', /* msg */ activity, 'standard', null );
 			  
 			  // println streamEntry.toString();
 			  

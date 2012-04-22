@@ -1,10 +1,8 @@
 package org.fogbeam.quoddy
 
-import org.fogbeam.quoddy.EventBase;
 
-class CalendarEvent extends EventBase
+class CalendarEvent extends EventBase implements Serializable
 {
-
 	
 	public CalendarEvent()
 	{
