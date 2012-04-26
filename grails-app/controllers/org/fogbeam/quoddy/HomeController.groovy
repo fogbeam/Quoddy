@@ -7,6 +7,7 @@ class HomeController {
 	def userStreamService;
 	def userListService;
 	def userGroupService;
+	def eventSubscriptionService;
 	
     def index = {
     		
@@ -17,6 +18,7 @@ class HomeController {
 		def userDefinedStreams = new ArrayList<UserStream>(); 
 		def userLists = new ArrayList<UserList>();
 		def userGroups = new ArrayList<UserGroup>();
+		def eventSubscriptions = new ArrayList<EventSubscription>();
 		
 		if( userId != null )
     	{
@@ -55,6 +57,9 @@ class HomeController {
 		
 			def tempUserGroups = userGroupService.getAllGroupsForUser( user );
 			userGroups.addAll( tempUserGroups );
+			
+			def tempEventSubscriptions = eventSubscriptionService.getAllSubscriptionsForUser( user );
+			eventSubscriptions.addAll( tempEventSubscriptions );
 		}	
 		    
     	[user:user, 
@@ -62,6 +67,7 @@ class HomeController {
 		  sysDefinedStreams:systemDefinedStreams, 
 		  userDefinedStreams:userDefinedStreams,
 		  userLists:userLists,
-		  userGroups:userGroups];
+		  userGroups:userGroups,
+		  eventSubscriptions:eventSubscriptions];
     }
 }
