@@ -12,6 +12,11 @@ class EventSubscriptionService
 	def onMessage( msg ) 
 	{
 		
+		// TODO: we need to pass over a subscription name, or id, or something
+		// so we can lookup the "owning subscription" for this and attach it.
+		// we'll need this later when doing "display by subscription."
+		
+		
 		// create an event for this, and store all the attributes needed
 		// to pull this into the user event stream when retrieved later.
 		// save one of these for every registered subscriber to this 
@@ -86,5 +91,36 @@ class EventSubscriptionService
 
 		return subscriptions;
 	}
+
 	
+	public List<SubscriptionEvent> getRecentEventsForSubscription( final EventSubscription subscription,  final int maxCount )
+	{
+	
+		println "getRecentEventsForSubscription: ${subscription.id} - ${maxCount}";
+		
+		List<SubscriptionEvent> recentEvents = new ArrayList<SubscriptionEvent>();
+	
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR_OF_DAY, -600 );
+		Date cutoffDate = cal.getTime();
+	
+		println "Using ${cutoffDate} as cutoffDate";
+
+	
+		List<SubscriptionEvent> queryResults =
+			SubscriptionEvent.executeQuery(
+					"select activity from Activity as activity, UserList as ulist where activity.dateCreated >= :cutoffDate " +
+					" and activity.owner in elements(ulist.members) and ulist = :thelist order by activity.dateCreated desc",
+			  ['cutoffDate':cutoffDate, 'thelist':list], ['max': maxCount ]);
+			
+		if( queryResults )
+		{
+			println "adding ${queryResults.size()} events read from DB";
+			recentEvents.addAll( queryResults );
+		}
+	
+		return recentEvents;
+			
+	}
+		
 }

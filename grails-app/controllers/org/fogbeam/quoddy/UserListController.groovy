@@ -9,6 +9,7 @@ class UserListController
 	def userStreamService;
 	def userListService;
 	def userGroupService;
+	def eventSubscriptionService;
 	
 	def index =
 	{

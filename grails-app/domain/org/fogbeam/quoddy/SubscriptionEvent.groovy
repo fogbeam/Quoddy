@@ -3,7 +3,12 @@ package org.fogbeam.quoddy
 class SubscriptionEvent extends EventBase implements Serializable
 {
 	static constraints = {
+		owningSubscription(nullable:false);
 	}
+	
+	
+	EventSubscription owningSubscription;
+	
 	
 	static transients = ['templateName', 'xmlDoc'];
 	
