@@ -1,6 +1,7 @@
 package org.fogbeam.quoddy
 
 import org.codehaus.jackson.map.ObjectMapper
+import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.integration.activitystream.ActivityStreamEntry
 
 
@@ -13,7 +14,7 @@ class ActivityStreamController
 	def eventQueueService;
 	
 	def getQueueSize =
-	{
+	{	
 		// check and see how many queued up messages are waiting for this user...	
 		// we'll call this on a timer basis and build up a message that says
 		// XXX more recent updates waiting

@@ -1,5 +1,8 @@
 package org.fogbeam.quoddy
 
+import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+
+@Mixin(SidebarPopulatorMixin)
 class UserStreamController
 {
 	def userService;
@@ -22,26 +25,15 @@ class UserStreamController
 		if( session.user != null )
 		{
 			user = userService.findUserByUserId( session.user.userId );
-		
-		
-			def tempSysStreams = userStreamService.getSystemDefinedStreamsForUser( user );
-			systemDefinedStreams.addAll( tempSysStreams );
-			def tempUserStreams = userStreamService.getUserDefinedStreamsForUser( user );
-			userDefinedStreams.addAll( tempUserStreams );
 			
-			
-			def tempUserLists = userListService.getListsForUser( user );
-			userLists.addAll( tempUserLists );
-			
-			def tempUserGroups = userGroupService.getAllGroupsForUser( user );
-			userGroups.addAll( tempUserGroups );
-			
-			[user:user, 
-			  sysDefinedStreams:systemDefinedStreams,
-			  userDefinedStreams:userDefinedStreams,
-			  userLists:userLists,
-			  userGroups:userGroups];
-	  
+			Map model = [:];
+			if( user )
+			{
+				Map sidebarCollections = populateSidebarCollections( this, user );
+				model.putAll( sidebarCollections );
+			}
+		  
+		  	return model;
 		}
 		else
 		{

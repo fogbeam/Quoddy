@@ -1,5 +1,9 @@
 package org.fogbeam.quoddy
 
+import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+
+
+@Mixin(SidebarPopulatorMixin)
 class UserGroupController
 {
 	def eventStreamService;
@@ -7,6 +11,7 @@ class UserGroupController
 	def userStreamService;
 	def userListService;
 	def userGroupService;
+	def eventSubscriptionService;
 	
 	def index =
 	{
@@ -15,48 +20,35 @@ class UserGroupController
 		def userOwnedGroups = new ArrayList<UserGroup>();
 		def userMembershipGroups = new ArrayList<UserGroup>();
 		
-		def systemDefinedStreams = new ArrayList<UserStream>();
-		def userDefinedStreams = new ArrayList<UserStream>();
-		def userLists = new ArrayList<UserList>();
-		def userGroups = new ArrayList<UserGroup>();
 		
 		if( session.user != null )
 		{
 			user = userService.findUserByUserId( session.user.userId );
-		
-		
-			def tempUserOwnedGroups = userGroupService.getGroupsOwnedByUser( user );
-			if( tempUserOwnedGroups )
+						
+			Map model = [:];
+			if( user ) 
 			{
-				userOwnedGroups.addAll( tempUserOwnedGroups );
-			}
-			
-			def tempUserMembershipGroups = userGroupService.getGroupsWhereUserIsMember(user); 
-			if( tempUserMembershipGroups )
-			{
-				userMembershipGroups.addAll( tempUserMembershipGroups );
-			}
-		
-			def tempSysStreams = userStreamService.getSystemDefinedStreamsForUser( user );
-			systemDefinedStreams.addAll( tempSysStreams );
-			def tempUserStreams = userStreamService.getUserDefinedStreamsForUser( user );
-			userDefinedStreams.addAll( tempUserStreams );
-			
-			def tempUserLists = userListService.getListsForUser( user );
-			userLists.addAll( tempUserLists );
-			
-			def tempUserGroups = userGroupService.getAllGroupsForUser( user );
-			userGroups.addAll( tempUserGroups );
-			
+				def tempUserOwnedGroups = userGroupService.getGroupsOwnedByUser( user );
+				if( tempUserOwnedGroups )
+				{
+					userOwnedGroups.addAll( tempUserOwnedGroups );
+				}
 				
-			[user:user, 
-			  userOwnedGroups:userOwnedGroups, 
-			  userMembershipGroups:userMembershipGroups,
-			  sysDefinedStreams:systemDefinedStreams, 
-			  userDefinedStreams:userDefinedStreams,
-			  userLists:userLists,
-			  userGroups:userGroups ];
-	  
+				def tempUserMembershipGroups = userGroupService.getGroupsWhereUserIsMember(user);
+				if( tempUserMembershipGroups )
+				{
+					userMembershipGroups.addAll( tempUserMembershipGroups );
+				}
+				
+				model.putAll( [user:user, 
+								userOwnedGroups:userOwnedGroups, 
+								userMembershipGroups:userMembershipGroups] );
+							
+				Map sidebarCollections = populateSidebarCollections( this, user );
+				model.putAll( sidebarCollections );
+			}
+			
+			return model;
 		}
 		else
 		{
@@ -72,7 +64,6 @@ class UserGroupController
 	def save = 
 	{
 		
-		// TODO: implement this...
 		println "save using params: ${params}"
 		if( session.user != null )
 		{
@@ -144,43 +135,34 @@ class UserGroupController
 			// println "Doing display with params: ${params}";
 			def activities = new ArrayList<Activity>();
 			
-			def systemDefinedStreams = new ArrayList<UserStream>();
-			def userDefinedStreams = new ArrayList<UserStream>();
-			def userLists = new ArrayList<UserList>();
-			def userGroups = new ArrayList<UserGroup>();
+			Map model = [:];
+			if( user )
+			{			
+				UserGroup group = UserGroup.findById( params.groupId );
 			
-			def tempSysStreams = userStreamService.getSystemDefinedStreamsForUser( user );
-			systemDefinedStreams.addAll( tempSysStreams );
-			def tempUserStreams = userStreamService.getUserDefinedStreamsForUser( user );
-			userDefinedStreams.addAll( tempUserStreams );
-			
-			def tempUserLists = userListService.getListsForUser( user );
-			userLists.addAll( tempUserLists );
-			
-			List<UserGroup> tempUserGroups = userGroupService.getAllGroupsForUser( user );
-			userGroups.addAll( tempUserGroups );						
-			
-			UserGroup group = UserGroup.findById( params.groupId );
-			
-			// check that this group is not one of the ones that the user either
-			// owns or is a member of
-			boolean userIsGroupMember = false;
-			userGroups.each {
-				if( it.id == group.id ){
-					userIsGroupMember = true;
-					return;
+				// check that this group is not one of the ones that the user either
+				// owns or is a member of
+				boolean userIsGroupMember = false;
+				userGroups.each {
+					if( it.id == group.id ){
+						userIsGroupMember = true;
+						return;
+					}
 				}
+			
+				activities = userGroupService.getRecentActivitiesForGroup( group, 25 ); 
+			
+				
+				model.putAll( [ group:group,
+								user: user,
+								userIsGroupMember:userIsGroupMember,
+								activities:activities] );
+				
+				Map sidebarCollections = populateSidebarCollections( this, user );
+				model.putAll( sidebarCollections );
 			}
 			
-			activities = userGroupService.getRecentActivitiesForGroup( group, 25 ); 
-			
-			[ group:group, 
-			  userIsGroupMember:userIsGroupMember,
-			  activities:activities,
-			  sysDefinedStreams:systemDefinedStreams, 
-			  userDefinedStreams:userDefinedStreams,
-			  userLists:userLists,
-			  userGroups:userGroups ];	
+			return model;	
 		}
 		else
 		{

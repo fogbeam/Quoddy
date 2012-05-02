@@ -1,5 +1,8 @@
 package org.fogbeam.quoddy
 
+import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+
+@Mixin(SidebarPopulatorMixin)
 class UserListController
 {
 	def userService;
@@ -11,32 +14,18 @@ class UserListController
 	{
 		User user = null;
 		
-		def systemDefinedStreams = new ArrayList<UserStream>();
-		def userDefinedStreams = new ArrayList<UserStream>(); 
-		def userLists = new ArrayList<UserList>();
-		def userGroups = new ArrayList<UserGroup>();
-		
 		if( session.user != null )
 		{
 			user = userService.findUserByUserId( session.user.userId );
-		
-		
-			def tempSysStreams = userStreamService.getSystemDefinedStreamsForUser( user );
-			systemDefinedStreams.addAll( tempSysStreams );
-			def tempUserStreams = userStreamService.getUserDefinedStreamsForUser( user );
-			userDefinedStreams.addAll( tempUserStreams );
-				
-			def tempUserLists = userListService.getListsForUser( user );
-			userLists.addAll( tempUserLists );
-				
-			def tempUserGroups = userGroupService.getAllGroupsForUser( user );
-			userGroups.addAll( tempUserGroups );
 			
-			[user:user, 
-			  sysDefinedStreams:systemDefinedStreams, 
-			  userDefinedStreams:userDefinedStreams,
-			  userLists:userLists,
-			  userGroups:userGroups ];
+			Map model = [:];
+			if( user )
+			{
+				Map sidebarCollections = populateSidebarCollections( this, user );
+				model.putAll( sidebarCollections );
+			}
+		  
+		  	return model;
 	  
 		}
 		else
@@ -53,32 +42,22 @@ class UserListController
 			def user = userService.findUserByUserId( session.user.userId );
 			// println "Doing display with params: ${params}";
 			def activities = new ArrayList<Activity>();
-			
-			def systemDefinedStreams = new ArrayList<UserStream>();
-			def userDefinedStreams = new ArrayList<UserStream>();
-			def userLists = new ArrayList<UserList>();
-			def userGroups = new ArrayList<UserGroup>();
-			
-			def tempSysStreams = userStreamService.getSystemDefinedStreamsForUser( user );
-			systemDefinedStreams.addAll( tempSysStreams );
-			def tempUserStreams = userStreamService.getUserDefinedStreamsForUser( user );
-			userDefinedStreams.addAll( tempUserStreams );
-			
-			def tempUserLists = userListService.getListsForUser( user );
-			userLists.addAll( tempUserLists );
-			
-			List<UserGroup> tempUserGroups = userGroupService.getAllGroupsForUser( user );
-			userGroups.addAll( tempUserGroups );						
+								
 			
 			UserList list = UserList.findById( params.listId );
 			
-			activities = userListService.getRecentActivitiesForList( list, 25 ); 
+			Map model = [:];
+			if( user )
+			{
+				activities = userListService.getRecentActivitiesForList( list, 25 );
+				model.putAll( [ activities:activities] );
+				
+				Map sidebarCollections = populateSidebarCollections( this, user );
+				model.putAll( sidebarCollections );
+				
+			}
 			
-			[ activities:activities,
-			  sysDefinedStreams:systemDefinedStreams, 
-			  userDefinedStreams:userDefinedStreams,
-			  userLists:userLists,
-			  userGroups:userGroups ];	
+			return model;
 		}
 		else
 		{

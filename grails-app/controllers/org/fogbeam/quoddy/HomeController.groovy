@@ -1,5 +1,8 @@
 package org.fogbeam.quoddy
 
+import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+
+@Mixin(SidebarPopulatorMixin)
 class HomeController {
 
 	def userService;
@@ -12,13 +15,8 @@ class HomeController {
     def index = {
     		
     	def userId = params.userId;
-    	def user = null;
+    	User user = null;
 		def activities = new ArrayList<Activity>();
-		def systemDefinedStreams = new ArrayList<UserStream>();
-		def userDefinedStreams = new ArrayList<UserStream>(); 
-		def userLists = new ArrayList<UserList>();
-		def userGroups = new ArrayList<UserGroup>();
-		def eventSubscriptions = new ArrayList<EventSubscription>();
 		
 		if( userId != null )
     	{
@@ -40,34 +38,20 @@ class HomeController {
 			}
     	}
 		
+		Map model = [:];
 		if( user )
 		{
 			// TODO: this should take the selected UserStream into account when
 			// determining what activities to include in the activities list
 			
 			activities = eventStreamService.getRecentActivitiesForUser( user, 25 );
-				
-			def tempSysStreams = userStreamService.getSystemDefinedStreamsForUser( user );
-			systemDefinedStreams.addAll( tempSysStreams );
-			def tempUserStreams = userStreamService.getUserDefinedStreamsForUser( user );
-			userDefinedStreams.addAll( tempUserStreams );
-		
-			def tempUserLists = userListService.getListsForUser( user );
-			userLists.addAll( tempUserLists );
-		
-			def tempUserGroups = userGroupService.getAllGroupsForUser( user );
-			userGroups.addAll( tempUserGroups );
+			model.putAll( [user:user, activities:activities] );
 			
-			def tempEventSubscriptions = eventSubscriptionService.getAllSubscriptionsForUser( user );
-			eventSubscriptions.addAll( tempEventSubscriptions );
+			Map sidebarCollections = populateSidebarCollections( this, user );
+			model.putAll( sidebarCollections );
+			
 		}	
-		    
-    	[user:user, 
-		  activities:activities, 
-		  sysDefinedStreams:systemDefinedStreams, 
-		  userDefinedStreams:userDefinedStreams,
-		  userLists:userLists,
-		  userGroups:userGroups,
-		  eventSubscriptions:eventSubscriptions];
+		
+		return model;
     }
 }
