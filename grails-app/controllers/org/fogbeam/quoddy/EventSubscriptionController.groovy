@@ -29,7 +29,7 @@ class EventSubscriptionController
 			if( user )
 			{
 
-				Map sidebarCollections = populateSidebarCollections( this, user );
+				Map sidebarCollections = this.populateSidebarCollections( this, user );
 				model.putAll( sidebarCollections );
 			}	
 			
@@ -58,10 +58,10 @@ class EventSubscriptionController
 			Map model = [:];
 			if( user )
 			{
-				subEvents = eventSubscriptionService.getRecentEventsForSubscription( list, 25 );
-				model.putAll( [ subEvents:subEvents ] );
+				subEvents = eventSubscriptionService.getRecentEventsForSubscription( subscription, 25 );
+				model.putAll( [ activities:subEvents ] );
 				
-				Map sidebarCollections = populateSidebarCollections( this, user );
+				Map sidebarCollections = this.populateSidebarCollections( this, user );
 				model.putAll( sidebarCollections );
 				
 			}

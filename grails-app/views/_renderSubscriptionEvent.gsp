@@ -1,7 +1,7 @@
 <div class="aseWrapper">
 	
 	<div class="aseAvatarBlock">
-		<img src="images/flavour-icons/speed_mph.png" />
+		<img src="${createLinkTo(dir:'images/flavour-icons', file:'speed_mph.png')}" />
 	</div>
 	<div class="aseTitleBar"> <!-- http://localhost:8080/quoddy/user/viewUser?userId=testuser2 -->
 		<a href="${createLink(controller:'user', action:'viewUser', params:[userId:item.owner.userId])}">${item.owner.fullName}</a>

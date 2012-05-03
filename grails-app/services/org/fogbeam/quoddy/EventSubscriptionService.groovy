@@ -8,34 +8,38 @@ class EventSubscriptionService
 	
 	def userService;
 	def jmsService;
+	def existDBService;
 	
 	def onMessage( msg ) 
 	{
-		
-		// TODO: we need to pass over a subscription name, or id, or something
-		// so we can lookup the "owning subscription" for this and attach it.
-		// we'll need this later when doing "display by subscription."
-		
 		
 		// create an event for this, and store all the attributes needed
 		// to pull this into the user event stream when retrieved later.
 		// save one of these for every registered subscriber to this 
 		// event.
 		String subscribers = msg.getStringProperty('subscribers');
+		String subscribersWithSubId = msg.getStringProperty( "subscribersWithSubId" );
 		String eventUuid = msg.getStringProperty( 'eventUuid' );
 		String matchedExpression = msg.getStringProperty( 'matchedExpression' );
+		
 		ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
-		if( subscribers != null && !subscribers.isEmpty() )
+		if( subscribersWithSubId != null && !subscribersWithSubId.isEmpty() )
 		{
 			println "Subscribers: ${subscribers}";
 			
-			List<String> subscriberList = subscribers.tokenize();
+			List<String> subscriberList = subscribersWithSubId.tokenize( " " );
 			for( String subscriber : subscriberList ) {
-			
-				User owner = userService.findUserByUserId( subscriber );
+				List<String> subParts = subscriber.tokenize( ";" );
+				String subscriberUuid = subParts.get(0);
+				String subscriptionUuid = subParts.get(1);
+				
+				User owner = userService.findUserByUuid( subscriberUuid );
+				
+				EventSubscription owningSubscription = this.findByUuid( subscriptionUuid );
 				
 				SubscriptionEvent subEvent = new SubscriptionEvent();
 				subEvent.owner = owner;
+				subEvent.owningSubscription = owningSubscription;
 				subEvent.xmlUuid = eventUuid;
 				subEvent.targetUuid = streamPublic.uuid;
 				subEvent.name = matchedExpression;
@@ -65,6 +69,12 @@ class EventSubscriptionService
 	
 	}
 	
+	
+	public EventSubscription findByUuid( final String uuid )
+	{
+		EventSubscription subscription = EventSubscription.findByUuid( uuid );
+		return subscription;	
+	}
 	
 	// note: would it make sense to wrap "save and notify" into one message and
 	// take advantage of Spring's method level transaction demarcation stuff?
@@ -96,7 +106,7 @@ class EventSubscriptionService
 	public List<SubscriptionEvent> getRecentEventsForSubscription( final EventSubscription subscription,  final int maxCount )
 	{
 	
-		println "getRecentEventsForSubscription: ${subscription.id} - ${maxCount}";
+		println "getRecentEventsForSubscription: ${subscription.id}";
 		
 		List<SubscriptionEvent> recentEvents = new ArrayList<SubscriptionEvent>();
 	
@@ -109,14 +119,21 @@ class EventSubscriptionService
 	
 		List<SubscriptionEvent> queryResults =
 			SubscriptionEvent.executeQuery(
-					"select activity from Activity as activity, UserList as ulist where activity.dateCreated >= :cutoffDate " +
-					" and activity.owner in elements(ulist.members) and ulist = :thelist order by activity.dateCreated desc",
-			  ['cutoffDate':cutoffDate, 'thelist':list], ['max': maxCount ]);
+					"select subevent from SubscriptionEvent as subevent where subevent.dateCreated >= :cutoffDate " +
+					" and subevent.owningSubscription = :owningSub order by subevent.dateCreated desc",
+			  ['cutoffDate':cutoffDate, 'owningSub':subscription], ['max': maxCount ]);
 			
 		if( queryResults )
 		{
 			println "adding ${queryResults.size()} events read from DB";
 			recentEvents.addAll( queryResults );
+			
+			recentEvents.each {
+				existDBService.populateSubscriptionEventWithXmlDoc( it );
+			} 
+		}
+		else {
+			println "NO results found!";	
 		}
 	
 		return recentEvents;
