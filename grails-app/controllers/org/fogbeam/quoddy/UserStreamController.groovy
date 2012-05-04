@@ -42,36 +42,123 @@ class UserStreamController
 		}
 	}
 	
-	def create = 
+
+	def createWizardFlow =
 	{
-		[];	
-	}
-	
-	def save = 
-	{
+		start {
+			action {
+				[];
+			}
+			on("success").to("createWizardOne")
+		}
 		
-		// TODO: implement this...
-		println "save using params: ${params}"
-		if( session.user != null )
-		{
-			def user = userService.findUserByUserId( session.user.userId );
-			UserStream streamToCreate = new UserStream();
+		/* a view state to bring up our GSP */
+		createWizardOne {
+			on("stage2") {
+				
+				println "transitioning to stage2";
+			   
+				UserStream streamToCreate = new UserStream();
+				streamToCreate.name = params.streamName;
+				streamToCreate.description = params.streamDescription;
+				
+				def user = userService.findUserByUserId( session.user.userId );
+				streamToCreate.owner = user;
+				streamToCreate.definedBy = UserStream.DEFINED_USER;
+				flow.streamToCreate = streamToCreate;
+				
+			}.to("createWizardTwo")
+		}
 		
-			streamToCreate.name = params.streamName;
-			streamToCreate.owner = user;
-			streamToCreate.definedBy = UserStream.DEFINED_USER;
-			
-			
-			streamToCreate.save();
+		createWizardTwo {
+			on("finishWizard"){
+				println "finishing Wizard";
+			   [];
+			}.to("finish")
+		}
 		
+		/* an action state to do the final save/update on the object */
+		finish {
+			action {
+				println "create using params: ${params}"
+				UserStream streamToCreate = flow.streamToCreate;
+				
+				if( !streamToCreate.save() )
+				{
+					println( "Saving UserStream FAILED");
+					streamToCreate.errors.allErrors.each { println it };
+				}
+			}
+			on("success").to("exitWizard");
+	   }
+		
+	   exitWizard {
 			redirect(controller:"userStream", action:"index");
-		}
-		else
-		{
-			// not logged in, deal with this...	
-		}
+	   }
+		
+		
+		
 	}
 	
+	
+	
+	def editWizardFlow =
+	{
+		start {
+			action {
+				def streamId = params.streamId;
+				println "Editing UserStream with id: ${streamId}";
+				UserStream streamToEdit = null;
+				streamToEdit = UserStream.findById( streamId );
+		
+				[streamToEdit:streamToEdit];
+			}
+			on("success").to("editWizardOne")
+		}
+		
+		/* a view state to bring up our GSP */
+		editWizardOne {
+			on("stage2") {
+				
+				println "transitioning to stage2";
+			   
+				UserStream streamToEdit = flow.streamToEdit
+				streamToEdit.name = params.streamName;
+				streamToEdit.description = params.streamDescription;
+
+				
+			}.to("editWizardTwo")
+		}
+		
+		editWizardTwo {
+			on("finishWizard"){
+				println "finishing Wizard";
+			   [];
+			}.to("finish")
+		}
+		
+		finish {
+			action {
+				println "update using params: ${params}"
+				def streamId = params.streamId;
+				UserStream streamToEdit = flow.streamToEdit;
+				
+				if( !streamToEdit.save() )
+				{
+					println( "Saving UserStream FAILED");
+					streamToEdit.errors.allErrors.each { println it };
+				}
+				
+			}
+			on("success").to("exitWizard");
+		}
+		
+		exitWizard {
+			redirect(controller:"userStream", action:"index");
+	   }
+	}
+	
+		
 	def edit =
 	{
 		def streamId = params.id;
