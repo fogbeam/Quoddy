@@ -9,6 +9,7 @@ class UserStream implements Serializable
 {
 	public static final String DEFINED_USER = "DEFINED_BY_USER";
 	public static final String DEFINED_SYSTEM = "DEFINED_BY_SYSTEM";
+	public static final String DEFAULT_STREAM = "Default";
 	
 	
 	public UserStream()
@@ -46,6 +47,7 @@ class UserStream implements Serializable
 		// user lists
 		// groups
 		// subscriptions
+
 	
 	// exclude (filters)
 		// event types

@@ -23,12 +23,19 @@ class EventStreamService {
 		}
 		
 	}
-
 	
-	/* Note: we're cheating here and just dealing with one queue, one user, etc., just to prove
-	 * the interaction from the UI layer down to here.  The real stuff will obviously pull in 
-	 * activities based on friends, and whatever other "stuff" the user has registered interest in.
-	*/
+	public List<Activity> getRecentActivitiesForUser( final User user, final int maxCount, final UserStream userStream )
+	{
+		
+		// ok, in this version we select the events to return, based on the specification defined by the
+		// passed in userStream instance.
+		
+		
+		
+		
+		
+		return null;
+	}
 	
 	public List<Activity> getRecentActivitiesForUser( final User user, final int maxCount )
 	{

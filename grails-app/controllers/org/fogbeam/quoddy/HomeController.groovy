@@ -43,8 +43,19 @@ class HomeController {
 		{
 			// TODO: this should take the selected UserStream into account when
 			// determining what activities to include in the activities list
+			UserStream selectedStream = null;
+			if( params.streamId )
+			{
+				Long streamId = Long.valueOf( onparams.streamId );
+				selectedStream = userStreamService.findById( streamId );
+			}
+			else 
+			{
+				selectedStream = userStreamService.getStreamForUser( user, UserStream.DEFAULT_STREAM );	
+			}
 			
-			activities = eventStreamService.getRecentActivitiesForUser( user, 25 );
+			
+			activities = eventStreamService.getRecentActivitiesForUser( user, 25, selectedStream );
 			model.putAll( [user:user, activities:activities] );
 			
 			Map sidebarCollections = populateSidebarCollections( this, user );
