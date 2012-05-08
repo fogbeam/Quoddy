@@ -30,7 +30,78 @@ class EventStreamService {
 		// ok, in this version we select the events to return, based on the specification defined by the
 		// passed in userStream instance.
 		
+		// in the very earliest cut of this, we're going to ignore messages waiting on the queue and just
+		// go straight to the database.  Once we're confident we have all the selectors and filters
+		// working that way, we can revisit what to do about queued messages.
 		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR_OF_DAY, -600 );
+		Date cutoffDate = cal.getTime();
+		
+					
+		List<User> friends = userService.listFriends( user );
+		if( friends != null && friends.size() >= 0 )
+		{
+			println "Found ${friends.size()} friends";
+			List<Integer> friendIds = new ArrayList<Integer>();
+			for( User friend: friends )
+			{
+				def id = friend.id;
+				println( "Adding friend id: ${id}, userId: ${friend.userId} to list" );
+				friendIds.add( id );
+			}
+		
+			
+			String query = "select event from EventBase as event where event.effectiveDate >= :cutoffDate " 
+							+ " and event.owner.id in (:friendIds)"  
+							+ " and event.targetUuid = :targetUuid ";
+			
+			if( userStream.includeAllEventTypes )
+			{
+				// don't do anything, the default query returns all event types
+			}				
+			else 
+			{
+				// start limiting the return types based on what we have in the
+				// stream object...
+				Set<String> eventTypesToInclude = userStream.getEventTypesToInclude();
+					
+				for( String eventType : eventTypesToInclude ) 
+				{
+						query = query + " and event.class = " + eventType;
+				}
+				
+				
+			}								 
+							
+			query = query + " order by event.effectiveDate desc";
+							
+			// for the purpose of this query, treat a user as their own friend... that is, we
+			// will want to read Activities created by this user (we see our own updates in our
+			// own feed)
+			friendIds.add( user.id );
+			ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
+			List<EventBase> queryResults =
+				EventBase.executeQuery( queryString,
+					['cutoffDate':cutoffDate,
+					 'oldestOriginTime':new Date(oldestOriginTime),
+					 'friendIds':friendIds,
+					 'targetUuid':streamPublic.uuid],
+					['max': recordsToRetrieve ]);
+		
+				println "adding ${queryResults.size()} activities read from DB";
+				for( EventBase event : queryResults ) {
+					
+					println "Populating XML into SubscriptionEvents";
+					
+					event = existDBService.populateSubscriptionEventWithXmlDoc( event );
+					recentEvents.add( event );
+				}
+		}
+		else
+		{
+			println( "no friends, so no activity read from DB" );
+		}
 		
 		
 		

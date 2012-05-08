@@ -35,19 +35,25 @@ class UserStream implements Serializable
 	Date 	dateCreated;
 	String 	description;
 	
-	Boolean includeAllEventTypes = false;
-	Set<String> userUuidsIncluded;
-	Set<String> userListUuidsIncluded;
-	Set<String> userGroupUuidsIncluded;
-	Set<String> subscriptionUuidsIncluded;
-	
-	// include:
-		// event types
-		// users
-		// user lists
-		// groups
-		// subscriptions
 
+	// include:
+		// users
+	Set<String> userUuidsIncluded = new HashSet<String>();
+	
+		// user lists
+	Set<String> userListUuidsIncluded = new HashSet<String>();
+	
+		// groups
+	Set<String> userGroupUuidsIncluded = new HashSet<String>();
+	
+		// subscriptions
+	Set<String> subscriptionUuidsIncluded = new HashSet<String>();
+	
+
+		// event types
+	Boolean includeAllEventTypes = false;
+	Set<String> eventTypesIncluded = new HashSet<String>();
+	
 	
 	// exclude (filters)
 		// event types
@@ -56,5 +62,29 @@ class UserStream implements Serializable
 		// groups
 		// subscriptions
 		// content
+
+	
+	public void addEventTypesToInclude( final Set<String> eventTypesToInclude ) 
+	{
+		this.eventTypesIncluded.addAll( eventTypesToInclude ); 
+	}	
+	
+	public Set<String> getEventTypesToInclude()
+	{
+		return this.eventTypesIncluded
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
