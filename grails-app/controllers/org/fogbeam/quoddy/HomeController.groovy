@@ -46,8 +46,8 @@ class HomeController {
 			UserStream selectedStream = null;
 			if( params.streamId )
 			{
-				Long streamId = Long.valueOf( onparams.streamId );
-				selectedStream = userStreamService.findById( streamId );
+				Long streamId = Long.valueOf( params.streamId );
+				selectedStream = userStreamService.findStreamById( streamId );
 			}
 			else 
 			{

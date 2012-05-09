@@ -51,6 +51,8 @@ class UserService {
 			defaultStream.name = UserStream.DEFAULT_STREAM;
 			defaultStream.definedBy = UserStream.DEFINED_SYSTEM;
 			defaultStream.owner = user;
+			defaultStream.includeAllEventTypes = true;
+			
 			
 			if( !defaultStream.save())
 			{

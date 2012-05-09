@@ -11,6 +11,7 @@ class UserStreamController
 	def userListService;
 	def userGroupService;
 	def eventSubscriptionService;
+	def eventTypeService;
 	
 	def index =
 	{
@@ -54,6 +55,10 @@ class UserStreamController
 		
 		/* a view state to bring up our GSP */
 		createWizardOne {
+			action {
+				Set<EventType> eventTypes = eventTypeService.findallEventTypes();
+				[eventTypes:eventTypes];
+			}
 			on("stage2") {
 				
 				println "transitioning to stage2";

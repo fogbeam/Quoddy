@@ -24,7 +24,7 @@ class EventStreamService {
 		
 	}
 	
-	public List<Activity> getRecentActivitiesForUser( final User user, final int maxCount, final UserStream userStream )
+	public List<EventBase> getRecentActivitiesForUser( final User user, final int maxCount, final UserStream userStream )
 	{
 		
 		// ok, in this version we select the events to return, based on the specification defined by the
@@ -37,6 +37,8 @@ class EventStreamService {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, -600 );
 		Date cutoffDate = cal.getTime();
+		
+		List<EventBase> recentEvents = new ArrayList<EventBase>();
 		
 					
 		List<User> friends = userService.listFriends( user );
@@ -52,9 +54,9 @@ class EventStreamService {
 			}
 		
 			
-			String query = "select event from EventBase as event where event.effectiveDate >= :cutoffDate " 
-							+ " and event.owner.id in (:friendIds)"  
-							+ " and event.targetUuid = :targetUuid ";
+			String query = "select event from EventBase as event where event.effectiveDate >= :cutoffDate " + 
+							" and event.owner.id in (:friendIds)"  + 
+							" and event.targetUuid = :targetUuid ";
 			
 			if( userStream.includeAllEventTypes )
 			{
@@ -82,12 +84,12 @@ class EventStreamService {
 			friendIds.add( user.id );
 			ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 			List<EventBase> queryResults =
-				EventBase.executeQuery( queryString,
+				EventBase.executeQuery( query,
 					['cutoffDate':cutoffDate,
-					 'oldestOriginTime':new Date(oldestOriginTime),
+					 // 'oldestOriginTime':new Date(oldestOriginTime),
 					 'friendIds':friendIds,
 					 'targetUuid':streamPublic.uuid],
-					['max': recordsToRetrieve ]);
+					['max': maxCount ]);
 		
 				println "adding ${queryResults.size()} activities read from DB";
 				for( EventBase event : queryResults ) {
@@ -104,8 +106,7 @@ class EventStreamService {
 		}
 		
 		
-		
-		return null;
+		return recentEvents;
 	}
 	
 	public List<Activity> getRecentActivitiesForUser( final User user, final int maxCount )

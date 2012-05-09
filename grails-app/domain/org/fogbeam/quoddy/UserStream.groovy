@@ -38,20 +38,24 @@ class UserStream implements Serializable
 
 	// include:
 		// users
+	Boolean includeAllUsers = true;
 	Set<String> userUuidsIncluded = new HashSet<String>();
 	
 		// user lists
+	Boolean includeAllLists = true;
 	Set<String> userListUuidsIncluded = new HashSet<String>();
 	
 		// groups
+	Boolean includeAllGroups = true;
 	Set<String> userGroupUuidsIncluded = new HashSet<String>();
 	
 		// subscriptions
+	Boolean includeAllSubscriptions = true;
 	Set<String> subscriptionUuidsIncluded = new HashSet<String>();
 	
 
 		// event types
-	Boolean includeAllEventTypes = false;
+	Boolean includeAllEventTypes = true;
 	Set<String> eventTypesIncluded = new HashSet<String>();
 	
 	
