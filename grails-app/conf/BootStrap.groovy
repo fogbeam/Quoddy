@@ -1,5 +1,6 @@
 import grails.util.Environment
 
+import org.fogbeam.quoddy.EventType
 import org.fogbeam.quoddy.ShareTarget
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.profile.Profile
@@ -18,11 +19,13 @@ class BootStrap {
 	         case Environment.DEVELOPMENT:
 	             createSomeUsers();
 				 createShareTargets();
+				 createEventTypes();
 	             break;
 	         case Environment.PRODUCTION:
 	             println "No special configuration required";
 				 createSomeUsers();
 				 createShareTargets();
+				 createEventTypes();
 				 break;
 	     }     
      
@@ -38,6 +41,31 @@ class BootStrap {
     	
      }
 
+	 void createEventTypes()
+	 {
+	 	
+		EventType calendarEventType = EventType.findByName( "CalendarEvent" );
+		if( calendarEventType == null )
+		{
+			calendarEventType = new EventType( name:"CalendarEvent" );
+			calendarEventType.save();
+		}
+		
+		EventType activityEventType = EventType.findByName( "Activity" );
+		if( activityEventType == null )
+		{
+			activityEventType = new EventType( name:"Activity" );
+			activityEventType.save();
+		}
+		
+		EventType subscriptionEventType = EventType.findByName( "SubscriptionEvent" );
+		if( subscriptionEventType == null )
+		{
+			subscriptionEventType = new EventType( name:"SubscriptionEvent" );
+			subscriptionEventType.save();
+		}
+	 }
+	 
 	 void createShareTargets()
 	 {
 		 ShareTarget streamPublicTarget = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );

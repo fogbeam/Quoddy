@@ -48,9 +48,11 @@ class UserService {
 			// ldapPersonService.createUser( user );
 			// create system defined Stream entries for this newly created user
 			UserStream defaultStream = new UserStream();
-			defaultStream.name = "Default";
+			defaultStream.name = UserStream.DEFAULT_STREAM;
 			defaultStream.definedBy = UserStream.DEFINED_SYSTEM;
 			defaultStream.owner = user;
+			defaultStream.includeAllEventTypes = true;
+			
 			
 			if( !defaultStream.save())
 			{

@@ -22,5 +22,6 @@
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.5-m1/grails-app/conf"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.5-m1/src/java"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.5-m1/src/groovy"/>
+        <wb-resource deploy-path="/" source-path="/grails-app/taglib"/>
     </wb-module>
 </project-modules>

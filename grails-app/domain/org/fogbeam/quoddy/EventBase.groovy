@@ -1,8 +1,7 @@
 package org.fogbeam.quoddy
 
-class EventBase
+public class EventBase implements Serializable
 {
-	
 	static mapping = 
 	{
 		tablePerHierarchy false

@@ -2,11 +2,12 @@ package org.fogbeam.quoddy;
 
 import java.util.Calendar
 
-class ActivityStreamService {
+class EventStreamService {
 
 	def userService;
 	def jmsService;
 	def eventQueueService;
+	def existDBService;
 	
 	public void saveActivity( Activity activity )
 	{
@@ -22,12 +23,91 @@ class ActivityStreamService {
 		}
 		
 	}
-
 	
-	/* Note: we're cheating here and just dealing with one queue, one user, etc., just to prove
-	 * the interaction from the UI layer down to here.  The real stuff will obviously pull in 
-	 * activities based on friends, and whatever other "stuff" the user has registered interest in.
-	*/
+	public List<EventBase> getRecentActivitiesForUser( final User user, final int maxCount, final UserStream userStream )
+	{
+		
+		// ok, in this version we select the events to return, based on the specification defined by the
+		// passed in userStream instance.
+		
+		// in the very earliest cut of this, we're going to ignore messages waiting on the queue and just
+		// go straight to the database.  Once we're confident we have all the selectors and filters
+		// working that way, we can revisit what to do about queued messages.
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR_OF_DAY, -600 );
+		Date cutoffDate = cal.getTime();
+		
+		List<EventBase> recentEvents = new ArrayList<EventBase>();
+		
+					
+		List<User> friends = userService.listFriends( user );
+		if( friends != null && friends.size() >= 0 )
+		{
+			println "Found ${friends.size()} friends";
+			List<Integer> friendIds = new ArrayList<Integer>();
+			for( User friend: friends )
+			{
+				def id = friend.id;
+				println( "Adding friend id: ${id}, userId: ${friend.userId} to list" );
+				friendIds.add( id );
+			}
+		
+			
+			String query = "select event from EventBase as event where event.effectiveDate >= :cutoffDate " + 
+							" and event.owner.id in (:friendIds)"  + 
+							" and event.targetUuid = :targetUuid ";
+			
+			if( userStream.includeAllEventTypes )
+			{
+				// don't do anything, the default query returns all event types
+			}				
+			else 
+			{
+				// start limiting the return types based on what we have in the
+				// stream object...
+				Set<String> eventTypesToInclude = userStream.getEventTypesToInclude();
+					
+				for( String eventType : eventTypesToInclude ) 
+				{
+						query = query + " and event.class = " + eventType;
+				}
+				
+				
+			}								 
+							
+			query = query + " order by event.effectiveDate desc";
+							
+			// for the purpose of this query, treat a user as their own friend... that is, we
+			// will want to read Activities created by this user (we see our own updates in our
+			// own feed)
+			friendIds.add( user.id );
+			ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
+			List<EventBase> queryResults =
+				EventBase.executeQuery( query,
+					['cutoffDate':cutoffDate,
+					 // 'oldestOriginTime':new Date(oldestOriginTime),
+					 'friendIds':friendIds,
+					 'targetUuid':streamPublic.uuid],
+					['max': maxCount ]);
+		
+				println "adding ${queryResults.size()} activities read from DB";
+				for( EventBase event : queryResults ) {
+					
+					println "Populating XML into SubscriptionEvents";
+					
+					event = existDBService.populateSubscriptionEventWithXmlDoc( event );
+					recentEvents.add( event );
+				}
+		}
+		else
+		{
+			println( "no friends, so no activity read from DB" );
+		}
+		
+		
+		return recentEvents;
+	}
 	
 	public List<Activity> getRecentActivitiesForUser( final User user, final int maxCount )
 	{
@@ -90,41 +170,41 @@ class ActivityStreamService {
 		// NOTE: we could avoid iterating over this list again by returning the "oldest message time"
 		// as part of this call.  But it'll mean wrapping this stuff up into an object of some
 		// sort, or returning a Map of Maps instead of a List of Maps
-		List<Map> messages = eventQueueService.getMessagesForUser( user.userId, msgsToRead );
-		for( Map msg : messages )
+		List<EventBase> messages = eventQueueService.getMessagesForUser( user.userId, msgsToRead );
+		for( EventBase msg : messages )
 		{
-			println "msg.originTime: ${msg.originTime}";
-			if( msg.effectiveDate < oldestOriginTime )
+			// println "msg.originTime: ${msg.originTime}";
+			if( msg.effectiveDate.time < oldestOriginTime )
 			{
-				oldestOriginTime = msg.effectiveDate;
+				oldestOriginTime = msg.effectiveDate.time;
 			}
 		}
 		
 		println "oldestOriginTime: ${oldestOriginTime}";
 		println "as date: " + new Date( oldestOriginTime);
 		
-		// convert our messages to Activity instances and
-		// put them in this list...
-		List<Activity> recentActivities = new ArrayList<Activity>();
+		List<EventBase> recentEvents = new ArrayList<EventBase>();
 		
 		// NOTE: we wouldn't really want to iterate over this list here... better
 		// to build up this list above, and never bother storing the JMS Message instances
 		// at all...  but for now, just to get something so we can prototype the
 		// behavior up through the UI...
+		
+		// TODO: now that we are passing notifications for different kinds of
+		// events through this mechanism, this has to be smarter... It can't just
+		// conver everything to an activity, it has to convert to Activity, SubscriptionEvent,
+		// CalendarEvent, etc., depending on what the notification is for.
 		for( int i = 0; i < messages.size(); i++ )
 		{
-			Map msg = messages.get(i);
-			println "got message: ${msg} off of queue";
-			Activity activity = new Activity();
+			EventBase event = messages.get(i);
+			// println "got message: ${msg} off of queue";
 			
-			// println "msg class: " + msg?.getClass().getName();
-			activity.owner = userService.findUserByUserId( msg.creator ); 
-			activity.content = msg.text;
-			activity.dateCreated = new Date( msg.originTime );
-			recentActivities.add( activity );	
+			event = existDBService.populateSubscriptionEventWithXmlDoc( event );
+			
+			recentEvents.add( event );				
 		}
 		
-		println "recentActivities.size() = ${recentActivities.size()}"
+		println "recentEvents.size() = ${recentEvents.size()}"
 		
 		/* NOTE: here, we need to make sure we don't retrieve anything NEWER than the OLDEST
 		 * message we may have in hand - that we received from the queue.  Otherwise, we risk
@@ -165,7 +245,7 @@ class ActivityStreamService {
 			
 				
 				// for the purpose of this query, treat a user as their own friend... that is, we
-				// will want to read Activities created by this user (we see out own updates in our
+				// will want to read Activities created by this user (we see our own updates in our
 				// own feed)
 				friendIds.add( user.id );
 				ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
@@ -178,7 +258,13 @@ class ActivityStreamService {
 					    ['max': recordsToRetrieve ]);
 			
 					println "adding ${queryResults.size()} activities read from DB";
-					recentActivities.addAll( queryResults );
+					for( EventBase event : queryResults ) {
+						
+						println "Populating XML into SubscriptionEvents";
+						
+						event = existDBService.populateSubscriptionEventWithXmlDoc( event );
+						recentEvents.add( event );
+					}
 			}
 			else
 			{
@@ -190,7 +276,7 @@ class ActivityStreamService {
 			println "Reading NO messages from DB";	
 		}
 		
-		println "recentActivities.size() = ${recentActivities.size()}";
-		return recentActivities;
+		println "recentEvents.size() = ${recentEvents.size()}";
+		return recentEvents;
 	}	
 }

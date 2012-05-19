@@ -28,7 +28,7 @@ class User implements Serializable
 		email(nullable:true)
 		dateCreated()
     }
-
+	
 	@XmlElement
     String uuid;
 	@XmlElement
