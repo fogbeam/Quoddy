@@ -92,18 +92,17 @@
 				</div>
 			</div>
     	
-    	<div id="body">
+    	<div id="body" class="span12">
 			
 			<!-- left sidenav, global -->
 
- 				<div class="leftContentNav">
+ 				<div class="leftContentNav span3">
  					<g:render template="/leftSidebar" />				
  				</div>
  			
 	    		<!-- layout main content area -->
-	    	  
+	    	 
 				<g:layoutBody /> 
- 
         	</div>
     	
     	</div> <!--  "body" -->
