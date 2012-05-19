@@ -27,6 +27,9 @@ body, #header {
 	position:relative;
 	top: -10px;
 }
+.headerNav ul.customNav h1 a:hover {
+	text-decoration: none;
+}
 
 .settingsNav a, .settingsNav a:hover,
 .headerNav ul.customNav h1,
