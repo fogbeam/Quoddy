@@ -4,12 +4,12 @@
        	<meta name="layout" content="main" />
     </head>
 	<body>
-		<div id="bodyContent">	
+		<div id="bodyContent" class="span8">	
 			<h2>Post a new update</h2>	
 			<g:if test="${session.user != null}">
 				<g:form name="updateStatusForm" controller="status" action="updateStatus" >
-					<input type="text" id="statusText" name="statusText" />
-					<input class="btn btn-primary btn-large" id="updateStatusSubmit" type="submit" value="Update Status" />
+					<input type="text" id="statusText" name="statusText" class="span6" />
+					<input class="btn btn-primary btn-large span2" id="updateStatusSubmit" type="submit" value="Update Status" />
 				</g:form>
 				
             	
