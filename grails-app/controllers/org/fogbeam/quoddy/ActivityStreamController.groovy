@@ -1,11 +1,11 @@
 package org.fogbeam.quoddy
 
-import org.codehaus.jackson.map.ObjectMapper
 import org.fogbeam.quoddy.integration.activitystream.ActivityStreamEntry
 
 
 class ActivityStreamController 
 {
+	def objectMapper
 	def activityStreamService;
 	def activityStreamTransformerService;
 	def userService;
@@ -74,7 +74,7 @@ class ActivityStreamController
 			  String json = params.activityJson;
 			  println("Got json:\n " + json );
 			  
-			  ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
+			  def mapper = objectMapper
 			  
 			  // convert from JSON to Groovy classes
 			  ActivityStreamEntry streamEntry = mapper.readValue(json, ActivityStreamEntry.class);

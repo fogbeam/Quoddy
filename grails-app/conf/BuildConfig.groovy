@@ -22,15 +22,8 @@ grails.project.dependency.resolution = {
 				grailsCentral()
         grailsHome()
 
+/*
 				// Random other places we can scour
-				mavenRepo 'http://repo.springsource.org/snapshot'
-				mavenRepo 'http://repo.springsource.org/release'
-				mavenRepo 'http://maven.springsource.org/snapshot'
-				mavenRepo 'http://maven.springsource.org/release'
-
-				mavenRepo 'http://s3.amazonaws.com/maven.springframework.org/milestone'
-				mavenRepo 'http://s3.amazonaws.com/maven.springframework.org/snapshot'
-		
 				['releases','thirdparty-releases','thirdparty-uploads','deprecated','snapshots'].each { dir ->	
 					mavenRepo "http://repository.jboss.org/nexus/content/repositories/$dir"
 				}
@@ -39,7 +32,7 @@ grails.project.dependency.resolution = {
         mavenRepo "http://repository.codehaus.org"
         mavenRepo "http://download.java.net/maven/2/"
         mavenRepo "http://repository.jboss.com/maven2/"
-				mavenRepo 'http://repository.opencastproject.org/nexus/content/repositories/com.springsource.repository.bundles.release/'
+*/
     }
 
     dependencies {
@@ -49,10 +42,14 @@ grails.project.dependency.resolution = {
 			compile 'com.google.guava:guava:12.0'
 			//compile 'org.jsoup:jsoup:1.6.3' // Replaces HTMLParser and NekoHTML
 			compile 'com.fasterxml.jackson.core:jackson-core:2.0.2'
+			compile 'com.fasterxml.jackson.core:jackson-databind:2.0.2'
 			compile 'net.sf.trove4j:trove4j:3.0.1'
 			compile 'joda-time:joda-time:2.1'
 			compile 'org.springframework.ldap:spring-ldap:1.3.1.RELEASE'
+			compile 'org.springframework.ldap:spring-ldap-core:1.3.1.RELEASE'
 			compile 'org.apache.httpcomponents:httpclient:4.2'
+			compile 'org.mnode.ical4j:ical4j:1.0.3'
+			compile 'org.apache.lucene:lucene-core:3.6.0'
     }
 
 		plugins {

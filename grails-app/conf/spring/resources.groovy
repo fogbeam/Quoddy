@@ -4,6 +4,8 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
 
 // Place your Spring DSL code here
 beans = {
+
+	objectMapper(com.fasterxml.jackson.databind.ObjectMapper)
  
 	contextSource(org.springframework.ldap.core.support.LdapContextSource){
 		url="ldap://localhost:10389"
