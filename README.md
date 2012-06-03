@@ -1,10 +1,15 @@
+Quoddy
+========
+
 Quoddy is part of the ScrewPile suite of tools for building intelligent applications.
 
 Why "Quoddy?"
+----------------
 
 We like lighthouses, so Quoddy is named after the famous West Quoddy Head Lighthouse.
 
 Ok, but what does it do?
+--------------------------
 
 Quoddy is basically a sort of "mini Facebook" like social-networking interface. It builds on the APIs for 
 social-graph management, activity-stream, activity profiling, tagging, etc. Provides the front-end 
@@ -12,21 +17,24 @@ for managing connections and for letting users provide information about themsel
 etc. But unlike Facebook, no silly Pirates vs. Ninjas or Farmville stuff.
 
 How does it work?
+--------------------
 
 Quoddy stores information about users, relationships between those users (eg, "friend", "follower," etc), groups,
 relationships between users and "things" that are of interest to the user, and provides for management of those
 relationships, as well as using those relationships to show a user updates regarding activity within their
 network (of friends, followers and other "things).
 
-Quoddy can also be combined with Neddick (https://github.com/fogbeam/Neddick) and Heceta (https://github.com/fogbeam/Heceta)
+Quoddy can also be combined with [Neddick](https://github.com/fogbeam/Neddick) and [Heceta](https://github.com/fogbeam/Heceta)
 to provide a rich, tightly integrated platform for knowledge discovery, navigation and management.
 
 What about OpenSocial?
+--------------------------
 
 Work is currently underway to add OpenSocial container support, using Apache Shindig.  When finished, this work
 will allow a Quoddy instance to host any valid OpenSocial application.
 
 How to build & run Quoddy?
+----------------------------
 
 (IMPORTANT NOTE: This is under very heavy development, is very much "pre-alpha" and is nowhere near
 ready to use for anything.  It does (usually) build, compile and run and there is useful functionality
