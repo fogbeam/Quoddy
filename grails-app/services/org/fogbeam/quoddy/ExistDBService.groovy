@@ -41,6 +41,7 @@ class ExistDBService
 		if( col == null ) 
 		{
 			println "ERROR: could not locate collection: ${URI + collection}";
+			return event;
 		}
 		
 		col.setProperty(OutputKeys.INDENT, "yes");

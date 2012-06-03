@@ -26,7 +26,8 @@ class UserStream implements Serializable
 	static hasMany = [ userUuidsIncluded:String, 
 					   userListUuidsIncluded:String, 
 					   userGroupUuidsIncluded:String,
-					   subscriptionUuidsIncluded:String];
+					   subscriptionUuidsIncluded:String,
+					   eventTypesIncluded:EventType];
 	
 	String 	name;
 	String 	uuid;
@@ -39,24 +40,24 @@ class UserStream implements Serializable
 	// include:
 		// users
 	Boolean includeAllUsers = true;
-	Set<String> userUuidsIncluded = new HashSet<String>();
+	// Set<String> userUuidsIncluded = new HashSet<String>();
 	
 		// user lists
 	Boolean includeAllLists = true;
-	Set<String> userListUuidsIncluded = new HashSet<String>();
+	// Set<String> userListUuidsIncluded = new HashSet<String>();
 	
 		// groups
 	Boolean includeAllGroups = true;
-	Set<String> userGroupUuidsIncluded = new HashSet<String>();
+	// Set<String> userGroupUuidsIncluded = new HashSet<String>();
 	
 		// subscriptions
 	Boolean includeAllSubscriptions = true;
-	Set<String> subscriptionUuidsIncluded = new HashSet<String>();
+	// Set<String> subscriptionUuidsIncluded = new HashSet<String>();
 	
 
 		// event types
-	Boolean includeAllEventTypes = true;
-	Set<String> eventTypesIncluded = new HashSet<String>();
+	Boolean includeAllEventTypes = false;
+	// Set<String> eventTypesIncluded = new HashSet<String>();
 	
 	
 	// exclude (filters)
@@ -68,27 +69,19 @@ class UserStream implements Serializable
 		// content
 
 	
-	public void addEventTypesToInclude( final Set<String> eventTypesToInclude ) 
+	public void addEventTypesToInclude( final Set<EventType> eventTypesToInclude ) 
 	{
 		this.eventTypesIncluded.addAll( eventTypesToInclude ); 
 	}	
 	
-	public Set<String> getEventTypesToInclude()
+	public Set<EventType> getEventTypesToInclude()
 	{
 		return this.eventTypesIncluded
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public String toString()
+	{
+		return "id: ${id}, uuid: ${uuid}, name: ${name}, owner: ${owner}, dateCreated: ${dateCreated}";
+	}
 }

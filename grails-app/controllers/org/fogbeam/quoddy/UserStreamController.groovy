@@ -48,17 +48,13 @@ class UserStreamController
 	{
 		start {
 			action {
-				[];
-			}
+				Set<EventType> eventTypes = eventTypeService.findAllEventTypes();
+				[eventTypes:eventTypes];			}
 			on("success").to("createWizardOne")
 		}
 		
 		/* a view state to bring up our GSP */
 		createWizardOne {
-			action {
-				Set<EventType> eventTypes = eventTypeService.findallEventTypes();
-				[eventTypes:eventTypes];
-			}
 			on("stage2") {
 				
 				println "transitioning to stage2";
@@ -78,7 +74,19 @@ class UserStreamController
 		createWizardTwo {
 			on("finishWizard"){
 				println "finishing Wizard";
-			   [];
+				println "params: ${params}";
+				// eventTypes:[219, 218]
+				String[] eventTypes = request.getParameterValues( 'eventTypes' );
+				
+				println "eventTypes: ${eventTypes}";
+				
+				for( String eventTypeId : eventTypes ) 
+				{
+					EventType eventType = eventTypeService.findEventTypeById( Long.valueOf( eventTypeId ) );
+					flow.streamToCreate.addToEventTypesIncluded( eventType );
+				}
+				
+				[];
 			}.to("finish")
 		}
 		
@@ -132,13 +140,35 @@ class UserStreamController
 				streamToEdit.description = params.streamDescription;
 
 				
+				Set<EventType> eventTypes = eventTypeService.findAllEventTypes();
+				[eventTypes:eventTypes, selectedEventTypes:streamToEdit.eventTypesIncluded];
+				
+				
 			}.to("editWizardTwo")
 		}
 		
 		editWizardTwo {
 			on("finishWizard"){
 				println "finishing Wizard";
-			   [];
+			   
+				println "params: ${params}";
+				
+				String[] eventTypes = request.getParameterValues( 'eventTypes' );
+				
+				flow.streamToEdit.eventTypesIncluded.clear();
+				
+				for( String eventTypeId : eventTypes ) 
+				{
+					EventType eventType = eventTypeService.findEventTypeById( Long.valueOf( eventTypeId ) );
+					
+					if( eventType == null ) {
+						println "Failed to locate eventType entry for id: ${eventTypeId}";
+						continue;	
+					}
+					flow.streamToEdit.addToEventTypesIncluded( eventType );
+				}				
+				
+				[];
 			}.to("finish")
 		}
 		

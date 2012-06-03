@@ -8,8 +8,14 @@
 	
 	<body>
 	
-		<h3>Edit User Stream</h3>
-        <g:form controller="userStream" action="editWizard" method="POST">
+		<h3>Edit Stream Stuff</h3>
+        <g:form controller="userStream" action="createWizard" method="POST">
+        	<g:select optionKey="id" optionValue="name" 
+        		name="eventTypes" 
+        		from="${eventTypes}"
+        		value="${selectedEventTypes}" 
+        		multiple="true" />
+        
 			<g:submitButton name="finishWizard" value="Finish" />
 		</g:form>
 		
