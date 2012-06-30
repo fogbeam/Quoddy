@@ -1,4 +1,4 @@
-<div class="hero-unit">
+<div class="">
     <g:if test="${session.user}">  <!-- /profilePic/thumbnail?userId=${session.user.userId} -->
       <img style="float:left;" src="${createLink(controller:'profilePic',action:'thumbnail',id:session.user.userId)}" />
       <h3><a href="${createLink(controller:'status', action:'listUpdates')}">${session.user.fullName}</a></h3>
