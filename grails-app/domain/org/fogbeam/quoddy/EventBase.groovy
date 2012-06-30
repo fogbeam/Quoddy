@@ -1,8 +1,7 @@
 package org.fogbeam.quoddy
 
-class EventBase
+public class EventBase implements Serializable
 {
-	
 	static mapping = 
 	{
 		tablePerHierarchy false
@@ -15,7 +14,7 @@ class EventBase
 	
 	User owner;
 	Date dateCreated;
-	Date effectiveDate;
+	Date effectiveDate; // TODO: should be Timestamp?
 	String name; // NOTE: do we really need this???
 	String	targetUuid;
 	

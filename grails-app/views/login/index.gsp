@@ -2,15 +2,15 @@
 
 	<head>
 		<title>Quoddy: Login</title>
-		<meta name="layout" content="main" />
+		<meta name="layout" content="login" />
 	     <nav:resources />
 	</head>
 	
 	<body>
-          <div style="margin-left:35px;padding-top:30px;">
+          <div class="hero-unit span6">
                                    
                <!-- begin body content -->
-               <h3>Login</h3>
+               <h2>Login</h2>
                 <p />
           
                <g:if test="${flash.message}">
@@ -19,7 +19,7 @@
                     </div>
                </g:if>
           
-               <g:form controller="login" action="login">
+               <g:form controller="login" class="login" action="login">
                     <dl>
                
                          <dt>Username:</dt>
@@ -29,7 +29,7 @@
                          <dd><g:passwordField name="password" /></dd>
                     </dl>
                     
-                    <g:submitButton name="login" value="Login" />
+                    <g:submitButton name="login" class="btn btn-large" value="Login" />
                </g:form>                            
      
           </div>

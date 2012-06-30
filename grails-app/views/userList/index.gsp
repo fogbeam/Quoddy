@@ -7,15 +7,34 @@
 	</head>
 	
 	<body>
-	<p />
-		<h3>The page for managing LISTS</h3>
-		<g:link controller="userList" action="createWizard" style="float:right;color:orange;margin-right:200px;margin-bottom:10px;">Create New List</g:link>
-		<p />
-		<ul style="margin-left:25px;margin-top:40px;">
+  <div class="span8 listView">
+  <!-- Blank state, should display when there are not any lists
+  <div class="hero-unit">
+    <h1>Lists</h1>
+    <p>Add new lists and manage existing ones here. <a href="#">What are lists?</a></p>
+    <p><a class="btn btn-primary btn-large">Create a New List</a></p>
+  </div>
+  --> 
+
+
+  <!-- populated state -->
+  <div class="hero-unit">
+    <div class="span4">
+    <h2>Lists</h2>
+    <p>Manage existing lists and create new ones.</p>
+    </div>
+    <div class="span4 offset5">
+		<g:link controller="userList" action="createWizard" class="btn btn-primary btn-large">Create New List</g:link>
+    </div>
+  <div class="clear"></div>
+  </div>
+
+		<ul>
 			<g:each var="list" in="${userLists}">
 				<li><g:link controller="userList" action="editWizard" event="start" params="[listId:list.id]" >${list.name}</g:link> </li>
 			</g:each>
 		</ul>		
+	</div>
 	</body>
 	
 </html>

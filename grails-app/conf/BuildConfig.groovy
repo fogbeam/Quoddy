@@ -47,8 +47,10 @@ grails.project.dependency.resolution = {
 
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-
         // runtime 'mysql:mysql-connector-java:5.1.5'
+
+			// Cannot find a maven repo for Exist 
+
 			compile 'com.google.guava:guava:12.0'
 			compile 'commons-io:commons-io:2.3'
 			//compile 'org.jsoup:jsoup:1.6.3' // Replaces HTMLParser and NekoHTML
@@ -61,10 +63,13 @@ grails.project.dependency.resolution = {
 			compile 'org.apache.httpcomponents:httpclient:4.2'
 			compile 'org.mnode.ical4j:ical4j:1.0.3'
 			compile 'org.apache.lucene:lucene-core:3.6.0'
+			compile 'excalibur-cli:excalibur-cli:1.0'
+			compile 'jgroups:jgroups-all:2.4.1'
 			runtime 'postgresql:postgresql:9.1-901.jdbc4'
     }
 
 		plugins {
+			compile ':jaxrs:0.5-m1'
 			compile ':rest-client-builder:1.0.2'
 			compile ':code-coverage:1.2.5'
 			compile('RobertFischer:jms:1.3') {

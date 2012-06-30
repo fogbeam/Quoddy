@@ -26,7 +26,7 @@
 										// now reload the content of the activity stream DIV
 										// so that we pick up the new addition.  That sets us up to
 										// add our timer based stuff to update things dynamically.
-										$j('#activityStream').load( "$j{ createLink(controller:'activityStream', action:'getContentHtml')}" );
+										$j('#activityStream').load( "${ createLink(controller:'activityStream', action:'getContentHtml')}" );
 										
 									}, 
 
@@ -40,7 +40,7 @@
 				$j(this).everyTime( 2000, 
 								function() 
 								{
-									$j.get("${ createLink(controller:'activityStream', action:'getQueueSize')}", 
+									$j.get( "${ createLink(controller:'activityStream', action:'getQueueSize')}", 
 											function(data) 
 											{
 												$j('#refreshMessagesLink').html( data + " messages pending" );
@@ -51,7 +51,7 @@
 
 				$j('#refreshMessagesLink').bind( 'click', function() {
 
-					$j('#activityStream').load( "$j{ createLink(controller:'activityStream', action:'getContentHtml')}" );
+					$j('#activityStream').load( "${ createLink(controller:'activityStream', action:'getContentHtml')}" );
 					return false;
 				})
 				
@@ -66,7 +66,7 @@
 						// load more content from the server, pass the page so it knows how much
 						// to return us...
 						
-						$j('#activityStream').load( "$j{ createLink(controller:'activityStream', action:'getContentHtml')}" + "?page=" + page );
+						$j('#activityStream').load( "${ createLink(controller:'activityStream', action:'getContentHtml')}" + "?page=" + page );
 					}
 					
 					return false;

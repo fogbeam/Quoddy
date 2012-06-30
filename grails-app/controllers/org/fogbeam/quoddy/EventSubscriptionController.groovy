@@ -1,5 +1,8 @@
 package org.fogbeam.quoddy
 
+import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+
+@Mixin(SidebarPopulatorMixin)
 class EventSubscriptionController
 {
 	def userService;
@@ -22,28 +25,16 @@ class EventSubscriptionController
 		{
 			user = userService.findUserByUserId( session.user.userId );
 		
-		
-			def tempSysStreams = userStreamService.getSystemDefinedStreamsForUser( user );
-			systemDefinedStreams.addAll( tempSysStreams );
-			def tempUserStreams = userStreamService.getUserDefinedStreamsForUser( user );
-			userDefinedStreams.addAll( tempUserStreams );
-				
-			def tempUserLists = userListService.getListsForUser( user );
-			userLists.addAll( tempUserLists );
-				
-			def tempUserGroups = userGroupService.getAllGroupsForUser( user );
-			userGroups.addAll( tempUserGroups );
+			Map model = [:];
+			if( user )
+			{
+
+				Map sidebarCollections = this.populateSidebarCollections( this, user );
+				model.putAll( sidebarCollections );
+			}	
 			
-			def tempEventSubscriptions = eventSubscriptionService.getAllSubscriptionsForUser( user );
-			eventSubscriptions.addAll( tempEventSubscriptions );
+			return model;
 			
-			[user:user, 
-			  sysDefinedStreams:systemDefinedStreams, 
-			  userDefinedStreams:userDefinedStreams,
-			  userLists:userLists,
-			  userGroups:userGroups,
-			  eventSubscriptions:eventSubscriptions ];
-	  
 		}
 		else
 		{
@@ -53,7 +44,35 @@ class EventSubscriptionController
 
 	def display =
 	{
-		[];
+		
+		
+		if( session.user != null )
+		{
+			def user = userService.findUserByUserId( session.user.userId );
+			// println "Doing display with params: ${params}";
+			def subEvents = new ArrayList<SubscriptionEvent>();
+								
+			
+			EventSubscription subscription = EventSubscription.findById( params.subscriptionId );
+			
+			Map model = [:];
+			if( user )
+			{
+				subEvents = eventSubscriptionService.getRecentEventsForSubscription( subscription, 25 );
+				model.putAll( [ activities:subEvents ] );
+				
+				Map sidebarCollections = this.populateSidebarCollections( this, user );
+				model.putAll( sidebarCollections );
+				
+			}
+			
+			return model;
+		}
+		else
+		{
+			redirect( controller:"home", action:"index");
+		}
+		
 	}
 		
 	def createWizardFlow =

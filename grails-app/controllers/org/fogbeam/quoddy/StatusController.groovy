@@ -7,7 +7,7 @@ import org.fogbeam.quoddy.User;
 class StatusController {
 
 	def userService;
-	def activityStreamService;
+	def eventStreamService;
 	def jmsService;
 	
 	def updateStatus = {
@@ -71,18 +71,22 @@ class StatusController {
 			activity.name = activity.title;
 			activity.effectiveDate = activity.published;
 			
-			activityStreamService.saveActivity( activity );
+			eventStreamService.saveActivity( activity );
 			
 			
-			Map msg = new HashMap();
-			msg.creator = activity.owner.userId;
-			msg.text = newStatus.text;
-			msg.targetUuid = activity.targetUuid;
-			msg.originTime = activity.dateCreated.time;
+			// Map msg = new HashMap();
+			// msg.creator = activity.owner.userId;
+			// msg.text = newStatus.text;
+			// msg.targetUuid = activity.targetUuid;
+			// msg.originTime = activity.dateCreated.time; // NOTE: this will be ever so slightly different from "effectiveDate" 
+														// due to the latency in writing to the database.  So we need to explicitly
+														// include the effectiveDate as a field in this message as well
+			// msg.effectiveDate = activity.effectiveDate.time;
 			
-			
+			// msg.actualEvent = activity;
+				
 			println "sending message to JMS";
-			jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );
+			jmsService.send( queue: 'uitestActivityQueue', /* msg */ activity, 'standard', null );
 			
 		}
 		

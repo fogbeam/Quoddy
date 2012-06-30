@@ -1,7 +1,14 @@
 package org.fogbeam.quoddy;
 
-import org.fogbeam.quoddy.profile.Profile 
+import javax.xml.bind.annotation.XmlAccessType
+import javax.xml.bind.annotation.XmlAccessorType
+import javax.xml.bind.annotation.XmlElement
+import javax.xml.bind.annotation.XmlRootElement
 
+import org.fogbeam.quoddy.profile.Profile
+
+@XmlRootElement
+@XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.NONE)
 class User implements Serializable
 {
 
@@ -21,9 +28,12 @@ class User implements Serializable
 		email(nullable:true)
 		dateCreated()
     }
-
+	
+	@XmlElement
     String uuid;
-    String userId;
+	@XmlElement
+	String userId;
+	@XmlElement
     Date dateCreated;
     Profile profile;
     StatusUpdate currentStatus;	
@@ -31,12 +41,17 @@ class User implements Serializable
 	/* stuff objects of this class "carry around" but aren't persisted as part of the object. 
 	 * This stuff is pulled in from an external source, like, say, LDAP. */
 	String password;
+	@XmlElement
 	String homepage;
+	@XmlElement
 	String firstName;
+	@XmlElement
 	String lastName;
+	@XmlElement
 	String displayName;
 	// String fullName;  // see below
 	String bio;
+	@XmlElement
 	String email;
 	static transients = [ "password", "homepage", "displayName", "bio",  ]
 	

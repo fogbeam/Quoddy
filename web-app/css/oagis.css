@@ -1,0 +1,27 @@
+div.oagisRFQHeader ul
+{
+	list-style-type: none;
+}
+
+div.oagisRFQHeader li
+{
+	float: left;
+	margin-top:6px;
+	padding-left: 20px;
+	padding-right:20px;
+}
+
+
+div.oagisRFQLines ul
+{
+	list-style-type: none;
+}
+
+div.oagisRFQLines li
+{
+	float: left;
+	margin-top:6px;
+	padding-left: 20px;
+	padding-right:20px;
+	
+}

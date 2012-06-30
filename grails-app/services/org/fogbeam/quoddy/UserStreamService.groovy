@@ -18,6 +18,24 @@ class UserStreamService
 		return streams;
 	}
 
+	public UserStream getStreamForUser( final User user, String streamName ) 
+	{
+		List<UserStream> streams = UserStream.executeQuery( "select stream from UserStream as stream where " 
+													 + "stream.owner = ? and stream.name = ?", [user, streamName ] );
+		
+		if( streams.size() != 1 ){
+			throw new RuntimeException( "Query returned the wrong number of results" );	
+		}						
+						 
+		return streams.get(0); 
+	}
+	
+	public UserStream findStreamById( final Long streamId ) 
+	{
+		UserStream stream = UserStream.findById( streamId );
+		return stream;
+	}
+	
 	
 	public List<UserStream> getSystemDefinedStreamsForUser( final User user, final int maxCount )
 	{

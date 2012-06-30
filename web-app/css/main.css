@@ -8,8 +8,7 @@ body, #header {
 
 .headerNavContainer {
 	background: #04324c url('../images/theme/header_bg.jpg') repeat;
-	height: 55px;
-	padding: 10px 0 0 0;
+	height: 40px;
 }
 
 .headerNav {
@@ -37,6 +36,12 @@ body, #header {
 	color: #fefefe;
 }
 
+.headerNav ul.customNav li {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight:200;
+	font-size:12px;
+}
+
 .settingsNav {
 	float:right;
 }
@@ -52,7 +57,7 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 
 #header {
 	padding-top: 1px;
-	font-size:14pt;
+	font-size:12px;
 	font-weight: bold;
 	height: 87px;
 }
@@ -95,8 +100,9 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 }
 	
 #statusText {
-	padding:18px;
 	margin: 8px 0;
+	height:36px
+	line-height: 36px;
 }
 	
 #searchBtn {
@@ -113,22 +119,25 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 #gbw ul.customNav li {
 	float: left;
 	margin:10px;
-	font-size:14px;
+	font-size:12px;
 	display:block;
 }
 
 .topLevel > li,
 .customNav ul > li {
-	margin: 10px;
-	font-size:14px;
+	margin: 10px 0px;
+	font-size:12px;
 	display:block;
 	float:left;
+	font-weight: 200;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.searchBoxContainer {width:286px; margin-top:-3px; float:left;}
+.searchbox input {height:36px;}
+
 .searchBoxContainer input {padding:12px;}
 .searchBoxContainer .btn-group {float: right; position: relative; left: -14px;}
-.searchBoxContainer .btn-group button {    font-size: 11px; margin-top: -4px !important; left:-6px; padding: 4px 6px; }
+.searchBoxContainer .btn-group button { font-size: 11px; margin-top: -5px !important; left:-6px; padding: 4px 6px; }
 
 
 .aseWrapper {
@@ -174,3 +183,41 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 }
 
 #footer {clear:both;}
+
+/* login form */
+form.login input {
+	height:36px;
+	margin-left:0px;
+}
+
+form.login dd {
+	margin-left: 0px;
+}
+
+form.login label {
+	margin-bottom:12px;
+}
+
+/* stream, list pages, etc */
+
+.listView .hero-unit {
+	padding:32px 10px 0px 10px;
+}
+
+.listView .hero-unit:after {
+	clear:both;
+}
+
+.listView .hero-unit .btn {
+	font-size: 16px;
+  font-weight: 200;
+  margin-bottom: -24px;
+  margin-top: -18px;
+  padding: 16px;
+  position: relative;
+  top: -68px;
+}
+
+input[type="text"] {height:24px;}
+
+.clear {clear:both; height:1%;}
