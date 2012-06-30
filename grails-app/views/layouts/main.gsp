@@ -113,6 +113,5 @@
                  <center>Footer for Quoddy</center>
            	</div>
        	</div>      
-      </div>      
     </body>	
 </html>
