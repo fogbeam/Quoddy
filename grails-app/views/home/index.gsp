@@ -4,7 +4,73 @@
        	<meta name="layout" content="main" />
     </head>
 	<body>
+
 		<div id="bodyContent" class="span8">	
+		<div class="subnav">
+    <ul class="nav nav-pills">
+
+		<li class="dropdown">
+		<g:if test="${session.user}">
+	        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Streams <b class="caret"></b></a>
+	        <ul class="dropdown-menu">
+					
+						<g:each var="stream" in="${sysDefinedStreams}">
+	          <li>
+							<g:link controller="home" action="index" params="[streamId:stream.id]">${stream.name}</g:link>
+	          </li>
+	        </g:each>
+	        <g:each var="stream" in="${userDefinedStreams}">
+	          <li>
+	            <g:link controller="home" action="index" params="[streamId:stream.id]" >${stream.name}</g:link>
+	          </li>
+	        </g:each> 
+	        </ul>
+		</g:if>
+      </li>
+
+    	<li class="dropdown">
+        <g:if test="${session.user}">
+	        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Lists <b class="caret"></b></a>
+	        <ul class="dropdown-menu">
+	        
+	          <g:each var="list" in="${userLists}">
+	          <li>
+							<g:link controller="userList" action="display" params="[listId:list.id]" >${list.name}</g:link>
+	          </li>
+	        </g:each>
+	        </ul>
+		</g:if>
+      </li>
+
+		<li class="dropdown">
+        <g:if test="${session.user}">
+	        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Groups <b class="caret"></b></a>
+	        <ul class="dropdown-menu">
+	        
+						<g:each var="group" in="${userGroups}">
+							<li>
+								<g:link controller="userGroup" action="display" params="[groupId:group.id]" >${group.name}</g:link>
+							</li>
+						</g:each>
+	        </ul>
+      </g:if>
+      </li>
+
+      <li class="dropdown">
+		<g:if test="${session.user}">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Subscriptions <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+					<g:each var="subscription" in="${eventSubscriptions}">
+            <li>
+						<g:link controller="eventSubscription" action="display" params="[subscriptionId:subscription.id]" >${subscription.name}</g:link>
+            </li>
+          </g:each>
+        </ul>
+        </g:if>
+      </li>
+
+    </ul>
+  </div>
 			<g:if test="${session.user != null}">
 			<h2>Post a new update</h2>	
 			
