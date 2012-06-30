@@ -32,8 +32,13 @@ grails.project.dependency.resolution = {
 
 				mavenRepo 'http://repo.smokejumperit.com'
 
+				// Necessary for Restlet
+				mavenRepo 'http://maven.restlet.org'
+
+				// Necessary for the bogus bsh-1.2b3 name
+				mavenRepo 'https://repository.jboss.org/nexus/content/repositories/deprecated/'
+
 				// Random other places we can scour
-/*
 				['releases','thirdparty-releases','thirdparty-uploads','deprecated','snapshots'].each { dir ->	
 					mavenRepo "http://repository.jboss.org/nexus/content/repositories/$dir"
 				}
@@ -42,7 +47,6 @@ grails.project.dependency.resolution = {
         mavenRepo "http://repository.codehaus.org"
         mavenRepo "http://download.java.net/maven/2/"
         mavenRepo "http://repository.jboss.com/maven2/"
-*/
     }
 
     dependencies {
