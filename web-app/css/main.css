@@ -8,8 +8,7 @@ body, #header {
 
 .headerNavContainer {
 	background: #04324c url('../images/theme/header_bg.jpg') repeat;
-	height: 55px;
-	padding: 10px 0 0 0;
+	height: 40px;
 }
 
 .headerNav {
