@@ -1,4 +1,4 @@
-<div class="">
+<div class="hero-unit">
 	<g:if test="${session.user}">
 		<!-- /profilePic/thumbnail?userId=${session.user.userId} -->
 		<img style="float: left;"
@@ -35,7 +35,7 @@
 			Users</a>
 	</p>
 </div>
-
+<!--
 <div class="hero-unit">
 	<g:if test="${session.user}">
 		<h3>Streams</h3>
@@ -104,3 +104,4 @@
 		</ul>
 	</g:if>
 </div>
+-->
