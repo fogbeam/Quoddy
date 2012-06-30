@@ -10,7 +10,8 @@ import javax.naming.directory.BasicAttributes;
 
 import org.springframework.ldap.core.DistinguishedName;
 
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
+
 
 public class PersonBuilder 
 {
@@ -46,17 +47,15 @@ public class PersonBuilder
 
 	private static String digestMd5(final String password) 
 	{
-		String base64;
 		try 
 		{
 			MessageDigest digest = MessageDigest.getInstance("MD5");
 			digest.update(password.getBytes());
-			base64 = new BASE64Encoder().encode(digest.digest());
+			// Do you want this chunked? URL safe? See the Base64 API.
+			return "{MD5}" + Base64.encodeBase64String(digest.digest());
 		}
 		catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
-	  
-		return "{MD5}" + base64;
 	}
 }
