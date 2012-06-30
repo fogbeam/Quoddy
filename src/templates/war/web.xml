@@ -165,9 +165,11 @@
 	-->
 	<!-- end Shindig Filter Mappings -->
 
+<!--
     <listener>
         <listener-class>org.codehaus.groovy.grails.web.util.Log4jConfigListener</listener-class>
     </listener>
+-->
 
     <listener>
         <listener-class>org.codehaus.groovy.grails.web.context.GrailsContextLoaderListener</listener-class>
