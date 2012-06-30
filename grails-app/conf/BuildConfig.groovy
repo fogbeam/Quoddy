@@ -58,8 +58,8 @@ grails.project.dependency.resolution = {
 			compile 'com.google.guava:guava:12.0'
 			compile 'commons-io:commons-io:2.3'
 			//compile 'org.jsoup:jsoup:1.6.3' // Replaces HTMLParser and NekoHTML
-			compile 'com.fasterxml.jackson.core:jackson-core:2.0.2'
-			compile 'com.fasterxml.jackson.core:jackson-databind:2.0.2'
+			compile 'com.fasterxml.jackson.core:jackson-core:2.0.4'
+			compile 'com.fasterxml.jackson.core:jackson-databind:2.0.4'
 			//compile 'net.sf.trove4j:trove4j:3.0.1'
 			compile 'joda-time:joda-time:2.1'
 			compile 'org.springframework.ldap:spring-ldap:1.3.1.RELEASE'
