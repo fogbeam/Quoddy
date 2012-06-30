@@ -35,14 +35,14 @@
     	<div id="gbw" class="headerNavContainer navbar-top">
 			<div class="container">
 				<div class="headerNav row">
-    			<ul class="customNav span7">
+    			<ul class="customNav span6">
 						<li><h1><a href="${createLink(controller:'home', action:'index')}">Quoddy</a></h1></li>
     				<li><a href="#">Email</a></li>
     				<li><a href="#">Reports</a></li>
     				<li><a href="#">Calendar</a></li>
     				<li><a href="#">Apps</a></li>
     			</ul>
-					<div id="gbg" class="settingsNav navbar span5">
+					<div id="gbg" class="settingsNav navbar span6">
 						<ul class="topLevel">
 							<li>
 								<div class="searchBoxContainer">

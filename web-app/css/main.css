@@ -36,6 +36,12 @@ body, #header {
 	color: #fefefe;
 }
 
+.headerNav ul.customNav li {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight:200;
+	font-size:12px;
+}
+
 .settingsNav {
 	float:right;
 }
@@ -51,7 +57,7 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 
 #header {
 	padding-top: 1px;
-	font-size:14pt;
+	font-size:12px;
 	font-weight: bold;
 	height: 87px;
 }
@@ -112,22 +118,25 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 #gbw ul.customNav li {
 	float: left;
 	margin:10px;
-	font-size:14px;
+	font-size:12px;
 	display:block;
 }
 
 .topLevel > li,
 .customNav ul > li {
-	margin: 10px;
-	font-size:14px;
+	margin: 10px 0px;
+	font-size:12px;
 	display:block;
 	float:left;
+	font-weight: 200;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.searchBoxContainer {width:286px; margin-top:-3px; float:left;}
+.searchbox input {height:36px;}
+
 .searchBoxContainer input {padding:12px;}
 .searchBoxContainer .btn-group {float: right; position: relative; left: -14px;}
-.searchBoxContainer .btn-group button {    font-size: 11px; margin-top: -4px !important; left:-6px; padding: 4px 6px; }
+.searchBoxContainer .btn-group button { font-size: 11px; margin-top: -5px !important; left:-6px; padding: 4px 6px; }
 
 
 .aseWrapper {
