@@ -7,15 +7,35 @@
 	</head>
 	
 	<body>
-	<p />
-		<h3>The page for managing Event Subscriptions</h3>
-		<g:link controller="eventSubscription" action="createWizard" style="float:right;color:orange;margin-right:200px;margin-bottom:10px;">Create New Subscription</g:link>
-		<p />
-		<ul style="margin-left:25px;margin-top:40px;">
+
+  <div class="span8 listView">
+  <!-- Blank state, should display when there are not any subscriptions
+  <div class="hero-unit">
+    <h1>Subscriptions</h1>
+    <p>Add new event subscriptions and manage existing ones here. <a href="#">What are subscriptions?</a></p>
+    <p><a class="btn btn-primary btn-large">Create a New Subscription</a></p>
+  </div>
+  --> 
+
+
+  <!-- populated state -->
+  <div class="hero-unit">
+    <div class="span4">
+    <h2>Subscriptions</h2>
+    <p>Manage existing event subscriptions and create new ones.</p>
+    </div>
+    <div class="span4 offset5">
+		<g:link controller="eventSubscription" action="createWizard" class="btn btn-primary btn-large">Create New Subscription</g:link>
+    </div>
+  <div class="clear"></div>
+  </div>
+
+		<ul>
 			<g:each var="subscription" in="${eventSubscriptions}">
 				<li><g:link controller="eventSubscription" action="editWizard" event="start" params="[subscriptionId:subscription.id]" >${subscription.name}</g:link> </li>
 			</g:each>
 		</ul>		
+	</div>
 	</body>
 	
 </html>
