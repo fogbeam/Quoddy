@@ -1,6 +1,5 @@
 package org.fogbeam.quoddy
 
-import org.codehaus.jackson.map.ObjectMapper
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.integration.activitystream.ActivityStreamEntry
 
