@@ -12,6 +12,7 @@
 		<li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">Streams <b class="caret"></b></a>
         <ul class="dropdown-menu">
+				<li><g:link controller="userStream" action="index">Manage Streams<i class="icon-cog"></i></g:link></li>
 				<g:if test="${session.user}">
 					<g:each var="stream" in="${sysDefinedStreams}">
           <li>
@@ -30,6 +31,7 @@
     <li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">Lists <b class="caret"></b></a>
         <ul class="dropdown-menu">
+				<g:link controller="userList" action="index">Manage Lists<i class="icon-cog"></i></g:link>
         <g:if test="${session.user}">
           <g:each var="list" in="${userLists}">
           <li>
@@ -43,6 +45,7 @@
 			<li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">Groups <b class="caret"></b></a>
         <ul class="dropdown-menu">
+				<g:link controller="userGroup" action="index">Manage Groups<i class="icon-cog"></i></g:link>			
         <g:if test="${session.user}">
 					<g:each var="group" in="${userGroups}">
 						<li>
@@ -56,6 +59,7 @@
       <li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">Subscriptions <b class="caret"></b></a>
         <ul class="dropdown-menu">
+				<g:link controller="userGroup" action="index">Manage Subscriptions<i class="icon-cog"></i></g:link>
 					<g:each var="subscription" in="${eventSubscriptions}">
             <li>
 						<g:link controller="eventSubscription" action="display" params="[subscriptionId:subscription.id]" >${subscription.name}</g:link>

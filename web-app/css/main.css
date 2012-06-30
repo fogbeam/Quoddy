@@ -100,8 +100,9 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 }
 	
 #statusText {
-	padding:18px;
 	margin: 8px 0;
+	height:36px
+	line-height: 36px;
 }
 	
 #searchBtn {
@@ -182,3 +183,17 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 }
 
 #footer {clear:both;}
+
+/* login form */
+form.login input {
+	height:36px;
+	margin-left:0px;
+}
+
+form.login dd {
+	margin-left: 0px;
+}
+
+form.login label {
+	margin-bottom:12px;
+}
