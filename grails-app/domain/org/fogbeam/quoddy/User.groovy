@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement
 import org.fogbeam.quoddy.profile.Profile
 
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.NONE)
+@XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.NONE)
 class User implements Serializable
 {
 
