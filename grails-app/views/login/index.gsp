@@ -2,7 +2,7 @@
 
 	<head>
 		<title>Quoddy: Login</title>
-		<meta name="layout" content="main" />
+		<meta name="layout" content="login" />
 	     <nav:resources />
 	</head>
 	
