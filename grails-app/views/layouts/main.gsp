@@ -101,10 +101,7 @@
 	    		<!-- layout main content area -->
 	    	 
 				<g:layoutBody /> 
-        	</div>
     	
-    	</div> <!--  "body" -->
-               
        	<div id="footer">
                     
             <!-- TODO: replace this with a template gsp -->
