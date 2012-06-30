@@ -9,7 +9,7 @@
 				<link rel="stylesheet" type="text/css" href="${createLinkTo(dir:'css/FontAwesome/css', file:'font-awesome.css')}">        
         
         <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" />
-       
+				<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
         
         <g:javascript library="jquery-1.7.1.min" />
         <g:javascript>
@@ -33,21 +33,18 @@
                 				
     </head>
     <body>
-   
 <!-- begin customizable header -->
- 
-    	<div id="gbw" class="headerNavContainer">
-				<div class="headerNav">
-    			<ul class="customNav">
+    	<div id="gbw" class="headerNavContainer navbar-top">
+			<div class="container">
+				<div class="headerNav row">
+    			<ul class="customNav span7">
 						<li><h1><a href="${createLink(controller:'home', action:'index')}">Quoddy</a></h1></li>
     				<li><a href="#">Email</a></li>
-    				<li><a href="${createLink(controller:'user', action:'listFriends')}">Friends</a></li>
-    				<li><a href="${createLink(controller:'user', action:'listFollowers')}">Followers</a></li>
     				<li><a href="#">Reports</a></li>
     				<li><a href="#">Calendar</a></li>
     				<li><a href="#">Apps</a></li>
     			</ul>
-					<div id="gbg" class="settingsNav navbar">
+					<div id="gbg" class="settingsNav navbar span5">
 						<ul class="topLevel">
 							<li>
 								<div class="searchBoxContainer">
@@ -90,9 +87,10 @@
 
 					</div>
 				</div>
+				</div>
 			</div>
     	
-    	<div id="body" class="span12">
+    	<div id="body" class="container">
 			
 			<!-- left sidenav, global -->
 
@@ -115,5 +113,6 @@
                  <center>Footer for Quoddy</center>
            	</div>
        	</div>      
+      </div>      
     </body>	
 </html>
