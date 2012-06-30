@@ -69,16 +69,16 @@ grails.project.dependency.resolution = {
     }
 
 		plugins {
-			compile ':jaxrs:0.5-m1'
+			compile ':jaxrs:0.6'
 			compile ':rest-client-builder:1.0.2'
 			compile ':code-coverage:1.2.5'
-			compile('RobertFischer:jms:1.3') {
+			compile('Fogbeam-Labs:jms:1.3') {
 				changing = true
 			}
-			compile ':jquery:1.7.1'
+			compile ':jquery:1.7.2'
 			compile ':navigation:1.3.2'
 			compile ':quartz:1.0-RC2'
-			compile ':webflow:1.3.7'
+			compile ':webflow:1.3.8'
 		}
 
 }
