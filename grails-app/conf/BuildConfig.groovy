@@ -54,7 +54,6 @@ grails.project.dependency.resolution = {
         // runtime 'mysql:mysql-connector-java:5.1.5'
 
 			// Cannot find a maven repo for Exist 
-
 			compile 'com.google.guava:guava:12.0'
 			compile 'commons-io:commons-io:2.3'
 			//compile 'org.jsoup:jsoup:1.6.3' // Replaces HTMLParser and NekoHTML
@@ -68,7 +67,12 @@ grails.project.dependency.resolution = {
 			compile 'org.mnode.ical4j:ical4j:1.0.3'
 			compile 'org.apache.lucene:lucene-core:3.6.0'
 			compile 'excalibur-cli:excalibur-cli:1.0'
-			compile 'jgroups:jgroups-all:2.4.1'
+			compile 'jgroups:jgroups:2.9.0.GA'
+			compile 'org.apache.ws.commons.util:ws-commons-util:1.0.2'
+			compile 'xalan:xalan:2.7.1'
+			//compile 'org.apache.xmlrpc:xmlrpc-common:3.1.3'
+			compile 'org.apache.xmlrpc:xmlrpc-client:3.1.3'
+			compile 'org.apache.xmlrpc:xmlrpc-server:3.1.3'
 			runtime 'postgresql:postgresql:9.1-901.jdbc4'
     }
 
