@@ -80,7 +80,7 @@
 							<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu">
-							<g:link controller="userGroup" action="index">Manage Subscriptions<i
+							<g:link controller="eventSubscription" action="index">Manage Subscriptions<i
 									class="icon-cog"></i>
 							</g:link>
 							<g:each var="subscription" in="${eventSubscriptions}">
