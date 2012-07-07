@@ -55,7 +55,7 @@ class EventStreamService {
 		
 			
 			String query = "select event from EventBase as event where event.effectiveDate >= :cutoffDate " + 
-							" and event.owner.id in (:friendIds)"  + 
+							" and ( event.owner.id in (:friendIds) and not ( event.owner <> :owner and event.class = SubscriptionEvent ) ) "  + 
 							" and event.targetUuid = :targetUuid ";
 			
 			if( userStream.includeAllEventTypes )
@@ -88,7 +88,7 @@ class EventStreamService {
 					['cutoffDate':cutoffDate,
 					 // 'oldestOriginTime':new Date(oldestOriginTime),
 					 'friendIds':friendIds,
-					 'targetUuid':streamPublic.uuid],
+					 'targetUuid':streamPublic.uuid, 'owner': user],
 					['max': maxCount ]);
 		
 				println "adding ${queryResults.size()} activities read from DB";

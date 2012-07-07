@@ -22,6 +22,8 @@ class EventSubscriptionService
 		String eventUuid = msg.getStringProperty( 'eventUuid' );
 		String matchedExpression = msg.getStringProperty( 'matchedExpression' );
 		
+		println "subscribersWithSubId: ${subscribersWithSubId}";
+		
 		ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 		if( subscribersWithSubId != null && !subscribersWithSubId.isEmpty() )
 		{
@@ -34,8 +36,17 @@ class EventSubscriptionService
 				String subscriptionUuid = subParts.get(1);
 				
 				User owner = userService.findUserByUuid( subscriberUuid );
+				if( owner == null ) 
+				{
+					println "Could not find Subscription Owner: ${subscriberUuid}";	
+				}
 				
 				EventSubscription owningSubscription = this.findByUuid( subscriptionUuid );
+				if( owningSubscription == null ) 
+				{
+					println "Could not locate Owning Subscription with uuid: ${subscriptionUuid}";	
+				}
+				
 				
 				SubscriptionEvent subEvent = new SubscriptionEvent();
 				subEvent.owner = owner;
