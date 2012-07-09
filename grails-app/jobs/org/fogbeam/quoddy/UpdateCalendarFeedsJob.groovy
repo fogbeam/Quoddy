@@ -35,6 +35,7 @@ class UpdateCalendarFeedsJob
 			// for each feed:
 			allFeeds.each { feed ->
 				 
+				println "Updating feed: $feed.name} for user: ${feed.owner.id}";
 				// download the contents of the feed, and parse out all of the VEVENTs
 				HttpClient httpclient = new DefaultHttpClient();
 				HttpGet httpget = new HttpGet(feed.url);
@@ -42,12 +43,14 @@ class UpdateCalendarFeedsJob
 				HttpEntity entity = response.getEntity();
 				if (entity != null) 
 				{
+					println "got HTTP entity";
 					InputStream instream = entity.getContent();
 					CalendarBuilder builder = new CalendarBuilder();
 					
 					net.fortuna.ical4j.model.Calendar calendar = builder.build(instream);
 					
 					ComponentList aList = calendar.getComponents("VEVENT");
+					println "got ComponentList";
 					
 					for( VEvent comp : aList )
 					{
@@ -56,13 +59,15 @@ class UpdateCalendarFeedsJob
 						
 						// check that we don't already have this event (using the provided uid)
 						String eventUid = comp.uid.value; 
+						println "got VEVENT with uid: ${eventUid}";
 						
 						// TODO: query for events with this uid, if we find one, don't try to
 						// persist this event.  Phase 2, add a check for the "last modified"
 						// date to see if the event has been modified since we originally
 						// saw it.  
-						List<CalendarEvent> temp = CalendarEvent.executeQuery( "select calEvent from CalendarEvent as calEvent where calEvent.uid = :eventUid",
-							['eventUid':eventUid] );
+						List<CalendarEvent> temp = CalendarEvent.executeQuery( "select calEvent from CalendarEvent as calEvent where " 
+																				+ " calEvent.uid = :eventUid and calEvent.owner = :owner",
+																				['eventUid':eventUid, 'owner':feed.owner] );
 						
 						println "Temp: ${temp}";
 						
@@ -79,6 +84,7 @@ class UpdateCalendarFeedsJob
 						
 						CalendarEvent event = new CalendarEvent();
 						event.uid = eventUid;
+						event.owningFeed = feed;
 						event.owner = feed.owner;
 						event.startDate = comp.startDate?.date;
 						event.endDate = comp.endDate?.date;
@@ -131,6 +137,10 @@ class UpdateCalendarFeedsJob
 						}
 						
 					}
+				}
+				else 
+				{
+					println "Entity was null.  Weird.";	
 				}
 			}
 		}

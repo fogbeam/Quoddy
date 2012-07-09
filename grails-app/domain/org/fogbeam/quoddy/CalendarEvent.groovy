@@ -9,7 +9,6 @@ class CalendarEvent extends EventBase implements Serializable
 		this.uuid = java.util.UUID.randomUUID().toString();
 	}
 	
-		
 	static constraints =
 	{
 		endDate(nullable:true);
@@ -35,7 +34,7 @@ class CalendarEvent extends EventBase implements Serializable
 	String url;
 	Date lastModified;
 	String uid;
-
+	CalendarFeed owningFeed;
 
 	String uuid;
 	Date dateCreated;

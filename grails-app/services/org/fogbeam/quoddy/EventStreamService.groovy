@@ -55,7 +55,8 @@ class EventStreamService {
 		
 			
 			String query = "select event from EventBase as event where event.effectiveDate >= :cutoffDate " + 
-							" and ( event.owner.id in (:friendIds) and not ( event.owner <> :owner and event.class = SubscriptionEvent ) ) "  + 
+							" and ( event.owner.id in (:friendIds) and not ( event.owner <> :owner and event.class = SubscriptionEvent ) " + 
+							" and not ( event.owner <> :owner and event.class = CalendarEvent ) ) " + 
 							" and event.targetUuid = :targetUuid ";
 			
 			if( userStream.includeAllEventTypes )

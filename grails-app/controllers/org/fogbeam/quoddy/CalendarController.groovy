@@ -93,4 +93,8 @@ class CalendarController
 		
 		redirect( controller:"calendar", action:"index");
 	}
+	
+	def display = {
+		[];	
+	}
 }

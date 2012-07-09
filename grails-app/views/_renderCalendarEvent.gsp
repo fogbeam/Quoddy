@@ -4,7 +4,7 @@
 		<img src="images/flavour-icons/ical.png" />
 	</div>
 	<div class="aseTitleBar"> <!-- http://localhost:8080/quoddy/user/viewUser?userId=testuser2 -->
-		<a href="${createLink(controller:'user', action:'viewUser', params:[userId:item.owner.userId])}">${item.owner.fullName}</a>
+		<a href="${createLink(controller:'calendar', action:'display', params:[calendarFeedId:item.owningFeed.id])}">${item.owningFeed.name}</a>
 	</div>
 	<div class="activityStreamEntry"> 
 		<font color="red">CALENDAR EVENT</font>

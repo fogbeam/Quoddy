@@ -6,7 +6,7 @@
 	<body>
 		<div id="bodyContent">	
 		
-		<h3>Create GROUP</h3>
+		<h3>Create Calendar Feed</h3>
 		<p />
 		<g:form controller="calendar" action="saveFeed" method="POST">
 			<label for="calFeedName">Name:</label> <g:textField name="calFeedName" value=""/>
