@@ -27,6 +27,8 @@ class EventStreamService {
 	public List<EventBase> getRecentActivitiesForUser( final User user, final int maxCount, final UserStream userStream )
 	{
 		
+		println "getting recent activities for user, using stream: ${userStream}";
+		
 		// ok, in this version we select the events to return, based on the specification defined by the
 		// passed in userStream instance.
 		
@@ -62,22 +64,43 @@ class EventStreamService {
 			if( userStream.includeAllEventTypes )
 			{
 				// don't do anything, the default query returns all event types
+				println "selecting ALL event types";
 			}				
 			else 
 			{
+				
+				println "filtering by event type";
+				
 				// start limiting the return types based on what we have in the
 				// stream object...
-				Set<String> eventTypesToInclude = userStream.getEventTypesToInclude();
+				Set<EventType> eventTypesToInclude = userStream.getEventTypesToInclude();
 					
-				for( String eventType : eventTypesToInclude ) 
-				{
-						query = query + " and event.class = " + eventType;
-				}
+				println "query was: ${query}";
 				
+				boolean first = true;
+				for( EventType eventType : eventTypesToInclude ) 
+				{
+					println "adding eventType: ${eventType}";
+					if( first ) 
+					{
+						query = query + " and (";
+						first = false;	
+					}
+					else 
+					{
+						query = query + " or ";
+						
+					}
+					query = query + " event.class = " + eventType.name;
+				}
+				query = query + " )";
+				println "query now: ${query}";
 				
 			}								 
 							
 			query = query + " order by event.effectiveDate desc";
+			
+			println "executing query: $query";
 							
 			// for the purpose of this query, treat a user as their own friend... that is, we
 			// will want to read Activities created by this user (we see our own updates in our

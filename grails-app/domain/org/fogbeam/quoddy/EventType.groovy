@@ -1,6 +1,6 @@
 package org.fogbeam.quoddy
 
-class EventType
+class EventType implements Serializable
 {
 	Long id;
 	String name;
