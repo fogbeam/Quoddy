@@ -133,9 +133,7 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.searchbox input {height:36px;}
-
-.searchBoxContainer input {padding:12px;}
+.searchBoxContainer input {padding:12px; height:24px !important;}
 .searchBoxContainer .btn-group {float: right; position: relative; left: -14px;}
 .searchBoxContainer .btn-group button { font-size: 11px; margin-top: -5px !important; left:-6px; padding: 4px 6px; }
 
@@ -221,3 +219,71 @@ form.login label {
 input[type="text"] {height:24px;}
 
 .clear {clear:both; height:1%;}
+
+form#profileForm input {
+	width: 272px;
+}	 
+
+form#profileForm textarea {width: 272px; height:86px !important;}
+
+form#profileForm h2 {float:left;}
+#profileForm .dateRow b {clear:both; margin-bottom:12px; font-weight:200; display:block; font-size:14px;}
+.currentPhoto {margin-top:-32px; float:right; width: 216px;}
+#profileForm .left {margin-top: 3px; margin-bottom:3px; float:left; margin-left:0px; width:310px;}
+#profileForm .right {margin-top: 3px; margin-bottom:3px; float:right; margin-left:0px; width:310px;}
+#profileForm .dateRow .span1 {float:left; width: 86px; margin-left:0px; margin-right:6px;}
+#profileForm .dateRow .span1 select {width: 86px !important;}
+#profileform .btn {width: auto; display:inline-block; text-transform: capitalize;}
+
+.employmentContainer, .contactContainer {width: 100% !important; clear:both; }
+.contactAddressPosition > * {
+		display: block;
+    float: left;
+    height: 32px !important;
+    margin: 6px 6px 6px 0;
+    width: auto !important;}
+
+#educationHistory .yearInput, #educationHistory select,
+#employmentHistory .yearInput, 
+#employmentHistory select {
+		float: left;
+    height: 32px;
+    margin: 0 6px 0 0;
+    width: 126px;} 
+
+#employmentHistory span {margin:6px; display:block; float:left;}
+#educationHistory span {margin:6px; display:block; float:left;}
+#employmentHistory fieldset div:nth-child(1), #employmentHistory fieldset div:nth-child(2),
+#educationHistory fieldset div:nth-child(1), #educationHistory fieldset div:nth-child(2) {float: left; width: 272px;}
+
+#employmentHistory fieldset div:nth-child(1) input, #employmentHistory fieldset div:nth-child(2) input,
+#educationHistory fieldset div:nth-child(1) input, #educationHistory fieldset div:nth-child(2) input 
+ {width: 262px !important;}
+#employmentHistory fieldset div:nth-child(3), 
+#employmentHistory fieldset div:nth-child(4), 
+#employmentHistory fieldset div:nth-child(5), 
+#employmentHistory fieldset div:nth-child(3) > *, 
+#employmentHistory fieldset div:nth-child(4) > *,
+#employmentHistory fieldset div:nth-child(5) > *,
+{float:left; width:25%;}
+
+
+.contactBtn {font-size: 12px !important;
+    height: 18px !important;
+    margin-left: 290px !important;
+    padding: 6px 12px !important;
+		top: -38px;
+		position:relative;
+}
+
+label#educationHistoryLabel,
+label#employmentHistoryLabel {
+	clear: both;
+  display: block;
+  font-size: 14px;
+  font-weight: 200;
+  margin-bottom: 12px;
+	padding-top:24px;
+}
+
+.saveFooter {clear:both; padding: 24px;}

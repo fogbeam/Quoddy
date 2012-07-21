@@ -7,9 +7,8 @@
 	</head>
 	
 	<body>
-		<p />
+	<div class="hero-unit span6">     
 		<h2>Friend Requests</h2>
-		<p />
 		<g:if test="${flash.message}">
 	        <div class="flash">
 	             ${flash.message}
@@ -17,7 +16,7 @@
 	   	</g:if>
 		
 		<p />
-		Pending friend request from:
+		<span>Pending friend request from:</span>
 		<p />
 		<ul>
 			<g:each in="${openFriendRequests}" var="friendRequest">
@@ -28,6 +27,7 @@
 				</li>
 			</g:each>
 		</ul>
+		</div>
 	</body>
 
 </html>

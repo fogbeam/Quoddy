@@ -7,7 +7,7 @@
 	</head>
 	
 	<body>
-		<p />
+		<div class="hero-unit span6">
 		<h2>People I Follow</h2>
 		<p />
 		
