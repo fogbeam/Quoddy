@@ -48,17 +48,14 @@ class UserStreamController
 	{
 		start {
 			action {
-				[];
+				Set<EventType> eventTypes = eventTypeService.findAllEventTypes();
+				[eventTypes:eventTypes];
 			}
 			on("success").to("createWizardOne")
 		}
 		
 		/* a view state to bring up our GSP */
 		createWizardOne {
-			action {
-				Set<EventType> eventTypes = eventTypeService.findallEventTypes();
-				[eventTypes:eventTypes];
-			}
 			on("stage2") {
 				
 				println "transitioning to stage2";
@@ -116,7 +113,9 @@ class UserStreamController
 				UserStream streamToEdit = null;
 				streamToEdit = UserStream.findById( streamId );
 		
-				[streamToEdit:streamToEdit];
+				Set<EventType> eventTypes = eventTypeService.findAllEventTypes();
+				
+				[streamToEdit:streamToEdit, eventTypes:eventTypes];
 			}
 			on("success").to("editWizardOne")
 		}
