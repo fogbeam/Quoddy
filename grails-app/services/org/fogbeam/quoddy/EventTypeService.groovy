@@ -11,4 +11,12 @@ class EventTypeService
 		
 		return allEventTypes; 	
 	}
+	
+	public EventType findEventTypeById( final Long eventTypeId )
+	{
+		EventType eventType = EventType.findById( eventTypeId );
+		
+		return eventType;	
+	}
+	
 }

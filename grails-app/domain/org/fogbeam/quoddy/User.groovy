@@ -1,11 +1,11 @@
 package org.fogbeam.quoddy;
 
-import javax.xml.bind.annotation.XmlAccessType
-import javax.xml.bind.annotation.XmlAccessorType
-import javax.xml.bind.annotation.XmlElement
-import javax.xml.bind.annotation.XmlRootElement
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-import org.fogbeam.quoddy.profile.Profile
+import org.fogbeam.quoddy.profile.Profile;
 
 @XmlRootElement
 @XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.NONE)
