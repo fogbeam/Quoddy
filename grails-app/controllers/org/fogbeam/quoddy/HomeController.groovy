@@ -16,7 +16,7 @@ class HomeController {
     		
     	def userId = params.userId;
     	User user = null;
-		def activities = new ArrayList<Activity>();
+		List<Activity> activities = new ArrayList<Activity>();
 		
 		if( userId != null )
     	{

@@ -91,14 +91,16 @@ class EventStreamService {
 						query = query + " or ";
 						
 					}
-					query = query + " event.class = " + eventType.name + ")";
+					query = query + " event.class = " + eventType.name;
 				}
-				
+				query = query + " )";
 				println "query now: ${query}";
 				
 			}								 
 							
 			query = query + " order by event.effectiveDate desc";
+			
+			println "executing query: $query";
 							
 			// for the purpose of this query, treat a user as their own friend... that is, we
 			// will want to read Activities created by this user (we see our own updates in our
