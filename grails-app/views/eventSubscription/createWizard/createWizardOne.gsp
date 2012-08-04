@@ -7,15 +7,13 @@
 	</head>
 	
 	<body>
-	
-		<h3>Create Event Subscription</h3>
-		<p />
+	<div class="hero-unit span6">	
+		<h2>Create Event Subscription</h2>
 		<g:form controller="eventSubscription" action="createWizard" method="POST">
-			<label for="subscriptionName">Name:</label> <g:textField name="subscriptionName" value=""/>
-			<br />
-			<label for="subscriptionDescription">Description:</label> <g:textField name="subscriptionDescription" value=""/>
-			<br />
-			<g:submitButton name="stage2" value="Next" />
+			<label for="subscriptionName">Name</label> <g:textField name="subscriptionName" value=""/>
+			<label for="subscriptionDescription">Description</label> <g:textField name="subscriptionDescription" value=""/>
+			<g:submitButton name="stage2" class="btn btn-large" value="Next" />
 		</g:form>
+		</div>
 	</body>
 </html>

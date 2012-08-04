@@ -5,10 +5,10 @@
         <nav:resources />
     </head>
     <body>
-           <div style="margin-left:35px;padding-top:30px;">
+           <div class="hero-unit span6">
 
               <!-- start body content -->
-              <h1>Edit Account</h1>
+              <h2>Edit Account</h2>
 
              <g:hasErrors>
                  <div class="errors">
@@ -32,7 +32,7 @@
                      <dd><g:textArea name="bio" value="${user?.bio}"/></dd>
                      <dt>Email</dt>
                      <dd><g:textField name="email" value="${user?.email}"/></dd>
-                     <dt><g:submitButton name="saveProfile" value="Save"/></dt>
+                     <dt><g:submitButton class="btn btn-large" name="saveProfile" value="Save"/></dt>
                  </dl>
 
              </g:form>
