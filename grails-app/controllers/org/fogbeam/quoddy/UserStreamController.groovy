@@ -150,8 +150,8 @@ class UserStreamController
 		}
 		
 		editWizardTwo {
-			on("finishWizard"){
-				println "finishing Wizard";
+			on("stage3"){
+				println "stage3";
 			   
 				println "params: ${params}";
 				
@@ -171,7 +171,40 @@ class UserStreamController
 				}				
 				
 				[];
-			}.to("finish")
+			}.to("editWizardThree")
+		}
+		
+		editWizardThree {
+			on( "stage4") {
+				println "stage4";
+				
+				// save users
+			}.to( "editWizardFour")
+
+		}
+		editWizardFour {
+			on( "stage5" ) {
+				
+				// save user lists
+			}.to( "editWizardFive")	
+		}
+		
+		editWizardFive {
+			on( "stage6") {
+				println "stage6";
+				
+				// save groups
+			}.to( "editWizardSix")
+
+		}
+		
+		editWizardSix {
+			on( "finishWizard") {
+				println "finishing Wizard";
+				
+				// save subscriptions
+			}.to( "finish")
+
 		}
 		
 		finish {
