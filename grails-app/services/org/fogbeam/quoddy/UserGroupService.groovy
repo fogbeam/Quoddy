@@ -11,7 +11,14 @@ class UserGroupService
 		
 		return group;	
 	}
-	
+
+	public UserGroup findUserGroupByUuid( final String uuid )
+	{
+		UserGroup group = UserGroup.findByUuid( uuid );
+		
+		return group;
+	}
+		
 	public List<UserGroup> getGroupsOwnedByUser( final User user )
 	{
 		List<UserGroup> groups = new ArrayList<UserGroup>();

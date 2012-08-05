@@ -4,6 +4,13 @@ import java.util.List;
 
 class UserListService
 {
+	public UserList findUserListByUuid( final String uuid ) 
+	{
+		UserList userList = UserList.findByUuid( uuid );
+		
+		return userList;	
+	}
+	
 	public List<UserList> getListsForUser( final User user )
 	{
 		List<UserList> lists = new ArrayList<UserList>();

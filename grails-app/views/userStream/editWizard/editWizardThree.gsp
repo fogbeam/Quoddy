@@ -10,7 +10,11 @@
 	
 		<h3>Select users to include in this stream.</h3>
         <g:form controller="userStream" action="createWizard" method="POST">
-			<!-- TODO: add user list-->
+			<g:select optionKey="uuid" optionValue="fullName" 
+        		name="users" 
+        		from="${users}"
+        		value="${selectedUsers}" 
+        		multiple="true" />
 			<g:submitButton name="stage4" value="Next" />
 		</g:form>
 		

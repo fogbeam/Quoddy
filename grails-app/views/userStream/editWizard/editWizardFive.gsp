@@ -10,7 +10,11 @@
 	
 		<h3>Select groups to include in this stream.</h3>
         <g:form controller="userStream" action="createWizard" method="POST">
-			<!-- TODO: add usergroup list-->
+			<g:select optionKey="uuid" optionValue="name" 
+        		name="userGroups" 
+        		from="${groups}"
+        		value="${selectedGroups}" 
+        		multiple="true" />
 			<g:submitButton name="stage6" value="Next" />
 		</g:form>
 		

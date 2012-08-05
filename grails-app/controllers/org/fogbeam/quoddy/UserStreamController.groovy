@@ -137,7 +137,7 @@ class UserStreamController
 				
 				println "transitioning to stage2";
 			   
-				UserStream streamToEdit = flow.streamToEdit
+				UserStream streamToEdit = flow.streamToEdit;
 				streamToEdit.name = params.streamName;
 				streamToEdit.description = params.streamDescription;
 
@@ -155,9 +155,12 @@ class UserStreamController
 			   
 				println "params: ${params}";
 				
+				UserStream streamToEdit = flow.streamToEdit;
+				
+				
 				String[] eventTypes = request.getParameterValues( 'eventTypes' );
 				
-				flow.streamToEdit.eventTypesIncluded.clear();
+				streamToEdit.eventTypesIncluded.clear();
 				
 				for( String eventTypeId : eventTypes ) 
 				{
@@ -167,33 +170,106 @@ class UserStreamController
 						println "Failed to locate eventType entry for id: ${eventTypeId}";
 						continue;	
 					}
-					flow.streamToEdit.addToEventTypesIncluded( eventType );
+					streamToEdit.addToEventTypesIncluded( eventType );
 				}				
 				
-				[];
+				/* load user list */
+				List<User> allusers = userService.findAllUsers();
+				
+				println "Found ${allusers.size()} users\n";
+				
+				[users:allusers, selectedUsers:streamToEdit.userUuidsIncluded];
 			}.to("editWizardThree")
 		}
 		
 		editWizardThree {
 			on( "stage4") {
 				println "stage4";
+				println "params: ${params}";
+				UserStream streamToEdit = flow.streamToEdit;
 				
 				// save users
+				String[] userUuids = request.getParameterValues( 'users' );
+				streamToEdit.userUuidsIncluded.clear();
+				
+				for( String userUuid : userUuids )
+				{
+					User userToInclude = userService.findUserByUuid( userUuid );
+					if( userToInclude == null ) {
+						println "Failed to locate User for uuid ${userUuid}";
+						continue;
+					}
+					
+					streamToEdit.addToUserUuidsIncluded( userUuid );
+				}
+				
+				
+				/* load userList list */
+				List<UserList> userLists = userListService.getListsForUser( session.user );
+				
+				[userLists:userLists, selectedUserLists:streamToEdit.userListUuidsIncluded];
 			}.to( "editWizardFour")
 
 		}
 		editWizardFour {
 			on( "stage5" ) {
 				
+
 				// save user lists
+				println( "stage5" );
+				println "params: ${params}";
+				UserStream streamToEdit = flow.streamToEdit;
+				
+				// userLists
+				String[] userListUuids = request.getParameterValues( 'userLists' );
+				streamToEdit.userListUuidsIncluded.clear();
+				
+				for( String userListUuid : userListUuids )
+				{
+					UserList userListToInclude = userListService.findUserListByUuid( userListUuid );
+					if( userListToInclude == null ) {
+						println "Failed to locate UserList for uuid ${userListUuid}";
+						continue;
+					}
+					
+					streamToEdit.addToUserListUuidsIncluded( userListUuid );
+				}
+												
+				/* load group list */
+				List<UserGroup> groups = userGroupService.getAllGroupsForUser( session.user );
+				println "found ${groups.size()} groups";
+				[groups:groups, selectedGroups:streamToEdit.userGroupUuidsIncluded];
+				
 			}.to( "editWizardFive")	
 		}
 		
 		editWizardFive {
 			on( "stage6") {
 				println "stage6";
-				
+				println "params: ${params}";
+				UserStream streamToEdit = flow.streamToEdit;
 				// save groups
+		
+				String[] userGroupUuids = request.getParameterValues( 'userGroups' );
+				streamToEdit.userGroupUuidsIncluded.clear();
+				
+				for( String userGroupUuid : userGroupUuids )
+				{
+					UserGroup userGroupToInclude = userGroupService.findUserGroupByUuid( userGroupUuid );
+					if( userGroupToInclude == null ) {
+						println "Failed to locate UserGroup for uuid ${userGroupUuid}";
+						continue;
+					}
+					
+					streamToEdit.addToUserGroupUuidsIncluded( userGroupUuid );
+				}
+										
+				/* load subscription list */
+				List<EventSubscription> eventSubscriptions =
+					eventSubscriptionService.getAllSubscriptionsForUser( session.user );
+				
+				[eventSubscriptions:eventSubscriptions, selectedEventSubscriptions:streamToEdit.subscriptionUuidsIncluded];
+			
 			}.to( "editWizardSix")
 
 		}
@@ -201,8 +277,25 @@ class UserStreamController
 		editWizardSix {
 			on( "finishWizard") {
 				println "finishing Wizard";
+				println "params: ${params}";
+				UserStream streamToEdit = flow.streamToEdit;
 				
 				// save subscriptions
+				// subscriptionUuidsIncluded
+				String[] eventSubscriptionUuids = request.getParameterValues( 'eventSubscriptions' );
+				streamToEdit.subscriptionUuidsIncluded.clear();
+				
+				for( String eventSubscriptionUuid : eventSubscriptionUuids )
+				{
+					EventSubscription eventSubscriptionToInclude = eventSubscriptionService.findByUuid( eventSubscriptionUuid );
+					if( eventSubscriptionToInclude == null ) {
+						println "Failed to locate EventSubscription for uuid ${eventSubscriptionUuid}";
+						continue;
+					}
+					
+					streamToEdit.addToSubscriptionUuidsIncluded( eventSubscriptionUuid );
+				}
+				
 			}.to( "finish")
 
 		}
