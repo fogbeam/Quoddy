@@ -216,6 +216,7 @@ form.login label {
   padding: 16px;
   position: relative;
   top: -68px;
+	float:right;
 }
 
 input[type="text"] {height:24px;}
@@ -253,6 +254,7 @@ form#profileForm h2 {float:left;}
     margin: 0 6px 0 0;
     width: 126px;} 
 
+#employmentHistory div {margin-top:1em;}
 #employmentHistory span {margin:6px; display:block; float:left;}
 #educationHistory span {margin:6px; display:block; float:left;}
 #employmentHistory fieldset div:nth-child(1), #employmentHistory fieldset div:nth-child(2),
@@ -269,6 +271,10 @@ form#profileForm h2 {float:left;}
 #employmentHistory fieldset div:nth-child(5) > *,
 {float:left; width:25%;}
 
+#educationBtn, #employmentBtn {
+	clear: both;
+  margin-top: 3em;
+}
 
 .contactBtn {font-size: 12px !important;
     height: 18px !important;
@@ -288,4 +294,4 @@ label#employmentHistoryLabel {
 	padding-top:24px;
 }
 
-.saveFooter {clear:both; padding: 24px;}
+.saveFooter {clear:both; margin-top: 3em; text-align: center;}

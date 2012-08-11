@@ -403,12 +403,12 @@
 								</fieldset>
 							</g:else>
 						</div>
-						<a href="#" onclick="return addEmploymentBlock();" class="btn btn-primary contactBtn">add another</a>
+						<a href="#" onclick="return addEmploymentBlock();" class="btn btn-primary employmentBtn">add another</a>
                     </div>
 
 
 					<div>
-						<label for="educationHistory" id="educationHistoryLabel">Educational History:</label>
+						<label for="educationHistory" id="educationHistoryLabel">Education History:</label>
             			<div id="educationHistory">
 
             				<input type="hidden" id="educationHistoryCount" name="educationHistoryCount" value="${profileToEdit?.educationHistoryCount}" />
@@ -467,12 +467,12 @@
 								</fieldset>							
 							</g:else>
 						</div>
-						<a href="#" onclick="return addEducationHistoryBlock();" class="btn btn-primary">add another</a>					
+						<a href="#" onclick="return addEducationHistoryBlock();" class="btn btn-primary" id="educationBtn">add another</a>					
 					</div>
 					
 					
-               		<div class="saveFooter">     
-                    	<g:submitButton name="saveProfile" class="btn btn-large btn-primary" value="Save"/>
+               		<div class="saveFooter well">     
+                    	<g:submitButton name="saveProfile" class="btn btn-large btn-primary" value="Save Profile"/>
                  	</div>
                  	
              </g:form>
