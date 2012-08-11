@@ -72,7 +72,6 @@
 	<classpathentry kind="src" path="grails-app/listeners"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
-	<classpathentry kind="con" path="com.springsource.sts.grails.core.CLASSPATH_CONTAINER"/>
 	<classpathentry kind="lib" path="/usr/java/junit3.8.1/junit.jar"/>
 	<classpathentry kind="lib" path="lib/arq-2.8.7.jar"/>
 	<classpathentry kind="lib" path="lib/concurrent.jar"/>
@@ -132,22 +131,40 @@
 	<classpathentry kind="lib" path="lib/jackson-all-1.9.3.jar"/>
 	<classpathentry kind="lib" path="lib/ical4j-1.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/postgresql-9.1-901.jdbc4.jar"/>
-	<classpathentry kind="src" path=".link_to_grails_plugins/navigation-1.1.1/grails-app/taglib">
+	<classpathentry kind="lib" path="lib/exist-fluent.jar"/>
+	<classpathentry kind="lib" path="lib/exist-optional.jar"/>
+	<classpathentry kind="lib" path="lib/exist.jar"/>
+	<classpathentry kind="lib" path="lib/excalibur-cli-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jgroups-all-2.2.6.jar"/>
+	<classpathentry kind="lib" path="lib/jline-0.9.94.jar"/>
+	<classpathentry kind="lib" path="lib/xmldb.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-client-3.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-common-3.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-server-3.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/serializer.jar"/>
+	<classpathentry kind="lib" path="lib/xalan.jar"/>
+	<classpathentry kind="lib" path="lib/ws-commons-util-1.0.2.jar"/>
+	<classpathentry kind="src" path=".link_to_grails_plugins/code-coverage-1.2/grails-app/i18n">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/navigation-1.1.1/grails-app/services">
+	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/jaxrs-0.5-m1/grails-app/conf">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/navigation-1.1.1/grails-app/i18n">
+	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.5-m1/grails-app/controllers">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jms-1.2/grails-app/utils">
+	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.5-m1/src/groovy">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.5-m1/src/java">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
@@ -157,7 +174,7 @@
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jms-1.2/src/java">
+	<classpathentry kind="src" path=".link_to_grails_plugins/jms-1.2/grails-app/utils">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
@@ -167,42 +184,7 @@
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/quartz-1.0-SNAPSHOT/grails-app/services">
-		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/quartz-1.0-SNAPSHOT/grails-app/conf">
-		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/quartz-1.0-SNAPSHOT/grails-app/i18n">
-		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/quartz-1.0-SNAPSHOT/src/java">
-		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/quartz-1.0-SNAPSHOT/src/groovy">
-		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/code-coverage-1.2/grails-app/i18n">
-		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/grails-app/taglib">
-		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/grails-app/services">
+	<classpathentry kind="src" path=".link_to_grails_plugins/jms-1.2/src/java">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
@@ -217,27 +199,52 @@
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/grails-app/services">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/grails-app/taglib">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/src/groovy">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.5-m1/grails-app/controllers">
+	<classpathentry kind="src" path=".link_to_grails_plugins/navigation-1.1.1/grails-app/i18n">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/jaxrs-0.5-m1/grails-app/conf">
+	<classpathentry kind="src" path=".link_to_grails_plugins/navigation-1.1.1/grails-app/services">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.5-m1/src/java">
+	<classpathentry kind="src" path=".link_to_grails_plugins/navigation-1.1.1/grails-app/taglib">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.5-m1/src/groovy">
+	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/quartz-1.0-RC1/grails-app/conf">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/quartz-1.0-RC1/grails-app/services">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/quartz-1.0-RC1/src/groovy">
+		<attributes>
+			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/quartz-1.0-RC1/src/java">
 		<attributes>
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
@@ -247,18 +254,6 @@
 			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/exist-fluent.jar"/>
-	<classpathentry kind="lib" path="lib/exist-optional.jar"/>
-	<classpathentry kind="lib" path="lib/exist.jar"/>
-	<classpathentry kind="lib" path="lib/excalibur-cli-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/jgroups-all-2.2.6.jar"/>
-	<classpathentry kind="lib" path="lib/jline-0.9.94.jar"/>
-	<classpathentry kind="lib" path="lib/xmldb.jar"/>
-	<classpathentry kind="lib" path="lib/xmlrpc-client-3.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/xmlrpc-common-3.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/xmlrpc-server-3.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/serializer.jar"/>
-	<classpathentry kind="lib" path="lib/xalan.jar"/>
-	<classpathentry kind="lib" path="lib/ws-commons-util-1.0.2.jar"/>
+	<classpathentry kind="con" path="com.springsource.sts.grails.core.CLASSPATH_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

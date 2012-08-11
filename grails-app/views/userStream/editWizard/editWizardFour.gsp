@@ -8,14 +8,14 @@
 	
 	<body>
 	
-		<h3>Select the event types you would like in this stream.</h3>
+		<h3>Select user lists to include in this stream.</h3>
         <g:form controller="userStream" action="createWizard" method="POST">
-        	<g:select optionKey="id" optionValue="name" 
-        		name="eventTypes" 
-        		from="${eventTypes}"
-        		value="${selectedEventTypes}" 
+			<g:select optionKey="uuid" optionValue="name" 
+        		name="userLists" 
+        		from="${userLists}"
+        		value="${selectedUserLists}" 
         		multiple="true" />
-			<g:submitButton name="stage3" value="Next" />
+			<g:submitButton name="stage5" value="Next" />
 		</g:form>
 		
 	</body>

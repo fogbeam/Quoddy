@@ -2,7 +2,7 @@ package org.fogbeam.quoddy
 
 import java.util.Date;
 
-class UserGroup
+class UserGroup implements Serializable
 {
 	
 	public UserGroup()

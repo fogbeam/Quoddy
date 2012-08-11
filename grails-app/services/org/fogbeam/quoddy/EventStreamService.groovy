@@ -56,11 +56,40 @@ class EventStreamService {
 			}
 		
 			
-			String query = "select event from EventBase as event where event.effectiveDate >= :cutoffDate " + 
+			String query = "select event ";
+			println "query now: ${query}";
+			
+			
+			if( !userStream.includeAllUsers ) 
+			{
+				println "filtering by user";
+				query = query + ", stream "; 	
+			
+			}
+			println "query now: ${query}";
+			
+			
+			query = query + " from EventBase as event ";
+			println "query now: ${query}";
+			
+			
+			if( !userStream.includeAllUsers )
+			{
+				println "filtering by user";
+				query = query + ", UserStream as stream ";
+			}
+			println "query now: ${query}";
+			
+			query = query + " where event.effectiveDate >= :cutoffDate " + 
 							" and ( event.owner.id in (:friendIds) and not ( event.owner <> :owner and event.class = SubscriptionEvent ) " + 
 							" and not ( event.owner <> :owner and event.class = CalendarEvent ) ) " + 
 							" and event.targetUuid = :targetUuid ";
 			
+							
+			println "query now: ${query}";
+			
+			
+			/* deal with event type filter */
 			if( userStream.includeAllEventTypes )
 			{
 				// don't do anything, the default query returns all event types
@@ -97,7 +126,30 @@ class EventStreamService {
 				println "query now: ${query}";
 				
 			}								 
-							
+				
+			/* deal with user filter */
+			if( userStream.includeAllUsers ) 
+			{
+				// nothing to do, default query will return hits from all eligible users
+			}
+			else 
+			{
+				query = query + " and event.owner.uuid in elements( stream.userUuidsIncluded ) and stream.id = :streamId ) ";	
+			}
+			
+			/* deal with user list filter */
+			
+			
+			
+			/* deal with group filter */
+			
+			
+			
+			/* deal with subscription filter */
+			
+			
+			
+						
 			query = query + " order by event.effectiveDate desc";
 			
 			println "executing query: $query";
@@ -107,12 +159,20 @@ class EventStreamService {
 			// own feed)
 			friendIds.add( user.id );
 			ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
-			List<EventBase> queryResults =
-				EventBase.executeQuery( query,
-					['cutoffDate':cutoffDate,
+			
+			def parameters = ['cutoffDate':cutoffDate,
 					 // 'oldestOriginTime':new Date(oldestOriginTime),
 					 'friendIds':friendIds,
-					 'targetUuid':streamPublic.uuid, 'owner': user],
+					 'targetUuid':streamPublic.uuid, 'owner': user]
+			
+			if( !userStream.includeAllUsers ) 
+			{
+				parameters << ['streamId':userStream.id]	
+			}
+			
+			List<EventBase> queryResults =
+				EventBase.executeQuery( query,
+					parameters,
 					['max': maxCount ]);
 		
 				println "adding ${queryResults.size()} activities read from DB";

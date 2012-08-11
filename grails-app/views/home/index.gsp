@@ -96,8 +96,6 @@
 			</ul>
 		</div>
 		<g:if test="${session.user != null}">
-			<h2>Post a new update</h2>
-
 			<g:form name="updateStatusForm" controller="status"
 				action="updateStatus">
 				<input type="text" id="statusText" name="statusText" class="span6" />
