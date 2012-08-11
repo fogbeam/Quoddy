@@ -24,7 +24,7 @@
     <h2>Groups</h2>
     <p>Manage existing groups and create new ones.</p>
     </div>
-    <div class="span4 offset5">
+    <div class="span4 offset3">
     <g:link controller="userGroup" action="create" class="btn-large btn btn-primary">Create a New Group</g:link>
     </div>
   <div class="clear"></div>

@@ -24,7 +24,7 @@
     <h2>Subscriptions</h2>
     <p>Manage existing event subscriptions and create new ones.</p>
     </div>
-    <div class="span4 offset5">
+    <div class="span4 offset3">
 		<g:link controller="eventSubscription" action="createWizard" class="btn btn-primary btn-large">Create New Subscription</g:link>
     </div>
   <div class="clear"></div>

@@ -23,7 +23,7 @@
     <h2>Lists</h2>
     <p>Manage existing lists and create new ones.</p>
     </div>
-    <div class="span4 offset5">
+    <div class="span4 offset3">
 		<g:link controller="userList" action="createWizard" class="btn btn-primary btn-large">Create New List</g:link>
     </div>
   <div class="clear"></div>

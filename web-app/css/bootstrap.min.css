@@ -607,7 +607,7 @@ a.thumbnail:hover{border-color:#0088cc;-webkit-box-shadow:0 1px 4px rgba(0, 105,
 .dropdown-menu .divider{height:1px;margin:5px 1px;overflow:hidden;background-color:#e5e5e5;border-bottom:1px solid #ffffff;*width:100%;*margin:-5px 0 5px;}
 .dropdown-menu a{display:block;padding:3px 15px;clear:both;font-weight:normal;line-height:18px;color:#555555;white-space:nowrap;}
 .dropdown-menu li>a:hover,.dropdown-menu .active>a,.dropdown-menu .active>a:hover{color:#ffffff;text-decoration:none;background-color:#0088cc;}
-.dropdown.open{*z-index:1000;}.dropdown.open .dropdown-toggle{color:#ffffff;background:#ccc;padding:.5em; border-radius: 6px;background:rgba(0, 0, 0, 0.3);}
+.dropdown.open{*z-index:1000;}.dropdown.open .dropdown-toggle{color:#ffffff;background:#ccc; border-radius: 6px;background:rgba(0, 0, 0, 0.3);}
 .dropdown.open .dropdown-menu{margin-top:10px; display:block;}
 .typeahead{margin-top:2px;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}
 .accordion{margin-bottom:18px;}

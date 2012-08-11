@@ -54,7 +54,7 @@
 						<li><a href="#">Apps</a></li>
 					</g:if>
 				</ul>
-				<div id="gbg" class="settingsNav navbar span6">
+				<div id="gbg" class="settingsNav navbar">
 					<ul class="topLevel">
 						<g:if test="${session.user != null}">
 						<li>

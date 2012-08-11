@@ -8,7 +8,7 @@ body, #header {
 
 .headerNavContainer {
 	background: #04324c url('../images/theme/header_bg.jpg') repeat;
-	height: 40px;
+	height: 50px;
 }
 
 .headerNav {
@@ -83,6 +83,7 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 
 .leftContentNav .hero-unit p a.btn {
 	width: auto;
+	display:inline-block;
 }
 
 .btn.manageStreams {
@@ -110,6 +111,8 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 
 #updateStatusSubmit {
 	margin-left: 22px;
+	float:right;
+	margin-top: 6px;
 }
 
 #gbw ul {
@@ -175,9 +178,9 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 }
 
 #activityStream {
-	margin-top:15px;
-	border-top: 1px solid black;
-
+  border-left: medium none;
+  border-top: 1px solid #CCCCCC;
+  margin: 2em;
 }
 
 #footer {clear:both;}
@@ -210,7 +213,6 @@ form.login label {
 	font-size: 16px;
   font-weight: 200;
   margin-bottom: -24px;
-  margin-top: -18px;
   padding: 16px;
   position: relative;
   top: -68px;
