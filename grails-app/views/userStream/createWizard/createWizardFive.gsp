@@ -7,16 +7,16 @@
 	</head>
 	
 	<body>
-	
-		<h3>Select groups to include in this stream.</h3>
+  <div class="hero-unit span6">	
+		<h2>Select groups to include in this stream.</h2>
         <g:form controller="userStream" action="createWizard" method="POST">
 			<g:select optionKey="uuid" optionValue="name" 
         		name="userGroups" 
         		from="${groups}"
         		value="${selectedGroups}" 
         		multiple="true" />
-			<g:submitButton name="stage6" value="Next" />
+			<g:submitButton name="stage6" value="Next" class="btn" />
 		</g:form>
-		
+	</div>	
 	</body>
 </html>
