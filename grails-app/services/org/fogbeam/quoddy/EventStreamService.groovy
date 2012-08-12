@@ -37,7 +37,7 @@ class EventStreamService {
 		// working that way, we can revisit what to do about queued messages.
 		
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.HOUR_OF_DAY, -600 );
+		cal.add(Calendar.HOUR_OF_DAY, -2160 );
 		Date cutoffDate = cal.getTime();
 		
 		List<EventBase> recentEvents = new ArrayList<EventBase>();
@@ -60,7 +60,7 @@ class EventStreamService {
 			println "query now: ${query}";
 			
 			
-			if( !userStream.includeAllUsers ) 
+			if( !userStream.includeAllUsers && !userStream.includeSelfOnly ) 
 			{
 				println "filtering by user";
 				query = query + ", stream "; 	
@@ -73,7 +73,7 @@ class EventStreamService {
 			println "query now: ${query}";
 			
 			
-			if( !userStream.includeAllUsers )
+			if( !userStream.includeAllUsers && !userStream.includeSelfOnly )
 			{
 				println "filtering by user";
 				query = query + ", UserStream as stream ";
@@ -132,6 +132,14 @@ class EventStreamService {
 			{
 				// nothing to do, default query will return hits from all eligible users
 			}
+			else if( userStream.includeSelfOnly )
+			{
+				// left alone, the existing default query would return posts from any
+				// user in the friends list.  We should rework the entire base query
+				// but - for now - we can cheat and just add an extra and clause to
+				// filter down to the user id of our user
+				query = query + " and event.owner = :owner";	
+			}
 			else 
 			{
 				query = query + " and event.owner.uuid in elements( stream.userUuidsIncluded ) and stream.id = :streamId ) ";	
@@ -165,7 +173,7 @@ class EventStreamService {
 					 'friendIds':friendIds,
 					 'targetUuid':streamPublic.uuid, 'owner': user]
 			
-			if( !userStream.includeAllUsers ) 
+			if( !userStream.includeAllUsers && !userStream.includeSelfOnly ) 
 			{
 				parameters << ['streamId':userStream.id]	
 			}

@@ -1,6 +1,6 @@
 package org.fogbeam.quoddy
 
-class FriendCollection 
+class FriendCollection implements Serializable
 {
 	String ownerUuid;
 	Date dateCreated;

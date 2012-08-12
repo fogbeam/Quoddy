@@ -56,7 +56,7 @@ class UserStreamController
 		createWizardOne {
 			on("stage2") {
 				
-				println "transitioning to stage2";
+				println "stage2";
 			   
 				UserStream streamToCreate = new UserStream();
 				streamToCreate.name = params.streamName;
@@ -76,7 +76,7 @@ class UserStreamController
 		
 		createWizardTwo {
 			on("stage3"){
-				println "finishing Wizard";
+				println "stage3";
 				println "params: ${params}";
 				UserStream streamToCreate = flow.streamToCreate;
 				// eventTypes:[219, 218]
@@ -91,11 +91,13 @@ class UserStreamController
 				}
 				
 				/* load user list */
-				List<User> allusers = userService.findAllUsers();
+				// List<User> allusers = userService.findAllUsers();
+				println "getting eligible users: ";
+				List<User> eligibleUsers = userService.findEligibleUsersForUser( session.user );
+				println "Found ${eligibleUsers.size()} users\n";
 				
-				println "Found ${allusers.size()} users\n";
-				
-				[users:allusers, selectedUsers:streamToCreate.userUuidsIncluded];
+				println ("returning eligible users:");
+				[users:eligibleUsers, selectedUsers:streamToCreate.userUuidsIncluded];
 
 			}.to("createWizardThree")
 		}
@@ -106,21 +108,41 @@ class UserStreamController
 				println "params: ${params}";
 				UserStream streamToCreate = flow.streamToCreate;
 				
-				// save users
-				String[] userUuids = request.getParameterValues( 'users' );
-				streamToCreate.userUuidsIncluded?.clear();
+				String userFilter = params.userFilter;
 				
-				for( String userUuid : userUuids )
+				if( userFilter.equals( "all_users" ))
 				{
-					User userToInclude = userService.findUserByUuid( userUuid );
-					if( userToInclude == null ) {
-						println "Failed to locate User for uuid ${userUuid}";
-						continue;
-					}
+					streamToCreate.includeAllUsers = true;
 					
-					streamToCreate.addToUserUuidsIncluded( userUuid );
 				}
-				
+				else if( userFilter.equals( "no_users" ))
+				{
+					streamToCreate.includeSelfOnly = true;
+					
+				}
+				else if( userFilter.equals( "select_list" ))
+				{
+					// save users
+					String[] userUuids = request.getParameterValues( 'users' );
+					streamToCreate.userUuidsIncluded?.clear();
+					
+					for( String userUuid : userUuids )
+					{
+						User userToInclude = userService.findUserByUuid( userUuid );
+						if( userToInclude == null ) {
+							println "Failed to locate User for uuid ${userUuid}";
+							continue;
+						}
+						
+						streamToCreate.addToUserUuidsIncluded( userUuid );
+					}
+	
+				}
+				else 
+				{
+					// this isn't supposed to happen	
+				}
+								
 				
 				/* load userList list */
 				List<UserList> userLists = userListService.getListsForUser( session.user );
@@ -303,11 +325,13 @@ class UserStreamController
 				}				
 				
 				/* load user list */
-				List<User> allusers = userService.findAllUsers();
+				// List<User> allusers = userService.findAllUsers();
+				List<User> eligibleUsers = userService.findEligibleUsersForUser( session.user );
 				
-				println "Found ${allusers.size()} users\n";
+				println "Found ${eligibleUsers.size()} users\n";
 				
-				[users:allusers, selectedUsers:streamToEdit.userUuidsIncluded];
+				[users:allusers, eligibleUsers:streamToEdit.userUuidsIncluded];
+			
 			}.to("editWizardThree")
 		}
 		

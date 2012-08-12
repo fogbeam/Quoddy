@@ -72,6 +72,7 @@ class LocalFriendService
 			friends.add( friend );
 		}
 		
+		friendsCollection = null;
 		println "returning friends: ${friends}";
 		return friends;
 	}
@@ -92,6 +93,7 @@ class LocalFriendService
 			User follower = User.findByUuid( collection.ownerUuid );
 			followers.add( follower ); 	
 		}
+		iFollowCollections = null;
 		
 		return followers;
 	}
@@ -109,7 +111,8 @@ class LocalFriendService
 			User iFollow = User.findByUuid( iFollowUuid );
 			peopleIFollow.add( iFollow );
 		}
-				
+		
+		iFollowCollection = null;		
 		return peopleIFollow;
 	}
 	

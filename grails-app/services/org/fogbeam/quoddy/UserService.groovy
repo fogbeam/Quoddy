@@ -52,6 +52,7 @@ class UserService {
 			defaultStream.definedBy = UserStream.DEFINED_SYSTEM;
 			defaultStream.owner = user;
 			defaultStream.includeAllEventTypes = true;
+			defaultStream.includeAllUsers = true;
 			
 			
 			if( !defaultStream.save())
@@ -124,6 +125,31 @@ class UserService {
 		return users;	
 	}
 
+	public List<User> findEligibleUsersForUser( final User user ) 
+	{
+		List<User> eligibleUsers = new ArrayList<User>();
+		Set<User> tempUsers = new TreeSet<User>();
+		
+		List<User> friends = friendService.listFriends( user );
+		List<User> iFollow = friendService.listIFollow( user );
+		
+		tempUsers.addAll( friends );
+		tempUsers.addAll( iFollow );
+		
+		friends.clear();
+		friends = null;
+		iFollow.clear();
+		iFollow = null;
+		
+		eligibleUsers.addAll( tempUsers );
+		
+		tempUsers.clear();
+		tempUsers = null;
+		
+		println "returning eligibleUsers from findEligibleUsersForUser";
+		return eligibleUsers;
+	}
+	
 	public List<User> listFriends( User user ) 
 	{
 		List<User> friends = new ArrayList<User>();

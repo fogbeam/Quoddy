@@ -1,6 +1,6 @@
 package org.fogbeam.quoddy;
 
-public class IFollowCollection 
+public class IFollowCollection implements Serializable
 {
 	String ownerUuid;
 	Date dateCreated;
