@@ -1,7 +1,7 @@
 Quoddy
 ========
 
-Quoddy is part of the ScrewPile suite of tools for building intelligent applications.
+Quoddy is part of the Fogcutter suite of tools for building intelligent applications.
 
 Why "Quoddy?"
 ----------------
@@ -64,4 +64,4 @@ http://localhost:8080/ and you should get the Quoddy homepage.
 You can login as testuser1 with a password of 'secret', or you can modify Bootstrap.groovy to create
 different default users.
 
-For help, see the screwpile-dev Google Group, or check #screwpile on Freenode.net IRC.
+For help, see the fogcutter-dev Google Group, or check #fogcutter on Freenode.net IRC.	
