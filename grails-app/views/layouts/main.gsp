@@ -86,29 +86,37 @@
 						<li class="dropdown"><a class="dropdown-toggle"
 							data-toggle="dropdown" href="#">My Account<b class="caret"></b></a>
 							<ul class="dropdown-menu">
-								<li><a
-									href="${createLink(controller:'user', action:'listOpenFriendRequests')}">Pending
+								
+								<g:if test="${session.user != null}">
+									<li><a
+										href="${createLink(controller:'user', action:'listOpenFriendRequests')}">Pending
 										Friend Requests</a></li>
-								<li><a
-									href="${createLink(controller:'schedule', action:'index')}">Manage
+									<li><a
+										href="${createLink(controller:'schedule', action:'index')}">Manage
 										Scheduled Jobs</a></li>
-								<li><a
-									href="${createLink(controller:'calendar', action:'index')}">Manage
+									<li><a
+										href="${createLink(controller:'calendar', action:'index')}">Manage
 										Calendar Feeds</a></li>
-								<li class="divider"></li>
-								<li><a
-									href="${createLink(controller:'user', action:'editAccount')}">Edit
+									<li class="divider"></li>
+									<li><a
+										href="${createLink(controller:'user', action:'editAccount')}">Edit
 										Account Info</a></li>
-								<li><a
-									href="${createLink(controller:'user', action:'editProfile')}">Edit
+									<li><a
+										href="${createLink(controller:'user', action:'editProfile')}">Edit
 										Profile</a></li>
+								</g:if>
+								
 								<li class="divider"></li>
 								<g:if test="${session.enable_self_registration == true}">
 									<!-- /user/create -->
 									<li><a
 										href="${createLink(controller:'user', action:'create')}">Register</a></li>
 								</g:if>
-								<li><a href="${createLink(controller:'login') }">Login</a></li>
+								
+								<g:if test="${session.user == null}">
+									<li><a href="${createLink(controller:'login') }">Login</a></li>
+								</g:if>
+								
 								<g:if test="${session.user != null}">
 									<li><a
 										href="${createLink(controller:'login', action:'logout')}">Logout</a></li>
