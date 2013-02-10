@@ -60,7 +60,7 @@ class UserListService
 		List<Activity> recentActivities = new ArrayList<Activity>();
 	
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.HOUR_OF_DAY, -600 );
+		cal.add(Calendar.HOUR_OF_DAY, -2160 );
 		Date cutoffDate = cal.getTime();
 	
 		println "Using ${cutoffDate} as cutoffDate";

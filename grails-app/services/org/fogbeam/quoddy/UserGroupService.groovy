@@ -101,7 +101,7 @@ class UserGroupService
 		List<Activity> recentActivities = new ArrayList<Activity>();
 		
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.HOUR_OF_DAY, -600 );
+		cal.add(Calendar.HOUR_OF_DAY, -2160 );
 		Date cutoffDate = cal.getTime();
 		
 		println "Using ${cutoffDate} as cutoffDate";
@@ -121,4 +121,34 @@ class UserGroupService
 		return recentActivities;
 				
 	}
+	
+	
+	public List<EventBase> getRecentEventsForGroup( final UserGroup group, final int maxCount )
+	{
+		println "getRecentEventsForGroup: ${group.id} - ${maxCount}";
+			
+		List<EventBase> recentEvents = new ArrayList<EventBase>();
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR_OF_DAY, -2160 );
+		Date cutoffDate = cal.getTime();
+		
+		println "Using ${cutoffDate} as cutoffDate";
+
+		
+		List<EventBase> queryResults =
+			EventBase.executeQuery( "select event from EventBase as event where event.dateCreated >= :cutoffDate and event.targetUuid = :targetUuid order by event.dateCreated desc",
+			['cutoffDate':cutoffDate, 'targetUuid':group.uuid], ['max': maxCount ]);
+
+		if( queryResults )
+		{
+			println "adding ${queryResults.size()} activities read from DB";
+			recentEvents.addAll( queryResults );
+		}
+		
+		
+		return recentEvents;
+	}
+	
+	
 }

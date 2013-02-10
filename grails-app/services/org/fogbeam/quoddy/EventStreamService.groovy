@@ -27,7 +27,9 @@ class EventStreamService {
 	public List<EventBase> getRecentActivitiesForUser( final User user, final int maxCount, final UserStream userStream )
 	{
 		
+		
 		println "getting recent activities for user, using stream: ${userStream}";
+		println "streamId = ${userStream.id}";
 		
 		// ok, in this version we select the events to return, based on the specification defined by the
 		// passed in userStream instance.
@@ -62,8 +64,8 @@ class EventStreamService {
 			
 			if( !userStream.includeAllUsers && !userStream.includeSelfOnly ) 
 			{
-				println "filtering by user";
-				query = query + ", stream "; 	
+				// println "filtering by user";
+				// query = query + ", stream "; 	
 			
 			}
 			println "query now: ${query}";
@@ -142,6 +144,7 @@ class EventStreamService {
 			}
 			else 
 			{
+				println "adding userUuidsIncluded and streamid filters to query";
 				query = query + " and event.owner.uuid in elements( stream.userUuidsIncluded ) and stream.id = :streamId ) ";	
 			}
 			
@@ -178,6 +181,8 @@ class EventStreamService {
 				parameters << ['streamId':userStream.id]	
 			}
 			
+			println "Using parameters map: ${parameters}";
+			
 			List<EventBase> queryResults =
 				EventBase.executeQuery( query,
 					parameters,
@@ -187,7 +192,7 @@ class EventStreamService {
 				for( EventBase event : queryResults ) {
 					
 					println "Populating XML into SubscriptionEvents";
-					
+					println "event = ${event}";
 					event = existDBService.populateSubscriptionEventWithXmlDoc( event );
 					recentEvents.add( event );
 				}

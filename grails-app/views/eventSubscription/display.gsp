@@ -1,14 +1,13 @@
 <html>
 	
 	<head>
-		<title>Quoddy: Display SUBSCRIPTION</title>
+		<title>Quoddy: Display Subscription</title>
 		<meta name="layout" content="main" />
 	     <nav:resources />		
 	</head>
 	
 	<body>
-		<h3>Display SUBSCRIPTION</h3>
-		<div id="bodyContent">	
+		<div id="bodyContent" class="span8">	
 		<g:if test="${session.user != null}">
 			<g:if test="${activities != null}">
 					<div id="activityStream">

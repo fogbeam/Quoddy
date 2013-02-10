@@ -1,5 +1,7 @@
 package org.fogbeam.quoddy
 
+import java.util.List;
+
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 
 
@@ -133,7 +135,10 @@ class UserGroupController
 		{
 			def user = userService.findUserByUserId( session.user.userId );
 			// println "Doing display with params: ${params}";
-			def activities = new ArrayList<Activity>();
+			
+			// def activities = new ArrayList<Activity>();
+			def events = new ArrayList<EventBase>();
+			
 			
 			Map model = [:];
 			if( user )
@@ -142,6 +147,8 @@ class UserGroupController
 			
 				// check that this group is not one of the ones that the user either
 				// owns or is a member of
+				List<UserGroup> userGroups = userGroupService.getAllGroupsForUser( user );
+				
 				boolean userIsGroupMember = false;
 				userGroups.each {
 					if( it.id == group.id ){
@@ -150,13 +157,13 @@ class UserGroupController
 					}
 				}
 			
-				activities = userGroupService.getRecentActivitiesForGroup( group, 25 ); 
-			
+				// activities = userGroupService.getRecentActivitiesForGroup( group, 25 ); 
+				events = userGroupService.getRecentEventsForGroup( group, 25 );
 				
 				model.putAll( [ group:group,
 								user: user,
 								userIsGroupMember:userIsGroupMember,
-								activities:activities] );
+								activities:events] );
 				
 				Map sidebarCollections = populateSidebarCollections( this, user );
 				model.putAll( sidebarCollections );

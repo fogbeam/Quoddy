@@ -13,7 +13,14 @@ class ExistDBService
 	
 	protected static String driver = "org.exist.xmldb.DatabaseImpl";
 	protected static String URI = "xmldb:exist://localhost:8090/exist/xmlrpc";
-	
+
+	public populateSubscriptionEventWithXmlDoc( Object event )
+	{
+		// unless we're passed a SubscriptionEvent instance, this is a NOP
+		println "NOT a SubscriptionEvent, nothing to do!";
+		return event;
+	}
+		
 	public populateSubscriptionEventWithXmlDoc( EventBase event ) 
 	{
 		// unless we're passed a SubscriptionEvent instance, this is a NOP
