@@ -6,9 +6,7 @@
 	     <nav:resources />		
 	</head>
 	
-	<body>
-	
-		<h3>Display LIST</h3>		
+	<body>		
 		<p />
         <g:if test="${session.user != null}">
         
