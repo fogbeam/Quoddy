@@ -1,7 +1,7 @@
 <div class="aseWrapper">
 	
 	<div class="aseAvatarBlock">
-		<img src="${createLinkTo(dir:'images/flavour-icons', file:'speed_mph.png')}" />
+		<img src="${createLinkTo(dir:'images/', file:'business_event.jpg')}" />
 	</div>
 	<div class="aseTitleBar"> <!-- http://localhost:8080/quoddy/user/viewUser?userId=testuser2 -->
 		<a href="${createLink(controller:'eventSubscription', action:'display', params:[subscriptionId:item.owningSubscription.id])}">${item.owningSubscription.name}</a>
