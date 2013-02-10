@@ -15,6 +15,7 @@
 	        </div>
 	   </g:if>
 
+ <div class="span8 listView">
 		<ul>
 			<g:each in="${users}" var="aUser">
 			
@@ -24,6 +25,7 @@
 				</li>
 			</g:each>
 		</ul>
+    </div>
 	</body>
 	
 </html>
