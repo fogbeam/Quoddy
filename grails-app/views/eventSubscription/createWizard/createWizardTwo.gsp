@@ -7,13 +7,14 @@
 	</head>
 	
 	<body>
-	
-		<h3>Create Event Subscription</h3>
+  <div class="hero-unit span6">>
+  <h2>Create Event Subscription</h2>
 		<p />
 		<g:form controller="eventSubscription" action="createWizard" method="POST">
 			<label for="xQueryExpression">Name:</label> <g:textField name="xQueryExpression" value=""/>
 			<br />
 			<g:submitButton name="finishWizard" value="Finish" />
 		</g:form>
+  </div>
 	</body>
 </html>

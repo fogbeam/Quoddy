@@ -7,7 +7,7 @@
 		<a href="${createLink(controller:'eventSubscription', action:'display', params:[subscriptionId:item.owningSubscription.id])}">${item.owningSubscription.name}</a>
 	</div>
 	<div class="activityStreamEntry"> 
-		<font color="red">BUSINESS SUBSCRIPTION EVENT</font>
+		<h2>Business Subscription Event</h2>
 		<p>
 			<g:transform stylesheet="oagis3" source="${item.xmlDoc}" factory="org.apache.xalan.processor.TransformerFactoryImpl" />
 		</p>
