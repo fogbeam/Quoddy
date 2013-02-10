@@ -3,10 +3,10 @@
 	<div class="aseWrapper">
 		
 		<div class="aseAvatarBlock">
-			<img src="${createLink(controller:'profilePic',action:'thumbnail',id:activity.userActor.userId)}" />
+			<img src="${createLink(controller:'profilePic',action:'thumbnail',id:activity.owner.userId)}" />
 		</div>
 		<div class="aseTitleBar"> <!-- http://localhost:8080/quoddy/user/viewUser?userId=testuser2 -->
-			<a href="${createLink(controller:'user', action:'viewUser', params:[userId:activity.userActor.userId])}">${activity.userActor.fullName}</a>
+			<a href="${createLink(controller:'user', action:'viewUser', params:[userId:activity.owner.userId])}">${activity.owner.fullName}</a>
 		</div>
 		<div class="activityStreamEntry"> 
 			${activity.content}
@@ -18,8 +18,3 @@
 		</div>
 	</div>
 </g:each>
-<div class="activityStreamFooter" style="clear:both;">
-	<g:if test="${session.user}">
-		<center><a href="#" id="loadMoreLink">Get More Events</a></center>
-	</g:if>
-</div>
