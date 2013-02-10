@@ -325,7 +325,7 @@ class UserStreamController
 				}				
 				
 				/* load user list */
-				// List<User> allusers = userService.findAllUsers();
+				List<User> allusers = userService.findAllUsers();
 				List<User> eligibleUsers = userService.findEligibleUsersForUser( session.user );
 				
 				println "Found ${eligibleUsers.size()} users\n";
