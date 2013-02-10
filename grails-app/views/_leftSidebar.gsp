@@ -9,7 +9,6 @@
 			</a>
 		</h3>
 	</g:if>
-	<p>Manage Connections:</p>
 	<p>
 		<a class="btn btn-info selected"
 			href="${createLink(controller:'user', action:'listFriends')}">All
