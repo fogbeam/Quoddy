@@ -7,8 +7,9 @@
 	</head>
 	
 	<body>
-	
-		<h3>Edit LIST</h3>
+
+<div class="hero span6">
+		<h2>Edit LIST</h2>
 		<p />
 		<g:form controller="userList" action="editWizard" method="POST">
 			<g:hiddenField name="listId" value="${listToEdit.id}" />
@@ -18,5 +19,6 @@
 			<br />
 			<g:submitButton name="stage2" value="Next" />
 		</g:form>
+    </div>
 	</body>
 </html>
