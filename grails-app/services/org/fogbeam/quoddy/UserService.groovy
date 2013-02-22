@@ -124,24 +124,61 @@ class UserService {
 	
 		return users;	
 	}
-
+	
+	/* NOTE: we really need a custom comparator here, since we want to
+	 * avoid duplicate members in the resulting list, based on entity id (database key)
+	 * and the default behavior is using object identity.  It probably won't matter
+	 * at least in the short-term, but fix this ASAP.
+	 */
 	public List<User> findEligibleUsersForUser( final User user ) 
 	{
+		println "findEligibleUsersForUser()";
 		List<User> eligibleUsers = new ArrayList<User>();
-		Set<User> tempUsers = new TreeSet<User>();
+		// Set<User> tempUsers = new TreeSet<User>();
+		List<User> tempUsers = new ArrayList<User>();
 		
 		List<User> friends = friendService.listFriends( user );
-		List<User> iFollow = friendService.listIFollow( user );
+		// println "got friends list: ${friends}";
+		// println "${friends.class.name}";
 		
-		tempUsers.addAll( friends );
-		tempUsers.addAll( iFollow );
+		List<User> iFollow = friendService.listIFollow( user );
+		// println "got iFollow list: ${iFollow}";
+		// println "${iFollow.class.name}";
+
+		if( friends && !(friends.isEmpty()) )
+		{
+			// println "adding friends";
+			for( User friend : friends )
+			{
+				if( !tempUsers.contains( friend ))
+				{
+					tempUsers.add( friend );
+				}
+			}
+			// println "added friends to tempUsers";
+		}
+		
+		if( iFollow && !(iFollow.isEmpty()))
+		{
+			// println "adding iFollow";
+			for( User iFollowUser : iFollow )
+			{
+				if( !tempUsers.contains( iFollowUser ))
+				{
+					tempUsers.add( iFollowUser );
+				}	
+			}
+			// println "added iFollow to tempUsers";
+		}
 		
 		friends.clear();
 		friends = null;
 		iFollow.clear();
 		iFollow = null;
+		println "cleared temporary lists";
 		
 		eligibleUsers.addAll( tempUsers );
+		println "added tempUsers to eligibleUsers list";
 		
 		tempUsers.clear();
 		tempUsers = null;

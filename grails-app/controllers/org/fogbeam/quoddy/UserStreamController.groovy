@@ -94,7 +94,7 @@ class UserStreamController
 				// List<User> allusers = userService.findAllUsers();
 				println "getting eligible users: ";
 				List<User> eligibleUsers = userService.findEligibleUsersForUser( session.user );
-				println "Found ${eligibleUsers.size()} users\n";
+				println "Found ${eligibleUsers.size()} eligible users\n";
 				
 				println ("returning eligible users:");
 				[users:eligibleUsers, selectedUsers:streamToCreate.userUuidsIncluded];
@@ -328,9 +328,9 @@ class UserStreamController
 				List<User> allusers = userService.findAllUsers();
 				List<User> eligibleUsers = userService.findEligibleUsersForUser( session.user );
 				
-				println "Found ${eligibleUsers.size()} users\n";
+				println "Found ${eligibleUsers.size()} eligible users\n";
 				
-				[users:allusers, eligibleUsers:streamToEdit.userUuidsIncluded];
+				[users:eligibleUsers, eligibleUsers:streamToEdit.userUuidsIncluded];
 			
 			}.to("editWizardThree")
 		}

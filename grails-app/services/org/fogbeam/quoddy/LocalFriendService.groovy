@@ -61,6 +61,7 @@ class LocalFriendService
 	
 	public List<User> listFriends( final User user )
 	{
+		println "listFriends()";
 		List<User> friends = new ArrayList<User>();
 		FriendCollection friendsCollection = FriendCollection.findByOwnerUuid( user.uuid );
 		
@@ -79,6 +80,7 @@ class LocalFriendService
 	
 	public List<User> listFollowers( final User user )
 	{
+		println "listFollowers()";
 		/* list the users who follow the supplied user */
 		List<User> followers = new ArrayList<User>();
 		
@@ -88,13 +90,26 @@ class LocalFriendService
 			IFollowCollection.executeQuery( 
 				"select collection from IFollowCollection as collection join collection.iFollow iFollow where ? in (iFollow)", [user.uuid] );
 		
+		println( "iterating over list of IFollowCollection objects" );
 		for( IFollowCollection collection: iFollowCollections )
 		{
+			println "collection id: ${collection.id}";
 			User follower = User.findByUuid( collection.ownerUuid );
+			if( follower )
+			{
+				println "found follower: ${follower.id}";	
+			}
+			else 
+			{
+				println "no follower found!";
+			}
+			
 			followers.add( follower ); 	
 		}
+		
 		iFollowCollections = null;
 		
+		println "return followers: ${followers}";
 		return followers;
 	}
 	
