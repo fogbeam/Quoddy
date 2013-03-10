@@ -14,4 +14,20 @@
 	<div class="aseFooter" >
 		<g:formatDate date="${item.dateCreated}" type="datetime" style="LONG" timeStyle="SHORT"/>
 	</div>
+	<div class="aseClear" />
+	<div class="aseFooter">
+		<label>+1</label>
+		<label>Share</label>
+	</div>
+	<div class="aseClear" />
+	<div class="aseFooter">
+		<div class="commentBoxWrapper">
+			<form>
+				<input id="addCommentTextInput" class="addCommentTextInput" type="textbox" value="Add a Comment" ></input>
+				<br />
+				<input id="submitCommentBtn" class="submitCommentBtn" style="display:none;" type="submit" value="Submit" />
+				<input id="cancelCommentBtn" class="cancelCommentBtn" style="display:none;" type="submit" value="Cancel" />
+			</form>
+		</div>
+	</div>
 </div>

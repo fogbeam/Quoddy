@@ -72,5 +72,28 @@
 					return false;
 				} );
 				
+				$j( '.addCommentTextInput' ).bind( 'focus', function()  {
 				
-			} );    
+					var clicked = $j(this);
+					clicked.val("" );
+					clicked.parent().find('#submitCommentBtn').css( 'display', 'inline' );
+					clicked.parent().find('#cancelCommentBtn').css( 'display', 'inline' );
+					
+				} );
+				
+				
+				$j( '.cancelCommentBtn' ).bind( 'click', function()  {
+					
+					// alert( 'OK' );
+					var clicked = $j(this);
+					var submitBtn = clicked.parent().find( '#submitCommentBtn' );
+					submitBtn.css('display', 'none');
+					clicked.css('display', 'none');
+					return false;
+				} );
+				
+				
+			} );
+			
+			
+			    
