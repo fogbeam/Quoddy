@@ -24,6 +24,7 @@ class EventStreamService {
 		
 	}
 	
+	// TODO: rename this method to reflect that it actually returns Events not Activities
 	public List<EventBase> getRecentActivitiesForUser( final User user, final int maxCount, final UserStream userStream )
 	{
 		
@@ -206,6 +207,8 @@ class EventStreamService {
 		return recentEvents;
 	}
 	
+	// TODO: refactor this to be consistent with the other getActivities method
+	// and return EventBase instances
 	public List<Activity> getRecentActivitiesForUser( final User user, final int maxCount )
 	{
 		println "getRecentActivitiesForUser: ${user.userId} - ${maxCount}";
@@ -375,5 +378,14 @@ class EventStreamService {
 		
 		println "recentEvents.size() = ${recentEvents.size()}";
 		return recentEvents;
-	}	
+	}
+	
+	public EventBase getEventById( final int eventId )
+	{
+		EventBase event = EventBase.findById( eventId );
+		
+		return event;
+			
+	}
+		
 }

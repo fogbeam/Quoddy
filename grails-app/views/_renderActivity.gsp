@@ -21,12 +21,24 @@
 	</div>
 	<div class="aseClear" />
 	<div class="aseFooter">
-		<div class="commentBoxWrapper">
-			<form>
-				<input id="addCommentTextInput" class="addCommentTextInput" type="textbox" value="Add a Comment" ></input>
-				<br />
-				<input id="submitCommentBtn" class="submitCommentBtn" style="display:none;" type="submit" value="Submit" />
-				<input id="cancelCommentBtn" class="cancelCommentBtn" style="display:none;" type="submit" value="Cancel" />
+		<div class="commentBoxWrapper" style="background-color:#F8F8F8;">
+		
+			<!--  render comments on the Event here -->
+			<g:each in="${item.comments}" var="comment">
+				<div>
+					<span class="commentUserName">${comment.creator.fullName}</span>&nbsp;&nbsp;
+					<span class="commentDateTime">${comment.dateCreated}</span>
+					<br />
+					<span class="commentText">${comment.text}</span>
+					<br />
+				</div>
+			</g:each>
+		
+			<form name="addCommentForm" id="addCommentForm" class="addCommentForm">
+				<input name="addCommentTextInput" id="addCommentTextInput" class="addCommentTextInput" type="textbox" value="Add a Comment" ></input>				<br />
+				<input name="eventId" type="hidden" value="${item.id}" />
+				<input name="submitCommentBtn" id="submitCommentBtn" class="submitCommentBtn" style="display:none;" type="submit" value="Submit" />
+				<input name="cancelCommentBtn" id="cancelCommentBtn" class="cancelCommentBtn" style="display:none;" type="submit" value="Cancel" />
 			</form>
 		</div>
 	</div>

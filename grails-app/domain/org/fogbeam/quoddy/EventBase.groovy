@@ -12,6 +12,9 @@ public class EventBase implements Serializable
 		owner(nullable:true);
 	}
 	
+	static hasMany = [ comments: Comment /* votes : Vote, savers: User, hiders: User, tagEntryLinks:TagEntryLink */  ];
+	
+	
 	User owner;
 	Date dateCreated;
 	Date effectiveDate; // TODO: should be Timestamp?
