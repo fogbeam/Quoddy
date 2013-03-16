@@ -4,17 +4,18 @@
 		<img src="${createLink(controller:'profilePic',action:'thumbnail',id:item.owner.userId)}" />
 	</div>
 	<div class="aseTitleBar"> <!-- http://localhost:8080/quoddy/user/viewUser?userId=testuser2 -->
+		<span class="aseTitleBarUserLink">
 		<a href="${createLink(controller:'user', action:'viewUser', params:[userId:item.owner.userId])}">${item.owner.fullName}</a>
+		</span>
+		<span class="aseTitleBarPermalink" >
+			<a href="#" title="${formatDate(date:item.dateCreated)}" ><g:formatDate date="${item.dateCreated}" type="datetime" style="SHORT" timeStyle="SHORT"/></a>
+		</span>
 	</div>
 	<div class="activityStreamEntry"> 
 		${item.content}
 	</div>
 	<div class="aseClear" >
 	</div>
-	<div class="aseFooter" >
-		<g:formatDate date="${item.dateCreated}" type="datetime" style="LONG" timeStyle="SHORT"/>
-	</div>
-	<div class="aseClear" />
 	<div class="aseFooter">
 		<span class="plusOneButton" >+1</span>
 		<span class="shareButton" >Share</span>

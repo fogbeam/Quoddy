@@ -64,3 +64,52 @@
 .shareButton {
 	
 }
+
+/* some stuff for events in the Activity Stream */
+.aseTitleBarUserLink {
+	font-size: 11pt;	
+}
+
+.aseTitleBarUserLink a:link {
+	text-decoration:none;
+
+}
+
+.aseTitleBarUserLink a:visited {
+	text-decoration:none;
+}
+
+.aseTitleBarUserLink a:hover {
+	text-decoration:underline;
+}
+
+.aseTitleBarUserLink a:active {
+	text-decoration:underline;
+}
+
+
+.aseTitleBarPermalink {
+	margin-left:37px;
+	font-size: 10pt;
+	color: gray;
+}
+
+.aseTitleBarPermalink a:link {
+	text-decoration:none;
+	color: gray;
+}
+
+.aseTitleBarPermalink a:visited {
+	text-decoration:none;
+	color: goldenrod;
+}
+
+.aseTitleBarPermalink a:hover {
+	text-decoration:underline;
+	color: gray;
+}
+
+.aseTitleBarPermalink a:active {
+	text-decoration:underline;
+	color: gray;
+}
