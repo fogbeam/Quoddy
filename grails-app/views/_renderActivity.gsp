@@ -16,24 +16,17 @@
 	</div>
 	<div class="aseClear" />
 	<div class="aseFooter">
-		<label>+1</label>
-		<label>Share</label>
+		<span class="plusOneButton" >+1</span>
+		<span class="shareButton" >Share</span>
 	</div>
 	<div class="aseClear" />
 	<div class="aseFooter">
-		<div class="commentBoxWrapper" style="background-color:#F8F8F8;">
-		
+		<div class="commentBoxWrapper">
+			<div id="commentsArea" class="commentsArea">
 			<!--  render comments on the Event here -->
-			<g:each in="${item.comments}" var="comment">
-				<div>
-					<span class="commentUserName">${comment.creator.fullName}</span>&nbsp;&nbsp;
-					<span class="commentDateTime">${comment.dateCreated}</span>
-					<br />
-					<span class="commentText">${comment.text}</span>
-					<br />
-				</div>
-			</g:each>
-		
+				<g:render template="/renderComments" var="comments" bean="${item.comments}" />
+			</div>
+			
 			<form name="addCommentForm" id="addCommentForm" class="addCommentForm">
 				<input name="addCommentTextInput" id="addCommentTextInput" class="addCommentTextInput" type="textbox" value="Add a Comment" ></input>				<br />
 				<input name="eventId" type="hidden" value="${item.id}" />

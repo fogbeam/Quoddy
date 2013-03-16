@@ -49,7 +49,8 @@ class CommentController {
 			log.info( "doing nothing, not logged in!" );
 		}
 	
-		render( "OK" );
+		// render using template, so we can ajaxify the loading of the comments...
+		render( template:"/renderComments", model:[comments:event.comments]);
 		
 	}
 }

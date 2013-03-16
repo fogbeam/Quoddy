@@ -94,47 +94,37 @@
 				
 				
 				$j( '.submitCommentBtn' ).bind( 'click', function( event ) {
-				
-					alert( "submitting Comment!" );
-					// alert( "this: " + $j(this));
-					// alert( "this: " + $j(this).css('class'));
-					// find our parent <form> element and serialize it
-					// it will have class ".addCommentForm"
-					// alert( "this: " + $j(this));
-					// alert( "this: " + $j(this).css('class'));
-					// alert( "this: " + $j(this).css('id'));
-					// alert( "this: " + $j(this).css('name'));
-					
+									
 					var form = $j(this).parent(); // (".addCommentForm").first();
-					alert( "submitting form: " + form.serialize() );
+					
+					// alert( "submitting form: " + form.serialize() );
+					var theButton = $j(this);
 					
 					$j.post("${ createLink(controller:'comment', action:'addComment')}", 
 									form.serialize(), 
 
 									function(data) 
 									{ 
-										alert( "whatever");
-										// var form = $j(this).parents(".addCommentForm");
-										// form.find('.addCommentTextInput').val('');
-
-										// TODO: attach the new comment here
+									
+										// clear the text input box after submitting and hide
+										// the buttons
+										var inputBox = form.find( ".addCommentTextInput" );
+										inputBox.val( "" );
+										form.find('.submitCommentBtn').css( 'display', 'none' );
+										form.find('.cancelCommentBtn').css( 'display', 'none' );
+									
+										alert( "refreshing comments in Javascript...");
+										// alert( "this: " + $j('<div>').append(theButton.clone()).html() );
 										
-										
-
-										/* OLD STUFF C&P'd for REFERENCE ONLY */
-										// now reload the content of the activity stream DIV
-										// so that we pick up the new addition.  That sets us up to
-										// add our timer based stuff to update things dynamically.
-										// $j('#activityStream').load( "${ createLink(controller:'activityStream', action:'getContentHtml')}" );
-										
+										var commentBoxWrapper = theButton.parents(".commentBoxWrapper");
+										var commentsDiv = commentBoxWrapper.find(".commentsArea");
+										commentsDiv.html( data );
+										return true;
 									}, 
 
 									"html" );
 
-							return false;
-					
-					
-					
+							return false;					
 				});
 				
 			} );

@@ -5,8 +5,9 @@ public class EventBase implements Serializable
 	static mapping = 
 	{
 		tablePerHierarchy false
+		comments sort:'dateCreated', order:'asc'
 	}
-	
+		
 	static constraints = 
 	{
 		owner(nullable:true);

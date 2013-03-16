@@ -1,0 +1,66 @@
+/* New, for comments, as of 03-16-2013, spr */
+
+.commentBoxWrapper {
+	padding-top: 5px;
+	padding-left: 7px;
+	background-color:#F8F8F8;	
+}
+
+.commentsArea {
+	
+	
+}
+
+.individualCommentBox {
+	margin-top:15px;
+}
+
+.commentUserName {
+	
+}
+
+.commentDateTime {
+	
+}
+
+.commentText{
+	
+}
+
+.addCommentForm {
+	margin-top:15px;
+	
+}
+
+.submitCommentBtn {
+	
+}
+
+.cancelCommentBtn {
+	
+}
+
+.addCommentTextInput {
+	padding-top:2px;
+	padding-bottom:2px;
+	padding-left:4px;
+	padding-right:4px;
+	height:35px;
+	font-size: 13px;
+	line-height: 1.4;
+	word-wrap: break-word;
+	background: none repeat scroll 0% 0% transparent;
+	position: relative;
+	/* min-height: 3.9em; */	
+	vertical-align: baseline;
+}
+
+/* for the event footer stuff. +1 link, share link, etc. */
+
+.plusOneButton {
+	
+}
+
+.shareButton {
+	
+}

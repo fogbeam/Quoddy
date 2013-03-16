@@ -11,6 +11,9 @@
 <link rel="stylesheet" type="text/css"
 	href="${createLinkTo(dir:'css', file:'oagis.css')}" />
 <link rel="stylesheet" type="text/css"
+	href="${createLinkTo(dir:'css', file:'crappy_css_added_by_phil.css')}" />
+
+<link rel="stylesheet" type="text/css"
 	href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
