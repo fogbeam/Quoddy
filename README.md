@@ -1,7 +1,7 @@
 Quoddy
 ========
 
-Quoddy is part of the Fogcutter suite of tools for building intelligent applications.
+Quoddy - an Open Source Enterprise Social Network - is part of the Fogcutter suite of tools for building intelligent applications.
 
 Why "Quoddy?"
 ----------------
@@ -11,10 +11,13 @@ We like lighthouses, so Quoddy is named after the famous West Quoddy Head Lighth
 Ok, but what does it do?
 --------------------------
 
-Quoddy is basically a sort of "mini Facebook" like social-networking interface. It builds on the APIs for 
-social-graph management, activity-stream, activity profiling, tagging, etc. Provides the front-end 
-for managing connections and for letting users provide information about themselves, their interests, 
-etc. But unlike Facebook, no silly Pirates vs. Ninjas or Farmville stuff.
+Quoddy is an Enterprise Social Network. With an intereface similar to consumer social networks like
+Facebook or G+, Quoddy builds on the APIs for social-graph management, ActivityStrea.ms, activity profiling, 
+tagging, and user profiles. Quoddy Provides the front-end  for managing connections and for letting users 
+provide information about themselves, their interests, etc. as well as viewing their news feed.  Quoddy also
+interoperates with Hatteras, our Busienss Events Subscription engine, to allow subscriptions to business
+events and workflow activities from the backend ESB/SOA and BPM systems.  And while Quoddy supports apps via
+OpenSocial, unlike Facebook there is no silly Pirates vs. Ninjas or Farmville stuff.
 
 How does it work?
 --------------------
