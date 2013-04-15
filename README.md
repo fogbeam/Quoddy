@@ -68,3 +68,9 @@ You can login as testuser1 with a password of 'secret', or you can modify Bootst
 different default users.
 
 For help, see the fogcutter-dev Google Group, or check #fogcutter on Freenode.net IRC.	
+
+Commercial Support
+------------------
+
+Commercial support is available from [Fogbeam Labs](http://www.fogbeam.com).  For more information on
+Quoddy Enterprise, please visit [http://wwww.fogbeam.com/quoddy_enterprise.html](http://wwww.fogbeam.com/quoddy_enterprise.html).
