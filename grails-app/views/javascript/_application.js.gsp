@@ -93,6 +93,43 @@
 				} );
 				
 				
+				$j( '.showHideCommentsButton' ).bind ( 'click', function() {
+				
+					// alert( 'OK' );
+					var clicked = $j(this);
+				
+					// we really don't need to do any of this if the comment
+					// count isn't > 0
+					var intermediate = clicked.parent( '.aseFooter' );					
+					var wrapperDiv = intermediate.parent( '.aseWrapper' );
+					var individualCommentBoxes = wrapperDiv.find( '.individualCommentBox' );
+					if( individualCommentBoxes == null || individualCommentBoxes.length < 1 ) 
+					{
+						// alert( "no comments yet" );
+						return false;
+					}
+					else
+					{
+						// alert( "toggling comment display" );
+						// if the button says "show" then slidedown and change the
+						// text to "hide""
+						var text = clicked.find('a').text();
+						// alert( "text = " + text );
+						if( text == "Show Comments")
+						{
+							clicked.find('a').text("Hide Comments");
+							wrapperDiv.find( '.commentsArea' ).slideDown();
+						}					
+						else if( text == "Hide Comments" )
+						{
+							// if it says "hide" then slide up and change the text to
+							// "show"
+							clicked.find('a').text("Show Comments");
+							wrapperDiv.find( '.commentsArea' ).slideUp();
+						}
+					}		
+				} );
+				
 				$j( '.submitCommentBtn' ).bind( 'click', function( event ) {
 									
 					var form = $j(this).parent(); // (".addCommentForm").first();
@@ -113,7 +150,7 @@
 										form.find('.submitCommentBtn').css( 'display', 'none' );
 										form.find('.cancelCommentBtn').css( 'display', 'none' );
 									
-										alert( "refreshing comments in Javascript...");
+										// alert( "refreshing comments in Javascript...");
 										// alert( "this: " + $j('<div>').append(theButton.clone()).html() );
 										
 										var commentBoxWrapper = theButton.parents(".commentBoxWrapper");

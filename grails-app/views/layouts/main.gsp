@@ -63,7 +63,7 @@
 						<li>
 							<div class="searchBoxContainer">
 								<g:form controller="search" action="doSearch" method="GET">
-									<input name="queryString" type="text" class="searchbox" />
+									<input name="queryString" type="text" class="searchbox" autocomplete="off" />
 									<!-- <input type="submit" value="Search" id="searchBtn" /> -->
 									<div class="btn-group">
 										<button data-toggle="dropdown"
@@ -72,11 +72,11 @@
 										</button>
 										<ul class="dropdown-menu">
 											<li><a
-												href="${createLink(controller:'search', action:'searchPeople')}">People</a></li>
+												href="#">People</a></li>
 											<li><a
-												href="${createLink(controller:'search', action:'searchFriends')}">Friends</a></li>
+												href="#">Friends</a></li>
 											<li><a
-												href="${createLink(controller:'search', action:'searchIFollow')}">People
+												href="#">People
 													I Follow</a></li>
 											<li class="divider"></li>
 											<li><a href="#">Everything</a></li>

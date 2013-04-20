@@ -7,7 +7,7 @@
 }
 
 .commentsArea {
-	
+	display: none;
 	
 }
 
@@ -62,6 +62,10 @@
 }
 
 .shareButton {
+	
+}
+
+.showHideCommentsButton {
 	
 }
 
