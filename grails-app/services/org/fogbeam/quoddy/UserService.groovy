@@ -3,6 +3,7 @@ package org.fogbeam.quoddy;
 import java.util.List
 
 import org.fogbeam.quoddy.profile.Profile
+import org.fogbeam.quoddy.social.FriendRequest;
 
 class UserService {
 

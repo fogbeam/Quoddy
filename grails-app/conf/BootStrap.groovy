@@ -1,9 +1,9 @@
 import grails.util.Environment
 
-import org.fogbeam.quoddy.EventType
-import org.fogbeam.quoddy.ShareTarget
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.profile.Profile
+import org.fogbeam.quoddy.stream.EventType;
+import org.fogbeam.quoddy.stream.ShareTarget;
 
 class BootStrap {
 
@@ -44,26 +44,44 @@ class BootStrap {
 	 void createEventTypes()
 	 {
 	 	
-		EventType calendarEventType = EventType.findByName( "CalendarEvent" );
-		if( calendarEventType == null )
+		EventType calendarFeedItemType = EventType.findByName( "CalendarFeedItem" );
+		if( calendarFeedItemType == null )
 		{
-			calendarEventType = new EventType( name:"CalendarEvent" );
-			calendarEventType.save();
+			calendarFeedItemType = new EventType( name:"CalendarFeedItem" );
+			calendarFeedItemType.save();
 		}
 		
-		EventType activityEventType = EventType.findByName( "Activity" );
-		if( activityEventType == null )
+		EventType activityStreamItemType = EventType.findByName( "ActivityStreamItem" );
+		if( activityStreamItemType == null )
 		{
-			activityEventType = new EventType( name:"Activity" );
-			activityEventType.save();
+			activityStreamItemType = new EventType( name:"ActivityStreamItem" );
+			activityStreamItemType.save();
 		}
 		
-		EventType subscriptionEventType = EventType.findByName( "SubscriptionEvent" );
-		if( subscriptionEventType == null )
+		EventType businessEventSubscriptionItemType = EventType.findByName( "BusinessEventSubscriptionItem" );
+		if( businessEventSubscriptionItemType == null )
 		{
-			subscriptionEventType = new EventType( name:"SubscriptionEvent" );
-			subscriptionEventType.save();
+			businessEventSubscriptionItemType = new EventType( name:"BusinessEventSubscriptionItem" );
+			businessEventSubscriptionItemType.save();
 		}
+
+		
+	 	// new types, not used yet
+		EventType rssFeedItemType = EventType.findByName( "RssFeedItem" );
+		if( calendarFeedItemType == null )
+		{
+			rssFeedItemType = new EventType( name:"RssFeedItem" );
+			rssFeedItemType.save();
+		}
+		
+		EventType questionItemType = EventType.findByName( "Question" );
+		if( questionItemType == null )
+		{
+			questionItemType = new EventType( name:"Question" );
+			questionItemType.save();
+		}
+		
+		
 	 }
 	 
 	 void createShareTargets()

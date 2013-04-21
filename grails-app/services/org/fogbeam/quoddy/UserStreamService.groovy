@@ -6,7 +6,7 @@ class UserStreamService
 	{
 		List<UserStream> streams = new ArrayList<UserStream>();
 	
-		// select activity from Activity as activity where
+		// select activity from ActivityStreamItem as activity where
 		List<UserStream> tempStreams = UserStream.executeQuery( "select stream from UserStream as stream where stream.owner = :owner and stream.definedBy = :definedBy", 
 																['owner':user,'definedBy':UserStream.DEFINED_SYSTEM] );
 		if( tempStreams )

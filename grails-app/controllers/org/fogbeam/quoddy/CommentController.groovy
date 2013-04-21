@@ -1,9 +1,13 @@
 package org.fogbeam.quoddy
 
+import org.fogbeam.quoddy.stream.ActivityStreamItem;
+import org.fogbeam.quoddy.stream.StreamItemComment;
+import org.fogbeam.quoddy.stream.StreamItemBase;
+
 
 class CommentController {
 
-	def scaffold = true;
+	def scaffold = false;
 	
 	def eventStreamService;
 	// def entryService;
@@ -14,7 +18,7 @@ class CommentController {
 		
 		// lookup the Event by id
 		log.debug( "eventId: ${params.eventId}" );
-		EventBase event = eventStreamService.getEventById( Integer.parseInt( params.eventId) );
+		StreamItemBase event = eventStreamService.getEventById( Integer.parseInt( params.eventId) );
 			
 		// add the comment to the Event
 		if( session.user )
@@ -23,7 +27,7 @@ class CommentController {
 			def user = User.findByUserId( session.user.userId );
 			log.debug( "user: ${user}" );
 		
-			Comment newComment = new Comment();
+			StreamItemComment newComment = new StreamItemComment();
 			newComment.text = params.addCommentTextInput;
 			newComment.creator = user;
 			newComment.event = event;
@@ -31,7 +35,7 @@ class CommentController {
 			
 			event.addToComments( newComment );
 			
-			eventStreamService.saveActivity( (Activity)event );
+			eventStreamService.saveActivity( (ActivityStreamItem)event );
 			
 	    	// send JMS message saying "new entry submitted"
 	    	/* def newCommentMessage = [msgType:"NEW_COMMENT", entry_id:entry.id, entry_uuid:entry.uuid, 
@@ -41,7 +45,7 @@ class CommentController {
 	    	// send a JMS message to our testQueue
 			// sendJMSMessage("searchQueue", newCommentMessage );			
 			
-			log.debug( "saved Comment for user ${user.userId}, event ${event.id}" );
+			log.debug( "saved StreamItemComment for user ${user.userId}, event ${event.id}" );
 		}
 		else
 		{

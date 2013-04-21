@@ -1,6 +1,8 @@
-package org.fogbeam.quoddy
+package org.fogbeam.quoddy.stream
 
-public class EventBase implements Serializable
+import org.fogbeam.quoddy.User;
+
+public class StreamItemBase implements Serializable
 {
 	static mapping = 
 	{
@@ -13,7 +15,7 @@ public class EventBase implements Serializable
 		owner(nullable:true);
 	}
 	
-	static hasMany = [ comments: Comment /* votes : Vote, savers: User, hiders: User, tagEntryLinks:TagEntryLink */  ];
+	static hasMany = [ comments: StreamItemComment /* votes : Vote, savers: User, hiders: User, tagEntryLinks:TagEntryLink */  ];
 	
 	
 	User owner;

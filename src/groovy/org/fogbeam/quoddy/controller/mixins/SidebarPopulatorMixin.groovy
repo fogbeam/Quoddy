@@ -1,10 +1,10 @@
 package org.fogbeam.quoddy.controller.mixins
 
-import org.fogbeam.quoddy.EventSubscription
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.UserGroup
 import org.fogbeam.quoddy.UserList
 import org.fogbeam.quoddy.UserStream
+import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
 
 class SidebarPopulatorMixin
 {
@@ -14,7 +14,7 @@ class SidebarPopulatorMixin
 		def userDefinedStreams = new ArrayList<UserStream>();
 		def userLists = new ArrayList<UserList>();
 		def userGroups = new ArrayList<UserGroup>();
-		def eventSubscriptions = new ArrayList<EventSubscription>();
+		def eventSubscriptions = new ArrayList<BusinessEventSubscription>();
 		
 		def tempSysStreams = controller.userStreamService.getSystemDefinedStreamsForUser( user );
 		systemDefinedStreams.addAll( tempSysStreams );

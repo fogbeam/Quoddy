@@ -1,5 +1,10 @@
 package org.fogbeam.quoddy
 
+import org.fogbeam.quoddy.stream.ShareTarget;
+import org.fogbeam.quoddy.stream.StreamItemBase;
+import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem;
+import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
+
 class EventSubscriptionService
 {
 	
@@ -41,14 +46,14 @@ class EventSubscriptionService
 					println "Could not find Subscription Owner: ${subscriberUuid}";	
 				}
 				
-				EventSubscription owningSubscription = this.findByUuid( subscriptionUuid );
+				BusinessEventSubscription owningSubscription = this.findByUuid( subscriptionUuid );
 				if( owningSubscription == null ) 
 				{
 					println "Could not locate Owning Subscription with uuid: ${subscriptionUuid}";	
 				}
 				
 				
-				SubscriptionEvent subEvent = new SubscriptionEvent();
+				BusinessEventSubscriptionItem subEvent = new BusinessEventSubscriptionItem();
 				subEvent.owner = owner;
 				subEvent.owningSubscription = owningSubscription;
 				subEvent.xmlUuid = eventUuid;
@@ -81,15 +86,15 @@ class EventSubscriptionService
 	}
 	
 	
-	public EventSubscription findByUuid( final String uuid )
+	public BusinessEventSubscription findByUuid( final String uuid )
 	{
-		EventSubscription subscription = EventSubscription.findByUuid( uuid );
+		BusinessEventSubscription subscription = BusinessEventSubscription.findByUuid( uuid );
 		return subscription;	
 	}
 	
 	// note: would it make sense to wrap "save and notify" into one message and
 	// take advantage of Spring's method level transaction demarcation stuff?
-	public void saveEvent( EventBase event )
+	public void saveEvent( StreamItemBase event )
 	{
 		if( ! event.save() )
 		{
@@ -98,11 +103,11 @@ class EventSubscriptionService
 		}
 	}
 	
-	public List<EventSubscription> getAllSubscriptionsForUser( final User user )
+	public List<BusinessEventSubscription> getAllSubscriptionsForUser( final User user )
 	{
-		List<EventSubscription> subscriptions = new ArrayList<EventSubscription>();
+		List<BusinessEventSubscription> subscriptions = new ArrayList<BusinessEventSubscription>();
 		
-		List<UserList> tempSubscriptions = EventSubscription.executeQuery( "select subscription from EventSubscription as subscription where subscription.owner = :owner",
+		List<UserList> tempSubscriptions = BusinessEventSubscription.executeQuery( "select subscription from BusinessEventSubscription as subscription where subscription.owner = :owner",
 			['owner':user] );
 		
 		if( tempSubscriptions )
@@ -114,12 +119,12 @@ class EventSubscriptionService
 	}
 
 	
-	public List<SubscriptionEvent> getRecentEventsForSubscription( final EventSubscription subscription,  final int maxCount )
+	public List<BusinessEventSubscriptionItem> getRecentEventsForSubscription( final BusinessEventSubscription subscription,  final int maxCount )
 	{
 	
 		println "getRecentEventsForSubscription: ${subscription.id}";
 		
-		List<SubscriptionEvent> recentEvents = new ArrayList<SubscriptionEvent>();
+		List<BusinessEventSubscriptionItem> recentEvents = new ArrayList<BusinessEventSubscriptionItem>();
 	
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, -2160 );
@@ -128,8 +133,8 @@ class EventSubscriptionService
 		println "Using ${cutoffDate} as cutoffDate";
 
 	
-		List<SubscriptionEvent> queryResults =
-			SubscriptionEvent.executeQuery(
+		List<BusinessEventSubscriptionItem> queryResults =
+			BusinessEventSubscriptionItem.executeQuery(
 					"select subevent from SubscriptionEvent as subevent where subevent.dateCreated >= :cutoffDate " +
 					" and subevent.owningSubscription = :owningSub order by subevent.dateCreated desc",
 			  ['cutoffDate':cutoffDate, 'owningSub':subscription], ['max': maxCount ]);

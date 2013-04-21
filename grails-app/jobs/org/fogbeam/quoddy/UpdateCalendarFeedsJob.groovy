@@ -12,6 +12,9 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.DefaultHttpClient
+import org.fogbeam.quoddy.stream.CalendarFeedItem;
+import org.fogbeam.quoddy.stream.ShareTarget;
+import org.fogbeam.quoddy.subscription.CalendarFeedSubscription;
 
 
 class UpdateCalendarFeedsJob 
@@ -27,8 +30,8 @@ class UpdateCalendarFeedsJob
 	{
 		println "executing UpdateCalendarFeedsJob";
 		
-     	// get a list of all the active CalendarFeed objects
-		List<CalendarFeed> allFeeds = CalendarFeed.findAll();
+     	// get a list of all the active CalendarFeedSubscription objects
+		List<CalendarFeedSubscription> allFeeds = CalendarFeedSubscription.findAll();
 		
 		if( allFeeds != null && allFeeds.size > 0 )
 		{
@@ -54,7 +57,7 @@ class UpdateCalendarFeedsJob
 					
 					for( VEvent comp : aList )
 					{
-						// for each VEVENT create a CalendarEvent instance with the CalendarFeed owner
+						// for each VEVENT create a CalendarFeedItem instance with the CalendarFeedSubscription owner
 						// as the owner of the VEVENT
 						
 						// check that we don't already have this event (using the provided uid)
@@ -65,7 +68,7 @@ class UpdateCalendarFeedsJob
 						// persist this event.  Phase 2, add a check for the "last modified"
 						// date to see if the event has been modified since we originally
 						// saw it.  
-						List<CalendarEvent> temp = CalendarEvent.executeQuery( "select calEvent from CalendarEvent as calEvent where " 
+						List<CalendarFeedItem> temp = CalendarFeedItem.executeQuery( "select calEvent from CalendarFeedItem as calEvent where " 
 																				+ " calEvent.uid = :eventUid and calEvent.owner = :owner",
 																				['eventUid':eventUid, 'owner':feed.owner] );
 						
@@ -82,7 +85,7 @@ class UpdateCalendarFeedsJob
 							println "proceeding to create CalendarEvent with uid: ${eventUid}";	
 						}
 						
-						CalendarEvent event = new CalendarEvent();
+						CalendarFeedItem event = new CalendarFeedItem();
 						event.uid = eventUid;
 						event.owningFeed = feed;
 						event.owner = feed.owner;

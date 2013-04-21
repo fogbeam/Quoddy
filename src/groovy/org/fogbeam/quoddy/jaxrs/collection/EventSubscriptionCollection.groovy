@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlElement
 import javax.xml.bind.annotation.XmlElementWrapper
 import javax.xml.bind.annotation.XmlRootElement
 
-import org.fogbeam.quoddy.EventSubscription
+import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
@@ -14,19 +14,19 @@ class EventSubscriptionCollection
 {
 	@XmlElementWrapper(name="subscriptions")
 	@XmlElement(name="subscription")
-	private List<EventSubscription> subscriptions = new ArrayList<EventSubscription>();
+	private List<BusinessEventSubscription> subscriptions = new ArrayList<BusinessEventSubscription>();
 	
-	public List<EventSubscription> getSubscriptions()
+	public List<BusinessEventSubscription> getSubscriptions()
 	{
 		return this.subscriptions;
 	}
 	
-	public void setSubscriptions( final List<EventSubscription> subscriptions )
+	public void setSubscriptions( final List<BusinessEventSubscription> subscriptions )
 	{
 		this.subscriptions = subscriptions;	
 	}
 	
-	public void addAll( final List<EventSubscription> subscriptions)
+	public void addAll( final List<BusinessEventSubscription> subscriptions)
 	{
 		this.subscriptions.addAll( subscriptions ); 	
 	}

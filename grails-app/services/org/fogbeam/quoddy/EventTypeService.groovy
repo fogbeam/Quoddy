@@ -1,5 +1,7 @@
 package org.fogbeam.quoddy
 
+import org.fogbeam.quoddy.stream.EventType;
+
 class EventTypeService
 {
 	public Set<EventType> findAllEventTypes()

@@ -10,6 +10,7 @@ import org.fogbeam.quoddy.profile.Interest
 import org.fogbeam.quoddy.profile.OrganizationAssociation
 import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.profile.Skill
+import org.fogbeam.quoddy.social.FriendRequest;
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.commons.CommonsMultipartFile
 
@@ -19,7 +20,7 @@ class UserController {
 
 	def userService;
 	def profileService;
-	def scaffold = true;
+	def scaffold = false;
 
 	def sexOptions = [new SexOption( id:1, text:"Male" ), new SexOption( id:2, text:"Female" ) ];
 	def years =	 {

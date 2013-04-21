@@ -1,13 +1,15 @@
-package org.fogbeam.quoddy
+package org.fogbeam.quoddy.stream
 
-class SubscriptionEvent extends EventBase implements Serializable
+import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
+
+class BusinessEventSubscriptionItem extends StreamItemBase implements Serializable
 {
 	static constraints = {
 		owningSubscription(nullable:false);
 	}
 	
 	
-	EventSubscription owningSubscription;
+	BusinessEventSubscription owningSubscription;
 	
 	
 	static transients = ['templateName', 'xmlDoc'];

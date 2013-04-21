@@ -1,8 +1,9 @@
 package org.fogbeam.quoddy
 
 import org.codehaus.jackson.map.ObjectMapper
-import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.integration.activitystream.ActivityStreamEntry
+import org.fogbeam.quoddy.stream.ActivityStreamItem;
+import org.fogbeam.quoddy.stream.StreamItemBase
 
 
 class ActivityStreamController 
@@ -47,19 +48,19 @@ class ActivityStreamController
 			page = "1";
 		}
 		println "getContentHtml requested page: ${page}";
-		def events = new ArrayList<EventBase>();
+		def items = new ArrayList<StreamItemBase>();
 		if( user != null )
 		{
 			user = userService.findUserByUserId( session.user.userId );
 			// activities = eventStreamService.getRecentFriendActivitiesForUser( user );
-			events = eventStreamService.getRecentActivitiesForUser( user, 25 * Integer.parseInt( page ) );
+			items = eventStreamService.getRecentActivitiesForUser( user, 25 * Integer.parseInt( page ) );
 		}
 		else
 		{
 			// don't do anything if we don't have a user
 		}
 		
-		render(template:"/activityStream",model:[activities:events]);
+		render(template:"/activityStream",model:[activities:items]);
 		
 		
 	}
@@ -80,7 +81,7 @@ class ActivityStreamController
 			  ActivityStreamEntry streamEntry = mapper.readValue(json, ActivityStreamEntry.class);
 			  
 			  // map to our internal representation and save / msg
-			  Activity activity = activityStreamTransformerService.getActivity( streamEntry );
+			  ActivityStreamItem activity = activityStreamTransformerService.getActivity( streamEntry );
 			  eventStreamService.saveActivity( activity );
 			  
 			  // send notification message

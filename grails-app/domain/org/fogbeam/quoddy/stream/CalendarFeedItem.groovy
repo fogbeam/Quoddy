@@ -1,10 +1,12 @@
-package org.fogbeam.quoddy
+package org.fogbeam.quoddy.stream
+
+import org.fogbeam.quoddy.subscription.CalendarFeedSubscription;
 
 
-class CalendarEvent extends EventBase implements Serializable
+class CalendarFeedItem extends StreamItemBase implements Serializable
 {
 	
-	public CalendarEvent()
+	public CalendarFeedItem()
 	{
 		this.uuid = java.util.UUID.randomUUID().toString();
 	}
@@ -34,7 +36,7 @@ class CalendarEvent extends EventBase implements Serializable
 	String url;
 	Date lastModified;
 	String uid;
-	CalendarFeed owningFeed;
+	CalendarFeedSubscription owningFeed;
 
 	String uuid;
 	Date dateCreated;

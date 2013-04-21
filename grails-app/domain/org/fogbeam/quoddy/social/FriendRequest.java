@@ -1,4 +1,6 @@
-package org.fogbeam.quoddy;
+package org.fogbeam.quoddy.social;
+
+import org.fogbeam.quoddy.User;
 
 public class FriendRequest 
 {

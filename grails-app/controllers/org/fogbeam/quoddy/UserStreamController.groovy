@@ -1,6 +1,8 @@
 package org.fogbeam.quoddy
 
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+import org.fogbeam.quoddy.stream.EventType;
+import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
 
 @Mixin(SidebarPopulatorMixin)
 class UserStreamController
@@ -206,7 +208,7 @@ class UserStreamController
 				}
 										
 				/* load subscription list */
-				List<EventSubscription> eventSubscriptions =
+				List<BusinessEventSubscription> eventSubscriptions =
 					eventSubscriptionService.getAllSubscriptionsForUser( session.user );
 				
 				[eventSubscriptions:eventSubscriptions, selectedEventSubscriptions:streamToCreate.subscriptionUuidsIncluded];
@@ -228,7 +230,7 @@ class UserStreamController
 				
 				for( String eventSubscriptionUuid : eventSubscriptionUuids )
 				{
-					EventSubscription eventSubscriptionToInclude = eventSubscriptionService.findByUuid( eventSubscriptionUuid );
+					BusinessEventSubscription eventSubscriptionToInclude = eventSubscriptionService.findByUuid( eventSubscriptionUuid );
 					if( eventSubscriptionToInclude == null ) {
 						println "Failed to locate EventSubscription for uuid ${eventSubscriptionUuid}";
 						continue;
@@ -418,7 +420,7 @@ class UserStreamController
 				}
 										
 				/* load subscription list */
-				List<EventSubscription> eventSubscriptions =
+				List<BusinessEventSubscription> eventSubscriptions =
 					eventSubscriptionService.getAllSubscriptionsForUser( session.user );
 				
 				[eventSubscriptions:eventSubscriptions, selectedEventSubscriptions:streamToEdit.subscriptionUuidsIncluded];
@@ -440,7 +442,7 @@ class UserStreamController
 				
 				for( String eventSubscriptionUuid : eventSubscriptionUuids )
 				{
-					EventSubscription eventSubscriptionToInclude = eventSubscriptionService.findByUuid( eventSubscriptionUuid );
+					BusinessEventSubscription eventSubscriptionToInclude = eventSubscriptionService.findByUuid( eventSubscriptionUuid );
 					if( eventSubscriptionToInclude == null ) {
 						println "Failed to locate EventSubscription for uuid ${eventSubscriptionUuid}";
 						continue;

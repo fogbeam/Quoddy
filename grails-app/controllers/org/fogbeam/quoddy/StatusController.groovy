@@ -1,8 +1,9 @@
 package org.fogbeam.quoddy;
 
-import org.fogbeam.quoddy.Activity;
 import org.fogbeam.quoddy.StatusUpdate;
 import org.fogbeam.quoddy.User;
+import org.fogbeam.quoddy.stream.ActivityStreamItem;
+import org.fogbeam.quoddy.stream.ShareTarget;
 
 class StatusController {
 
@@ -55,18 +56,18 @@ class StatusController {
 			session.user = user;
 			
 			// TODO: if the user update was successful
-			Activity activity = new Activity(content:newStatus.text);
+			ActivityStreamItem activity = new ActivityStreamItem(content:newStatus.text);
 			ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 
 			
-			activity.title = "Internal Activity";
+			activity.title = "Internal ActivityStreamItem";
 			activity.url = new URL( "http://www.example.com" );
 			activity.verb = "status_update";
 			activity.published = new Date(); // set published to "now"
 			activity.targetUuid = streamPublic.uuid;
 			activity.owner = user;
 			
-			// NOTE: we added "name" to EventBase, but how is it really going
+			// NOTE: we added "name" to StreamItemBase, but how is it really going
 			// to be used?  Do we *really* need this??
 			activity.name = activity.title;
 			activity.effectiveDate = activity.published;

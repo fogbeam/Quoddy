@@ -4,6 +4,10 @@ import java.util.Set
 
 import javax.jms.Message
 
+import org.fogbeam.quoddy.social.FriendCollection;
+import org.fogbeam.quoddy.stream.ShareTarget;
+import org.fogbeam.quoddy.stream.StreamItemBase;
+
 class EventQueueService 
 {	
 	def userService;
@@ -38,7 +42,7 @@ class EventQueueService
 			// messages that were to the public stream.  We'll come back to deal with
 			// common group membership and other scenarios later.
 			def streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC);
-			EventBase event = (EventBase)msg.getObject();
+			StreamItemBase event = (StreamItemBase)msg.getObject();
 			if( ! event.targetUuid.equals( streamPublic.uuid ))
 			{
 				return;
@@ -120,10 +124,10 @@ class EventQueueService
 		return queueSize;	
 	}
 	
-	public List<EventBase> getMessagesForUser( final String userId, final int msgCount )
+	public List<StreamItemBase> getMessagesForUser( final String userId, final int msgCount )
 	{
 		println "getting messages for user: ${userId}, msgCount: ${msgCount}";
-		List<EventBase> messages = new ArrayList<Map>();
+		List<StreamItemBase> messages = new ArrayList<Map>();
 		Deque<Map> userQueue = eventQueues.get( userId );
 		if( userQueue != null )
 		{
@@ -131,7 +135,7 @@ class EventQueueService
 			for( int i = 0; i < msgCount; i++ )
 			{
 				// get message from queue, put it in return set	
-				EventBase msg = userQueue.pollFirst();
+				StreamItemBase msg = userQueue.pollFirst();
 				messages.add( msg ); 
 			}
 		}

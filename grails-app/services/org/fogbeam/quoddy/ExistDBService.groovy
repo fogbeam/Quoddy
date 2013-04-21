@@ -3,6 +3,8 @@ package org.fogbeam.quoddy
 import javax.xml.transform.OutputKeys
 
 import org.exist.storage.serializers.EXistOutputKeys
+import org.fogbeam.quoddy.stream.StreamItemBase;
+import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem;
 import org.xmldb.api.DatabaseManager
 import org.xmldb.api.base.Collection
 import org.xmldb.api.base.Database
@@ -16,22 +18,22 @@ class ExistDBService
 
 	public populateSubscriptionEventWithXmlDoc( Object event )
 	{
-		// unless we're passed a SubscriptionEvent instance, this is a NOP
-		println "NOT a SubscriptionEvent, nothing to do!";
+		// unless we're passed a BusinessEventSubscriptionItem instance, this is a NOP
+		println "NOT a BusinessEventSubscriptionItem, nothing to do!";
 		return event;
 	}
 		
-	public populateSubscriptionEventWithXmlDoc( EventBase event ) 
+	public populateSubscriptionEventWithXmlDoc( StreamItemBase event ) 
 	{
-		// unless we're passed a SubscriptionEvent instance, this is a NOP
-		println "NOT a SubscriptionEvent, nothing to do!";
+		// unless we're passed a BusinessEventSubscriptionItem instance, this is a NOP
+		println "NOT a BusinessEventSubscriptionItem, nothing to do!";
 		return event;	
 	}
 	
-	public SubscriptionEvent populateSubscriptionEventWithXmlDoc( SubscriptionEvent event )
+	public BusinessEventSubscriptionItem populateSubscriptionEventWithXmlDoc( BusinessEventSubscriptionItem event )
 	{
 		
-		println "It's a SubscriptionEvent, populate XML body";
+		println "It's a BusinessEventSubscriptionItem, populate XML body";
 		// get the XML uuid from the event, pull the XML from the existDB instance
 		// and populate it into the object for rendering in the stream
 		

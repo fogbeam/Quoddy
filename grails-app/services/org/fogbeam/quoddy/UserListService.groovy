@@ -2,6 +2,8 @@ package org.fogbeam.quoddy
 
 import java.util.List;
 
+import org.fogbeam.quoddy.stream.ActivityStreamItem;
+
 class UserListService
 {
 	public UserList findUserListByUuid( final String uuid ) 
@@ -53,11 +55,11 @@ class UserListService
 			
 	}	
 
-	public List<Activity> getRecentActivitiesForList( final UserList list, final int maxCount )
+	public List<ActivityStreamItem> getRecentActivitiesForList( final UserList list, final int maxCount )
 	{
 		println "getRecentActivitiesForList: ${list.id} - ${maxCount}";
 		
-		List<Activity> recentActivities = new ArrayList<Activity>();
+		List<ActivityStreamItem> recentActivities = new ArrayList<ActivityStreamItem>();
 	
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, -2160 );
@@ -66,8 +68,8 @@ class UserListService
 		println "Using ${cutoffDate} as cutoffDate";
 
 	
-		List<Activity> queryResults =
-			Activity.executeQuery( 
+		List<ActivityStreamItem> queryResults =
+			ActivityStreamItem.executeQuery( 
 					"select activity from Activity as activity, UserList as ulist where activity.dateCreated >= :cutoffDate " + 
 					" and activity.owner in elements(ulist.members) and ulist = :thelist order by activity.dateCreated desc",
               ['cutoffDate':cutoffDate, 'thelist':list], ['max': maxCount ]);

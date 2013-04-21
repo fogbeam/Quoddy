@@ -1,4 +1,4 @@
-package org.fogbeam.quoddy
+package org.fogbeam.quoddy.social
 
 class FriendCollection implements Serializable
 {

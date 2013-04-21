@@ -3,9 +3,9 @@ package org.fogbeam.quoddy.transformer
 import java.net.URL
 import java.text.SimpleDateFormat
 
-import org.fogbeam.quoddy.Activity
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.integration.activitystream.ActivityStreamEntry
+import org.fogbeam.quoddy.stream.ActivityStreamItem;
 
 class ActivityStreamTransformerService
 {
@@ -15,9 +15,9 @@ class ActivityStreamTransformerService
 	private static final String RFC3339_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 	def userService;
 	
-	public Activity getActivity( ActivityStreamEntry entry )
+	public ActivityStreamItem getActivity( ActivityStreamEntry entry )
 	{
-		Activity activity = new Activity();
+		ActivityStreamItem activity = new ActivityStreamItem();
 		
 		activity.content = entry.content;
 		activity.title = entry.title;

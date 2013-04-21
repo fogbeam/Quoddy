@@ -9,7 +9,7 @@ import javax.ws.rs.PUT
 import javax.ws.rs.Produces
 import javax.ws.rs.core.Response
 
-import org.fogbeam.quoddy.EventSubscription
+import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
 import org.grails.jaxrs.provider.DomainObjectNotFoundException
 
 @Consumes(['application/xml','application/json'])
@@ -20,7 +20,7 @@ class EventSubscriptionResource
 	
 	@GET
 	Response read() {
-		def obj = EventSubscription.get(id)
+		def obj = BusinessEventSubscription.get(id)
 		if (!obj) {
 			throw new DomainObjectNotFoundException(Person.class, id)
 		}
@@ -28,8 +28,8 @@ class EventSubscriptionResource
 	}
 	
 	@PUT
-	Response update(EventSubscription dto) {
-		def obj = EventSubscription.get(id)
+	Response update(BusinessEventSubscription dto) {
+		def obj = BusinessEventSubscription.get(id)
 		if (!obj) {
 			throw new DomainObjectNotFoundException(Person.class, id)
 		}
@@ -39,7 +39,7 @@ class EventSubscriptionResource
 	
 	@DELETE
 	void delete() {
-		def obj = EventSubscription.get(id)
+		def obj = BusinessEventSubscription.get(id)
 		if (obj) {
 			obj.delete()
 		}

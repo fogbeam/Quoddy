@@ -2,6 +2,11 @@ package org.fogbeam.quoddy;
 
 import java.util.Calendar
 
+import org.fogbeam.quoddy.stream.ActivityStreamItem;
+import org.fogbeam.quoddy.stream.EventType;
+import org.fogbeam.quoddy.stream.ShareTarget;
+import org.fogbeam.quoddy.stream.StreamItemBase;
+
 class EventStreamService {
 
 	def userService;
@@ -9,7 +14,7 @@ class EventStreamService {
 	def eventQueueService;
 	def existDBService;
 	
-	public void saveActivity( Activity activity )
+	public void saveActivity( ActivityStreamItem activity )
 	{
 		println "about to save activity...";
 		if( !activity.save(flush:true) )
@@ -19,13 +24,13 @@ class EventStreamService {
 		}
 		else 
 		{
-			println "Successfully saved Activity: ${activity.id}";	
+			println "Successfully saved ActivityStreamItem: ${activity.id}";	
 		}
 		
 	}
 	
 	// TODO: rename this method to reflect that it actually returns Events not Activities
-	public List<EventBase> getRecentActivitiesForUser( final User user, final int maxCount, final UserStream userStream )
+	public List<StreamItemBase> getRecentActivitiesForUser( final User user, final int maxCount, final UserStream userStream )
 	{
 		
 		
@@ -43,7 +48,7 @@ class EventStreamService {
 		cal.add(Calendar.HOUR_OF_DAY, -2160 );
 		Date cutoffDate = cal.getTime();
 		
-		List<EventBase> recentEvents = new ArrayList<EventBase>();
+		List<StreamItemBase> recentEvents = new ArrayList<StreamItemBase>();
 		
 					
 		List<User> friends = userService.listFriends( user );
@@ -72,7 +77,7 @@ class EventStreamService {
 			println "query now: ${query}";
 			
 			
-			query = query + " from EventBase as event ";
+			query = query + " from StreamItemBase as event ";
 			println "query now: ${query}";
 			
 			
@@ -84,8 +89,8 @@ class EventStreamService {
 			println "query now: ${query}";
 			
 			query = query + " where event.effectiveDate >= :cutoffDate " + 
-							" and ( event.owner.id in (:friendIds) and not ( event.owner <> :owner and event.class = SubscriptionEvent ) " + 
-							" and not ( event.owner <> :owner and event.class = CalendarEvent ) ) " + 
+							" and ( event.owner.id in (:friendIds) and not ( event.owner <> :owner and event.class = BusinessEventSubscriptionItem ) " + 
+							" and not ( event.owner <> :owner and event.class = CalendarFeedItem ) ) " + 
 							" and event.targetUuid = :targetUuid ";
 			
 							
@@ -184,13 +189,13 @@ class EventStreamService {
 			
 			println "Using parameters map: ${parameters}";
 			
-			List<EventBase> queryResults =
-				EventBase.executeQuery( query,
+			List<StreamItemBase> queryResults =
+				StreamItemBase.executeQuery( query,
 					parameters,
 					['max': maxCount ]);
 		
 				println "adding ${queryResults.size()} activities read from DB";
-				for( EventBase event : queryResults ) {
+				for( StreamItemBase event : queryResults ) {
 					
 					println "Populating XML into SubscriptionEvents";
 					println "event = ${event}";
@@ -209,7 +214,7 @@ class EventStreamService {
 	
 	// TODO: refactor this to be consistent with the other getActivities method
 	// and return EventBase instances
-	public List<Activity> getRecentActivitiesForUser( final User user, final int maxCount )
+	public List<ActivityStreamItem> getRecentActivitiesForUser( final User user, final int maxCount )
 	{
 		println "getRecentActivitiesForUser: ${user.userId} - ${maxCount}";
 		/*
@@ -270,8 +275,8 @@ class EventStreamService {
 		// NOTE: we could avoid iterating over this list again by returning the "oldest message time"
 		// as part of this call.  But it'll mean wrapping this stuff up into an object of some
 		// sort, or returning a Map of Maps instead of a List of Maps
-		List<EventBase> messages = eventQueueService.getMessagesForUser( user.userId, msgsToRead );
-		for( EventBase msg : messages )
+		List<StreamItemBase> messages = eventQueueService.getMessagesForUser( user.userId, msgsToRead );
+		for( StreamItemBase msg : messages )
 		{
 			// println "msg.originTime: ${msg.originTime}";
 			if( msg.effectiveDate.time < oldestOriginTime )
@@ -283,7 +288,7 @@ class EventStreamService {
 		println "oldestOriginTime: ${oldestOriginTime}";
 		println "as date: " + new Date( oldestOriginTime);
 		
-		List<EventBase> recentEvents = new ArrayList<EventBase>();
+		List<StreamItemBase> recentEvents = new ArrayList<StreamItemBase>();
 		
 		// NOTE: we wouldn't really want to iterate over this list here... better
 		// to build up this list above, and never bother storing the JMS Message instances
@@ -296,7 +301,7 @@ class EventStreamService {
 		// CalendarEvent, etc., depending on what the notification is for.
 		for( int i = 0; i < messages.size(); i++ )
 		{
-			EventBase event = messages.get(i);
+			StreamItemBase event = messages.get(i);
 			// println "got message: ${msg} off of queue";
 			
 			event = existDBService.populateSubscriptionEventWithXmlDoc( event );
@@ -349,8 +354,8 @@ class EventStreamService {
 				// own feed)
 				friendIds.add( user.id );
 				ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
-				List<EventBase> queryResults = 
-					EventBase.executeQuery( "select event from EventBase as event where event.effectiveDate >= :cutoffDate and event.owner.id in (:friendIds) and event.effectiveDate < :oldestOriginTime and event.targetUuid = :targetUuid order by event.effectiveDate desc",
+				List<StreamItemBase> queryResults = 
+					StreamItemBase.executeQuery( "select event from StreamItemBase as event where event.effectiveDate >= :cutoffDate and event.owner.id in (:friendIds) and event.effectiveDate < :oldestOriginTime and event.targetUuid = :targetUuid order by event.effectiveDate desc",
 						['cutoffDate':cutoffDate, 
 						 'oldestOriginTime':new Date(oldestOriginTime), 
 						 'friendIds':friendIds, 
@@ -358,7 +363,7 @@ class EventStreamService {
 					    ['max': recordsToRetrieve ]);
 			
 					println "adding ${queryResults.size()} activities read from DB";
-					for( EventBase event : queryResults ) {
+					for( StreamItemBase event : queryResults ) {
 						
 						println "Populating XML into SubscriptionEvents";
 						
@@ -380,9 +385,9 @@ class EventStreamService {
 		return recentEvents;
 	}
 	
-	public EventBase getEventById( final int eventId )
+	public StreamItemBase getEventById( final int eventId )
 	{
-		EventBase event = EventBase.findById( eventId );
+		StreamItemBase event = StreamItemBase.findById( eventId );
 		
 		return event;
 			

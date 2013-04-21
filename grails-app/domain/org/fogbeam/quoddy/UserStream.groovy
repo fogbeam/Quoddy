@@ -1,5 +1,7 @@
 package org.fogbeam.quoddy
 
+import org.fogbeam.quoddy.stream.EventType;
+
 /* a UserStream object defines one specific named "stream" of entries that will
  * appear in the user's feed.  The UserStream controls which users, which groups, etc.
  * are included, as well as an filters or other preferences that will affect which items

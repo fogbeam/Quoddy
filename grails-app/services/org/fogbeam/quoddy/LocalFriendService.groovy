@@ -2,6 +2,11 @@ package org.fogbeam.quoddy
 
 import java.util.List;
 
+import org.fogbeam.quoddy.social.FriendCollection;
+import org.fogbeam.quoddy.social.FriendRequest;
+import org.fogbeam.quoddy.social.FriendRequestCollection;
+import org.fogbeam.quoddy.social.IFollowCollection;
+
 class LocalFriendService 
 {
 	public void addToFollow( final User destinationUser, final User targetUser )

@@ -1,15 +1,17 @@
-package org.fogbeam.quoddy
+package org.fogbeam.quoddy.subscription
 
 import javax.xml.bind.annotation.XmlAccessType
 import javax.xml.bind.annotation.XmlAccessorType
 import javax.xml.bind.annotation.XmlElement
 import javax.xml.bind.annotation.XmlRootElement
 
+import org.fogbeam.quoddy.User;
+
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-class EventSubscription implements Serializable
+class BusinessEventSubscription implements Serializable
 {
-	public EventSubscription()
+	public BusinessEventSubscription()
 	{
 		this.uuid = java.util.UUID.randomUUID().toString();
 	}
@@ -33,6 +35,6 @@ class EventSubscription implements Serializable
 
 	public String toString()
 	{
-		return "EventSubscription[ uuid: ${uuid}, name: ${name}, owner: ${owner.userId}, xQuery: ${xQueryExpression}]";	
+		return "BusinessEventSubscription[ uuid: ${uuid}, name: ${name}, owner: ${owner.userId}, xQuery: ${xQueryExpression}]";	
 	}		
 }

@@ -3,6 +3,8 @@ package org.fogbeam.quoddy
 import java.util.List;
 
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+import org.fogbeam.quoddy.stream.ActivityStreamItem;
+import org.fogbeam.quoddy.stream.StreamItemBase
 
 
 @Mixin(SidebarPopulatorMixin)
@@ -136,8 +138,7 @@ class UserGroupController
 			def user = userService.findUserByUserId( session.user.userId );
 			// println "Doing display with params: ${params}";
 			
-			// def activities = new ArrayList<Activity>();
-			def events = new ArrayList<EventBase>();
+			def items = new ArrayList<StreamItemBase>();
 			
 			
 			Map model = [:];
@@ -158,12 +159,12 @@ class UserGroupController
 				}
 			
 				// activities = userGroupService.getRecentActivitiesForGroup( group, 25 ); 
-				events = userGroupService.getRecentEventsForGroup( group, 25 );
+				items = userGroupService.getRecentEventsForGroup( group, 25 );
 				
 				model.putAll( [ group:group,
 								user: user,
 								userIsGroupMember:userIsGroupMember,
-								activities:events] );
+								activities:items] );
 				
 				Map sidebarCollections = populateSidebarCollections( this, user );
 				model.putAll( sidebarCollections );
@@ -231,7 +232,7 @@ class UserGroupController
 					
 			}
 			
-			Activity activity = new Activity(content:newStatus.text);
+			ActivityStreamItem activity = new ActivityStreamItem(content:newStatus.text);
 			activity.title = "Internal Activity";
 			activity.url = new URL( "http://www.example.com" );
 			activity.verb = "status_update";

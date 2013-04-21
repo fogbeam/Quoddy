@@ -1,4 +1,5 @@
-package org.fogbeam.quoddy
+package org.fogbeam.quoddy.stream
+
 
 
 /* TODO: map the fields of this class to the activitystrea.ms protocol */
@@ -107,7 +108,7 @@ Following is a simple, minimal example of a JSON serialized activity:
 
 /*
 
-	3.2.  Activity Serialization
+	3.2.  ActivityStreamItem Serialization
 
 	Property				Value								Description
 	
@@ -121,7 +122,7 @@ Following is a simple, minimal example of a JSON serialized activity:
 	provider 				Object								Describes the application that published the activity. Note that this is not necessarily the same entity that generated the activity. An activity MAY contain a provider property whose value is a single Object.
 	target 					Object								Describes the target of the activity. The precise meaning of the activity's target is dependent on the activities verb, but will often be the object the English preposition "to". For instance, in the activity, "John saved a movie to his wishlist", the target of the activity is "wishlist". The activity target MUST NOT be used to identity an indirect object that is not a target of the activity. An activity MAY contain a target property whose value is a single Object.
 	title 					JSON [RFC4627] String				Natural-language title or headline for the activity encoded as a single JSON String containing HTML markup. An activity MAY contain a title property.
-	updated 				[RFC3339] date-time					The date and time at which a previously published activity has been modified. An Activity MAY contain an updated property.
+	updated 				[RFC3339] date-time					The date and time at which a previously published activity has been modified. An ActivityStreamItem MAY contain an updated property.
 	url 					JSON [RFC4627] String				An IRI [RFC3987] identifying a resource providing an HTML representation of the activity. An activity MAY contain a url property.
 	verb 					JSON [RFC4627] String				Identifies the action that the activity describes. An activity SHOULD contain a verb property whose value is a JSON String that is non-empty and matches either the "isegment-nz-nc" or the "IRI" production in [RFC3339]. Note that the use of a relative reference other than a simple name is not allowed. If the verb is not specified, or if the value is null, the verb is assumed to be "post".
 
@@ -148,10 +149,10 @@ Following is a simple, minimal example of a JSON serialized activity:
 	url 					JSON [RFC4627] String				An IRI [RFC3987] identifying a resource providing an HTML representation of the object. An object MAY contain a url property 
  
 */
-class Activity extends EventBase implements Serializable
+class ActivityStreamItem extends StreamItemBase implements Serializable
 {
 
-	public Activity()
+	public ActivityStreamItem()
 	{
 		this.uuid = java.util.UUID.randomUUID().toString();
 	}

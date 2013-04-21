@@ -1,6 +1,7 @@
 package org.fogbeam.quoddy
 
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+import org.fogbeam.quoddy.stream.ActivityStreamItem;
 
 @Mixin(SidebarPopulatorMixin)
 class HomeController {
@@ -16,7 +17,7 @@ class HomeController {
     		
     	def userId = params.userId;
     	User user = null;
-		List<Activity> activities = new ArrayList<Activity>();
+		List<ActivityStreamItem> activities = new ArrayList<ActivityStreamItem>();
 		
 		if( userId != null )
     	{

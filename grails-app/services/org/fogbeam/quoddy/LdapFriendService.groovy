@@ -13,6 +13,7 @@ import org.fogbeam.quoddy.ldap.GroupBuilder
 import org.fogbeam.quoddy.ldap.LDAPPerson 
 import org.fogbeam.quoddy.ldap.PersonAttributeMapper 
 import org.fogbeam.quoddy.ldap.PersonBuilder 
+import org.fogbeam.quoddy.social.FriendRequest;
 import org.springframework.ldap.filter.AndFilter 
 import org.springframework.ldap.filter.EqualsFilter 
 

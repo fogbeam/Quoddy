@@ -33,6 +33,11 @@ class SearchController
 	}
 	
 	
+	def searchEverything =
+	{
+		
+	}
+	
 	def showAdvanced =
 	{
 		[]	

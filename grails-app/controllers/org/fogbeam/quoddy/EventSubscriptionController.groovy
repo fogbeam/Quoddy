@@ -1,6 +1,8 @@
 package org.fogbeam.quoddy
 
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
+import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
 
 @Mixin(SidebarPopulatorMixin)
 class EventSubscriptionController
@@ -19,7 +21,7 @@ class EventSubscriptionController
 		def userDefinedStreams = new ArrayList<UserStream>(); 
 		def userLists = new ArrayList<UserList>();
 		def userGroups = new ArrayList<UserGroup>();
-		def eventSubscriptions = new ArrayList<EventSubscription>();
+		def eventSubscriptions = new ArrayList<BusinessEventSubscription>();
 		
 		if( session.user != null )
 		{
@@ -50,10 +52,10 @@ class EventSubscriptionController
 		{
 			def user = userService.findUserByUserId( session.user.userId );
 			// println "Doing display with params: ${params}";
-			def subEvents = new ArrayList<SubscriptionEvent>();
+			def subEvents = new ArrayList<BusinessEventSubscriptionItem>();
 								
 			
-			EventSubscription subscription = EventSubscription.findById( params.subscriptionId );
+			BusinessEventSubscription subscription = BusinessEventSubscription.findById( params.subscriptionId );
 			
 			Map model = [:];
 			if( user )
@@ -89,7 +91,7 @@ class EventSubscriptionController
 				
 				println "transitioning to stage2";
 				
-				EventSubscription subscriptionToCreate = new EventSubscription();
+				BusinessEventSubscription subscriptionToCreate = new BusinessEventSubscription();
 				subscriptionToCreate.name = params.subscriptionName;
 				subscriptionToCreate.description = params.subscriptionDescription;
 			   
@@ -107,7 +109,7 @@ class EventSubscriptionController
 			on("finishWizard"){
 				println "finishing wizard with params ${params}";
 				
-				EventSubscription subscriptionToCreate = flow.subscriptionToCreate;
+				BusinessEventSubscription subscriptionToCreate = flow.subscriptionToCreate;
 				subscriptionToCreate.xQueryExpression = params.xQueryExpression;
 				
 			   [];
@@ -119,11 +121,11 @@ class EventSubscriptionController
 			action {
 				println "create using params: ${params}"
 
-				EventSubscription subscriptionToCreate = flow.subscriptionToCreate;
+				BusinessEventSubscription subscriptionToCreate = flow.subscriptionToCreate;
 				
 				if( !subscriptionToCreate.save() )
 				{
-					println( "Saving EventSubscription FAILED");
+					println( "Saving BusinessEventSubscription FAILED");
 					subscriptionToCreate.errors.allErrors.each { println it };
 				}
 				
@@ -142,9 +144,9 @@ class EventSubscriptionController
 		start {
 			action {
 				def subscriptionId = params.subscriptionId;
-				println "Editing EventSubscription with id: ${subscriptionId}";	
-				EventSubscription subscriptionToEdit = null;
-				subscriptionToEdit = EventSubscription.findById( subscriptionId );
+				println "Editing BusinessEventSubscription with id: ${subscriptionId}";	
+				BusinessEventSubscription subscriptionToEdit = null;
+				subscriptionToEdit = BusinessEventSubscription.findById( subscriptionId );
 				[subscriptionToEdit: subscriptionToEdit];
 			}
 			on("success").to( "editWizardOne" )
@@ -155,7 +157,7 @@ class EventSubscriptionController
 				
 				println "transitioning to stage2";
 				
-				EventSubscription subscriptionToEdit = flow.subscriptionToEdit;
+				BusinessEventSubscription subscriptionToEdit = flow.subscriptionToEdit;
 				subscriptionToEdit.name = params.subscriptionName;
 				subscriptionToEdit.description = params.subscriptionDescription;
 					
@@ -176,13 +178,13 @@ class EventSubscriptionController
 				println "update using params: ${params}"
 				
 				def subscriptionId = params.subscriptionId;
-				EventSubscription subscriptionToEdit = flow.subscriptionToEdit;
+				BusinessEventSubscription subscriptionToEdit = flow.subscriptionToEdit;
 				
 				subscriptionToEdit.xQueryExpression = params.xQueryExpression;
 				
 				if( !subscriptionToEdit.save() )
 				{
-					println( "Saving EventSubscription FAILED");
+					println( "Saving BusinessEventSubscription FAILED");
 					subscriptionToEdit.errors.allErrors.each { println it };
 				}
 				

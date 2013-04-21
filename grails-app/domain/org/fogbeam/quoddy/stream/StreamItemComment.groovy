@@ -1,8 +1,10 @@
-package org.fogbeam.quoddy
+package org.fogbeam.quoddy.stream
 
 import java.text.SimpleDateFormat
 
-class Comment implements Comparable {
+import org.fogbeam.quoddy.User;
+
+class StreamItemComment implements Comparable {
 
 	// TODO: inject these formatters, or move all of this
 	// formatting stuff into a wrapper class
@@ -11,7 +13,7 @@ class Comment implements Comparable {
 	
 	static transients = ['formattedCreateDate', 'formattedCreateTime'];
 	
-	public Comment() {
+	public StreamItemComment() {
 		this.uuid = java.util.UUID.randomUUID().toString();
 	}
 	
@@ -20,7 +22,7 @@ class Comment implements Comparable {
 	Date dateCreated;
 	User creator;
 	
-	static belongsTo = [event:EventBase];
+	static belongsTo = [event:StreamItemBase];
 
 	@Override
 	public int compareTo(Object o) {

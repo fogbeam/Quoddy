@@ -1,18 +1,20 @@
 package org.fogbeam.quoddy
 
+import org.fogbeam.quoddy.subscription.CalendarFeedSubscription;
+
 class CalendarController
 {
 	def userService;
 	
 	def index =
 	{
-		List<CalendarFeed> calFeeds = new ArrayList<CalendarFeed>();
+		List<CalendarFeedSubscription> calFeeds = new ArrayList<CalendarFeedSubscription>();
 		User user = null;
 		if( session.user != null )
 		{
 			println "Found User in Session";
 			user = userService.findUserByUserId( session.user.userId );
-			def queryResults = CalendarFeed.executeQuery( "select calfeed from CalendarFeed as calfeed where calfeed.owner = :owner", [owner:user] );
+			def queryResults = CalendarFeedSubscription.executeQuery( "select calfeed from CalendarFeedSubscription as calfeed where calfeed.owner = :owner", [owner:user] );
 			
 			calFeeds.addAll( queryResults ); 
 		}
@@ -34,7 +36,7 @@ class CalendarController
 		
 		if( session.user != null )
 		{
-			CalendarFeed calFeed = new CalendarFeed();
+			CalendarFeedSubscription calFeed = new CalendarFeedSubscription();
 			
 			User user = userService.findUserByUserId( session.user.userId );
 			calFeed.owner = user;
@@ -43,7 +45,7 @@ class CalendarController
 			
 			if( !calFeed.save() )
 			{
-				println( "Saving CalendarFeed FAILED");
+				println( "Saving CalendarFeedSubscription FAILED");
 				calFeed.errors.allErrors.each { println it };
 			}
 		}
@@ -57,11 +59,11 @@ class CalendarController
 	
 	def editFeed =
 	{
-		CalendarFeed calFeedToEdit = null;
+		CalendarFeedSubscription calFeedToEdit = null;
 		if( session.user != null )
 		{
 			def calFeedId = params.calFeedId;
-			calFeedToEdit = CalendarFeed.findById( params.calFeedId);
+			calFeedToEdit = CalendarFeedSubscription.findById( params.calFeedId);
 		}
 		else
 		{
@@ -75,14 +77,14 @@ class CalendarController
 	{
 		if( session.user != null )
 		{
-			CalendarFeed calFeed = CalendarFeed.findById( params.calFeedId);
+			CalendarFeedSubscription calFeed = CalendarFeedSubscription.findById( params.calFeedId);
 			
 			calFeed.url = params.calFeedUrl;
 			calFeed.name = params.calFeedName;
 			
 			if( !calFeed.save() )
 			{
-				println( "Saving CalendarFeed FAILED");
+				println( "Saving CalendarFeedSubscription FAILED");
 				calFeed.errors.allErrors.each { println it };
 			}
 		}

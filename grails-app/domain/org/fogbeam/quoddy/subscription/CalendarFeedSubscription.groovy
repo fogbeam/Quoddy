@@ -1,8 +1,10 @@
-package org.fogbeam.quoddy
+package org.fogbeam.quoddy.subscription
 
-class CalendarFeed
+import org.fogbeam.quoddy.User;
+
+class CalendarFeedSubscription
 {
-	public CalendarFeed()
+	public CalendarFeedSubscription()
 	{
 		this.uuid = java.util.UUID.randomUUID().toString();
 	}

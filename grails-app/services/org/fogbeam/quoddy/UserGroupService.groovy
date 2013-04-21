@@ -2,6 +2,9 @@ package org.fogbeam.quoddy
 
 import java.util.List
 
+import org.fogbeam.quoddy.stream.ActivityStreamItem;
+import org.fogbeam.quoddy.stream.StreamItemBase;
+
 class UserGroupService
 {
 	
@@ -94,11 +97,11 @@ class UserGroupService
 		return groups;
 	}
 	
-	public List<Activity> getRecentActivitiesForGroup( final UserGroup group, final int maxCount )
+	public List<ActivityStreamItem> getRecentActivitiesForGroup( final UserGroup group, final int maxCount )
 	{
 		println "getRecentActivitiesForGroup: ${group.id} - ${maxCount}";
 			
-		List<Activity> recentActivities = new ArrayList<Activity>();
+		List<ActivityStreamItem> recentActivities = new ArrayList<ActivityStreamItem>();
 		
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, -2160 );
@@ -107,8 +110,8 @@ class UserGroupService
 		println "Using ${cutoffDate} as cutoffDate";
 
 		
-		List<Activity> queryResults =
-			Activity.executeQuery( "select activity from Activity as activity where activity.dateCreated >= :cutoffDate and activity.targetUuid = :targetUuid order by activity.dateCreated desc",
+		List<ActivityStreamItem> queryResults =
+			ActivityStreamItem.executeQuery( "select activity from Activity as activity where activity.dateCreated >= :cutoffDate and activity.targetUuid = :targetUuid order by activity.dateCreated desc",
 			['cutoffDate':cutoffDate, 'targetUuid':group.uuid], ['max': maxCount ]);
 
 		if( queryResults )
@@ -123,11 +126,11 @@ class UserGroupService
 	}
 	
 	
-	public List<EventBase> getRecentEventsForGroup( final UserGroup group, final int maxCount )
+	public List<StreamItemBase> getRecentEventsForGroup( final UserGroup group, final int maxCount )
 	{
 		println "getRecentEventsForGroup: ${group.id} - ${maxCount}";
 			
-		List<EventBase> recentEvents = new ArrayList<EventBase>();
+		List<StreamItemBase> recentEvents = new ArrayList<StreamItemBase>();
 		
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, -2160 );
@@ -136,8 +139,8 @@ class UserGroupService
 		println "Using ${cutoffDate} as cutoffDate";
 
 		
-		List<EventBase> queryResults =
-			EventBase.executeQuery( "select event from EventBase as event where event.dateCreated >= :cutoffDate and event.targetUuid = :targetUuid order by event.dateCreated desc",
+		List<StreamItemBase> queryResults =
+			StreamItemBase.executeQuery( "select event from StreamItemBase as event where event.dateCreated >= :cutoffDate and event.targetUuid = :targetUuid order by event.dateCreated desc",
 			['cutoffDate':cutoffDate, 'targetUuid':group.uuid], ['max': maxCount ]);
 
 		if( queryResults )

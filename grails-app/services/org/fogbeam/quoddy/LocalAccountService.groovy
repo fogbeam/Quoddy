@@ -4,6 +4,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import org.fogbeam.quoddy.social.FriendCollection;
+import org.fogbeam.quoddy.social.FriendRequestCollection;
+import org.fogbeam.quoddy.social.IFollowCollection;
+
 import sun.misc.BASE64Encoder;
 
 class LocalAccountService 

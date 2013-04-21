@@ -1,6 +1,7 @@
 package org.fogbeam.quoddy
 
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+import org.fogbeam.quoddy.stream.ActivityStreamItem
 
 @Mixin(SidebarPopulatorMixin)
 class UserListController
@@ -42,7 +43,7 @@ class UserListController
 		{
 			def user = userService.findUserByUserId( session.user.userId );
 			// println "Doing display with params: ${params}";
-			def activities = new ArrayList<Activity>();
+			def activities = new ArrayList<ActivityStreamItem>();
 								
 			
 			UserList list = UserList.findById( params.listId );

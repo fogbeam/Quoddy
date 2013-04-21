@@ -19,7 +19,7 @@ class ReapOldCalendarEventsJob
 		Date now = new Date();
 		SimpleDateFormat sdf = SimpleDateFormat.getDateTimeInstance();
 		
-		println( "TRIGGER: Reaping old CalendarEvent instances: ${sdf.format( now )}" );
+		println( "TRIGGER: Reaping old CalendarFeedItem instances: ${sdf.format( now )}" );
 
 	}
 }

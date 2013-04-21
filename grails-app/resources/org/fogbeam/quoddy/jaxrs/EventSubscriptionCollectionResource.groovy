@@ -9,8 +9,8 @@ import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.core.Response
 
-import org.fogbeam.quoddy.EventSubscription
 import org.fogbeam.quoddy.jaxrs.collection.EventSubscriptionCollection
+import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
 
 @Path('/api/eventsubscription')
 @Consumes(['application/xml','application/json'])
@@ -21,7 +21,7 @@ class EventSubscriptionCollectionResource
 	Response readAll() {
 		
 		println "readAll";
-		List all = EventSubscription.findAll();
+		List all = BusinessEventSubscription.findAll();
 	
 		EventSubscriptionCollection collection = new EventSubscriptionCollection();
 		
