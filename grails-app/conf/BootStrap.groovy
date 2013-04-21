@@ -1,5 +1,12 @@
 import grails.util.Environment
 
+import org.apache.lucene.analysis.standard.StandardAnalyzer
+import org.apache.lucene.document.Document
+import org.apache.lucene.index.IndexWriter
+import org.apache.lucene.index.IndexWriter.MaxFieldLength
+import org.apache.lucene.store.Directory
+import org.apache.lucene.store.NIOFSDirectory
+import org.apache.lucene.util.Version
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.stream.EventType;
@@ -9,6 +16,7 @@ class BootStrap {
 
 	def ldapTemplate;
 	def userService;
+	def siteConfigService;
 	
 	def init = { servletContext ->
      
@@ -31,8 +39,38 @@ class BootStrap {
      
 	     
 	     
-	     // getClass().classLoader.rootLoader.URLs.each { println it };
-	     
+
+		 String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		 log.debug( "indexDirLocation: ${indexDirLocation}" );
+		 if( indexDirLocation )
+		 {
+			 File indexFile = new java.io.File( indexDirLocation );
+			 String[] indexFileChildren = indexFile.list();
+			 boolean indexIsInitialized = (indexFileChildren != null && indexFileChildren.length > 0 );
+			 if( ! indexIsInitialized )
+			 {
+				 log.debug( "Index not previously initialized, creating empty index" );
+				 /* initialize empty index */
+				 Directory indexDir = new NIOFSDirectory( indexFile );
+				 IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.UNLIMITED);
+				 Document doc = new Document();
+				 writer.addDocument(doc);
+				 writer.close();
+			}
+			else
+			{
+				
+				log.info( "Index already initialized, skipping..." );
+			}
+		 }
+		 else
+		 {
+			 log.warn( "No indexDirLocation configured!!");
+		 }
+		 
+		 
+		 
+		 
      }
      
      def destroy = {

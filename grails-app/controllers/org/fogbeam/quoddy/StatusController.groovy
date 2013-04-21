@@ -62,7 +62,7 @@ class StatusController {
 			
 			activity.title = "Internal ActivityStreamItem";
 			activity.url = new URL( "http://www.example.com" );
-			activity.verb = "status_update";
+			activity.verb = "quoddy_status_update";
 			activity.published = new Date(); // set published to "now"
 			activity.targetUuid = streamPublic.uuid;
 			activity.owner = user;
@@ -75,19 +75,13 @@ class StatusController {
 			eventStreamService.saveActivity( activity );
 			
 			
-			// Map msg = new HashMap();
-			// msg.creator = activity.owner.userId;
-			// msg.text = newStatus.text;
-			// msg.targetUuid = activity.targetUuid;
-			// msg.originTime = activity.dateCreated.time; // NOTE: this will be ever so slightly different from "effectiveDate" 
-														// due to the latency in writing to the database.  So we need to explicitly
-														// include the effectiveDate as a field in this message as well
-			// msg.effectiveDate = activity.effectiveDate.time;
-			
-			// msg.actualEvent = activity;
+			def msg = [msgType:'NEW_STATUS_UPDATE', activityId:activity.id, activityUuid:activity.uuid ];
 				
 			println "sending message to JMS";
-			jmsService.send( queue: 'uitestActivityQueue', /* msg */ activity, 'standard', null );
+			// jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
+			sendJMSMessage("quoddySearchQueue", msg );
+			
+			jmsService.send( queue: 'uitestActivityQueue', activity, 'standard', null );
 			
 		}
 		

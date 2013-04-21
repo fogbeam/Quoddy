@@ -1,9 +1,7 @@
 package org.fogbeam.quoddy
 
-import org.apache.commons.httpclient.HttpClient
-import org.apache.commons.httpclient.HttpException
-import org.apache.commons.httpclient.HttpMethod
-import org.apache.commons.httpclient.methods.GetMethod
+import javax.jms.MapMessage
+
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field
@@ -15,16 +13,13 @@ import org.apache.lucene.index.IndexWriter.MaxFieldLength
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.Version
-import org.apache.tika.metadata.Metadata
-import org.apache.tika.parser.AutoDetectParser
-import org.apache.tika.parser.Parser
-import org.apache.tika.sax.BodyContentHandler
+import org.fogbeam.quoddy.stream.ActivityStreamItem
 
 public class SearchQueueInputService
 {
 	
 	def siteConfigService;
-	def entryService;
+	def eventStreamService;
 	
     static expose = ['jms']
     static destination = "quoddySearchQueue"                 
@@ -54,26 +49,31 @@ public class SearchQueueInputService
     	else
     	{
 			log.info( "Received message: ${msg}" );
+			println "Received message: ${msg}";
+			MapMessage mapMessage = (MapMessage)msg;
+    		String msgType = mapMessage.getString( "msgType" );
+    		if( msgType == null || msgType.isEmpty())
+			{
+				println( "No msgType received!" );
+				return;
+			}
 			
-    		String msgType = msg['msgType'];
-    		
-
     		if( msgType.equals( "NEW_STATUS_UPDATE" ))
     		{
 		    	// add document to index
-		    	log.info( "adding document to index: ${msg['uuid']}" );				
-				newEntry( msg );
+		    	// log.info( "adding document to index: ${msg.uuid}" );				
+				newStatusUpdate( msg );
 
     		}
-			else if( msgType.equals( "NEW_CALENDAR_EVENT" ))
+			else if( msgType.equals( "NEW_CALENDAR_FEED_ITEM" ))
     		{
 		    	log.debug( "adding document to index" );
-				newComment( msg );
+				newCalendarFeedItem( msg );
     		}
-			else if( msgType.equals( "NEW_SUBSCRIPTION_EVENT" ))
+			else if( msgType.equals( "NEW_BUSINESS_SUBSCRIPTION_ITEM" ))
 			{
 				log.debug( "adding document to index" );
-				newComment( msg );
+				// newComment( msg );
 			}
     		else if( msgType.equals( "NEW_QUESTION" ))
     		{
@@ -82,7 +82,7 @@ public class SearchQueueInputService
 				newQuestion( msg );
 				
     		}
-			else if( msgType.equals( "TBD" ))
+			else if( msgType.equals( "NEW_STREAM_ENTRY_COMMENT" ))
     		{
     			
 		    	log.debug( "adding document to index" );
@@ -90,7 +90,7 @@ public class SearchQueueInputService
     		}
 			else 
     		{
-    			log.debug( "Bad message type: ${msgType}" );
+    			println( "Bad message type: ${msgType}" );
     		}
     	}
     }
@@ -142,6 +142,7 @@ public class SearchQueueInputService
 			}
 			catch( Exception e ) {
 				// ignore this for now, but add a log message at least
+				e.printStackTrace();
 			}
 			
 			try
@@ -151,26 +152,28 @@ public class SearchQueueInputService
 			catch( Exception e )
 			{
 				// ignore this for now, but add a log message at least
+				e.printStackTrace();
 			}
 		}
 		
 	}
 	
-	private void newEntry( def msg )
+	private void newStatusUpdate( def msg )
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		log.info ( "got indexDirLocation as: ${indexDirLocation}");
+		println( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation ) );
 		IndexWriter writer = null;
 		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
 		// where we never do get the required lock.
 		int count = 0;
+		println( "Trying to acquire IndexWriter");
 		while( writer == null )
 		{
 			count++;
 			if( count > 3 ) {
-				log.debug( "tried to obtain Lucene lock 3 times, giving up..." );
+				println( "tried to obtain Lucene lock 3 times, giving up..." );
 				return;
 			}
 			try
@@ -183,51 +186,29 @@ public class SearchQueueInputService
 			}
 		}
 		
-		InputStream input = null;
+		println( "opened Writer" );
+		
 		try
 		{
+			ActivityStreamItem statusUpdateActivity = eventStreamService.getEventById( msg.getLong("activityId") );
+
+			// println( "Trying to add Document to index" );
+			
 			writer.setUseCompoundFile(true);
-	
+
 			Document doc = new Document();
 		
-			doc.add( new Field( "docType", "docType.entry", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-			doc.add( new Field( "uuid", msg['uuid'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "id", Long.toString( msg['id'] ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "url", msg['url'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "title", msg['title'], Field.Store.YES, Field.Index.ANALYZED ) );
-			doc.add( new Field( "tags", "", Field.Store.YES, Field.Index.ANALYZED ));
-		
+			doc.add( new Field( "docType", "docType.statusUpdate", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+			doc.add( new Field( "uuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "id", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "content", statusUpdateActivity.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			
 			writer.addDocument( doc );
 			writer.optimize();
+			// println( "Updated Lucene Index for new StatusUpdate" );
 		}
 		finally
 		{
-			try
-			{
-				if( input != null )
-				{
-					input.close();
-				}
-			}
-			catch( Exception e )
-			{
-				// ignore this for now, but add a log message at least
-				e.printStackTrace();
-			}
-		
-			try
-			{
-				if( method != null )
-				{
-					log.debug( "calling method.releaseConnection()" );
-					method.releaseConnection();
-				}
-			}
-			catch( Exception e )
-			{
-				// ignore this for now, but add a log message at least
-				e.printStackTrace();
-			}
 				
 			try
 			{
@@ -256,7 +237,7 @@ public class SearchQueueInputService
 			}
 		}
 
-		
+		println( "done with onMessage() call" );
 	}
 	
 	

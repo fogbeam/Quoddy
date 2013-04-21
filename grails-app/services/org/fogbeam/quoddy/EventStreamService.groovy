@@ -385,12 +385,19 @@ class EventStreamService {
 		return recentEvents;
 	}
 	
-	public StreamItemBase getEventById( final int eventId )
+	public StreamItemBase getEventById( final long eventId )
 	{
 		StreamItemBase event = StreamItemBase.findById( eventId );
 		
 		return event;
-			
 	}
+
+	public StreamItemBase getEventByUuid( final String uuid )
+	{
+		StreamItemBase event = StreamItemBase.findByUuid( uuid );
+		
+		return event;
+	}
+	
 		
 }
