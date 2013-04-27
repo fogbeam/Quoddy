@@ -20,6 +20,8 @@ class BusinessEventSubscriptionItem extends StreamItemBase implements Serializab
 	// and populate this just-in-time for rendering in the stream.
 	String xmlUuid;
 	
+	String summary;
+	
 	public String getTemplateName()
 	{
 		return "/renderSubscriptionEvent";

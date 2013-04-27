@@ -22,6 +22,7 @@ class UpdateCalendarFeedsJob
 	
 	def group = "MyGroup";
 	def volatility = false;
+	def jmsService;
 	
 	static triggers = {
 	}
@@ -138,6 +139,14 @@ class UpdateCalendarFeedsJob
 						{
 							println "successfully saved CalendarEvent.  Uid: ${event.uid}, Id: ${event.id}, Uuid: ${event.uuid}";	
 						}
+						
+						
+						// send JMS message for UI notifications
+						
+						// send JMS message for indexing and additional processing
+						def msg = [ id:event.id, uuid:event.uuid, msgType:'NEW_CALENDAR_FEED_ITEM'];
+						jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
+						
 						
 					}
 				}

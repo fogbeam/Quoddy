@@ -1,41 +1,80 @@
 package org.fogbeam.quoddy
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer 
-import org.apache.lucene.document.Document 
-import org.apache.lucene.document.Field 
-import org.apache.lucene.index.IndexWriter 
-import org.apache.lucene.index.Term 
-import org.apache.lucene.index.IndexWriter.MaxFieldLength 
-import org.apache.lucene.queryParser.QueryParser 
-import org.apache.lucene.search.BooleanQuery 
-import org.apache.lucene.search.IndexSearcher 
-import org.apache.lucene.search.Query 
-import org.apache.lucene.search.ScoreDoc 
-import org.apache.lucene.search.TermQuery 
-import org.apache.lucene.search.TopDocs 
-import org.apache.lucene.search.BooleanClause.Occur 
-import org.apache.lucene.store.Directory 
-import org.apache.lucene.store.FSDirectory 
-import org.apache.lucene.store.NIOFSDirectory 
-import org.apache.lucene.util.Version 
-import org.fogbeam.quoddy.User;
+
+import org.apache.lucene.analysis.standard.StandardAnalyzer
+import org.apache.lucene.document.Document
+import org.apache.lucene.document.Field
+import org.apache.lucene.index.IndexWriter
+import org.apache.lucene.index.Term
+import org.apache.lucene.index.IndexWriter.MaxFieldLength
+import org.apache.lucene.queryParser.MultiFieldQueryParser
+import org.apache.lucene.queryParser.QueryParser
+import org.apache.lucene.search.BooleanQuery
+import org.apache.lucene.search.IndexSearcher
+import org.apache.lucene.search.Query
+import org.apache.lucene.search.ScoreDoc
+import org.apache.lucene.search.TermQuery
+import org.apache.lucene.search.TopDocs
+import org.apache.lucene.search.BooleanClause.Occur
+import org.apache.lucene.store.Directory
+import org.apache.lucene.store.FSDirectory
+import org.apache.lucene.store.NIOFSDirectory
+import org.apache.lucene.util.Version
+import org.fogbeam.quoddy.search.SearchResult
+
 
 class SearchController 
 {
 
+	def siteConfigService;
 	def userService;
 	
 	def index = 
-	{
-		println "WTF?";
-		
+	{	
 		[]		
 	}
 	
 	
-	def searchEverything =
+	
+	def doEverythingSearch =
 	{
 		
+		// search using supplied parameters and return the
+		// model for rendering...
+		String queryString = params.queryString;
+		println "searching Everything, queryString: ${queryString}";
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		println( "got indexDirLocation as: ${indexDirLocation}");
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation ) );
+		
+		
+		IndexSearcher searcher = new IndexSearcher( indexDir );
+	
+		// QueryParser queryParser = new QueryParser(Version.LUCENE_30, "content", new StandardAnalyzer(Version.LUCENE_30));
+		StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
+		String[] fields = ["content", "status", "description", "location", "summary" ];
+		MultiFieldQueryParser queryParser = new MultiFieldQueryParser( Version.LUCENE_30, fields, analyzer );
+		
+		Query query = queryParser.parse(queryString);
+		
+		TopDocs hits = searcher.search(query, 20);
+		
+		List<SearchResult> searchResults = new ArrayList<SearchResult>();
+		ScoreDoc[] docs = hits.scoreDocs;
+		println "Search returned " + docs.length + " results";
+		for( ScoreDoc doc : docs )
+		{
+			Document result = searcher.doc( doc.doc );
+			String docType = result.get("docType")
+			String uuid = result.get("uuid");
+			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType);
+			
+			searchResults.add( searchResult );
+		}
+		
+		println "found some results: ${searchResults.size()}";
+		
+		render( view:'everythingSearchResults', model:[searchResults:searchResults]);
 	}
 	
 	def showAdvanced =

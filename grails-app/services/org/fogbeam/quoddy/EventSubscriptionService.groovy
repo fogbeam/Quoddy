@@ -26,6 +26,7 @@ class EventSubscriptionService
 		String subscribersWithSubId = msg.getStringProperty( "subscribersWithSubId" );
 		String eventUuid = msg.getStringProperty( 'eventUuid' );
 		String matchedExpression = msg.getStringProperty( 'matchedExpression' );
+		String summary = msg.getStringProperty( "summary" );
 		
 		println "subscribersWithSubId: ${subscribersWithSubId}";
 		
@@ -60,7 +61,15 @@ class EventSubscriptionService
 				subEvent.targetUuid = streamPublic.uuid;
 				subEvent.name = matchedExpression;
 				subEvent.effectiveDate = new Date(); // TODO: should take this from the JMS message
-				
+				if( summary != null )
+				{
+					subEvent.summary = summary;
+				}
+				else 
+				{
+					subEvent.summary = "";
+				}
+
 				// saving this and sending the UI notification should
 				// happen in a transaction
 				this.saveEvent( subEvent );
