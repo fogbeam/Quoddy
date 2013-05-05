@@ -399,5 +399,15 @@ class EventStreamService {
 		return event;
 	}
 	
+	// NOTE: we will probably need a version of this that supports
+	// chunking, since returning *every* item in the stream will consume
+	// massive memory once the system has been in use for a while.
+	public List<StreamItemBase> getAllStreamItems()
+	{
+		List<StreamItemBase> items = new ArrayList<StreamItemBase>();
+		items.addAll( StreamItemBase.findAll() );
 		
+		return items;
+	}
+			
 }
