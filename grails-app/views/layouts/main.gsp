@@ -13,14 +13,26 @@
 <link rel="stylesheet" type="text/css"
 	href="${createLinkTo(dir:'css', file:'crappy_css_added_by_phil.css')}" />
 
+
+
 <link rel="stylesheet" type="text/css"
 	href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" />
+
+<link rel="stylesheet" type="text/css"
+ href="${createLinkTo(dir:'js/jquery-ui-1.10.3.custom/css/no-theme', file:'jquery-ui-1.10.3.custom.css') }" />
+
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<g:javascript library="jquery-1.7.1.min" />
+<!-- <g:javascript library="jquery-1.7.1.min" /> -->
+<g:javascript library="jquery-ui-1.10.3.custom/js/jquery-1.9.1" />
+
 <g:javascript>
           var $j = jQuery.noConflict();	
-        </g:javascript>
+</g:javascript>
+
+<g:javascript library="jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom" />
+
 
 <g:javascript library="dropdown" />
 <g:javascript>
