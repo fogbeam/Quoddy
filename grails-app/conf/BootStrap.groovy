@@ -17,6 +17,7 @@ class BootStrap {
 	def ldapTemplate;
 	def userService;
 	def siteConfigService;
+	def searchService;
 	
 	def init = { servletContext ->
      
@@ -38,38 +39,8 @@ class BootStrap {
 	     }     
      
 	     
-	     
-
-		 String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		 log.debug( "indexDirLocation: ${indexDirLocation}" );
-		 if( indexDirLocation )
-		 {
-			 File indexFile = new java.io.File( indexDirLocation );
-			 String[] indexFileChildren = indexFile.list();
-			 boolean indexIsInitialized = (indexFileChildren != null && indexFileChildren.length > 0 );
-			 if( ! indexIsInitialized )
-			 {
-				 log.debug( "Index not previously initialized, creating empty index" );
-				 /* initialize empty index */
-				 Directory indexDir = new NIOFSDirectory( indexFile );
-				 IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.UNLIMITED);
-				 Document doc = new Document();
-				 writer.addDocument(doc);
-				 writer.close();
-			}
-			else
-			{
-				
-				log.info( "Index already initialized, skipping..." );
-			}
-		 }
-		 else
-		 {
-			 log.warn( "No indexDirLocation configured!!");
-		 }
-		 
-		 
-		 
+	     searchService.initializeGeneralIndex();
+		 searchService.initializePersonIndex();		 
 		 
      }
      

@@ -28,6 +28,7 @@ class SearchController
 
 	def siteConfigService;
 	def userService;
+	def searchService;
 	
 	def index = 
 	{	
@@ -43,35 +44,8 @@ class SearchController
 		// model for rendering...
 		String queryString = params.queryString;
 		println "searching Everything, queryString: ${queryString}";
-		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		println( "got indexDirLocation as: ${indexDirLocation}");
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation ) );
 		
-		
-		IndexSearcher searcher = new IndexSearcher( indexDir );
-	
-		// QueryParser queryParser = new QueryParser(Version.LUCENE_30, "content", new StandardAnalyzer(Version.LUCENE_30));
-		StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
-		String[] fields = ["content", "status", "description", "location", "summary" ];
-		MultiFieldQueryParser queryParser = new MultiFieldQueryParser( Version.LUCENE_30, fields, analyzer );
-		
-		Query query = queryParser.parse(queryString);
-		
-		TopDocs hits = searcher.search(query, 20);
-		
-		List<SearchResult> searchResults = new ArrayList<SearchResult>();
-		ScoreDoc[] docs = hits.scoreDocs;
-		println "Search returned " + docs.length + " results";
-		for( ScoreDoc doc : docs )
-		{
-			Document result = searcher.doc( doc.doc );
-			String docType = result.get("docType")
-			String uuid = result.get("uuid");
-			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType);
-			
-			searchResults.add( searchResult );
-		}
-		
+		List<SearchResult> searchResults = searchService.doEverythingSearch( queryString );
 		println "found some results: ${searchResults.size()}";
 		
 		render( view:'everythingSearchResults', model:[searchResults:searchResults]);
@@ -90,28 +64,7 @@ class SearchController
 		String queryString = params.queryString;
 		println "searching Users, queryString: ${queryString}";
 		
-		File indexDir = new File( "/development/lucene_indexes/quoddy/person_index" );
-		Directory fsDir = FSDirectory.open( indexDir );
-		
-		IndexSearcher searcher = new IndexSearcher( fsDir );
-	
-		QueryParser queryParser = new QueryParser(Version.LUCENE_30, "fullName", new StandardAnalyzer(Version.LUCENE_30));
-		Query query = queryParser.parse(queryString);
-		
-		TopDocs hits = searcher.search(query, 20);
-		
-		def users = new ArrayList<User>();
-		ScoreDoc[] docs = hits.scoreDocs;
-		for( ScoreDoc doc : docs )
-		{
-			Document result = searcher.doc( doc.doc );
-			String userId = result.get("userId")
-			println( userId + " " + result.get("fullName"));
-		
-			users.add( userService.findUserByUserId(userId));
-		
-		}
-		
+		List<User> users = searchService.doUserSearch();
 		println "found some users: ${users.size()}";
 		
 		render( view:'userSearchResults', model:[allUsers:users]);
@@ -131,34 +84,10 @@ class SearchController
 		println "searching People, queryString: ${queryString}";
 				
 		
-		File indexDir = new File( "/development/lucene_indexes/quoddy/person_index" );
-		Directory fsDir = FSDirectory.open( indexDir );
 		
-		IndexSearcher searcher = new IndexSearcher( fsDir );
-
-		BooleanQuery outerQuery = new BooleanQuery();
-		
-		QueryParser queryParser = new QueryParser(Version.LUCENE_30, "fullName", new StandardAnalyzer(Version.LUCENE_30));
-		Query userQuery = queryParser.parse(queryString);
-		
-		TopDocs hits = searcher.search( userQuery, 20);
-		
-		def users = new ArrayList<User>();
-		ScoreDoc[] docs = hits.scoreDocs;
-		for( ScoreDoc doc : docs )
-		{
-			Document result = searcher.doc( doc.doc );
-			String userId = result.get("userId")
-			println( userId + " " + result.get("fullName"));
-		
-			users.add( userService.findUserByUserId(userId));
-		
-		}
-		
+		List<User> users = searchService.doPeopleSearch( queryString );
 		println "found some users: ${users.size()}";
 		
-		
-		println "done"
 		render( view:'peopleSearchResults', model:[allUsers:users]);
 		
 	}
@@ -170,61 +99,17 @@ class SearchController
 		
 		User user = session.user;
 		
-		// TODO: verify login...
 
 		// search users using supplied parameters and return the
 		// model for rendering...
 		String queryString = params.queryString;
 		println "searching IFollow, queryString: ${queryString}";
 				
-		// get a list of my friends
-		List<User> iFollow = userService.listIFollow( user );
-		
-		// use the list of iFollow ids as part of the lucene query.  Need to make sure that we
-		// specify that the id field must be a match.
-		
-		File indexDir = new File( "/development/lucene_indexes/quoddy/person_index" );
-		Directory fsDir = FSDirectory.open( indexDir );
-		
-		IndexSearcher searcher = new IndexSearcher( fsDir );
 
-		BooleanQuery outerQuery = new BooleanQuery();
-		
-		QueryParser queryParser = new QueryParser(Version.LUCENE_30, "fullName", new StandardAnalyzer(Version.LUCENE_30));
-		Query userQuery = queryParser.parse(queryString);
-		
-		BooleanQuery userIdQuery = new BooleanQuery();
-		for( User person : iFollow )
-		{
-			Term term = new Term( "userId", person.userId );
-			TermQuery termQuery = new TermQuery( term );
-			userIdQuery.add(termQuery, Occur.SHOULD );
-		}
-		
-		outerQuery.add( userQuery, Occur.MUST );
-		outerQuery.add( userIdQuery, Occur.MUST );
-		
-		System.out.println( "Query (" + outerQuery.getClass().getName() + "): "  + outerQuery.toString() );
-		
-		
-		TopDocs hits = searcher.search( outerQuery, 20);
-		
-		def users = new ArrayList<User>();
-		ScoreDoc[] docs = hits.scoreDocs;
-		for( ScoreDoc doc : docs )
-		{
-			Document result = searcher.doc( doc.doc );
-			String userId = result.get("userId")
-			println( userId + " " + result.get("fullName"));
-		
-			users.add( userService.findUserByUserId(userId));
-		
-		}
-		
+		List<User> users = searchService.doIFollowSearch( queryString );
 		println "found some users: ${users.size()}";
 		
 		
-		println "done"
 		render( view:'iFollowSearchResults', model:[allUsers:users]);
 		
 			
@@ -242,57 +127,14 @@ class SearchController
 		println "Searching Friends";	
 		
 		User user = session.user;
-		
-		// TODO: verify login...
+
 
 		// search users using supplied parameters and return the
 		// model for rendering...
 		String queryString = params.queryString;
 		println "searching Users, queryString: ${queryString}";
 				
-		// get a list of my friends
-		List<User> myFriends = userService.listFriends( user );
-		
-		// use the list of friend ids as part of the lucene query.  Need to make sure that we
-		// specify that the id field must be a match.
-		
-		File indexDir = new File( "/development/lucene_indexes/quoddy/person_index" );
-		Directory fsDir = FSDirectory.open( indexDir );
-		
-		IndexSearcher searcher = new IndexSearcher( fsDir );
-
-		BooleanQuery outerQuery = new BooleanQuery();
-		
-		QueryParser queryParser = new QueryParser(Version.LUCENE_30, "fullName", new StandardAnalyzer(Version.LUCENE_30));
-		Query userQuery = queryParser.parse(queryString);
-		
-		BooleanQuery userIdQuery = new BooleanQuery();
-		for( User friend : myFriends )
-		{
-			Term term = new Term( "userId", friend.userId );
-			TermQuery termQuery = new TermQuery( term );
-			userIdQuery.add(termQuery, Occur.SHOULD );
-		}
-		
-		outerQuery.add( userQuery, Occur.MUST );
-		outerQuery.add( userIdQuery, Occur.MUST );
-		
-		System.out.println( "Query (" + outerQuery.getClass().getName() + "): "  + outerQuery.toString() );
-		
-		
-		TopDocs hits = searcher.search( outerQuery, 20);
-		
-		def users = new ArrayList<User>();
-		ScoreDoc[] docs = hits.scoreDocs;
-		for( ScoreDoc doc : docs )
-		{
-			Document result = searcher.doc( doc.doc );
-			String userId = result.get("userId")
-			println( userId + " " + result.get("fullName"));
-		
-			users.add( userService.findUserByUserId(userId));
-		
-		}
+		List<User> users = searchService.doFriendSearch( queryString );
 		
 		println "found some users: ${users.size()}";
 		
@@ -304,54 +146,21 @@ class SearchController
 	}
 	
 	
-	def rebuildIndex = {
+	def rebuildPersonIndex = {
 		
-		// build the search index using Lucene
-		List<User> users = userService.findAllUsers();
-		println "reindexing ${users.size()} users";
-		Directory indexDir = new NIOFSDirectory( new java.io.File( "/development/lucene_indexes/quoddy/person_index" ) );
-		IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.LIMITED);
-		writer.setUseCompoundFile(false);		
+		searchService.rebuildPersonIndex();
 		
-		for( User user : users )
-		{	
-			Document doc = new Document();
-			
-			
-			doc.add( new Field( "fullName", user.getFullName(), 
-						Field.Store.YES, Field.Index.ANALYZED ) );
-			
-			String bio = user.getBio();
-			if( bio == null )
-			{
-				bio= "NA";	
-			}
-			
-			doc.add( new Field( "bio", bio, 
-					Field.Store.YES, Field.Index.ANALYZED ) );
-			
-			doc.add( new Field( "userId", user.userId, 
-					Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			
-			doc.add( new Field( "email", user.getEmail(), 
-					Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			
-			String homepage = user.getHomepage();
-			if( homepage == null ) 
-			{
-				homepage = "NA";
-			}
-			doc.add( new Field( "homepage", homepage, 
-					Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			
-			writer.addDocument( doc );
-		}
-		
-		writer.optimize();
-		writer.close();		
-		
-		println "done";
-		render( "<html><head><title>Index Rebuilt</head><body><h1>Index Rebuilt</h1></body></html>" );
+		render( "<html><head><title>Person Index Rebuilding...</head><body><h1>Person Index Rebuilding...</h1></body></html>" );
 		
 	}
+	
+	def rebuildGeneralIndex = {
+		
+		searchService.rebuildGeneralIndex();
+		
+		render( "<html><head><title>General Index Rebuilding...</head><body><h1>General Index Rebuilding...</h1></body></html>" );
+		
+	}
+	
+	
 }
