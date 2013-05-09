@@ -15,6 +15,7 @@ import org.apache.lucene.index.IndexWriter.MaxFieldLength
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.Version
+import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
 import org.fogbeam.quoddy.stream.CalendarFeedItem
@@ -24,6 +25,8 @@ public class SearchQueueInputService
 	
 	def siteConfigService;
 	def eventStreamService;
+	def searchService;
+	def userService;
 	
     static expose = ['jms']
     static destination = "quoddySearchQueue"                 
@@ -102,6 +105,11 @@ public class SearchQueueInputService
 		    	log.debug( "adding document to index" );
 				newStreamEntryComment( msg );
     		}
+			else if( msgType.equals( "NEW_USER" ) )
+			{
+				log.debug( "adding new User to Person index" );
+				newUser( msg );
+			}
 			else 
     		{
     			println( "Bad message type: ${msgType}" );
@@ -110,11 +118,12 @@ public class SearchQueueInputService
     }
 
 	
+	
 	private void newStatusUpdate( def msg )
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		println( "got indexDirLocation as: ${indexDirLocation}");
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation ) );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
@@ -198,7 +207,7 @@ public class SearchQueueInputService
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		println( "got indexDirLocation as: ${indexDirLocation}");
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation ) );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
@@ -298,7 +307,7 @@ public class SearchQueueInputService
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		println( "got indexDirLocation as: ${indexDirLocation}");
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation ) );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
@@ -382,7 +391,7 @@ public class SearchQueueInputService
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		println( "got indexDirLocation as: ${indexDirLocation}");
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation ) );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
@@ -418,7 +427,7 @@ public class SearchQueueInputService
 
 			Document doc = new Document();
 		
-			doc.add( new Field( "docType", "docType.statusUpdate", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+			doc.add( new Field( "docType", "docType.activityStreamItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
 			doc.add( new Field( "uuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "id", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "content", statusUpdateActivity.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
@@ -467,7 +476,7 @@ public class SearchQueueInputService
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		println( "got indexDirLocation as: ${indexDirLocation}");
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation ) );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
@@ -495,21 +504,21 @@ public class SearchQueueInputService
 		
 		try
 		{
-			ActivityStreamItem statusUpdateActivity = eventStreamService.getEventById( msg.getLong("activityId") );
+			// ActivityStreamItem statusUpdateActivity = eventStreamService.getEventById( msg.getLong("activityId") );
 
 			// println( "Trying to add Document to index" );
 			
-			writer.setUseCompoundFile(true);
-
-			Document doc = new Document();
-		
-			doc.add( new Field( "docType", "docType.statusUpdate", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-			doc.add( new Field( "uuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "id", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "content", statusUpdateActivity.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
-			
-			writer.addDocument( doc );
-			writer.optimize();
+//			writer.setUseCompoundFile(true);
+//
+//			Document doc = new Document();
+//		
+//			doc.add( new Field( "docType", "docType.rssFeedItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+//			doc.add( new Field( "uuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+//			doc.add( new Field( "id", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+//			doc.add( new Field( "content", statusUpdateActivity.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+//			
+//			writer.addDocument( doc );
+//			writer.optimize();
 			// println( "Updated Lucene Index for new StatusUpdate" );
 		}
 		finally
@@ -553,7 +562,7 @@ public class SearchQueueInputService
 	{
 	
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation ) );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
@@ -576,7 +585,7 @@ public class SearchQueueInputService
 	
 			Document doc = new Document();
 		
-			doc.add( new Field( "docType", "docType.entry", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+			doc.add( new Field( "docType", "docType.question", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
 			doc.add( new Field( "uuid", msg['uuid'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "id", Long.toString( msg['id'] ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "url", msg['url'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
@@ -650,7 +659,7 @@ public class SearchQueueInputService
 	
 			Document doc = new Document();
 		
-			doc.add( new Field( "docType", "docType.comment", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+			doc.add( new Field( "docType", "docType.streamEntryComment", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
 		
 			doc.add( new Field( "entry_id", Long.toString( msg['entry_id'] ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "entry_uuid", msg['entry_uuid'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
@@ -682,6 +691,77 @@ public class SearchQueueInputService
 			}
 		}
 	}
+	
+	
+	private void newUser( def msg )
+	{
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index" ) );
+		IndexWriter writer = null;
+
+		
+		int luceneLockRetryCount = 0;
+		while( writer == null )
+		{
+			try
+			{
+				writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), false, MaxFieldLength.UNLIMITED );
+			}
+			catch( org.apache.lucene.store.LockObtainFailedException lfe )
+			{
+				luceneLockRetryCount++;
+				if( luceneLockRetryCount > 10 )
+				{
+					log.error( "Failed to obtain lock for Lucene store", e );
+					return;
+				}
+				else
+				{
+					Thread.sleep( 1200 );
+					continue;
+				}
+			}
+		}
+		
+		try
+		{
+			
+			User user = userService.findUserByUuid( msg['user_uuid']);
+			
+			writer.setUseCompoundFile(true);
+	
+			Document doc = new Document();
+			
+			doc.add( new Field( "fullName", user.getFullName(),
+				Field.Store.YES, Field.Index.ANALYZED ) );
+			
+			
+			writer.addDocument( doc );
+	
+			writer.optimize();
+		}
+		finally
+		{
+			try
+			{
+				writer.close();
+			}
+			catch( Exception e ) {
+				// ignore this for now, but add a log message at least
+			}
+			
+			try
+			{
+				indexDir.close();
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+			}
+		}
+			
+	}
+	
 	
     private void addTag( final String uuid, final String tagName )
     {
@@ -722,7 +802,7 @@ public class SearchQueueInputService
 			{
 				/* Entry entry = entryService.findByUuid( uuid );
 				Document doc = new Document();
-				doc.add( new Field( "docType", "docType.entry", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+				doc.add( new Field( "docType", "docType.tag", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
 				doc.add( new Field( "uuid", entry.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 				doc.add( new Field( "id", Long.toString(entry.id), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 				doc.add( new Field( "url", entry.url, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
@@ -797,6 +877,8 @@ public class SearchQueueInputService
     
     private void rebuildIndex()
     {
-		log.debug( "doing rebuildIndex" );	    	
+		log.warn( "doing rebuildIndex" );
+		searchService.rebuildGeneralIndex();
+		searchService.rebuildPersonIndex();	    	
     }
 }

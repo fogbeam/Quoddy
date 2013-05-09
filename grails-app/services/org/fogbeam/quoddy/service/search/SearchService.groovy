@@ -22,7 +22,13 @@ import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.Version
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.search.SearchResult
+import org.fogbeam.quoddy.stream.ActivityStreamItem
+import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
+import org.fogbeam.quoddy.stream.CalendarFeedItem
+import org.fogbeam.quoddy.stream.Question
+import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.StreamItemBase;
+import org.fogbeam.quoddy.stream.StreamItemComment
 
 class SearchService
 {
@@ -33,7 +39,7 @@ class SearchService
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		println( "got indexDirLocation as: ${indexDirLocation}");
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "general_index" ) );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
 		
 		IndexSearcher searcher = new IndexSearcher( indexDir );
@@ -68,7 +74,7 @@ class SearchService
 	public List<User> doUserSearch( final String queryString )
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "person_index") );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
 		
 		IndexSearcher searcher = new IndexSearcher( indexDir );
 	
@@ -97,7 +103,7 @@ class SearchService
 	public List<User> doPeopleSearch( final String queryString )
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "person_index") );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
 		
 		IndexSearcher searcher = new IndexSearcher( indexDir );
 
@@ -135,7 +141,7 @@ class SearchService
 		// specify that the id field must be a match.
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "person_index") );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
 
 		BooleanQuery outerQuery = new BooleanQuery();
 		
@@ -183,7 +189,7 @@ class SearchService
 		// specify that the id field must be a match.
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "person_index") );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
 
 		BooleanQuery outerQuery = new BooleanQuery();
 		
@@ -227,7 +233,7 @@ class SearchService
 		// a quick "switch" at the end, so the main index isn't offline (or bogged down) the
 		// whole time we are re-indexing
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "general_index") );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index") );
 		IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.LIMITED);
 		writer.setUseCompoundFile(false);
 	
@@ -243,6 +249,26 @@ class SearchService
 		
 	}
 	
+	public void addToIndex( final IndexWriter writer, final ActivityStreamItem item )
+	{}
+	
+	public void addToIndex( final IndexWriter writer, final CalendarFeedItem item )
+	{}
+	
+	public void addToIndex( final IndexWriter writer, final BusinessEventSubscriptionItem item )
+	{}	
+	
+	public void addToIndex( final IndexWriter writer, final Question item )
+	{}
+
+	public void addToIndex( final IndexWriter writer, final RssFeedItem item )
+	{}
+		
+	public void addToIndex( final IndexWriter writer, final StreamItemComment item )
+	{}
+
+	
+		
 	public void rebuildPersonIndex()
 	{
 		// build the search index using Lucene
@@ -250,7 +276,7 @@ class SearchService
 		println "reindexing ${users.size()} users";
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "person_index") );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
 		IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.LIMITED);
 		writer.setUseCompoundFile(false);
 		
@@ -299,12 +325,12 @@ class SearchService
 		log.debug( "indexDirLocation: ${indexDirLocation}" );
 		if( indexDirLocation )
 		{
-			File indexFile = new java.io.File( indexDirLocation + "general_index" );
+			File indexFile = new java.io.File( indexDirLocation + "/general_index" );
 			String[] indexFileChildren = indexFile.list();
 			boolean indexIsInitialized = (indexFileChildren != null && indexFileChildren.length > 0 );
 			if( ! indexIsInitialized )
 			{
-				log.debug( "Index not previously initialized, creating empty index" );
+				println( "Index not previously initialized, creating empty index" );
 				/* initialize empty index */
 				Directory indexDir = new NIOFSDirectory( indexFile );
 				IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.UNLIMITED);
@@ -315,12 +341,12 @@ class SearchService
 		   else
 		   {
 			   
-			   log.info( "Index already initialized, skipping..." );
+			   println( "Index already initialized, skipping..." );
 		   }
 		}
 		else
 		{
-			log.warn( "No indexDirLocation configured!!");
+			println( "No indexDirLocation configured!!");
 		}
 		
 	}
@@ -331,7 +357,7 @@ class SearchService
 		log.debug( "indexDirLocation: ${indexDirLocation}" );
 		if( indexDirLocation )
 		{
-			File indexFile = new java.io.File( indexDirLocation + "person_index" );
+			File indexFile = new java.io.File( indexDirLocation + "/person_index" );
 			String[] indexFileChildren = indexFile.list();
 			boolean indexIsInitialized = (indexFileChildren != null && indexFileChildren.length > 0 );
 			if( ! indexIsInitialized )
@@ -356,6 +382,4 @@ class SearchService
 		}
 		
 	}
-		
-	
 }
