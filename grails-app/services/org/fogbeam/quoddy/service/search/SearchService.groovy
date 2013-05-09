@@ -34,6 +34,7 @@ class SearchService
 {
 	
 	def siteConfigService;
+	def userService;
 	
 	public List<SearchResult> doEverythingSearch( final String queryString )
 	{

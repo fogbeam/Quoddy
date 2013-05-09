@@ -42,16 +42,7 @@ public class SearchQueueInputService
     	log.debug( "GOT MESSAGE: ${msg}" ); 
     
     	if( msg instanceof java.lang.String )
-    	{
-    		log.info( "Received message: ${msg}" );
-    		
-    		
-    		if( msg.equals( "REINDEX_ALL" ))
-    		{
-    			rebuildIndex();
-    			return;
-    		}
-
+    	{    		
     	}
     	else
     	{
@@ -65,7 +56,20 @@ public class SearchQueueInputService
 				return;
 			}
 			
-			if( msgType.equals( "NEW_STATUS_UPDATE" )) // TODO: rename all this to STREAM_POST or something.
+			
+			if( msgType.equals( "REINDEX_ALL" ))
+			{
+				rebuildAllIndexes();
+			}
+			else if( msgType.equals( "REINDEX_PERSON" ))
+			{
+				rebuildPersonIndex();
+			}
+			else if( msgType.equals( "REINDEX_GENERAL" ))
+			{
+				rebuildGeneralIndex();
+			}
+			else if( msgType.equals( "NEW_STATUS_UPDATE" )) // TODO: rename all this to STREAM_POST or something.
     		{
 		    	// add document to index
 		    	log.info( "adding document to index: ${mapMessage.getString('activityUuid')}" );				
@@ -875,10 +879,21 @@ public class SearchQueueInputService
     	}
     }
     
-    private void rebuildIndex()
+    private void rebuildAllIndexes()
     {
 		log.warn( "doing rebuildIndex" );
 		searchService.rebuildGeneralIndex();
 		searchService.rebuildPersonIndex();	    	
     }
+	
+	private void rebuildPersonIndex()
+	{
+		searchService.rebuildPersonIndex();
+	}
+	
+	private void rebuildGeneralIndex()
+	{
+		searchService.rebuildGeneralIndex();
+	}
+	
 }

@@ -29,6 +29,7 @@ class SearchController
 	def siteConfigService;
 	def userService;
 	def searchService;
+	def jmsService;
 	
 	def index = 
 	{	
@@ -146,19 +147,33 @@ class SearchController
 	}
 	
 	
+	def rebuildAll = {
+	
+		// send JMS message requesting ALL index rebuild
+		def msg = [ msgType:'REINDEX_ALL'];
+		jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
+		
+		render( "<html><head><title>Person Index Rebuilding...</title></head><body><h1>All Indexes Rebuilding...</h1></body></html>" );
+		
+	}
+	
 	def rebuildPersonIndex = {
 		
-		searchService.rebuildPersonIndex();
+		// TODO: send JMS message requesting PERSON index rebuild
+		def msg = [ msgType:'REINDEX_PERSON'];
+		jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
 		
-		render( "<html><head><title>Person Index Rebuilding...</head><body><h1>Person Index Rebuilding...</h1></body></html>" );
+		render( "<html><head><title>Person Index Rebuilding...</title></head><body><h1>Person Index Rebuilding...</h1></body></html>" );
 		
 	}
 	
 	def rebuildGeneralIndex = {
 		
-		searchService.rebuildGeneralIndex();
+		// TODO: send JMS message requesting GENERAL index rebuild
+		def msg = [ msgType:'REINDEX_GENERAL'];
+		jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
 		
-		render( "<html><head><title>General Index Rebuilding...</head><body><h1>General Index Rebuilding...</h1></body></html>" );
+		render( "<html><head><title>General Index Rebuilding...</title></head><body><h1>General Index Rebuilding...</h1></body></html>" );
 		
 	}
 	
