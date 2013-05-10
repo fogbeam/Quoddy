@@ -205,7 +205,7 @@ class ActivityStreamItem extends StreamItemBase implements Serializable
 	String	verb;
 	URL 	icon;
 	String 	uuid;
-
+	
 	String 	actorUuid;
 	String 	actorUrl;
 	String	actorContent;

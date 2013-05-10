@@ -3,6 +3,7 @@ package org.fogbeam.quoddy.service.search
 import java.util.List;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer
+import org.apache.lucene.document.DateTools
 import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field
 import org.apache.lucene.index.IndexWriter
@@ -35,6 +36,7 @@ class SearchService
 	
 	def siteConfigService;
 	def userService;
+	def eventStreamService;
 	
 	public List<SearchResult> doEverythingSearch( final String queryString )
 	{
@@ -233,43 +235,169 @@ class SearchService
 		// note: this should probably involve writing out a whole new index, then doing
 		// a quick "switch" at the end, so the main index isn't offline (or bogged down) the
 		// whole time we are re-indexing
-		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index") );
-		IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.LIMITED);
-		writer.setUseCompoundFile(false);
+		String indexDirLocation = null;
+		Directory indexDir = null;
+		IndexWriter writer = null;
+		try
+		{
+			indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+			indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index") );
+			writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.LIMITED);
+			writer.setUseCompoundFile(false);
 	
 					
-		// get all Activities...
-		List<StreamItemBase> items = eventStreamService.getAllStreamItems();
+			// get all Activities...
+			List<StreamItemBase> items = eventStreamService.getAllStreamItems();
 		
-		// iterate the list and store each to the DB
-		for( StreamItemBase item : items )
-		{
-				
+			// iterate the list and store each to the DB
+			for( StreamItemBase item : items )
+			{
+				addToIndex( writer, item );		
+			}
 		}
+		finally
+		{
+			try
+			{
+				if( writer != null )
+				{
+					writer.close();
+				}
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+				e.printStackTrace();
+			}
+			
+			try
+			{
+				if( indexDir != null )
+				{
+					indexDir.close();
+				}
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+				e.printStackTrace();
+			}
+		}
+		
 		
 	}
 	
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem item )
-	{}
+	{
+		Document doc = new Document();
+		
+		if( item.verb.equals( "quoddy_status_update" ))
+		{
+			doc.add( new Field( "docType", "docType.statusUpdate", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+		}
+		else
+		{
+			doc.add( new Field( "docType", "docType.activityStreamItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+		}
+		
+		doc.add( new Field( "uuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "id", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "content", item.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			
+		writer.addDocument( doc );
+		writer.optimize();
+	}
 	
 	public void addToIndex( final IndexWriter writer, final CalendarFeedItem item )
-	{}
+	{
+		Document doc = new Document();
+		
+			doc.add( new Field( "docType", "docType.calendarFeedItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+			doc.add( new Field( "uuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "id", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		
+			// extract content from the item and add to appropriate fields
+			doc.add( new Field( "startDate", DateTools.dateToString(item.startDate, DateTools.Resolution.MINUTE ), Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ) );
+			doc.add( new Field( "endDate", DateTools.dateToString(item.endDate, DateTools.Resolution.MINUTE ), Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ) );
+			doc.add( new Field( "dateEventCreated", DateTools.dateToString(item.dateEventCreated, DateTools.Resolution.MINUTE ), Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ) );
+			doc.add( new Field( "status", item.status, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			doc.add( new Field( "summary", item.summary, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			doc.add( new Field( "description", item.description, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			doc.add( new Field( "location", item.location, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			
+			writer.addDocument( doc );
+			writer.optimize();
+
+	}
 	
+	/* NOTE: question is, do we even want to put this stuff in the
+	 * Lucene index at all? Having it together is a convenience, but we can search for
+	 * this stuff right out of the eXistDB database, no? 
+	 */
 	public void addToIndex( final IndexWriter writer, final BusinessEventSubscriptionItem item )
-	{}	
+	{
+		
+		Document doc = new Document();
+	
+		doc.add( new Field( "docType", "docType.businessEventSubscriptionItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+		doc.add( new Field( "uuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "id", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "summary", item.summary, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		
+		writer.addDocument( doc );
+		writer.optimize();
+	}	
 	
 	public void addToIndex( final IndexWriter writer, final Question item )
-	{}
+	{
+		Document doc = new Document();
+		
+			doc.add( new Field( "docType", "docType.question", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+			doc.add( new Field( "uuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "id", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+//			doc.add( new Field( "url", msg['url'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+//			doc.add( new Field( "title", msg['title'], Field.Store.YES, Field.Index.ANALYZED ) );
+//			doc.add( new Field( "tags", "", Field.Store.YES, Field.Index.ANALYZED ));
+
+			writer.addDocument( doc );
+		
+			writer.optimize();
+		
+	}
 
 	public void addToIndex( final IndexWriter writer, final RssFeedItem item )
-	{}
+	{
+		Document doc = new Document();
+		
+		doc.add( new Field( "docType", "docType.rssFeedItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+		doc.add( new Field( "uuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "id", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		// doc.add( new Field( "content", statusUpdateActivity.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		
+		writer.addDocument( doc );
+		writer.optimize();
+	}
 		
 	public void addToIndex( final IndexWriter writer, final StreamItemComment item )
-	{}
+	{
+		Document doc = new Document();
+		
+		doc.add( new Field( "docType", "docType.streamEntryComment", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+		
+		doc.add( new Field( "entry_id", Long.toString( item.event.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "entry_uuid", item.event.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		
+		doc.add( new Field( "id", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "uuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "content", item.text, Field.Store.NO, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		
+		writer.addDocument( doc );
+	
+		writer.optimize();
+		
+	}
 
 	
-		
 	public void rebuildPersonIndex()
 	{
 		// build the search index using Lucene
