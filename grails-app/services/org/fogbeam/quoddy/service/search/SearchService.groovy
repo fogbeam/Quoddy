@@ -1,5 +1,6 @@
 package org.fogbeam.quoddy.service.search
 
+import java.io.File
 import java.util.List;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer
@@ -11,6 +12,7 @@ import org.apache.lucene.index.Term
 import org.apache.lucene.index.IndexWriter.MaxFieldLength
 import org.apache.lucene.queryParser.MultiFieldQueryParser
 import org.apache.lucene.queryParser.QueryParser
+import org.apache.lucene.search.BooleanClause
 import org.apache.lucene.search.BooleanQuery
 import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.search.Query
@@ -41,7 +43,7 @@ class SearchService
 	public List<SearchResult> doEverythingSearch( final String queryString )
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		println( "got indexDirLocation as: ${indexDirLocation}");
+		// println( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
 		
@@ -73,9 +75,229 @@ class SearchService
 		return searchResults;
 	}
 
-	
-	public List<User> doUserSearch( final String queryString )
+	public List<SearchResult> doStatusUpdateSearch( final String queryString )
 	{
+		
+		println "in doStatusUpdateSearch";
+		
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		// println( "got indexDirLocation as: ${indexDirLocation}");
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		
+		
+		IndexSearcher searcher = new IndexSearcher( indexDir );
+	
+		// QueryParser queryParser = new QueryParser(Version.LUCENE_30, "content", new StandardAnalyzer(Version.LUCENE_30));
+		StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
+		String[] fields = ["content", "status", "description", "location", "summary" ];
+		MultiFieldQueryParser queryParser = new MultiFieldQueryParser( Version.LUCENE_30, fields, analyzer );
+		
+		Query userQuery = queryParser.parse(queryString);
+		BooleanQuery query = new BooleanQuery();
+		query.add(userQuery, BooleanClause.Occur.MUST );
+		TermQuery docTypeTerm = new TermQuery(new Term("docType","docType.statusUpdate"));
+		query.add( docTypeTerm, BooleanClause.Occur.MUST );
+		
+		TopDocs hits = searcher.search(query, 20);
+		
+		List<SearchResult> searchResults = new ArrayList<SearchResult>();
+		ScoreDoc[] docs = hits.scoreDocs;
+		println "Search returned " + docs.length + " results";
+		for( ScoreDoc doc : docs )
+		{
+			Document result = searcher.doc( doc.doc );
+			String docType = result.get("docType")
+			String uuid = result.get("uuid");
+			// lookup our object by it's UUID and assign it to the searchResult instance
+			StreamItemBase item = eventStreamService.getEventByUuid( uuid );
+			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
+			
+			searchResults.add( searchResult );
+		}
+		
+				
+		return searchResults;
+	}	
+	
+	public List<SearchResult> doCalendarFeedItemSearch( final String queryString )
+	{
+		println "in doCalendarFeedItemSearch";
+				
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		// println( "got indexDirLocation as: ${indexDirLocation}");
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		
+		
+		IndexSearcher searcher = new IndexSearcher( indexDir );
+	
+		// QueryParser queryParser = new QueryParser(Version.LUCENE_30, "content", new StandardAnalyzer(Version.LUCENE_30));
+		StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
+		String[] fields = ["content", "status", "description", "location", "summary" ];
+		MultiFieldQueryParser queryParser = new MultiFieldQueryParser( Version.LUCENE_30, fields, analyzer );
+		
+		Query userQuery = queryParser.parse(queryString);
+		BooleanQuery query = new BooleanQuery();
+		query.add(userQuery, BooleanClause.Occur.MUST );
+		TermQuery docTypeTerm = new TermQuery(new Term("docType","docType.calendarFeedItem"));
+		query.add( docTypeTerm, BooleanClause.Occur.MUST );
+		
+		TopDocs hits = searcher.search(query, 20);
+		
+		List<SearchResult> searchResults = new ArrayList<SearchResult>();
+		ScoreDoc[] docs = hits.scoreDocs;
+		println "Search returned " + docs.length + " results";
+		for( ScoreDoc doc : docs )
+		{
+			Document result = searcher.doc( doc.doc );
+			String docType = result.get("docType")
+			String uuid = result.get("uuid");
+			// lookup our object by it's UUID and assign it to the searchResult instance
+			StreamItemBase item = eventStreamService.getEventByUuid( uuid );
+			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
+			
+			searchResults.add( searchResult );
+		}
+		
+		
+		return searchResults;
+	}
+	
+	
+	public List<SearchResult> doBusinessSubscriptionItemSearch( final String queryString )
+	{
+		
+		println "in doBusinessSubscriptionItemSearch";
+		
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		// println( "got indexDirLocation as: ${indexDirLocation}");
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		
+		
+		IndexSearcher searcher = new IndexSearcher( indexDir );
+	
+		// QueryParser queryParser = new QueryParser(Version.LUCENE_30, "content", new StandardAnalyzer(Version.LUCENE_30));
+		StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
+		String[] fields = ["content", "status", "description", "location", "summary" ];
+		MultiFieldQueryParser queryParser = new MultiFieldQueryParser( Version.LUCENE_30, fields, analyzer );
+		
+		Query userQuery = queryParser.parse(queryString);
+		BooleanQuery query = new BooleanQuery();
+		query.add(userQuery, BooleanClause.Occur.MUST );
+		TermQuery docTypeTerm = new TermQuery(new Term("docType", "docType.businessEventSubscriptionItem"));
+		query.add( docTypeTerm, BooleanClause.Occur.MUST );
+		
+		TopDocs hits = searcher.search(query, 20);
+		
+		List<SearchResult> searchResults = new ArrayList<SearchResult>();
+		ScoreDoc[] docs = hits.scoreDocs;
+		println "Search returned " + docs.length + " results";
+		for( ScoreDoc doc : docs )
+		{
+			Document result = searcher.doc( doc.doc );
+			String docType = result.get("docType")
+			String uuid = result.get("uuid");
+			// lookup our object by it's UUID and assign it to the searchResult instance
+			StreamItemBase item = eventStreamService.getEventByUuid( uuid );
+			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
+			
+			searchResults.add( searchResult );
+		}
+		
+		
+		return searchResults;
+	}
+	
+	
+	public List<SearchResult> doRssFeedItemSearch( final String queryString )
+	{
+		println "in doRssFeedItemSearch";
+
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		// println( "got indexDirLocation as: ${indexDirLocation}");
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		
+		
+		IndexSearcher searcher = new IndexSearcher( indexDir );
+	
+		// QueryParser queryParser = new QueryParser(Version.LUCENE_30, "content", new StandardAnalyzer(Version.LUCENE_30));
+		StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
+		String[] fields = ["content", "status", "description", "location", "summary" ];
+		MultiFieldQueryParser queryParser = new MultiFieldQueryParser( Version.LUCENE_30, fields, analyzer );
+		
+		Query userQuery = queryParser.parse(queryString);
+		BooleanQuery query = new BooleanQuery();
+		query.add(userQuery, BooleanClause.Occur.MUST );
+		TermQuery docTypeTerm = new TermQuery(new Term("docType", "docType.rssFeedItem"));
+		query.add( docTypeTerm, BooleanClause.Occur.MUST );
+		
+		TopDocs hits = searcher.search(query, 20);
+		
+		List<SearchResult> searchResults = new ArrayList<SearchResult>();
+		ScoreDoc[] docs = hits.scoreDocs;
+		println "Search returned " + docs.length + " results";
+		for( ScoreDoc doc : docs )
+		{
+			Document result = searcher.doc( doc.doc );
+			String docType = result.get("docType")
+			String uuid = result.get("uuid");
+			// lookup our object by it's UUID and assign it to the searchResult instance
+			StreamItemBase item = eventStreamService.getEventByUuid( uuid );
+			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
+			
+			searchResults.add( searchResult );
+		}
+				
+		return searchResults;
+	}
+	
+	public List<SearchResult> doActivityStreamItemSearch( final String queryString )
+	{
+		println "in doActivityStreamItemSearch";
+		
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		// println( "got indexDirLocation as: ${indexDirLocation}");
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		
+		
+		IndexSearcher searcher = new IndexSearcher( indexDir );
+	
+		// QueryParser queryParser = new QueryParser(Version.LUCENE_30, "content", new StandardAnalyzer(Version.LUCENE_30));
+		StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
+		String[] fields = ["content", "status", "description", "location", "summary" ];
+		MultiFieldQueryParser queryParser = new MultiFieldQueryParser( Version.LUCENE_30, fields, analyzer );
+		
+		Query userQuery = queryParser.parse(queryString);
+		BooleanQuery query = new BooleanQuery();
+		query.add(userQuery, BooleanClause.Occur.MUST );
+		TermQuery docTypeTerm = new TermQuery(new Term("docType", "docType.activityStreamItem"));
+		query.add( docTypeTerm, BooleanClause.Occur.MUST );
+		
+		TopDocs hits = searcher.search(query, 20);
+		
+		List<SearchResult> searchResults = new ArrayList<SearchResult>();
+		ScoreDoc[] docs = hits.scoreDocs;
+		println "Search returned " + docs.length + " results";
+		for( ScoreDoc doc : docs )
+		{
+			Document result = searcher.doc( doc.doc );
+			String docType = result.get("docType")
+			String uuid = result.get("uuid");
+			// lookup our object by it's UUID and assign it to the searchResult instance
+			StreamItemBase item = eventStreamService.getEventByUuid( uuid );
+			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
+			
+			searchResults.add( searchResult );
+		}
+		
+		
+		return searchResults;
+	}
+	
+	
+	public List<SearchResult> doUserSearch( final String queryString )
+	{
+		println "in doUserSearch";
+		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
 		
@@ -86,28 +308,28 @@ class SearchService
 		
 		TopDocs hits = searcher.search(query, 20);
 		
-		List<User> users = new ArrayList<User>();
+		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
+		println "Search returned " + docs.length + " results";
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
 			String userId = result.get("userId")
 			println( userId + " " + result.get("fullName"));
-		
-			users.add( userService.findUserByUserId(userId));
+			User userResult = userService.findUserByUserId(userId);
+			searchResults.add( new SearchResult(docType:"user", uuid:userResult.uuid, object:userResult) );
 		
 		}
 		
-		return users;
+		return searchResults;
 	}
 	
-	
-	// do YYY search
-	public List<User> doPeopleSearch( final String queryString )
+	public List<SearchResult> doPeopleSearch( final String queryString )
 	{
+		println "in doPeopleSearch";
+		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
-		
 		IndexSearcher searcher = new IndexSearcher( indexDir );
 
 		BooleanQuery outerQuery = new BooleanQuery();
@@ -117,26 +339,28 @@ class SearchService
 		
 		TopDocs hits = searcher.search( userQuery, 20);
 		
-		List<User> users = new ArrayList<User>();
+		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
+		println "Search returned " + docs.length + " results";
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
 			String userId = result.get("userId")
 			println( userId + " " + result.get("fullName"));
 		
-			users.add( userService.findUserByUserId(userId));
-		
+			User userResult = userService.findUserByUserId(userId);
+			searchResults.add( new SearchResult(docType:"user", uuid:userResult.uuid, object:userResult) );
 		}
 		
-		return users;
+		return searchResults;
 	}
 	
 	
-	
-	// do ZZZ search	
-	public List<User> doIFollowSearch( final String queryString )
+		
+	public List<SearchResult> doIFollowSearch( final String queryString, final User user )
 	{
+		println "in doIFollowSearch";
+		
 		// get a list of my friends
 		List<User> iFollow = userService.listIFollow( user );
 		
@@ -145,7 +369,8 @@ class SearchService
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
-
+		IndexSearcher searcher = new IndexSearcher( indexDir );
+		
 		BooleanQuery outerQuery = new BooleanQuery();
 		
 		QueryParser queryParser = new QueryParser(Version.LUCENE_30, "fullName", new StandardAnalyzer(Version.LUCENE_30));
@@ -162,29 +387,32 @@ class SearchService
 		outerQuery.add( userQuery, Occur.MUST );
 		outerQuery.add( userIdQuery, Occur.MUST );
 		
-		System.out.println( "Query (" + outerQuery.getClass().getName() + "): "  + outerQuery.toString() );
+		// System.out.println( "Query (" + outerQuery.getClass().getName() + "): "  + outerQuery.toString() );
 		
 		
 		TopDocs hits = searcher.search( outerQuery, 20);
 		
-		List<User> users = new ArrayList<User>();
+		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
+		println "Search returned " + docs.length + " results";
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
 			String userId = result.get("userId")
 			println( userId + " " + result.get("fullName"));
 		
-			users.add( userService.findUserByUserId(userId));
-		
+			User userResult = userService.findUserByUserId(userId);
+			searchResults.add( new SearchResult(docType:"user", uuid:userResult.uuid, object:userResult) );
 		}
 		
-		return users;
+		return searchResults;
 	}
 	
 	
-	public List<User> doFriendSearch( final String queryString )
+	public List<SearchResult> doFriendSearch( final String queryString, final User user )
 	{
+		println "in doFriendSearch";
+		
 		// get a list of my friends
 		List<User> myFriends = userService.listFriends( user );
 		
@@ -193,7 +421,8 @@ class SearchService
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
-
+		IndexSearcher searcher = new IndexSearcher( indexDir );
+		
 		BooleanQuery outerQuery = new BooleanQuery();
 		
 		QueryParser queryParser = new QueryParser(Version.LUCENE_30, "fullName", new StandardAnalyzer(Version.LUCENE_30));
@@ -210,24 +439,25 @@ class SearchService
 		outerQuery.add( userQuery, Occur.MUST );
 		outerQuery.add( userIdQuery, Occur.MUST );
 		
-		System.out.println( "Query (" + outerQuery.getClass().getName() + "): "  + outerQuery.toString() );
+		// System.out.println( "Query (" + outerQuery.getClass().getName() + "): "  + outerQuery.toString() );
 		
 		
 		TopDocs hits = searcher.search( outerQuery, 20);
 		
-		List<User> users = new ArrayList<User>();
+		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
+		println "Search returned " + docs.length + " results";
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
 			String userId = result.get("userId")
 			println( userId + " " + result.get("fullName"));
 		
-			users.add( userService.findUserByUserId(userId));
-		
+			User userResult = userService.findUserByUserId(userId);
+			searchResults.add( new SearchResult(docType:"user", uuid:userResult.uuid, object:userResult) );
 		}
 		
-		return users;
+		return searchResults;
 	}
 	
 	public void rebuildGeneralIndex()

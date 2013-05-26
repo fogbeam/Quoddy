@@ -35,9 +35,16 @@
 	
 	<!-- begin aseFooter -->
 	<div class="aseFooter">
-		<span class="plusOneButton">+1</span> <span class="shareButton">Share</span>
-		<span class="showHideCommentsButton"> <a href="#">Show Comments</a>
+		<span class="plusOneButton" id="plusOneButton.${item.uuid}" name="plusOneButton.${item.uuid}" >
+			<a href="#">+1</a>
+		</span> 
+		<span class="shareButton" id="shareButton.${item.uuid}" name="shareButton.${item.uuid}" >
+			<a href="#">Share</a>
 		</span>
+		<span class="showHideCommentsButton"> 
+			<a href="#">Show Comments</a>
+		</span>
+		
 	</div>
 	<!--  end aseFooter -->
 	

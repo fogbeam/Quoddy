@@ -4,6 +4,12 @@ import org.fogbeam.quoddy.User;
 
 public class StreamItemBase implements Serializable
 {
+	
+	public StreamItemBase()
+	{
+		this.uuid = java.util.UUID.randomUUID().toString();
+	}
+	
 	static mapping = 
 	{
 		tablePerHierarchy false
@@ -19,6 +25,7 @@ public class StreamItemBase implements Serializable
 	
 	
 	User owner;
+	String uuid;
 	Date dateCreated;
 	Date effectiveDate; // TODO: should be Timestamp?
 	String name; // NOTE: do we really need this???

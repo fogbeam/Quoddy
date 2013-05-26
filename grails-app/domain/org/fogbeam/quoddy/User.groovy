@@ -53,8 +53,7 @@ class User implements Serializable
 	String bio;
 	@XmlElement
 	String email;
-	static transients = [ "password", "homepage", "displayName", "bio",  ]
-	
+	static transients = [ "password", "homepage", "displayName", "bio", "templateName" ]
 	
     static mapping = {
     	table 'uzer'
@@ -82,4 +81,10 @@ class User implements Serializable
 
 	public void setFullName( String fullName )
 	{}	
+	
+	public String getTemplateName()
+	{
+		return "/renderUser";
+	}
+	
 }

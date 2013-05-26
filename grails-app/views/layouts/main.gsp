@@ -19,7 +19,7 @@
 	href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" />
 
 <link rel="stylesheet" type="text/css"
- href="${createLinkTo(dir:'js/jquery-ui-1.10.3.custom/css/no-theme', file:'jquery-ui-1.10.3.custom.css') }" />
+ href="${createLinkTo(dir:'js/jquery-ui-1.10.3.custom/css/vader', file:'jquery-ui-1.10.3.custom.css') }" />
 
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

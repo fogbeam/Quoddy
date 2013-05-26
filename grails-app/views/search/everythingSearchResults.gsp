@@ -13,7 +13,9 @@
 		<ul style="margin-left:315px;">
 			<g:each in="${searchResults}" var="searchResult">
 			
-				<li>AAA: ${searchResult.uuid} - ${searchResult.docType}</li>
+				<!-- <li>AAA: ${searchResult.uuid} - ${searchResult.docType}</li> -->
+				<g:render template="${searchResult.object.templateName}" var="item" bean="${searchResult.object}" />
+								
 			</g:each>
 		</ul>
 		

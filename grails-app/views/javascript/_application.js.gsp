@@ -7,6 +7,26 @@
 			function()
 		 	{
 				// alert( "JQuery ready for action!" );
+				$j( "#dialog" ).dialog(
+				{
+					autoOpen: false,
+					show: {
+					effect: "blind",
+					duration: 1000
+					},
+					hide: {
+					effect: "explode",
+					duration: 1000
+					}
+				});
+
+
+				$j( ".shareButton" ).click(function() {
+					$j( "#dialog" ).dialog( "open" );
+				});
+
+
+
 
 				$j('#loadMoreLink').data("page", 1 );
 				// setup an onclick handler for the status submit button

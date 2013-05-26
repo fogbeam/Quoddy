@@ -6,4 +6,5 @@ class SearchResult
 	String docType;
 	String name;
 	String content;
+	Object object;
 }

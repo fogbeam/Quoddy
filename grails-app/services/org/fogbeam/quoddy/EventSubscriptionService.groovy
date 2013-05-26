@@ -87,6 +87,12 @@ class EventSubscriptionService
 				// uiNotificationMsg.actualEvent = subEvent;
 				
 				jmsService.send( queue: 'uitestActivityQueue', /* uiNotificationMsg */ subEvent, 'standard', null );
+
+			
+				// send this to the search service for indexing...
+				def subEventMsg = [msgType:"NEW_BUSINESS_EVENT_SUBSCRIPTION_ITEM", id:subEvent.id];
+				jmsService.send( queue: 'quoddySearchQueue', subEventMsg, 'standard', null );
+				
 			}
 			   
 			   

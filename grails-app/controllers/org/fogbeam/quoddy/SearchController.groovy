@@ -37,16 +37,150 @@ class SearchController
 	}
 	
 	
-	
-	def doEverythingSearch =
+	def doAdvancedSearch =
 	{
 		
 		// search using supplied parameters and return the
 		// model for rendering...
 		String queryString = params.queryString;
-		println "searching Everything, queryString: ${queryString}";
 		
-		List<SearchResult> searchResults = searchService.doEverythingSearch( queryString );
+		println "doAdvancedSearch, queryString: ${queryString}";
+		
+		boolean bSearchEverything = false;
+		boolean bSearchStatusUpdates = false;
+		boolean bSearchCalendarFeedItems = false;
+		boolean bSearchBusSubItems = false;
+		boolean bSearchRssFeedItems = false;
+		boolean bSearchActivityStreamItems = false;		
+		boolean bSearchUsers = false;
+		boolean bSearchFriends = false;
+		
+		String searchEverything = params.searchEverything;
+		println "searchEverything: ${searchEverything}";
+		bSearchEverything = searchEverything ? true: false;
+		
+		if( bSearchEverything )
+		{
+			println( "setting all flags to true");
+			bSearchStatusUpdates = true;
+			bSearchCalendarFeedItems = true;
+			bSearchBusSubItems = true;
+			bSearchRssFeedItems = true;
+			bSearchActivityStreamItems = true;
+			bSearchUsers = true;
+			bSearchFriends = true;
+		}
+		else
+		{
+
+		
+			String searchStatusUpdates = params.searchStatusUpdates;
+			bSearchStatusUpdates = searchStatusUpdates ? true: false;
+			println "searchStatusUpdates: ${searchStatusUpdates}";
+		
+			String searchCalendarFeedItems = params.searchCalendarFeedItems;
+			bSearchCalendarFeedItems = searchCalendarFeedItems ? true : false;
+			println "searchCalendarFeedItems: ${searchCalendarFeedItems}";
+		
+			String searchBusSubItems = params.searchBusSubItems;
+			bSearchBusSubItems = searchBusSubItems ? true : false;
+			println "searchBusSubItems: ${searchBusSubItems}";
+					
+			String searchRssFeedItems = params.searchRssFeedItems;
+			bSearchRssFeedItems = searchRssFeedItems ? true : false;
+			println "searchRssFeedItems: ${searchRssFeedItems}";
+		
+			String searchActivityStreamItems = params.searchActivityStreamItems;
+			bSearchActivityStreamItems = searchActivityStreamItems ? true : false;
+			println "searchActivityStreamItems: ${searchActivityStreamItems}";
+			
+			String searchUsers = params.searchUsers;
+			bSearchUsers = searchUsers ? true : false;
+			println "searchUsers: ${searchUsers}";
+			
+			String searchFriends = params.searchFriends;
+			bSearchFriends = searchFriends ? true : false;
+			println "searchFriends: ${searchFriends}";
+		
+		}
+		
+		
+		List<SearchResult> searchResults = null;
+		
+//		if( bSearchEverything )
+//		{
+//			searchResults = searchService.doEverythingSearch( queryString );
+//		}
+//		else 
+//		{
+		
+		searchResults = new ArrayList<SearchResult>();	
+		if( bSearchStatusUpdates )
+		{
+			println "searching status updates";
+			List<SearchResult> tempResults = searchService.doStatusUpdateSearch( queryString );
+			println "SearchStatusUpdates returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchCalendarFeedItems )
+		{
+			println "searching calendar feed items";
+			List<SearchResult> tempResults = searchService.doCalendarFeedItemSearch( queryString );
+			println "SearchCalendarFeedItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchBusSubItems )
+		{
+			println "searching business event subscription items";
+			List<SearchResult> tempResults = searchService.doBusinessSubscriptionItemSearch( queryString );
+			println "SearchBusSubItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchRssFeedItems )
+		{
+			println "searching rss feed items";
+			List<SearchResult> tempResults = searchService.doRssFeedItemSearch( queryString );
+			println "SearchRssFeedItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchActivityStreamItems )
+		{
+			println "searching activity stream items";
+			List<SearchResult> tempResults = searchService.doActivityStreamItemSearch( queryString );
+			println "SearchActivityStreamItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchUsers )
+		{
+			println "searching users";
+			List<SearchResult> tempResults = searchService.doUserSearch( queryString );
+			println "SearchUsers returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchFriends )
+		{
+			println "searching friends";
+			List<SearchResult> tempResults = searchService.doFriendSearch( queryString, session.user );
+			println "SearchFriends returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();		}
+
+		
+		// }
+		
+		
 		println "found some results: ${searchResults.size()}";
 		
 		render( view:'everythingSearchResults', model:[searchResults:searchResults]);
@@ -65,10 +199,10 @@ class SearchController
 		String queryString = params.queryString;
 		println "searching Users, queryString: ${queryString}";
 		
-		List<User> users = searchService.doUserSearch();
-		println "found some users: ${users.size()}";
+		List<SearchResult> results = searchService.doUserSearch();
+		println "found some users: ${results.size()}";
 		
-		render( view:'userSearchResults', model:[allUsers:users]);
+		render( view:'userSearchResults', model:[allUsers:results]);
 	}
 
 	def searchIFollow = 
@@ -86,10 +220,10 @@ class SearchController
 				
 		
 		
-		List<User> users = searchService.doPeopleSearch( queryString );
-		println "found some users: ${users.size()}";
+		List<SearchResult> results = searchService.doPeopleSearch( queryString );
+		println "found some users: ${results.size()}";
 		
-		render( view:'peopleSearchResults', model:[allUsers:users]);
+		render( view:'peopleSearchResults', model:[allUsers:results]);
 		
 	}
 	
@@ -107,11 +241,11 @@ class SearchController
 		println "searching IFollow, queryString: ${queryString}";
 				
 
-		List<User> users = searchService.doIFollowSearch( queryString );
-		println "found some users: ${users.size()}";
+		List<SearchResult> results = searchService.doIFollowSearch( queryString );
+		println "found some users: ${results.size()}";
 		
 		
-		render( view:'iFollowSearchResults', model:[allUsers:users]);
+		render( view:'iFollowSearchResults', model:[allUsers:results]);
 		
 			
 	}
@@ -135,13 +269,13 @@ class SearchController
 		String queryString = params.queryString;
 		println "searching Users, queryString: ${queryString}";
 				
-		List<User> users = searchService.doFriendSearch( queryString );
+		List<SearchResult> results = searchService.doFriendSearch( queryString );
 		
-		println "found some users: ${users.size()}";
+		println "found some users: ${results.size()}";
 		
 		
 		println "done"
-		render( view:'friendSearchResults', model:[allUsers:users]);
+		render( view:'friendSearchResults', model:[allUsers:results]);
 		
 			
 	}

@@ -149,13 +149,8 @@ Following is a simple, minimal example of a JSON serialized activity:
 	url 					JSON [RFC4627] String				An IRI [RFC3987] identifying a resource providing an HTML representation of the object. An object MAY contain a url property 
  
 */
-class ActivityStreamItem extends StreamItemBase implements Serializable
+class ActivityStreamItem extends StreamItemBase
 {
-
-	public ActivityStreamItem()
-	{
-		this.uuid = java.util.UUID.randomUUID().toString();
-	}
 	
 	static constraints = {
 		
@@ -204,7 +199,6 @@ class ActivityStreamItem extends StreamItemBase implements Serializable
 	URL		url;
 	String	verb;
 	URL 	icon;
-	String 	uuid;
 	
 	String 	actorUuid;
 	String 	actorUrl;
