@@ -12,7 +12,7 @@
 		<p />
 		<ul style="margin-left:25px;margin-top:40px;">
 			<g:each var="subscription" in="${allSubscriptions}">
-				<li><g:link controller="eventSubscription" action="display" params="[subscriptionId:subscription.id]" >${subscription.name}</g:link> </li>
+				<li><g:link controller="subscription" action="display" params="[subscriptionId:subscription.id]" >${subscription.name}</g:link> </li>
 			</g:each>
 		</ul>	
 	</body>

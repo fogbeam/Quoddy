@@ -66,8 +66,6 @@
 	<classpathentry kind="lib" path="lib/oauth-consumer-20090617.jar"/>
 	<classpathentry kind="lib" path="lib/oauth-httpclient4-20090913.jar"/>
 	<classpathentry kind="lib" path="lib/oauth-provider-20100527.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.5.6.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-jdk14-1.5.6.jar"/>
 	<classpathentry kind="src" path="grails-app/src"/>
 	<classpathentry kind="src" path="grails-app/listeners"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
@@ -255,5 +253,9 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="com.springsource.sts.grails.core.CLASSPATH_CONTAINER"/>
+	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
+	<classpathentry kind="lib" path="lib/jul-to-slf4j-1.7.2.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.2.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-simple-1.7.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -25,6 +25,7 @@ import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.Version
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.search.SearchResult
+import org.fogbeam.quoddy.stream.ActivitiUserTask
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
 import org.fogbeam.quoddy.stream.CalendarFeedItem
@@ -471,6 +472,11 @@ class SearchService
 		try
 		{
 			indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+			
+			
+			println "rebuildGeneralIndex";
+			println "indexDirLocation: ${indexDirLocation}";
+			
 			indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index") );
 			writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.LIMITED);
 			writer.setUseCompoundFile(false);
@@ -515,6 +521,13 @@ class SearchService
 		}
 		
 		
+	}
+	
+	public void addToIndex( final IndexWriter writer, final ActivitiUserTask task )
+	{
+		// let's just let this stay a NOP for right this minute... there are bigger
+		// fish to fry
+		// TODO: implement adding ActivitiUserTask objects to Search Index	
 	}
 	
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem item )
@@ -635,6 +648,10 @@ class SearchService
 		println "reindexing ${users.size()} users";
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		println "rebuildPersonIndex";
+		println "indexDirLocation: ${indexDirLocation}";
+		
+		
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
 		IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.LIMITED);
 		writer.setUseCompoundFile(false);
@@ -681,7 +698,8 @@ class SearchService
 	{
 	
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		log.debug( "indexDirLocation: ${indexDirLocation}" );
+		println( "initializeGeneralIndex" );
+		println( "indexDirLocation: ${indexDirLocation}" );
 		if( indexDirLocation )
 		{
 			File indexFile = new java.io.File( indexDirLocation + "/general_index" );
@@ -713,7 +731,8 @@ class SearchService
 	public void initializePersonIndex()
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		log.debug( "indexDirLocation: ${indexDirLocation}" );
+		println( "initializePersonIndex" );
+		println( "indexDirLocation: ${indexDirLocation}" );
 		if( indexDirLocation )
 		{
 			File indexFile = new java.io.File( indexDirLocation + "/person_index" );

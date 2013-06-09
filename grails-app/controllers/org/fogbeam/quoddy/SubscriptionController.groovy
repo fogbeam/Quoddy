@@ -2,10 +2,11 @@ package org.fogbeam.quoddy
 
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
+import org.fogbeam.quoddy.subscription.ActivitiUserTaskSubscription
 import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
 
 @Mixin(SidebarPopulatorMixin)
-class EventSubscriptionController
+class SubscriptionController
 {
 	def userService;
 	def userStreamService;
@@ -25,6 +26,7 @@ class EventSubscriptionController
 		
 		if( session.user != null )
 		{
+			println "got user: ${session.user}";
 			user = userService.findUserByUserId( session.user.userId );
 		
 			Map model = [:];
@@ -89,23 +91,56 @@ class EventSubscriptionController
 		createWizardOne {
 			on("stage2") {
 				
-				println "transitioning to stage2";
-				
-				BusinessEventSubscription subscriptionToCreate = new BusinessEventSubscription();
-				subscriptionToCreate.name = params.subscriptionName;
-				subscriptionToCreate.description = params.subscriptionDescription;
-			   
-				def user = userService.findUserByUserId( session.user.userId );
-				subscriptionToCreate.owner = user;
-				
-				flow.subscriptionToCreate = subscriptionToCreate;
-				
-				
-			}.to("createWizardTwo")
+				println "transitioning to stage2";				
+			}.to("createWizardTemp")
 				
 		}
 		
-		createWizardTwo {
+		createWizardTemp {
+			
+		 action {
+			 String subscriptionType = params.subscriptionType;
+			 
+			 if( subscriptionType.equals( "businessEvent" ) )
+			 {
+				 businessEventSubscription();
+			 }
+			 else if( subscriptionType.equals( "activitiUserTask" ) )
+			 {
+				 activitiUserTask();
+			 }
+			 else if( subscriptionType.equals( "rssFeed" ) )
+			 {
+				 rssFeed();
+			 }
+			 
+		   }	
+		   on( "businessEventSubscription" ).to("createBusinessEventSubscriptionWizardOne")
+		   on( "activitiUserTask" ).to("createActivitiUserTaskSubscriptionWizardOne")
+		   on( "rssFeed" ).to("createBusinessEventSubscriptionWizardOne")
+		}
+		
+				
+		createBusinessEventSubscriptionWizardOne {
+				
+				on( "stage2" ) {
+					BusinessEventSubscription subscriptionToCreate = new BusinessEventSubscription();
+					subscriptionToCreate.name = params.subscriptionName;
+					subscriptionToCreate.description = params.subscriptionDescription;
+			   
+					// UserService userService = grailsApplication.mainContext.getBean('userService');
+					def user = userService.findUserByUserId( session.user.userId );
+					subscriptionToCreate.owner = user;
+				
+					flow.subscriptionToCreate = subscriptionToCreate;
+			
+				}.to("createBusinessEventSubscriptionWizardTwo")
+ 
+			}
+		
+		
+		
+		createBusinessEventSubscriptionWizardTwo {
 			on("finishWizard"){
 				println "finishing wizard with params ${params}";
 				
@@ -113,11 +148,11 @@ class EventSubscriptionController
 				subscriptionToCreate.xQueryExpression = params.xQueryExpression;
 				
 			   [];
-			}.to("finish")
+			}.to("finishBusinessEventSubscription")
 		}
 		
 		/* an action state to do the final save/update on the object */
-		finish {
+		finishBusinessEventSubscription {
 			action {
 				println "create using params: ${params}"
 
@@ -133,8 +168,42 @@ class EventSubscriptionController
 			on("success").to("exitWizard");
 	   }
 		
+		createActivitiUserTaskSubscriptionWizardOne {
+			
+				on( "stage2" ){
+					ActivitiUserTaskSubscription subscriptionToCreate = new ActivitiUserTaskSubscription();
+					subscriptionToCreate.name = params.subscriptionName;
+					subscriptionToCreate.description = params.subscriptionDescription;
+					subscriptionToCreate.activitiServer = params.activitiServer;
+					subscriptionToCreate.candidateGroup = params.candidateGroup;
+					subscriptionToCreate.assignee = params.assignee;
+			   
+					def user = userService.findUserByUserId( session.user.userId );
+					subscriptionToCreate.owner = user;
+				
+					flow.subscriptionToCreate = subscriptionToCreate;
+				}.to( "finishActivitiUserTaskSubscription") 
+		}
+		
+		finishActivitiUserTaskSubscription {
+			action {
+				println "create using params: ${params}"
+
+				ActivitiUserTaskSubscription subscriptionToCreate = flow.subscriptionToCreate;
+				
+				if( !subscriptionToCreate.save() )
+				{
+					println( "Saving ActivitiUserTaskSubscription FAILED");
+					subscriptionToCreate.errors.allErrors.each { println it };
+				}
+				
+			}
+			on("success").to("exitWizard");
+		}
+		
+		
 	   exitWizard {
-			redirect(controller:"eventSubscription", action:"index");
+			redirect(controller:"subscription", action:"index");
 	   }
 		
 	}
@@ -193,7 +262,7 @@ class EventSubscriptionController
 		}
 	
 		exitWizard {
-			redirect(controller:"eventSubscription", action:"index");
+			redirect(controller:"subscription", action:"index");
 		}
 	}	
 	

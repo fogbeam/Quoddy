@@ -409,5 +409,30 @@ class EventStreamService {
 		
 		return items;
 	}
+	
+	/*
+	 * NOTE: this version just assumes we're only looking for things shared to "Public".
+	 * we haven't yet really fully integrated the ability to select different "ShareTarget"
+	 * instances, but we'll have to account for that later.
+	 */
+	public List<StreamItemBase> getStatusUpdatesForUser( final User user )
+	{
+		List<StreamItemBase> statusUpdatesForUser = new ArrayList<StreamItemBase>();
+		
+		ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
+		
+		// TODO: write query to get activitystreamitem (status updates) for a User
+		List<StreamItemBase> results = 
+			ActivityStreamItem.executeQuery( 
+				"select actItem from ActivityStreamItem as actItem where actItem.owner = :owner " + 
+				" and actItem.verb = :verb and actItem.targetUuid = :targetUuid",
+				['owner':user, verb:'quoddy_status_update', targetUuid:streamPublic.uuid] );
+		
+		statusUpdatesForUser.addAll( results );
+		
+		
+		return statusUpdatesForUser;
+	}
+	
 			
 }

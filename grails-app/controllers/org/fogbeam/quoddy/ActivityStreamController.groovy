@@ -1,11 +1,13 @@
 package org.fogbeam.quoddy
 
 import org.codehaus.jackson.map.ObjectMapper
+import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.integration.activitystream.ActivityStreamEntry
 import org.fogbeam.quoddy.stream.ActivityStreamItem;
 import org.fogbeam.quoddy.stream.StreamItemBase
 
 
+@Mixin(SidebarPopulatorMixin)
 class ActivityStreamController 
 {
 	def eventStreamService;
@@ -13,6 +15,13 @@ class ActivityStreamController
 	def userService;
 	def jmsService;
 	def eventQueueService;
+	def userStreamService;
+	def userListService;
+	def userGroupService;
+	def eventSubscriptionService;
+	
+	
+	
 	
 	def getQueueSize =
 	{	
@@ -115,4 +124,50 @@ class ActivityStreamController
 		
 		render "OK";
 	}
+	
+	def viewUserStream = {
+		
+		println "viewUserStream: ";
+		User user = session.user;
+		
+		
+		String userId = params.userId;
+		println "userId: ${userId}";
+		def page = params.page;
+		if( !page )
+		{
+			page = "1";
+		}
+		
+		
+		if( userId == null || userId.isEmpty() )
+		{
+			flash.message = "No UserId sent!";	
+			return [];
+		}
+		
+		User requestedUser = userService.findUserByUserId( userId );
+		
+		List<StreamItemBase> statusUpdatesForUser = null;
+		if( requestedUser != null )
+		{
+			println "getting status updates for user ${requestedUser.userId}";
+			statusUpdatesForUser = eventStreamService.getStatusUpdatesForUser( requestedUser );
+				
+		}
+		else 
+		{
+			println "NO user";
+		}
+		
+		Map model = [:];
+		
+		model.putAll( [user:user, statusUpdatesForUser:statusUpdatesForUser] );
+		Map sidebarCollections = populateSidebarCollections( this, user );
+		model.putAll( sidebarCollections );
+		
+		return model;
+				
+	}
+	
 }
