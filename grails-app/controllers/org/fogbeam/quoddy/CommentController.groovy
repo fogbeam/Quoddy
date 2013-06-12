@@ -18,24 +18,24 @@ class CommentController {
 		
 		// lookup the Event by id
 		log.debug( "eventId: ${params.eventId}" );
-		StreamItemBase event = eventStreamService.getEventById( Integer.parseInt( params.eventId) );
+		ActivityStreamItem item = eventStreamService.getActivityStreamItemById( Integer.parseInt( params.eventId) );
 			
 		// add the comment to the Event
 		if( session.user )
 		{
-			log.debug( "event: ${event}" );
+			log.debug( "item: ${item}" );
 			def user = User.findByUserId( session.user.userId );
 			log.debug( "user: ${user}" );
 		
 			StreamItemComment newComment = new StreamItemComment();
 			newComment.text = params.addCommentTextInput;
 			newComment.creator = user;
-			newComment.event = event;
+			newComment.event = item.streamObject;
 			newComment.save();
 			
-			event.addToComments( newComment );
+			item.streamObject.addToComments( newComment );
 			
-			eventStreamService.saveActivity( (ActivityStreamItem)event );
+			eventStreamService.saveActivity( item );
 			
 	    	// send JMS message saying "new entry submitted"
 	    	/* def newCommentMessage = [msgType:"NEW_COMMENT", entry_id:entry.id, entry_uuid:entry.uuid, 
@@ -45,7 +45,7 @@ class CommentController {
 	    	// send a JMS message to our testQueue
 			// sendJMSMessage("searchQueue", newCommentMessage );			
 			
-			log.debug( "saved StreamItemComment for user ${user.userId}, event ${event.id}" );
+			log.debug( "saved StreamItemComment for user ${user.userId}, item ${item.id}" );
 		}
 		else
 		{
@@ -54,7 +54,7 @@ class CommentController {
 		}
 	
 		// render using template, so we can ajaxify the loading of the comments...
-		render( template:"/renderComments", model:[comments:event.comments]);
+		render( template:"/renderComments", model:[comments:item.streamObject.comments]);
 		
 	}
 }

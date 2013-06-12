@@ -1,5 +1,9 @@
 package org.fogbeam.quoddy.stream
 
+import java.io.Serializable;
+
+import org.fogbeam.quoddy.User
+
 
 
 /* TODO: map the fields of this class to the activitystrea.ms protocol */
@@ -149,14 +153,19 @@ Following is a simple, minimal example of a JSON serialized activity:
 	url 					JSON [RFC4627] String				An IRI [RFC3987] identifying a resource providing an HTML representation of the object. An object MAY contain a url property 
  
 */
-class ActivityStreamItem extends StreamItemBase
+class ActivityStreamItem implements Serializable
 {
+	
+	public ActivityStreamItem()
+	{
+		this.uuid = java.util.UUID.randomUUID().toString();
+	}
 	
 	static constraints = {
 		
 		updated(nullable:true);
 		icon(nullable:true);
-		
+		uuid( nullable: false);
 		actorUuid(nullable:true);
 		actorUrl(nullable:true);
 		actorContent(nullable:true);
@@ -166,6 +175,8 @@ class ActivityStreamItem extends StreamItemBase
 		actorImageHeight(nullable:true);
 		actorImageWidth(nullable:true);
 
+		streamObject( nullable:false );
+		objectClass( nullable:false );
 		objectUuid(nullable:true);
 		objectUrl(nullable:true);
 		objectContent(nullable:true);
@@ -192,6 +203,8 @@ class ActivityStreamItem extends StreamItemBase
 	
 	static transients = ['templateName'];
 	
+	String  name;
+	String  uuid;
 	String 	content;
 	Date	published;
 	String	title;
@@ -199,6 +212,8 @@ class ActivityStreamItem extends StreamItemBase
 	URL		url;
 	String	verb;
 	URL 	icon;
+	User 	owner;
+	
 	
 	String 	actorUuid;
 	String 	actorUrl;
@@ -209,16 +224,21 @@ class ActivityStreamItem extends StreamItemBase
 	String 	actorImageHeight;
 	String	actorImageWidth;
 
-	String 	objectUuid;
-	String	objectUrl;
-	String	objectContent;
-	String	objectDisplayName;
-	String	objectObjectType;
-	String	objectImageUrl;
-	String	objectImageHeight;
-	String	objectImageWidth;
+	StreamItemBase 	streamObject;
+	String 			objectClass;
+	String 			objectUuid;
+	String			objectUrl;
+	String			objectContent;
+	String			objectDisplayName;
+	String			objectObjectType;
+	String			objectImageUrl;
+	String			objectImageHeight;
+	String			objectImageWidth;
 		
+	// TODO: should we define the Target as an object ref
+	// as well??
 	String	targetUrl;
+	String	targetUuid;
 	String	targetContent;
 	String	targetDisplayName;
 	String 	targetObjectType;
@@ -236,6 +256,4 @@ class ActivityStreamItem extends StreamItemBase
 	{
 		return "/renderActivity";
 	}
-	
-	
 }

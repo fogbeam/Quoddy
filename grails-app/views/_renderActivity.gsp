@@ -62,7 +62,7 @@
 			<div id="commentsArea" class="commentsArea">
 				<!--  render comments on the Event here -->
 				<g:render template="/renderComments" var="comments"
-					bean="${item.comments}" />
+					bean="${item.streamObject.comments}" />
 			</div>
 			<!-- end commentsArea -->
 			

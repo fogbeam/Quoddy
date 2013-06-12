@@ -29,8 +29,8 @@ class EventStreamService {
 		
 	}
 	
-	// TODO: rename this method to reflect that it actually returns Events not Activities
-	public List<StreamItemBase> getRecentActivitiesForUser( final User user, final int maxCount, final UserStream userStream )
+	
+	public List<ActivityStreamItem> getRecentActivitiesForUser( final User user, final int maxCount, final UserStream userStream )
 	{
 		
 		
@@ -48,7 +48,7 @@ class EventStreamService {
 		cal.add(Calendar.HOUR_OF_DAY, -2160 );
 		Date cutoffDate = cal.getTime();
 		
-		List<StreamItemBase> recentEvents = new ArrayList<StreamItemBase>();
+		List<ActivityStreamItem> recentActivityStreamItems = new ArrayList<ActivityStreamItem>();
 		
 					
 		List<User> friends = userService.listFriends( user );
@@ -64,7 +64,7 @@ class EventStreamService {
 			}
 		
 			
-			String query = "select event ";
+			String query = "select item ";
 			println "query now: ${query}";
 			
 			
@@ -77,7 +77,7 @@ class EventStreamService {
 			println "query now: ${query}";
 			
 			
-			query = query + " from StreamItemBase as event ";
+			query = query + " from ActivityStreamItem as item ";
 			println "query now: ${query}";
 			
 			
@@ -88,10 +88,10 @@ class EventStreamService {
 			}
 			println "query now: ${query}";
 			
-			query = query + " where event.effectiveDate >= :cutoffDate " + 
-							" and ( event.owner.id in (:friendIds) and not ( event.owner <> :owner and event.class = BusinessEventSubscriptionItem ) " + 
-							" and not ( event.owner <> :owner and event.class = CalendarFeedItem ) ) " + 
-							" and event.targetUuid = :targetUuid ";
+			query = query + " where item.published >= :cutoffDate " + 
+							" and ( item.owner.id in (:friendIds) and not ( item.owner <> :owner and item.objectClass = 'BusinessEventSubscriptionItem' ) " + 
+							" and not ( item.owner <> :owner and item.objectClass = 'CalendarFeedItem' ) ) " + 
+							" and item.targetUuid = :targetUuid ";
 			
 							
 			println "query now: ${query}";
@@ -128,7 +128,7 @@ class EventStreamService {
 						query = query + " or ";
 						
 					}
-					query = query + " event.class = " + eventType.name;
+					query = query + " item.objectClass = " + eventType.name;
 				}
 				query = query + " )";
 				println "query now: ${query}";
@@ -146,12 +146,12 @@ class EventStreamService {
 				// user in the friends list.  We should rework the entire base query
 				// but - for now - we can cheat and just add an extra and clause to
 				// filter down to the user id of our user
-				query = query + " and event.owner = :owner";	
+				query = query + " and item.owner = :owner";	
 			}
 			else 
 			{
 				println "adding userUuidsIncluded and streamid filters to query";
-				query = query + " and event.owner.uuid in elements( stream.userUuidsIncluded ) and stream.id = :streamId ) ";	
+				query = query + " and item.owner.uuid in elements( stream.userUuidsIncluded ) and stream.id = :streamId ) ";	
 			}
 			
 			/* deal with user list filter */
@@ -167,7 +167,7 @@ class EventStreamService {
 			
 			
 						
-			query = query + " order by event.effectiveDate desc";
+			query = query + " order by item.published desc";
 			
 			println "executing query: $query";
 							
@@ -189,18 +189,18 @@ class EventStreamService {
 			
 			println "Using parameters map: ${parameters}";
 			
-			List<StreamItemBase> queryResults =
-				StreamItemBase.executeQuery( query,
+			List<ActivityStreamItem> queryResults =
+				ActivityStreamItem.executeQuery( query,
 					parameters,
 					['max': maxCount ]);
 		
 				println "adding ${queryResults.size()} activities read from DB";
-				for( StreamItemBase event : queryResults ) {
+				for( ActivityStreamItem event : queryResults ) {
 					
 					println "Populating XML into SubscriptionEvents";
 					println "event = ${event}";
-					event = existDBService.populateSubscriptionEventWithXmlDoc( event );
-					recentEvents.add( event );
+					event.streamObject = existDBService.populateSubscriptionEventWithXmlDoc( event.streamObject );
+					recentActivityStreamItems.add( event );
 				}
 		}
 		else
@@ -209,7 +209,7 @@ class EventStreamService {
 		}
 		
 		
-		return recentEvents;
+		return recentActivityStreamItems;
 	}
 	
 	// TODO: refactor this to be consistent with the other getActivities method
@@ -275,8 +275,8 @@ class EventStreamService {
 		// NOTE: we could avoid iterating over this list again by returning the "oldest message time"
 		// as part of this call.  But it'll mean wrapping this stuff up into an object of some
 		// sort, or returning a Map of Maps instead of a List of Maps
-		List<StreamItemBase> messages = eventQueueService.getMessagesForUser( user.userId, msgsToRead );
-		for( StreamItemBase msg : messages )
+		List<ActivityStreamItem> messages = eventQueueService.getMessagesForUser( user.userId, msgsToRead );
+		for( ActivityStreamItem msg : messages )
 		{
 			// println "msg.originTime: ${msg.originTime}";
 			if( msg.effectiveDate.time < oldestOriginTime )
@@ -288,7 +288,7 @@ class EventStreamService {
 		println "oldestOriginTime: ${oldestOriginTime}";
 		println "as date: " + new Date( oldestOriginTime);
 		
-		List<StreamItemBase> recentEvents = new ArrayList<StreamItemBase>();
+		List<ActivityStreamItem> recentEvents = new ArrayList<ActivityStreamItem>();
 		
 		// NOTE: we wouldn't really want to iterate over this list here... better
 		// to build up this list above, and never bother storing the JMS Message instances
@@ -301,10 +301,10 @@ class EventStreamService {
 		// CalendarEvent, etc., depending on what the notification is for.
 		for( int i = 0; i < messages.size(); i++ )
 		{
-			StreamItemBase event = messages.get(i);
+			ActivityStreamItem activityStreamItem = messages.get(i);
 			// println "got message: ${msg} off of queue";
 			
-			event = existDBService.populateSubscriptionEventWithXmlDoc( event );
+			event = existDBService.populateSubscriptionEventWithXmlDoc( activityStreamItem.streamObject );
 			
 			recentEvents.add( event );				
 		}
@@ -354,8 +354,8 @@ class EventStreamService {
 				// own feed)
 				friendIds.add( user.id );
 				ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
-				List<StreamItemBase> queryResults = 
-					StreamItemBase.executeQuery( "select event from StreamItemBase as event where event.effectiveDate >= :cutoffDate and event.owner.id in (:friendIds) and event.effectiveDate < :oldestOriginTime and event.targetUuid = :targetUuid order by event.effectiveDate desc",
+				List<ActivityStreamItem> queryResults = 
+					ActivityStreamItem.executeQuery( "select item from ActivityStreamItem as item where item.published >= :cutoffDate and item.owner.id in (:friendIds) and item.effectiveDate < :oldestOriginTime and item.targetUuid = :targetUuid order by item.effectiveDate desc",
 						['cutoffDate':cutoffDate, 
 						 'oldestOriginTime':new Date(oldestOriginTime), 
 						 'friendIds':friendIds, 
@@ -363,11 +363,11 @@ class EventStreamService {
 					    ['max': recordsToRetrieve ]);
 			
 					println "adding ${queryResults.size()} activities read from DB";
-					for( StreamItemBase event : queryResults ) {
+					for( ActivityStreamItem activityStreamItem : queryResults ) {
 						
 						println "Populating XML into SubscriptionEvents";
 						
-						event = existDBService.populateSubscriptionEventWithXmlDoc( event );
+						event = existDBService.populateSubscriptionEventWithXmlDoc( activityStreamItem.streamObject );
 						recentEvents.add( event );
 					}
 			}
@@ -398,7 +398,28 @@ class EventStreamService {
 		
 		return event;
 	}
+
 	
+	
+	public ActivityStreamItem getActivityStreamItemById( final long itemId )
+	{
+		ActivityStreamItem item = ActivityStreamItem.findById( itemId );
+		
+		return item;
+	}
+
+	public ActivityStreamItem getActivityStreamItemByUuid( final String uuid )
+	{
+		ActivityStreamItem item = ActivityStreamItem.findByUuid( uuid );
+		
+		return item;
+	}
+
+	
+	
+	
+	
+		
 	// NOTE: we will probably need a version of this that supports
 	// chunking, since returning *every* item in the stream will consume
 	// massive memory once the system has been in use for a while.
@@ -415,14 +436,14 @@ class EventStreamService {
 	 * we haven't yet really fully integrated the ability to select different "ShareTarget"
 	 * instances, but we'll have to account for that later.
 	 */
-	public List<StreamItemBase> getStatusUpdatesForUser( final User user )
+	public List<ActivityStreamItem> getStatusUpdatesForUser( final User user )
 	{
-		List<StreamItemBase> statusUpdatesForUser = new ArrayList<StreamItemBase>();
+		List<ActivityStreamItem> statusUpdatesForUser = new ArrayList<ActivityStreamItem>();
 		
 		ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 		
 		// TODO: write query to get activitystreamitem (status updates) for a User
-		List<StreamItemBase> results = 
+		List<ActivityStreamItem> results = 
 			ActivityStreamItem.executeQuery( 
 				"select actItem from ActivityStreamItem as actItem where actItem.owner = :owner " + 
 				" and actItem.verb = :verb and actItem.targetUuid = :targetUuid",

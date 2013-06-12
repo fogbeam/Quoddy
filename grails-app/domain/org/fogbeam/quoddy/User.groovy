@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.fogbeam.quoddy.profile.Profile;
+import org.fogbeam.quoddy.stream.StatusUpdate;
 
 @XmlRootElement
 @XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.NONE)
@@ -62,7 +63,9 @@ class User implements Serializable
 	
     // static hasMany = [savedEntries : Entry, hiddenEntries: Entry];
     static hasMany = [oldStatusUpdates:StatusUpdate]
-    
+	
+	static mappedBy = [oldStatusUpdates:'creator']
+	
     // static mappedBy = [savedEntries : "savers", hiddenEntries:"hiders" ];
 
     public void setUuid( String uuid ){

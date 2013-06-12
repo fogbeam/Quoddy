@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.stream.ActivityStreamItem;
+import org.fogbeam.quoddy.stream.StatusUpdate;
 import org.fogbeam.quoddy.stream.StreamItemBase
 
 
