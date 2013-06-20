@@ -24,6 +24,7 @@ class BusinessEventSubscriptionItem extends StreamItemBase
 	
 	public String getTemplateName()
 	{
+		println "returning /renderSubscriptionEvent";
 		return "/renderSubscriptionEvent";
 	}
 }

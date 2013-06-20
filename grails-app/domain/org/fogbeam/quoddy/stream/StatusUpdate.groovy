@@ -12,4 +12,12 @@ class StatusUpdate extends StreamItemBase implements Serializable
 	Date dateCreated;
 	
 	static belongsTo = [User];
+	static transients = ['templateName'];
+	
+	public String getTemplateName()
+	{
+		println "returning /renderActivity from StatusUpdate";
+		return "/renderActivity";
+	}
+	
 }

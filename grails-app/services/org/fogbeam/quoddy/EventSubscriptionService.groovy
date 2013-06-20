@@ -1,5 +1,6 @@
 package org.fogbeam.quoddy
 
+import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ShareTarget;
 import org.fogbeam.quoddy.stream.StreamItemBase;
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem;
@@ -14,6 +15,7 @@ class EventSubscriptionService
 	def userService;
 	def jmsService;
 	def existDBService;
+	def eventStreamService;
 	
 	def onMessage( msg ) 
 	{
@@ -74,24 +76,38 @@ class EventSubscriptionService
 				// happen in a transaction
 				this.saveEvent( subEvent );
 				
-				println "sending message to JMS";
-				// Map uiNotificationMsg = new HashMap();
-				// uiNotificationMsg.creator = subEvent.owner.userId;
-				// uiNotificationMsg.text = "Business Event Subscription";
-				// uiNotificationMsg.targetUuid = subEvent.targetUuid;
-				// msg.published = activity.published;
-				// uiNotificationMsg.originTime = subEvent.dateCreated.time;
-				// TODO: figure out what to do with "effectiveDate" here
-				// uiNotificationMsg.effectiveDate = subEvent.dateCreated.time;
 				
-				// uiNotificationMsg.actualEvent = subEvent;
+				// TODO: if the event update was successful
+				ActivityStreamItem activity = new ActivityStreamItem(content:subEvent.summary);
 				
-				jmsService.send( queue: 'uitestActivityQueue', /* uiNotificationMsg */ subEvent, 'standard', null );
-
+				activity.title = "Business Event Subscription Item Received";
+				activity.url = new URL( "http://www.example.com" );
+				activity.verb = "business_event_subscription_item_received";
+				activity.published = new Date(); // set published to "now"
+				activity.targetUuid = streamPublic.uuid;
+				activity.owner = owner;
+				activity.streamObject = subEvent;
+				activity.objectClass = subEvent.class.getName();
+				
+				// NOTE: we added "name" to StreamItemBase, but how is it really going
+				// to be used?  Do we *really* need this??
+				activity.name = activity.title;
+				
+				// activity.effectiveDate = activity.published;
+				
+				eventStreamService.saveActivity( activity );
+				
+				
+				def newContentMsg = [msgType:'NEW_BUSINESS_EVENT_SUBSCRIPTION_ITEM', activityId:activity.id, activityUuid:activity.uuid ];
+				
+				println "sending messages to JMS";
+				
+				// send message to request search indexing
+				sendJMSMessage("quoddySearchQueue", newContentMsg );
 			
-				// send this to the search service for indexing...
-				def subEventMsg = [msgType:"NEW_BUSINESS_EVENT_SUBSCRIPTION_ITEM", id:subEvent.id];
-				jmsService.send( queue: 'quoddySearchQueue', subEventMsg, 'standard', null );
+				
+				// send message for UI notification
+				jmsService.send( queue: 'uitestActivityQueue', subEvent, 'standard', null );
 				
 			}
 			   
