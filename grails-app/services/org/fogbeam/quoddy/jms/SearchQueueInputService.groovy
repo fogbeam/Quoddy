@@ -249,7 +249,9 @@ public class SearchQueueInputService
 		
 		try
 		{
-			CalendarFeedItem calendarFeedItem = eventStreamService.getEventById( msg.getLong("id") );
+	
+			ActivityStreamItem calendarFeedItemActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
+			CalendarFeedItem calendarFeedItem = calendarFeedItemActivity.streamObject;
 			
 			println( "Trying to add Document to index" );
 			
@@ -258,8 +260,8 @@ public class SearchQueueInputService
 			Document doc = new Document();
 		
 			doc.add( new Field( "docType", "docType.calendarFeedItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-			doc.add( new Field( "uuid", msg.getString("uuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "id", Long.toString( msg.getLong("id") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "uuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "id", Long.toString( calendarFeedItem.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 		
 			// extract content from the item and add to appropriate fields
 			doc.add( new Field( "startDate", DateTools.dateToString(calendarFeedItem.startDate, DateTools.Resolution.MINUTE ), Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ) );

@@ -77,7 +77,7 @@ class EventSubscriptionService
 				this.saveEvent( subEvent );
 				
 				
-				// TODO: if the event update was successful
+				// if the event update was successful
 				ActivityStreamItem activity = new ActivityStreamItem(content:subEvent.summary);
 				
 				activity.title = "Business Event Subscription Item Received";

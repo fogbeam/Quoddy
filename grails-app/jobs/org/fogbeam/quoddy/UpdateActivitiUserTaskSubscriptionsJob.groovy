@@ -9,6 +9,7 @@ import org.apache.http.HttpRequest
 import org.apache.http.HttpRequestInterceptor
 import org.apache.http.protocol.HttpContext
 import org.fogbeam.quoddy.stream.ActivitiUserTask
+import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.subscription.ActivitiUserTaskSubscription
 
@@ -19,6 +20,7 @@ class UpdateActivitiUserTaskSubscriptionsJob
 	def group = "MyGroup";
 	def volatility = false;
 	def jmsService;
+	def eventStreamService;
 	
 	static triggers = {
 	}
@@ -92,8 +94,43 @@ class UpdateActivitiUserTaskSubscriptionsJob
 						userTask.errors.allErrors.each { println it };
 					}
 					else
-					{
+					{ 
+						// if userTask save is successful...
+						
 						println "successfully saved ActivitiUserTask.";
+						
+						ActivityStreamItem activity = new ActivityStreamItem(content:"fuckme");
+						
+						activity.title = "ActivitiUserTask Received";
+						activity.url = new URL( "http://example.com/" );
+						activity.verb = "activiti_user_task_received";
+						activity.published = new Date(); // set published to "now"
+						activity.targetUuid = streamPublic.uuid;
+						activity.owner = owner;
+						activity.streamObject = userTask;
+						activity.objectClass = userTask.class.getName();
+						
+						// NOTE: we added "name" to StreamItemBase, but how is it really going
+						// to be used?  Do we *really* need this??
+						activity.name = activity.title;
+						
+						// activity.effectiveDate = activity.published;
+						
+						eventStreamService.saveActivity( activity );
+						
+						
+						def newContentMsg = [msgType:'NEW_ACTIVITI_USER_TASK', activityId:activity.id, activityUuid:activity.uuid ];
+						
+						println "sending messages to JMS";
+						
+						// send message to request search indexing
+						jmsService.send( queue: 'quoddySearchQueue', newContentMsg, 'standard', null );
+						
+		
+										
+						// TODO: send JMS message for UI notifications
+
+												
 					}
 				}
 				else

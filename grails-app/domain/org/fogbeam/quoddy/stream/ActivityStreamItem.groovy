@@ -163,6 +163,7 @@ class ActivityStreamItem implements Serializable
 	
 	static constraints = {
 		
+		content( size: 0..1024, nullable:true);
 		updated(nullable:true);
 		icon(nullable:true);
 		uuid( nullable: false);
