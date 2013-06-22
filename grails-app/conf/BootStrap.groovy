@@ -18,12 +18,13 @@ class BootStrap {
 	def userService;
 	def siteConfigService;
 	def searchService;
+	def environment;
 	
 	def init = { servletContext ->
      
 		
 		
-		 switch( Environment.current )
+		 switch( Environment.current  )
 	     {
 	         case Environment.DEVELOPMENT:
 	             createSomeUsers();
@@ -211,20 +212,21 @@ class BootStrap {
 			  if( userService.findUserByUserId( "testuser${i}" ) == null )
 			  {
 				  println "Fresh Database, creating TESTUSER ${i} user";
-				  def testUser = new User(
+				  User testUser = new User(
 								  userId: "testuser${i}",
-								password: "secret",
 								firstName: "Test",
 								lastName: "User${i}",
 								email: "testuser${i}@example.com",
 								bio:"stuff",
 								displayName: "Test User${i}" );
 				  
+					testUser.password = "secret";
 					Profile profile = new Profile();
 					// profile.userUuid = testUser.uuid;
 					profile.setOwner( testUser );
 					testUser.profile = profile;
 							
+					println "about to create user: ${testUser.toString()}";
 					userService.createUser( testUser );
 			  }
 			  else

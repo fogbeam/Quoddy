@@ -30,6 +30,12 @@ class User implements Serializable
 		dateCreated()
     }
 	
+	public String toString()
+	{
+		return "id: ${id} uuid: ${uuid}, userId: ${userId}, password: ${password}, firstName: ${firstName}, lastName: ${lastName}, homepage: ${homepage}";
+		
+	}
+	
 	@XmlElement
     String uuid;
 	@XmlElement

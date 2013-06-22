@@ -35,6 +35,8 @@ class UserService {
 	public void createUser( User user ) 
 	{
 		
+		
+		println "UserService.createUser() - about to create user: ${user.toString()}";
 		/* save the user into the uzer table, we need that for associations with other
 		* "system things"
 		*/
