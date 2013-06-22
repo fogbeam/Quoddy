@@ -430,7 +430,23 @@ class EventStreamService {
 		
 		return items;
 	}
+
 	
+	// NOTE: we will probably need a version of this that supports
+	// chunking, since returning *every* item in the stream will consume
+	// massive memory once the system has been in use for a while.
+	public List<ActivityStreamItem> getAllActivityStreamItems()
+	{
+		/* NOTE: We'll also need a way to not return multiple ASI's that point
+		 * to the same streamObject, once we support sharing / re-sharing of stream
+		 * entries
+		 */
+		List<ActivityStreamItem> items = new ArrayList<ActivityStreamItem>();
+		items.addAll( ActivityStreamItem.findAll() );
+		
+		return items;
+	}
+		
 	/*
 	 * NOTE: this version just assumes we're only looking for things shared to "Public".
 	 * we haven't yet really fully integrated the ability to select different "ShareTarget"

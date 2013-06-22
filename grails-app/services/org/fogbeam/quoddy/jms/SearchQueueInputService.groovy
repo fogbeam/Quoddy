@@ -1,6 +1,5 @@
 package org.fogbeam.quoddy.jms
 
-
 import javax.jms.MapMessage
 import javax.xml.transform.OutputKeys
 import javax.xml.transform.Transformer
@@ -25,8 +24,11 @@ import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
 import org.fogbeam.quoddy.stream.CalendarFeedItem
+import org.fogbeam.quoddy.stream.StatusUpdate
 
-import org.w3c.dom.Node as Node;
+
+
+
 
 
 public class SearchQueueInputService
@@ -165,8 +167,9 @@ public class SearchQueueInputService
 		
 		try
 		{
-			ActivityStreamItem statusUpdateActivity = eventStreamService.getEventById( msg.getLong("activityId") );
-
+			ActivityStreamItem statusUpdateActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
+			StatusUpdate statusUpdate = statusUpdateActivity.streamObject;
+			
 			// println( "Trying to add Document to index" );
 			
 			writer.setUseCompoundFile(true);
@@ -174,10 +177,17 @@ public class SearchQueueInputService
 			Document doc = new Document();
 		
 			doc.add( new Field( "docType", "docType.statusUpdate", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-			doc.add( new Field( "uuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "id", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "content", statusUpdateActivity.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
 			
+			doc.add( new Field( "objectUuid", statusUpdate.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( statusUpdate.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId")), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		
+			doc.add( new Field( "content", statusUpdateActivity.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		
+				
 			writer.addDocument( doc );
 			writer.optimize();
 			// println( "Updated Lucene Index for new StatusUpdate" );
@@ -249,7 +259,6 @@ public class SearchQueueInputService
 		
 		try
 		{
-	
 			ActivityStreamItem calendarFeedItemActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 			CalendarFeedItem calendarFeedItem = calendarFeedItemActivity.streamObject;
 			
@@ -258,10 +267,15 @@ public class SearchQueueInputService
 			writer.setUseCompoundFile(true);
 
 			Document doc = new Document();
-		
+			
 			doc.add( new Field( "docType", "docType.calendarFeedItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-			doc.add( new Field( "uuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "id", Long.toString( calendarFeedItem.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+				
+			doc.add( new Field( "objectUuid", calendarFeedItem.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( calendarFeedItem.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId")), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 		
 			// extract content from the item and add to appropriate fields
 			doc.add( new Field( "startDate", DateTools.dateToString(calendarFeedItem.startDate, DateTools.Resolution.MINUTE ), Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ) );
@@ -275,7 +289,8 @@ public class SearchQueueInputService
 			writer.addDocument( doc );
 			writer.optimize();
 			
-			println( "Updated Lucene Index for new CalendarFeedItem" );
+			println( "Updated Lucene Index for new CalendarFeedItem" );			
+
 		}
 		finally
 		{
@@ -351,8 +366,8 @@ public class SearchQueueInputService
 		
 		try
 		{
-			BusinessEventSubscriptionItem besItem = eventStreamService.getEventById( msg.getLong("id") );
-
+			ActivityStreamItem besItemActivity = eventStreamService.getActivityStreamEventById( msg.getLong("activityId") );
+			BusinessEventSubscriptionItem besItem = besItemActivity.streamObject;
 			besItem = existDBService.populateSubscriptionEventWithXmlDoc( besItem );
 			
 			// println( "Trying to add Document to index" );
@@ -362,8 +377,14 @@ public class SearchQueueInputService
 			Document doc = new Document();
 		
 			doc.add( new Field( "docType", "docType.businessEventSubscriptionItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-			doc.add( new Field( "uuid", besItem.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "id", Long.toString( besItem.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			
+			doc.add( new Field( "objectUuid", besItem.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( besItem.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId")), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
 			
 			// TODO: figure out how to convert from any one of a bazillion different possible XML messages, to something
 			// we can index.  
@@ -448,7 +469,7 @@ public class SearchQueueInputService
 		
 		try
 		{
-			ActivityStreamItem statusUpdateActivity = eventStreamService.getEventById( msg.getLong("activityId") );
+			ActivityStreamItem genericActivityStreamItem = eventStreamService.getActivityStreamEventById( msg.getLong("activityId") );
 
 			// println( "Trying to add Document to index" );
 			
@@ -457,9 +478,14 @@ public class SearchQueueInputService
 			Document doc = new Document();
 		
 			doc.add( new Field( "docType", "docType.activityStreamItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-			doc.add( new Field( "uuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "id", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "content", statusUpdateActivity.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			
+			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			
+			doc.add( new Field( "objectUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			
+			doc.add( new Field( "content", genericActivityStreamItem.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
 			
 			writer.addDocument( doc );
 			writer.optimize();
@@ -615,12 +641,14 @@ public class SearchQueueInputService
 			Document doc = new Document();
 		
 			doc.add( new Field( "docType", "docType.question", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-			doc.add( new Field( "uuid", msg['uuid'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		
+			/*	doc.add( new Field( "uuid", msg['uuid'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "id", Long.toString( msg['id'] ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "url", msg['url'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "title", msg['title'], Field.Store.YES, Field.Index.ANALYZED ) );
 			doc.add( new Field( "tags", "", Field.Store.YES, Field.Index.ANALYZED ));
-
+			*/
+			
 			writer.addDocument( doc );
 		
 			writer.optimize();
@@ -687,7 +715,8 @@ public class SearchQueueInputService
 			writer.setUseCompoundFile(true);
 	
 			Document doc = new Document();
-		
+			
+			/* 
 			doc.add( new Field( "docType", "docType.streamEntryComment", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
 		
 			doc.add( new Field( "entry_id", Long.toString( msg['entry_id'] ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
@@ -696,6 +725,8 @@ public class SearchQueueInputService
 			doc.add( new Field( "id", Long.toString( msg['comment_id'] ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "uuid", msg['comment_uuid'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "content", msg['comment_text'], Field.Store.NO, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			*/
+			
 			writer.addDocument( doc );
 	
 			writer.optimize();

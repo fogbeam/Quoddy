@@ -87,11 +87,11 @@ class StatusController {
 			eventStreamService.saveActivity( activity );
 			
 			
-			def msg = [msgType:'NEW_STATUS_UPDATE', activityId:activity.id, activityUuid:activity.uuid ];
+			def newContentMsg = [msgType:'NEW_STATUS_UPDATE', activityId:activity.id, activityUuid:activity.uuid ];
 				
 			println "sending message to JMS";
 			// jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
-			sendJMSMessage("quoddySearchQueue", msg );
+			sendJMSMessage("quoddySearchQueue", newContentMsg );
 			
 			jmsService.send( queue: 'uitestActivityQueue', activity, 'standard', null );
 			
