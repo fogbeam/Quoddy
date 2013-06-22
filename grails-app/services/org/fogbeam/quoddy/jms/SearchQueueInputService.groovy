@@ -2,12 +2,6 @@ package org.fogbeam.quoddy.jms
 
 
 import javax.jms.MapMessage
-import javax.xml.transform.OutputKeys
-import javax.xml.transform.Transformer
-import javax.xml.transform.TransformerException
-import javax.xml.transform.TransformerFactory
-import javax.xml.transform.dom.DOMSource
-import javax.xml.transform.stream.StreamResult
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.DateTools
@@ -26,8 +20,10 @@ import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
 import org.fogbeam.quoddy.stream.CalendarFeedItem
 
-import org.w3c.dom.Node as Node;
-
+//:::
+import groovyx.net.http.HTTPBuilder
+import static groovyx.net.http.Method.GET
+import static groovyx.net.http.ContentType.TEXT
 
 public class SearchQueueInputService
 {
@@ -36,14 +32,14 @@ public class SearchQueueInputService
 	def eventStreamService;
 	def searchService;
 	def userService;
-	def existDBService;
 	
     static expose = ['jms']
     static destination = "quoddySearchQueue"                 
     
     def onMessage(msg)
     { 
-    	
+    	System.out.print("INONMESSSAGE:::")
+		System.out.println(msg)
     	/* note: what we would ordinarily do where is turn around and copy this message
     	 * to other queue's, topics, etc., or otherwise route it as needed.  But for
     	 * now we just assume we are the "indexer" job.
@@ -52,7 +48,8 @@ public class SearchQueueInputService
     	log.debug( "GOT MESSAGE: ${msg}" ); 
     
     	if( msg instanceof java.lang.String )
-    	{    		
+    	{
+			System.out.println(":::Message is a string")	
     	}
     	else
     	{
@@ -60,6 +57,42 @@ public class SearchQueueInputService
 			println "Received message: ${msg}";
 			MapMessage mapMessage = (MapMessage)msg;
     		String msgType = mapMessage.getString( "msgType" );
+			System.out.print(":::Showing the MessageMap:::")
+			try{
+				System.out.print(":::The Message ->")
+				System.out.println(mapMessage)
+				ActivityStreamItem statusUpdateActivity = eventStreamService.getEventById( msg.getLong("activityId") );
+				System.out.println(":::statusUpdateActivity->"+statusUpdateActivity)
+				System.out.println(":::statusUpdateActivity.content->"+statusUpdateActivity.content)
+			}
+				catch(Exception e){
+				System.out.print(":::Whoops2:::")
+				System.out.print(e)
+				System.out.println(":::")
+			}
+			try{
+				System.out.println(":::Message to Stanbol1")
+				def http = new HTTPBuilder('http://localhost:8090')
+				System.out.println(":::Message to Stanbol2")
+				http.get( path : '/enhancer',
+					contentType : TEXT,
+					query : [q:'The City of Portland'] ) { resp, reader ->
+						System.out.print(":::Stanbol's Response->")
+						System.out.println(reader)
+					/*println "response status: ${resp.statusLine}"
+					println 'Headers: -----------'
+					resp.headers.each { h ->
+					  println " ${h.name} : ${h.value}"
+					}
+					println 'Response data: -----'
+					System.out << reader
+					println '\n--------------------'*/
+		  }
+			}catch(Exception e){
+				System.out.println(":::Whoops3:::")
+			}
+				
+			
     		if( msgType == null || msgType.isEmpty())
 			{
 				println( "No msgType received!" );
@@ -82,41 +115,42 @@ public class SearchQueueInputService
 			else if( msgType.equals( "NEW_STATUS_UPDATE" )) // TODO: rename all this to STREAM_POST or something.
     		{
 		    	// add document to index
-		    	log.info( "adding Status Update ActivityStreamItem to index: ${mapMessage.getString('activityUuid')}" );				
+				System.out.println("NEWSTATUSUPDATE:::")
+		    	log.info( "adding document to index: ${mapMessage.getString('activityUuid')}" );				
 				newStatusUpdate( msg );
 
     		}
 			else if( msgType.equals( "NEW_CALENDAR_FEED_ITEM" ))
     		{
-		    	log.info( "adding CalendarFeedItem to index" );
+		    	log.info( "adding document to index" );
 				newCalendarFeedItem( msg );
     		}
 			else if( msgType.equals( "NEW_BUSINESS_EVENT_SUBSCRIPTION_ITEM" ))
 			{
-				log.info( "adding BusinessEventSubscriptionItem to index" );
+				log.info( "adding document to index" );
 				newBusinessEventSubscriptionItem( msg );
 			}
 			else if( msgType.equals( "NEW_ACTIVITY_STREAM_ITEM" ))
 			{
-				log.info( "adding ActivityStreamItem to index" );
+				log.info( "adding document to index" );
 				newActivityStreamItem( msg );
 			}
 			else if( msgType.equals( "NEW_RSS_FEED_ITEM" ))
 			{
-				log.info( "adding RssFeedItem to index" );
+				log.info( "adding document to index" );
 				newRssFeedItem( msg );
 			}
 			else if( msgType.equals( "NEW_QUESTION" ))
     		{
 		    	// add document to index
-		    	log.debug( "adding Question to index" );
+		    	log.debug( "adding document to index" );
 				newQuestion( msg );
 				
     		}
 			else if( msgType.equals( "NEW_STREAM_ENTRY_COMMENT" ))
     		{
     			
-		    	log.debug( "adding StreamEntryComment to index" );
+		    	log.debug( "adding document to index" );
 				newStreamEntryComment( msg );
     		}
 			else if( msgType.equals( "NEW_USER" ) )
@@ -351,8 +385,6 @@ public class SearchQueueInputService
 		{
 			BusinessEventSubscriptionItem besItem = eventStreamService.getEventById( msg.getLong("id") );
 
-			besItem = existDBService.populateSubscriptionEventWithXmlDoc( besItem );
-			
 			// println( "Trying to add Document to index" );
 			
 			writer.setUseCompoundFile(true);
@@ -360,20 +392,9 @@ public class SearchQueueInputService
 			Document doc = new Document();
 		
 			doc.add( new Field( "docType", "docType.businessEventSubscriptionItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-			doc.add( new Field( "uuid", besItem.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "id", Long.toString( besItem.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			
-			// TODO: figure out how to convert from any one of a bazillion different possible XML messages, to something
-			// we can index.  
-			if( besItem.xmlDoc != null )
-			{
-				String xmlString = nodeToString( besItem.xmlDoc );
-				doc.add( new Field( "content", xmlString, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
-			}
-			else
-			{
-				println( "WARNING: NO XML DOC AVAILABLE IN BES_ITEM" );	
-			}
+			doc.add( new Field( "uuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "id", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "summary", besItem.summary, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
 			
 			writer.addDocument( doc );
 			writer.optimize();
@@ -918,24 +939,5 @@ public class SearchQueueInputService
 	{
 		searchService.rebuildGeneralIndex();
 	}
-	
-	
-	private String nodeToString(Node node) 
-	{
-		StringWriter sw = new StringWriter();
-		try 
-		{
-			Transformer t = TransformerFactory.newInstance().newTransformer();
-			t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-			t.setOutputProperty(OutputKeys.INDENT, "yes");
-			t.transform(new DOMSource(node), new StreamResult(sw));
-		} 
-		catch (TransformerException te) {
-			System.out.println("nodeToString Transformer Exception");
-		}
-		
-		return sw.toString();
-	}
-	
 	
 }
