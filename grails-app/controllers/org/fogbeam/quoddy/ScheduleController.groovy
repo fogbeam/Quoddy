@@ -5,6 +5,7 @@ import org.codehaus.groovy.grails.commons.GrailsClass
 import org.quartz.JobDetail
 import org.quartz.JobKey
 import org.quartz.Trigger
+import org.quartz.TriggerKey
 import org.quartz.impl.matchers.GroupMatcher
 import org.quartz.impl.matchers.StringMatcher
 import org.quartz.impl.triggers.SimpleTriggerImpl
@@ -145,26 +146,26 @@ class ScheduleController {
 	{
 		log.debug( "Edit Trigger, params: ${params}" );
 		
-		Trigger theTrigger = jobManagerService.quartzScheduler.getTrigger(params.triggerName, params.triggerGroup);
+		Trigger theTrigger = jobManagerService.quartzScheduler.getTrigger( new TriggerKey( params.triggerName, params.triggerGroup ));
 		[trigger: theTrigger];
 	}
 
 	
 	def deleteTrigger =
 	{
-		jobManagerService.quartzScheduler.unscheduleJob(params.triggerName, params.triggerGroup);
+		jobManagerService.quartzScheduler.unscheduleJob( new TriggerKey( params.triggerName, params.triggerGroup ) );
 		redirect(action:"index");
 	}
 		
 	def saveTrigger =
 	{
-
-		Trigger theTrigger = jobManagerService.quartzScheduler.getTrigger(params.oldTriggerName, params.oldTriggerGroup);
+		TriggerKey theKey = new TriggerKey( params.oldTriggerName, params.oldTriggerGroup )
+		Trigger theTrigger = jobManagerService.quartzScheduler.getTrigger(theKey);
 		Trigger newTrigger = theTrigger.clone();
 		newTrigger.name = params.triggerName;
 		newTrigger.group = params.triggerGroup;
 		newTrigger.repeatInterval = Long.parseLong( params.recurrenceInterval );
-		jobManagerService.quartzScheduler.rescheduleJob(params.oldTriggerName, params.oldTriggerGroup, newTrigger);
+		jobManagerService.quartzScheduler.rescheduleJob( theKey, newTrigger);
 			
 		redirect(action:"index");
 	}
