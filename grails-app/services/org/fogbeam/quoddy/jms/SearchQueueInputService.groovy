@@ -366,7 +366,7 @@ public class SearchQueueInputService
 		
 		try
 		{
-			ActivityStreamItem besItemActivity = eventStreamService.getActivityStreamEventById( msg.getLong("activityId") );
+			ActivityStreamItem besItemActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 			BusinessEventSubscriptionItem besItem = besItemActivity.streamObject;
 			besItem = existDBService.populateSubscriptionEventWithXmlDoc( besItem );
 			
@@ -469,7 +469,7 @@ public class SearchQueueInputService
 		
 		try
 		{
-			ActivityStreamItem genericActivityStreamItem = eventStreamService.getActivityStreamEventById( msg.getLong("activityId") );
+			ActivityStreamItem genericActivityStreamItem = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 
 			// println( "Trying to add Document to index" );
 			
@@ -953,7 +953,7 @@ public class SearchQueueInputService
 	}
 	
 	
-	private String nodeToString(Node node) 
+	private String nodeToString(org.w3c.dom.Node node) 
 	{
 		StringWriter sw = new StringWriter();
 		try 
@@ -969,6 +969,4 @@ public class SearchQueueInputService
 		
 		return sw.toString();
 	}
-	
-	
 }

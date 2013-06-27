@@ -9,7 +9,12 @@
 	<div class="activityStreamEntry"> 
 		<h2>Business Subscription Event</h2>
 		<p>
-			<g:transform stylesheet="oagis3" source="${item.streamObject.xmlDoc}" factory="org.apache.xalan.processor.TransformerFactoryImpl" />
+			<g:if test="${item.streamObject.xmlDoc != null}">
+				<g:transform stylesheet="oagis3" source="${item.streamObject.xmlDoc}" factory="org.apache.xalan.processor.TransformerFactoryImpl" />
+			</g:if>
+			<g:else>
+				<h3>Error rendering Subscription Event: Please Contact Your System Administrator</h3>
+			</g:else>
 		</p>
 	</div>
 	<div class="aseClear" >

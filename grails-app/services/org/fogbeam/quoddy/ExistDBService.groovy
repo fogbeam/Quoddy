@@ -59,6 +59,8 @@ class ExistDBService
 		
 		String xmlUuid = event.xmlUuid;
 		
+		println( "xmlUuid = ${xmlUuid}");
+		
 		XMLResource res = (XMLResource)col.getResource(xmlUuid);
 		if(res == null)
 			System.out.println("document not found!");

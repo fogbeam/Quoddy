@@ -6,6 +6,7 @@ class BusinessEventSubscriptionItem extends StreamItemBase
 {
 	static constraints = {
 		owningSubscription(nullable:false);
+		summary( size: 0..1024, nullable:true);
 	}
 	
 	BusinessEventSubscription owningSubscription;

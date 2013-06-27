@@ -1,7 +1,11 @@
 package org.fogbeam.quoddy.service.search
 
-import java.io.File
-import java.util.List;
+import javax.xml.transform.OutputKeys
+import javax.xml.transform.Transformer
+import javax.xml.transform.TransformerException
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.DateTools
@@ -32,7 +36,6 @@ import org.fogbeam.quoddy.stream.CalendarFeedItem
 import org.fogbeam.quoddy.stream.Question
 import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.StatusUpdate
-import org.fogbeam.quoddy.stream.StreamItemBase;
 import org.fogbeam.quoddy.stream.StreamItemComment
 
 class SearchService
@@ -41,6 +44,7 @@ class SearchService
 	def siteConfigService;
 	def userService;
 	def eventStreamService;
+	def existDBService;
 	
 	public List<SearchResult> doEverythingSearch( final String queryString )
 	{
@@ -200,6 +204,13 @@ class SearchService
 			String uuid = result.get("activityUuid");
 			// lookup our object by it's UUID and assign it to the searchResult instance
 			ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
+			
+			BusinessEventSubscriptionItem besItem = item.streamObject;
+			besItem = existDBService.populateSubscriptionEventWithXmlDoc( besItem );
+			item.streamObject = besItem;
+			
+			// need to populate the XMLDoc data...
+			
 			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
 			
 			searchResults.add( searchResult );
@@ -492,6 +503,23 @@ class SearchService
 				println "indexing ASI with id: ${item.id}, uuid: ${item.uuid} and objectClass: ${item.objectClass}";
 				// if streamObject is null, the only valid scenario is for this ASI to be a 3rd party (remote)
 				// ActivityStreamItem, so the object we're indexing is the ASI itself.
+				
+				
+				Object streamObject = item.streamObject;
+				if( streamObject != null )
+				{
+					streamObject = existDBService.populateSubscriptionEventWithXmlDoc( streamObject );
+					item.streamObject = streamObject;	
+					
+					if( streamObject instanceof BusinessEventSubscriptionItem )
+					{
+						String xmlString = nodeToString( streamObject.xmlDoc );
+						streamObject.summary = xmlString;
+					}
+									
+				}
+				
+				
 				addToIndex( writer, item, ( ( item.streamObject != null ) ? item.streamObject : item ) );		
 			}
 		}
@@ -806,4 +834,23 @@ class SearchService
 		}
 		
 	}
+	
+	
+	private String nodeToString(org.w3c.dom.Node node)
+	{
+		StringWriter sw = new StringWriter();
+		try
+		{
+			Transformer t = TransformerFactory.newInstance().newTransformer();
+			t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+			t.setOutputProperty(OutputKeys.INDENT, "yes");
+			t.transform(new DOMSource(node), new StreamResult(sw));
+		}
+		catch (TransformerException te) {
+			System.out.println("nodeToString Transformer Exception");
+		}
+		
+		return sw.toString();
+	}
+	
 }
