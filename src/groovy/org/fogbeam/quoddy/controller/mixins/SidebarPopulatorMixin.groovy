@@ -34,8 +34,11 @@ class SidebarPopulatorMixin
 		def tempUserGroups = controller.userGroupService.getAllGroupsForUser( user );
 		userGroups.addAll( tempUserGroups );
 		
-		def tempEventSubscriptions = controller.eventSubscriptionService.getAllSubscriptionsForUser( user );
+		def tempEventSubscriptions = controller.businessEventSubscriptionService.getAllSubscriptionsForUser( user );
 		eventSubscriptions.addAll( tempEventSubscriptions );
+		
+		
+		
 		
 		[sysDefinedStreams:systemDefinedStreams,
 			userDefinedStreams:userDefinedStreams,

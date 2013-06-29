@@ -14,7 +14,7 @@ class SubscriptionController
 	def userStreamService;
 	def userListService;
 	def userGroupService;
-	def eventSubscriptionService;
+	def businessEventSubscriptionService;
 	
 	def index =
 	{
@@ -67,7 +67,7 @@ class SubscriptionController
 			Map model = [:];
 			if( user )
 			{
-				subEvents = eventSubscriptionService.getRecentEventsForSubscription( subscription, 25 );
+				subEvents = businessEventSubscriptionService.getRecentEventsForSubscription( subscription, 25 );
 				model.putAll( [ activities:subEvents ] );
 				
 				Map sidebarCollections = this.populateSidebarCollections( this, user );

@@ -12,7 +12,7 @@ class UserStreamController
 	def userStreamService;
 	def userListService;
 	def userGroupService;
-	def eventSubscriptionService;
+	def businessEventSubscriptionService;
 	def eventTypeService;
 	
 	def index =
@@ -209,7 +209,7 @@ class UserStreamController
 										
 				/* load subscription list */
 				List<BusinessEventSubscription> eventSubscriptions =
-					eventSubscriptionService.getAllSubscriptionsForUser( session.user );
+					businessEventSubscriptionService.getAllSubscriptionsForUser( session.user );
 				
 				[eventSubscriptions:eventSubscriptions, selectedEventSubscriptions:streamToCreate.subscriptionUuidsIncluded];
 			
@@ -230,7 +230,7 @@ class UserStreamController
 				
 				for( String eventSubscriptionUuid : eventSubscriptionUuids )
 				{
-					BusinessEventSubscription eventSubscriptionToInclude = eventSubscriptionService.findByUuid( eventSubscriptionUuid );
+					BusinessEventSubscription eventSubscriptionToInclude = businessEventSubscriptionService.findByUuid( eventSubscriptionUuid );
 					if( eventSubscriptionToInclude == null ) {
 						println "Failed to locate EventSubscription for uuid ${eventSubscriptionUuid}";
 						continue;
@@ -421,7 +421,7 @@ class UserStreamController
 										
 				/* load subscription list */
 				List<BusinessEventSubscription> eventSubscriptions =
-					eventSubscriptionService.getAllSubscriptionsForUser( session.user );
+					businessEventSubscriptionService.getAllSubscriptionsForUser( session.user );
 				
 				[eventSubscriptions:eventSubscriptions, selectedEventSubscriptions:streamToEdit.subscriptionUuidsIncluded];
 			
@@ -442,7 +442,7 @@ class UserStreamController
 				
 				for( String eventSubscriptionUuid : eventSubscriptionUuids )
 				{
-					BusinessEventSubscription eventSubscriptionToInclude = eventSubscriptionService.findByUuid( eventSubscriptionUuid );
+					BusinessEventSubscription eventSubscriptionToInclude = businessEventSubscriptionService.findByUuid( eventSubscriptionUuid );
 					if( eventSubscriptionToInclude == null ) {
 						println "Failed to locate EventSubscription for uuid ${eventSubscriptionUuid}";
 						continue;

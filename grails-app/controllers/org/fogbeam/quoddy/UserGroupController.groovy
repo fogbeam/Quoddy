@@ -16,7 +16,7 @@ class UserGroupController
 	def userStreamService;
 	def userListService;
 	def userGroupService;
-	def eventSubscriptionService;
+	def businessEventSubscriptionService;
 	
 	def index =
 	{

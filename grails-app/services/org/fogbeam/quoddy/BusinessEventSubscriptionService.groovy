@@ -6,7 +6,7 @@ import org.fogbeam.quoddy.stream.StreamItemBase;
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem;
 import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
 
-class EventSubscriptionService
+class BusinessEventSubscriptionService
 {
 	
 	static expose = ['jms']
