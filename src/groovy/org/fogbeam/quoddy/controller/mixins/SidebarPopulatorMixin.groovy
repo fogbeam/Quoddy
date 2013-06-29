@@ -4,7 +4,10 @@ import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.UserGroup
 import org.fogbeam.quoddy.UserList
 import org.fogbeam.quoddy.UserStream
-import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
+import org.fogbeam.quoddy.subscription.ActivitiUserTaskSubscription
+import org.fogbeam.quoddy.subscription.BusinessEventSubscription
+import org.fogbeam.quoddy.subscription.CalendarFeedSubscription
+import org.fogbeam.quoddy.subscription.RssFeedSubscription
 
 class SidebarPopulatorMixin
 {
@@ -15,6 +18,10 @@ class SidebarPopulatorMixin
 		def userLists = new ArrayList<UserList>();
 		def userGroups = new ArrayList<UserGroup>();
 		def eventSubscriptions = new ArrayList<BusinessEventSubscription>();
+		def calendarFeedSubscriptions = new ArrayList<CalendarFeedSubscription>();
+		def activitiUserTaskSubscriptions = new ArrayList<ActivitiUserTaskSubscription>();
+		def rssFeedSubscriptions = new ArrayList<RssFeedSubscription>();
+		
 		
 		def tempSysStreams = controller.userStreamService.getSystemDefinedStreamsForUser( user );
 		systemDefinedStreams.addAll( tempSysStreams );

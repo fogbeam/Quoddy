@@ -2,7 +2,7 @@ package org.fogbeam.quoddy.subscription
 
 import org.fogbeam.quoddy.User;
 
-class CalendarFeedSubscription
+class CalendarFeedSubscription implements Serializable
 {
 	public CalendarFeedSubscription()
 	{

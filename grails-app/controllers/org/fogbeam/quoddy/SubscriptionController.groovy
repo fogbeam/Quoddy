@@ -3,7 +3,9 @@ package org.fogbeam.quoddy
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
 import org.fogbeam.quoddy.subscription.ActivitiUserTaskSubscription
-import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
+import org.fogbeam.quoddy.subscription.BusinessEventSubscription
+import org.fogbeam.quoddy.subscription.CalendarFeedSubscription
+import org.fogbeam.quoddy.subscription.RssFeedSubscription
 
 @Mixin(SidebarPopulatorMixin)
 class SubscriptionController
@@ -23,6 +25,9 @@ class SubscriptionController
 		def userLists = new ArrayList<UserList>();
 		def userGroups = new ArrayList<UserGroup>();
 		def eventSubscriptions = new ArrayList<BusinessEventSubscription>();
+		def calendarFeedSubscriptions = new ArrayList<CalendarFeedSubscription>();
+		def activitiUserTaskSubscriptions = new ArrayList<ActivitiUserTaskSubscription>();
+		def rssFeedSubscriptions = new ArrayList<RssFeedSubscription>();
 		
 		if( session.user != null )
 		{
@@ -101,13 +106,17 @@ class SubscriptionController
 		 action {
 			 String subscriptionType = params.subscriptionType;
 			 
-			 if( subscriptionType.equals( "businessEvent" ) )
+			 if( subscriptionType.equals( "activitiUserTask" ) )
+			 {
+				 activitiUserTask();
+			 }
+			 else if( subscriptionType.equals( "businessEvent" ) )
 			 {
 				 businessEventSubscription();
 			 }
-			 else if( subscriptionType.equals( "activitiUserTask" ) )
+			 else if( subscriptionType.equals( "calendarFeed" ) )
 			 {
-				 activitiUserTask();
+				 calendarFeed();
 			 }
 			 else if( subscriptionType.equals( "rssFeed" ) )
 			 {
@@ -115,8 +124,9 @@ class SubscriptionController
 			 }
 			 
 		   }	
-		   on( "businessEventSubscription" ).to("createBusinessEventSubscriptionWizardOne")
 		   on( "activitiUserTask" ).to("createActivitiUserTaskSubscriptionWizardOne")
+		   on( "businessEventSubscription" ).to("createBusinessEventSubscriptionWizardOne")
+		   on( "calendarFeed" ).to("createCalendarFeedSubscriptionWizardOne")
 		   on( "rssFeed" ).to("createBusinessEventSubscriptionWizardOne")
 		}
 		
@@ -201,7 +211,39 @@ class SubscriptionController
 			on("success").to("exitWizard");
 		}
 		
-		
+		createCalendarFeedSubscriptionWizardOne {
+			
+			on( "stage2" ){
+
+				CalendarFeedSubscription calendarFeedToCreate = new CalendarFeedSubscription();
+				
+				calendarFeedToCreate.url = params.calFeedUrl;
+				calendarFeedToCreate.name = params.calFeedName;
+		   
+				def user = userService.findUserByUserId( session.user.userId );
+				calendarFeedToCreate.owner = user;
+			
+				flow.calendarFeedToCreate = calendarFeedToCreate;
+			
+			}.to( "finishCalendarFeedSubscription")
+		}
+
+		finishCalendarFeedSubscription {
+			action {
+				println "create using params: ${params}"
+
+				CalendarFeedSubscription calendarFeedToCreate = flow.calendarFeedToCreate;
+				
+				if( !calendarFeedToCreate.save() )
+				{
+					println( "Saving CalendarFeedSubscription FAILED");
+					calendarFeedToCreate.errors.allErrors.each { println it };
+				}
+				
+			}
+			on("success").to("exitWizard");
+	   }
+
 	   exitWizard {
 			redirect(controller:"subscription", action:"index");
 	   }

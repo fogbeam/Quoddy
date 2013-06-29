@@ -8,8 +8,6 @@
 	
 	<body>
 		<p />
-		Results:
-		<p />
 		<ul style="margin-left:315px;">
 			<g:each in="${searchResults}" var="searchResult">
 				<g:if test="${searchResult.object.streamObject != null}"> 

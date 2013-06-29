@@ -104,21 +104,26 @@
 								
 								<g:if test="${session.user != null}">
 									<li><a
-										href="${createLink(controller:'user', action:'listOpenFriendRequests')}">Pending
-										Friend Requests</a></li>
+										href="${createLink(controller:'user', action:'listOpenFriendRequests')}">
+										Pending Friend Requests</a></li>
 									<li><a
-										href="${createLink(controller:'schedule', action:'index')}">Manage
-										Scheduled Jobs</a></li>
+										href="${createLink(controller:'schedule', action:'index')}">
+										Manage Scheduled Jobs</a></li>
+									
+									<!-- remove this once we've merged management of calendar
+									feeds into the main subscriptions wizard
 									<li><a
-										href="${createLink(controller:'calendar', action:'index')}">Manage
-										Calendar Feeds</a></li>
-									<li class="divider"></li>
+										href="${createLink(controller:'calendar', action:'index')}">
+										Manage Calendar Feeds</a></li>
+									
+									 -->									<li class="divider"></li>
+									
 									<li><a
-										href="${createLink(controller:'user', action:'editAccount')}">Edit
-										Account Info</a></li>
+										href="${createLink(controller:'user', action:'editAccount')}">
+										Edit Account Info</a></li>
 									<li><a
-										href="${createLink(controller:'user', action:'editProfile')}">Edit
-										Profile</a></li>
+										href="${createLink(controller:'user', action:'editProfile')}">
+										Edit Profile</a></li>
 								</g:if>
 								
 								<li class="divider"></li>
