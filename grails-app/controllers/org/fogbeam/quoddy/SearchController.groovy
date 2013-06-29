@@ -50,6 +50,7 @@ class SearchController
 		boolean bSearchStatusUpdates = false;
 		boolean bSearchCalendarFeedItems = false;
 		boolean bSearchBusSubItems = false;
+		boolean bSearchActivitiUserTasks = false;
 		boolean bSearchRssFeedItems = false;
 		boolean bSearchActivityStreamItems = false;		
 		boolean bSearchUsers = false;
@@ -65,6 +66,7 @@ class SearchController
 			bSearchStatusUpdates = true;
 			bSearchCalendarFeedItems = true;
 			bSearchBusSubItems = true;
+			bSearchActivitiUserTasks = true;
 			bSearchRssFeedItems = true;
 			bSearchActivityStreamItems = true;
 			bSearchUsers = true;
@@ -86,6 +88,10 @@ class SearchController
 			bSearchBusSubItems = searchBusSubItems ? true : false;
 			println "searchBusSubItems: ${searchBusSubItems}";
 					
+			String searchActivitiUserTasks = params.searchActivitiUserTasks;
+			bSearchActivitiUserTasks = searchActivitiUserTasks ? true : false;
+			println "searchActivitiUserTasks: ${searchActivitiUserTasks}";
+			
 			String searchRssFeedItems = params.searchRssFeedItems;
 			bSearchRssFeedItems = searchRssFeedItems ? true : false;
 			println "searchRssFeedItems: ${searchRssFeedItems}";
@@ -140,6 +146,16 @@ class SearchController
 			println "SearchBusSubItems returned " + tempResults.size() + " results";
 			searchResults.addAll( tempResults );
 			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchActivitiUserTasks )
+		{
+			println "searching Activiti User Tasks";
+			List<SearchResult> tempResults = searchService.doActivitiUserTaskSearch( queryString );
+			println "SearchBusSubItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+			
 		}
 		
 		if( bSearchRssFeedItems )

@@ -169,6 +169,50 @@ class SearchService
 	}
 	
 	
+	public List<SearchResult> doActivitiUserTaskSearch( final String queryString )
+	{
+		println "in doActivitiUserTaskSearch";
+		
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		// println( "got indexDirLocation as: ${indexDirLocation}");
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		
+		
+		IndexSearcher searcher = new IndexSearcher( indexDir );
+	
+		StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
+		String[] fields = ["content", "status", "description", "location", "summary" ];
+		MultiFieldQueryParser queryParser = new MultiFieldQueryParser( Version.LUCENE_30, fields, analyzer );
+		
+		Query userQuery = queryParser.parse(queryString);
+		BooleanQuery query = new BooleanQuery();
+		query.add(userQuery, BooleanClause.Occur.MUST );
+		TermQuery docTypeTerm = new TermQuery(new Term("docType", "docType.activitiUserTask"));
+		query.add( docTypeTerm, BooleanClause.Occur.MUST );
+		
+		TopDocs hits = searcher.search(query, 20);
+		
+		List<SearchResult> searchResults = new ArrayList<SearchResult>();
+		ScoreDoc[] docs = hits.scoreDocs;
+		println "Search returned " + docs.length + " results";
+		for( ScoreDoc doc : docs )
+		{
+			Document result = searcher.doc( doc.doc );
+			String docType = result.get("docType")
+			String uuid = result.get("activityUuid");
+			// lookup our object by it's UUID and assign it to the searchResult instance
+			ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
+			
+			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
+			
+			searchResults.add( searchResult );
+		}
+		
+		
+		return searchResults;
+
+	}
+	
 	public List<SearchResult> doBusinessSubscriptionItemSearch( final String queryString )
 	{
 		
@@ -555,12 +599,27 @@ class SearchService
 		
 	}
 	
-	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final ActivitiUserTask task )
+	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final ActivitiUserTask item )
 	{
-		// let's just let this stay a NOP for right this minute... there are bigger
-		// fish to fry
-		// TODO: implement adding ActivitiUserTask objects to Search Index	
-		println "TODO: implement adding ActivitiUserTask objects to Search Index";
+		
+
+		println "adding ActivitiUserTask object to Search Index";
+		
+		// TODO: implement adding ActivitiUserTask objects to Search Index
+		Document doc = new Document();
+		
+		doc.add( new Field( "docType", "docType.activitiUserTask", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+
+		
+		doc.add( new Field( "objectUuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "objectId", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityUuid", asi.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityId", Long.toString( asi.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+				
+		doc.add( new Field( "content", item.description, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+
+		writer.addDocument( doc );
+		writer.optimize();
 	}
 	
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final ActivityStreamItem item )
