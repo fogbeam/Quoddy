@@ -12,7 +12,10 @@ class HomeController {
 	def userListService;
 	def userGroupService;
 	def businessEventSubscriptionService;
-	
+	def calendarFeedSubscriptionService;
+	def activitiUserTaskSubscriptionService;
+	def rssFeedSubscriptionService;
+		
     def index = {
     		
     	def userId = params.userId;

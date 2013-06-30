@@ -4,23 +4,17 @@ import java.io.Serializable;
 
 import org.fogbeam.quoddy.User;
 
-class ActivitiUserTaskSubscription implements Serializable
+class ActivitiUserTaskSubscription extends BaseSubscription implements Serializable
 {
-	public ActivitiUserTaskSubscription()
-	{
-		this.uuid = java.util.UUID.randomUUID().toString();
+	static constraints = {
+		activitiServer( nullable:false)
+		candidateGroup(nullable:true)
+		assignee( nullable:true)
 	}
-	
-	String 	uuid;
-	String 	name;
-	String 	description;
+
 	String 	activitiServer;
 	String 	candidateGroup;
 	String 	assignee;
-	User 	owner;
 	
-	static mapping = {
-		owner lazy:false; // eagerly fetch the owner
-	}
 	
 }

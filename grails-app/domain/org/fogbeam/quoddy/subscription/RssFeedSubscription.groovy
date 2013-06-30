@@ -1,5 +1,8 @@
 package org.fogbeam.quoddy.subscription;
 
-public class RssFeedSubscription
+import org.fogbeam.quoddy.User
+
+public class RssFeedSubscription extends BaseSubscription
 {
+	
 }

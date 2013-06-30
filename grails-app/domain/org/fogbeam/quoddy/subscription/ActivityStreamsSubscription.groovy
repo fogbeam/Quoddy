@@ -1,5 +1,5 @@
 package org.fogbeam.quoddy.subscription;
 
-public class ActivityStreamsSubscription
+public class ActivityStreamsSubscription extends BaseSubscription
 {
 }

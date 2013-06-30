@@ -4,7 +4,7 @@
 		<img src="${createLinkTo(dir:'images', file:'flavour-icons/ical.png')}"/>
 	</div>
 	<div class="aseTitleBar"> <!-- http://localhost:8080/quoddy/user/viewUser?userId=testuser2 -->
-		<a href="${createLink(controller:'calendar', action:'display', params:[calendarFeedId:item.streamObject.owningFeed.id])}">${item.streamObject.owningFeed.name}</a>
+		<a href="${createLink(controller:'calendar', action:'display', params:[calendarFeedId:item.streamObject.owningSubscription.id])}">${item.streamObject.owningSubscription.name}</a>
 	</div>
 	<div class="activityStreamEntry"> 
 		<font color="red">CALENDAR EVENT</font>

@@ -1,6 +1,7 @@
 package org.fogbeam.quoddy.stream
 
-import org.fogbeam.quoddy.User;
+import org.fogbeam.quoddy.User
+import org.fogbeam.quoddy.subscription.BaseSubscription
 
 public class StreamItemBase implements Serializable
 {
@@ -19,6 +20,7 @@ public class StreamItemBase implements Serializable
 	static constraints = 
 	{
 		owner(nullable:true);
+		owningSubscription(nullable:true);
 	}
 	
 	static hasMany = [ comments: StreamItemComment /* votes : Vote, savers: User, hiders: User, tagEntryLinks:TagEntryLink */  ];
@@ -32,6 +34,8 @@ public class StreamItemBase implements Serializable
 	String	targetUuid; // UUID of the "thing" this stream item was targeted at.  A group, etc.
 						// question is, do we really need this for internal events if we have the
 						// notion of a ShareTarget domain object?  How would this
-						// be used any differently? 
+						// be used any differently?
+	
+	BaseSubscription owningSubscription; 
 	
 }

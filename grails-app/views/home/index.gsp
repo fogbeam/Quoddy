@@ -83,12 +83,34 @@
 							<g:link controller="subscription" action="index">Manage Subscriptions<i
 									class="icon-cog"></i>
 							</g:link>
-							<g:each var="subscription" in="${eventSubscriptions}">
-								<li><g:link controller="subscription" action="display"
+							<li class="divider"></li>
+							<g:each var="subscription" in="${businessEventSubscriptions}">
+								<li><g:link controller="subscription" action="displayBusinessEventSubscription"
 										params="[subscriptionId:subscription.id]">
 										${subscription.name}
 									</g:link></li>
 							</g:each>
+							<li class="divider"></li>
+							<g:each var="subscription" in="${calendarFeedSubscriptions}">
+								<li><g:link controller="subscription" action="displayCalendarFeedSubscription"
+										params="[subscriptionId:subscription.id]">
+										${subscription.name}
+									</g:link></li>
+							</g:each>
+							<li class="divider"></li>
+							<g:each var="subscription" in="${activitiUserTaskSubscriptions}">
+								<li><g:link controller="subscription" action="displayActivitiUserTaskSubscription"
+										params="[subscriptionId:subscription.id]">
+										${subscription.name}
+									</g:link></li>
+							</g:each>							
+							<li class="divider"></li>
+							<g:each var="subscription" in="${rssFeedSubscriptions}">
+								<li><g:link controller="subscription" action="displayRssFeedSubscription"
+										params="[subscriptionId:subscription.id]">
+										${subscription.name}
+									</g:link></li>
+							</g:each>							
 						</ul>
 					</g:if>
 				</li>

@@ -23,7 +23,6 @@ class ActivitiUserTask extends StreamItemBase
 	// delegationState:null
 	
 	static constraints = {
-		owningSubscription(nullable:false);
 		createTime(nullable:true);
 		executionId(nullable:true);
 		// attachmentList
@@ -36,9 +35,6 @@ class ActivitiUserTask extends StreamItemBase
 		dueDate(nullable:true);
 		
 	}
-	
-	ActivitiUserTaskSubscription owningSubscription;
-	
 	
 	static transients = ['templateName'];
 		
@@ -59,10 +55,5 @@ class ActivitiUserTask extends StreamItemBase
 	String remoteName;
 	String remoteOwner;
 	String dueDate;
-	
-	
-	
-	
-	
-	
+
 }

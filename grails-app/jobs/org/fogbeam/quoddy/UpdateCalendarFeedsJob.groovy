@@ -91,7 +91,7 @@ class UpdateCalendarFeedsJob
 						
 						CalendarFeedItem event = new CalendarFeedItem();
 						event.uid = eventUid;
-						event.owningFeed = feed;
+						event.owningSubscription = feed;
 						event.owner = feed.owner;
 						event.startDate = comp.startDate?.date;
 						event.endDate = comp.endDate?.date;

@@ -138,7 +138,7 @@ class BusinessEventSubscriptionService
 	{
 		List<BusinessEventSubscription> subscriptions = new ArrayList<BusinessEventSubscription>();
 		
-		List<UserList> tempSubscriptions = BusinessEventSubscription.executeQuery( "select subscription from BusinessEventSubscription as subscription where subscription.owner = :owner",
+		List<BusinessEventSubscription> tempSubscriptions = BusinessEventSubscription.executeQuery( "select subscription from BusinessEventSubscription as subscription where subscription.owner = :owner",
 			['owner':user] );
 		
 		if( tempSubscriptions )
@@ -150,12 +150,12 @@ class BusinessEventSubscriptionService
 	}
 
 	
-	public List<BusinessEventSubscriptionItem> getRecentEventsForSubscription( final BusinessEventSubscription subscription,  final int maxCount )
+	public List<ActivityStreamItem> getRecentEventsForSubscription( final BusinessEventSubscription subscription,  final int maxCount )
 	{
 	
 		println "getRecentEventsForSubscription: ${subscription.id}";
 		
-		List<BusinessEventSubscriptionItem> recentEvents = new ArrayList<BusinessEventSubscriptionItem>();
+		List<ActivityStreamItem> recentEvents = new ArrayList<ActivityStreamItem>();
 	
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, -2160 );
@@ -164,10 +164,10 @@ class BusinessEventSubscriptionService
 		println "Using ${cutoffDate} as cutoffDate";
 
 	
-		List<BusinessEventSubscriptionItem> queryResults =
-			BusinessEventSubscriptionItem.executeQuery(
-					"select subevent from SubscriptionEvent as subevent where subevent.dateCreated >= :cutoffDate " +
-					" and subevent.owningSubscription = :owningSub order by subevent.dateCreated desc",
+		List<ActivityStreamItem> queryResults =
+			ActivityStreamItem.executeQuery(
+					"select actItem from ActivityStreamItem as actItem where actItem.dateCreated >= :cutoffDate " +
+					"and actItem.streamObject in ( select sib from StreamItemBase as sib where sib.owningSubscription = :owningSub) order by actItem.dateCreated desc",
 			  ['cutoffDate':cutoffDate, 'owningSub':subscription], ['max': maxCount ]);
 			
 		if( queryResults )
@@ -176,7 +176,7 @@ class BusinessEventSubscriptionService
 			recentEvents.addAll( queryResults );
 			
 			recentEvents.each {
-				existDBService.populateSubscriptionEventWithXmlDoc( it );
+				existDBService.populateSubscriptionEventWithXmlDoc( it.streamObject );
 			} 
 		}
 		else {

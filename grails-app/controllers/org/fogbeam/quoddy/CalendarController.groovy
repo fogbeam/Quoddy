@@ -5,6 +5,9 @@ import org.fogbeam.quoddy.subscription.CalendarFeedSubscription;
 class CalendarController
 {
 	def userService;
+	def calendarFeedSubscriptionService;
+	def activitiUserTaskSubscriptionService;
+	def rssFeedSubscriptionService;
 	
 	def index =
 	{

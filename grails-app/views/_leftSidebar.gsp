@@ -94,7 +94,7 @@
 			<i class="icon-cog"></i>
 		</g:link>
 		<ul style="margin-left: 25px; margin-top: 15px;">
-			<g:each var="subscription" in="${eventSubscriptions}">
+			<g:each var="subscription" in="${businessEventSubscriptions}">
 				<li><g:link controller="eventSubscription" action="display"
 						params="[subscriptionId:subscription.id]">
 						${subscription.name}

@@ -14,6 +14,10 @@ class UserStreamController
 	def userGroupService;
 	def businessEventSubscriptionService;
 	def eventTypeService;
+	def calendarFeedSubscriptionService;
+	def activitiUserTaskSubscriptionService;
+	def rssFeedSubscriptionService;
+	
 	
 	def index =
 	{

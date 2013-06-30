@@ -19,7 +19,9 @@ class ActivityStreamController
 	def userListService;
 	def userGroupService;
 	def businessEventSubscriptionService;
-	
+	def calendarFeedSubscriptionService;
+	def activitiUserTaskSubscriptionService;
+	def rssFeedSubscriptionService;
 	
 	
 	
