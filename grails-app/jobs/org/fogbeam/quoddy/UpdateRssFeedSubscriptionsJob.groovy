@@ -53,6 +53,7 @@ class UpdateRssFeedSubscriptionsJob
 		allSubscriptions.each {
 			RssFeedSubscription sub = it;
 			
+			println "processing subscription for url: ${sub.url}";
 			
 			URL feedUrl = new URL(sub.url);
 			SyndFeedInput input = new SyndFeedInput();
@@ -64,11 +65,11 @@ class UpdateRssFeedSubscriptionsJob
 			{
 				reader = new XmlReader(feedUrl)
 				feed = input.build(reader);
-				log.debug( "Feed: ${feed.getTitle()}" );
+				println( "Feed: ${feed.getTitle()}" );
 				
 				List<SyndEntry> entries = feed.getEntries();
 				
-				log.debug( "processing ${entries.size()} entries!" );
+				println( "processing ${entries.size()} entries!" );
 				int good = 0;
 				int bad = 0;
 				
@@ -77,16 +78,16 @@ class UpdateRssFeedSubscriptionsJob
 					String linkUrl = entry.getLink();
 					String linkTitle = entry.getTitle();
 					
-					List<RssFeedItem> testForExisting = null; // TODO: create this query; // entryService.findByUrlAndChannel( linkUrl, channel );
-					if( testForExisting != null && testForExisting.size() > 0 )
+					RssFeedItem testForExisting = rssFeedItemService.findRssFeedItemByUrlAndSubscription( linkUrl, sub );
+					if( testForExisting != null )
 					{
-						log.debug( "An RssFeedItem entry for this link already exists. Skipping" );							
+						println( "An RssFeedItem entry for this link (${linkUrl}) already exists. Skipping" );							
 						continue;
 					}
 					else
 					{	
 						
-						log.debug( "creating and adding entry for link: ${linkUrl} with title: ${linkTitle}" );
+						println( "creating and adding entry for link: ${linkUrl} with title: ${linkTitle}" );
 			
 						// Entry newEntry = new Entry( url: linkUrl, title: linkTitle, submitter: anonymous );
 						RssFeedItem rssFeedItem = new RssFeedItem();
@@ -178,13 +179,19 @@ class UpdateRssFeedSubscriptionsJob
 							eventStreamService.saveActivity( activity );
 							
 							
-							
 							// send JMS message saying "new entry submitted"
-							// def newEntryMessage = [msgType:"NEW_ENTRY", id:newEntry.id, uuid:newEntry.uuid, url:newEntry.url, title:newEntry.title ];
-								
+							def newContentMsg = [msgType:'NEW_RSS_FEED_ITEM', activityId:activity.id, activityUuid:activity.uuid ];
+							
+							println "sending messages to JMS";
 							log.debug( "sending new entry message to JMS searchQueue" );
-							// send a JMS message to our searchQueue
-							// sendJMSMessage("searchQueue", newEntryMessage );
+							
+							// send message to request search indexing
+							jmsService.send( queue: 'quoddySearchQueue', newContentMsg, 'standard', null );
+							
+			
+
+							// TODO: send a JMS message for UI update notification
+							// sendJMSMessage("uiNotificationQueue", newEntryMessage );
 	
 						
 						}

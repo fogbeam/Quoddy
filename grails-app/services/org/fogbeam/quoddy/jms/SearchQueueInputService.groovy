@@ -529,6 +529,8 @@ public class SearchQueueInputService
 	/* RssFeedItem */
 	private void newRssFeedItem( def msg )
 	{
+		println "newRssFeedItem indexing new item...";
+		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		println( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
