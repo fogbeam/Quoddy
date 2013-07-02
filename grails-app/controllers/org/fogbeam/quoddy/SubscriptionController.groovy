@@ -356,6 +356,39 @@ class SubscriptionController
 			on("success").to("exitWizard");
 	   }
 
+		
+	   createRssFeedSubscriptionWizardOne {
+		   on( "stage2" ){
+			   RssFeedSubscription subscriptionToCreate = new RssFeedSubscription();
+			   subscriptionToCreate.name = params.subscriptionName;
+			   subscriptionToCreate.url = params.subscriptionUrl;
+			   
+			   def user = userService.findUserByUserId( session.user.userId );
+			   subscriptionToCreate.owner = user;
+		   
+			   flow.subscriptionToCreate = subscriptionToCreate;
+		   }.to( "finishCreateRssFeedSubscription")
+	   }
+		
+	   
+	   finishCreateRssFeedSubscription {
+		   
+		   action {
+			   println "create using params: ${params}"
+
+			   RssFeedSubscription subscriptionToCreate = flow.subscriptionToCreate;
+			   
+			   if( !subscriptionToCreate.save() )
+			   {
+				   println( "Saving RssFeedSubscription FAILED");
+				   subscriptionToCreate.errors.allErrors.each { println it };
+			   }
+			   
+		   }
+		   on("success").to("exitWizard");
+		   
+	   }
+	   
 	   exitWizard {
 			redirect(controller:"subscription", action:"index");
 	   }

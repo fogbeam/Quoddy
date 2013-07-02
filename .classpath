@@ -11,6 +11,7 @@
 	<classpathentry kind="src" path="test/integration"/>
 	<classpathentry kind="src" path="test/unit"/>
 	<classpathentry kind="src" path="grails-app/ldap"/>
+	<classpathentry kind="src" path="grails-app/jobs"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path=".link_to_grails_plugins/code-coverage-1.2/grails-app/i18n">
 		<attributes>
