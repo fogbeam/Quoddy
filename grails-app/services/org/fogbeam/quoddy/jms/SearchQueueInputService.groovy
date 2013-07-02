@@ -8,6 +8,12 @@ import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 
+import org.apache.http.HttpEntity
+import org.apache.http.HttpException
+import org.apache.http.HttpResponse
+import org.apache.http.client.HttpClient
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.DefaultHttpClient
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.DateTools
 import org.apache.lucene.document.Document
@@ -20,10 +26,15 @@ import org.apache.lucene.index.IndexWriter.MaxFieldLength
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.Version
+import org.apache.tika.metadata.Metadata
+import org.apache.tika.parser.AutoDetectParser
+import org.apache.tika.parser.Parser
+import org.apache.tika.sax.BodyContentHandler
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
 import org.fogbeam.quoddy.stream.CalendarFeedItem
+import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.StatusUpdate
 
 
@@ -536,7 +547,7 @@ public class SearchQueueInputService
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
-		// TODO: fix this so it will eventually give up, to deal with the pathological case
+		// this will eventually give up, to deal with the pathological case
 		// where we never do get the required lock.
 		int count = 0;
 		println( "Trying to acquire IndexWriter");
@@ -561,22 +572,79 @@ public class SearchQueueInputService
 		
 		try
 		{
-			// ActivityStreamItem statusUpdateActivity = eventStreamService.getEventById( msg.getLong("activityId") );
+			ActivityStreamItem activityStreamItem = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 
-			// println( "Trying to add Document to index" );
+			println( "Trying to add Document to index" );
 			
-//			writer.setUseCompoundFile(true);
-//
-//			Document doc = new Document();
-//		
-//			doc.add( new Field( "docType", "docType.rssFeedItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-//			doc.add( new Field( "uuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-//			doc.add( new Field( "id", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-//			doc.add( new Field( "content", statusUpdateActivity.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
-//			
-//			writer.addDocument( doc );
-//			writer.optimize();
-			// println( "Updated Lucene Index for new StatusUpdate" );
+			RssFeedItem rssFeedItem = activityStreamItem.streamObject;
+			
+			/* Note:  We *could* archive the content of the Item when we initially encounter it, and
+			 * that would save having to re-download the content now.  That could matter if we're
+			 * in a re-index scenario after the resource has become unavailable, and now we're
+			 * unable to index this item.  OTOH, if it's not available anymore, you can ask if it
+			 * *should* be indexed.   Anyway, we'll go with the approach of re-downloading for now...
+			 */
+
+			HttpClient client = new DefaultHttpClient();
+			
+			//establish a connection within 10 seconds
+			// client.getHttpConnectionManager().getParams().setConnectionTimeout(10000);
+			HttpGet httpget = new HttpGet(linkUrl);
+			InputStream httpStream = null;
+			try
+			{
+				HttpResponse httpResponse = client.execute(httpget);
+				HttpEntity entity = httpResponse.getEntity();
+				
+				httpStream = entity.content;
+				
+			}
+			catch ( HttpException he) {
+			   log.error("Http error connecting to '" + url + "'");
+			   log.error(he.getMessage());
+			}
+			catch (IOException ioe){
+			   // ioe.printStackTrace();
+			   log.error("Unable to connect to '" + url + "'");
+			   log.error( ioe );
+			}
+	   
+			// extract text with Tika
+			String content = "";
+			try
+			{
+				org.xml.sax.ContentHandler textHandler = new BodyContentHandler(-1);
+				Metadata metadata = new Metadata();
+				Parser parser = new AutoDetectParser();
+				parser.parse(httpStream, textHandler, metadata);
+				
+				content = textHandler.toString()?.replaceAll('\\s+', ' ');
+							
+			}
+			catch( Exception e )
+			{
+				e.printStackTrace();
+			}
+			
+						
+			writer.setUseCompoundFile(true);
+			
+			Document doc = new Document();
+
+			doc.add( new Field( "docType", "docType.rssFeedItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+			
+			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			
+			doc.add( new Field( "objectUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			
+			doc.add( new Field( "content", content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+
+			writer.addDocument( doc );
+			writer.optimize();
+			println( "Updated Lucene Index for new RssFeedItem" );
+		
 		}
 		finally
 		{

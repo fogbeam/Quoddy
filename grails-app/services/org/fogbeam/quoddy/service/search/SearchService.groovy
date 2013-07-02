@@ -7,6 +7,12 @@ import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 
+import org.apache.http.HttpEntity
+import org.apache.http.HttpException
+import org.apache.http.HttpResponse
+import org.apache.http.client.HttpClient
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.DefaultHttpClient
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.DateTools
 import org.apache.lucene.document.Document
@@ -27,6 +33,10 @@ import org.apache.lucene.search.BooleanClause.Occur
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.Version
+import org.apache.tika.metadata.Metadata
+import org.apache.tika.parser.AutoDetectParser
+import org.apache.tika.parser.Parser
+import org.apache.tika.sax.BodyContentHandler
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.search.SearchResult
 import org.fogbeam.quoddy.stream.ActivitiUserTask
@@ -742,9 +752,53 @@ class SearchService
 		doc.add( new Field( "activityUuid", asi.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 		doc.add( new Field( "activityId", Long.toString( asi.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 
+		/* TODO - BIG TODO: get rid of all the duplicated code between this class and the SearchQueueInputService
+		 * class.  We should do this indexing stuff in ONE place 
+		 **/
 		
 		
-		// doc.add( new Field( "content", statusUpdateActivity.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		HttpClient client = new DefaultHttpClient();
+		
+		//establish a connection within 10 seconds
+		// client.getHttpConnectionManager().getParams().setConnectionTimeout(10000);
+		HttpGet httpget = new HttpGet(item.linkUrl);
+		InputStream httpStream = null;
+		try
+		{
+			HttpResponse httpResponse = client.execute(httpget);
+			HttpEntity entity = httpResponse.getEntity();
+			
+			httpStream = entity.content;
+			
+		}
+		catch ( HttpException he) {
+		   log.error("Http error connecting to '" + url + "'");
+		   log.error(he.getMessage());
+		}
+		catch (IOException ioe){
+		   // ioe.printStackTrace();
+		   log.error("Unable to connect to '" + url + "'");
+		   log.error( ioe );
+		}
+   
+		// extract text with Tika
+		String content = "";
+		try
+		{
+			org.xml.sax.ContentHandler textHandler = new BodyContentHandler(-1);
+			Metadata metadata = new Metadata();
+			Parser parser = new AutoDetectParser();
+			parser.parse(httpStream, textHandler, metadata);
+			
+			content = textHandler.toString()?.replaceAll('\\s+', ' ');
+						
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
+
+		doc.add( new Field( "content", content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
 		
 		writer.addDocument( doc );
 		writer.optimize();
