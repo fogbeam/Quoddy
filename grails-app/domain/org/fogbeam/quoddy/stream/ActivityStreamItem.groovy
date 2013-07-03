@@ -176,7 +176,7 @@ class ActivityStreamItem implements Serializable
 		actorImageHeight(nullable:true);
 		actorImageWidth(nullable:true);
 
-		streamObject( nullable:false );
+		streamObject( nullable:true );
 		objectClass( nullable:false );
 		objectUuid(nullable:true);
 		objectUrl(nullable:true);

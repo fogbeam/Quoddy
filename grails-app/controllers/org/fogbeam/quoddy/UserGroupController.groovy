@@ -142,8 +142,8 @@ class UserGroupController
 			def user = userService.findUserByUserId( session.user.userId );
 			// println "Doing display with params: ${params}";
 			
-			def items = new ArrayList<StreamItemBase>();
-			
+			// def items = new ArrayList<StreamItemBase>();
+			List<ActivityStreamItem> activities = new ArrayList<ActivityStreamItem>();
 			
 			Map model = [:];
 			if( user )
@@ -162,13 +162,13 @@ class UserGroupController
 					}
 				}
 			
-				// activities = userGroupService.getRecentActivitiesForGroup( group, 25 ); 
-				items = userGroupService.getRecentEventsForGroup( group, 25 );
+				activities = userGroupService.getRecentActivitiesForGroup( group, 25 ); 
+				// items = userGroupService.getRecentEventsForGroup( group, 25 );
 				
 				model.putAll( [ group:group,
 								user: user,
 								userIsGroupMember:userIsGroupMember,
-								activities:items] );
+								activities:activities] );
 				
 				Map sidebarCollections = populateSidebarCollections( this, user );
 				model.putAll( sidebarCollections );
@@ -229,11 +229,14 @@ class UserGroupController
 			// construct a status object
 			println "statusText: ${params.statusText}";
 			StatusUpdate newStatus = new StatusUpdate( text: params.statusText, creator: user );
+			newStatus.effectiveDate = new Date();
+			newStatus.targetUuid = group.uuid; // NOTE: can we take 'targetUuid' out of StatusUpdate??
+			newStatus.name = "321BCA";
 			
 			if( !newStatus.save() )
 			{
 				println "Save StatusUpdate FAILED!";
-					
+				newStatus.errors.allErrors.each { println it };	
 			}
 			
 			ActivityStreamItem activity = new ActivityStreamItem(content:newStatus.text);
@@ -243,11 +246,13 @@ class UserGroupController
 			activity.owner = user;
 			activity.published = new Date(); // set published to "now"
 			activity.targetUuid = group.uuid;
+			activity.streamObject = newStatus;
+			activity.objectClass = newStatus.class.name;
 						
 			// NOTE: we added "name" to EventBase, but how is it really going
 			// to be used?  Do we *really* need this??
 			activity.name = activity.title;
-			activity.effectiveDate = activity.published;
+			activity.published = activity.published;
 			
 			eventStreamService.saveActivity( activity );
 			
