@@ -69,7 +69,7 @@ public class SearchQueueInputService
     	}
     	else
     	{
-			log.info( "Received message: ${msg}" );
+			println( "Received message: ${msg}" );
 			println "Received message: ${msg}";
 			MapMessage mapMessage = (MapMessage)msg;
     		String msgType = mapMessage.getString( "msgType" );
@@ -129,7 +129,7 @@ public class SearchQueueInputService
 			else if( msgType.equals( "NEW_STREAM_ENTRY_COMMENT" ))
     		{
     			
-		    	log.debug( "adding StreamEntryComment to index" );
+		    	println( "adding StreamEntryComment to index" );
 				newStreamEntryComment( msg );
     		}
 			else if( msgType.equals( "NEW_USER" ) )
@@ -493,6 +493,10 @@ public class SearchQueueInputService
 			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			
+			/* 
+			 * TODO: this is wrong.  Or it should be.  We *should* have a streamObject even for "external" activitystrea.ms 
+			 * objects.
+			 */ 
 			doc.add( new Field( "objectUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "objectId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			
@@ -501,6 +505,7 @@ public class SearchQueueInputService
 			writer.addDocument( doc );
 			writer.optimize();
 			// println( "Updated Lucene Index for new StatusUpdate" );
+			
 		}
 		finally
 		{
@@ -636,6 +641,7 @@ public class SearchQueueInputService
 			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			
+			/* TODO: this is wrong... use the id/uuid of the streamObject here */
 			doc.add( new Field( "objectUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "objectId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			
@@ -750,8 +756,10 @@ public class SearchQueueInputService
 	
 	private void newStreamEntryComment( def msg )
 	{
+		
+		println "adding NEW_STREAM_ENTRY_COMMENT to index!";
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation ) );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
@@ -786,20 +794,31 @@ public class SearchQueueInputService
 	
 			Document doc = new Document();
 			
-			/* 
+			 
 			doc.add( new Field( "docType", "docType.streamEntryComment", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-		
-			doc.add( new Field( "entry_id", Long.toString( msg['entry_id'] ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "entry_uuid", msg['entry_uuid'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-		
-			doc.add( new Field( "id", Long.toString( msg['comment_id'] ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "uuid", msg['comment_uuid'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "content", msg['comment_text'], Field.Store.NO, Field.Index.ANALYZED, Field.TermVector.YES ) );
-			*/
+
+					
+			doc.add( new Field( "objectUuid", msg.getString('comment_uuid'), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( msg.getLong('comment_id')), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId")), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "entryUuid", msg.getString('entry_uuid'), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "entryId", Long.toString( msg.getLong('entry_id')), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "content", msg.getString('comment_text'), Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			
 			
 			writer.addDocument( doc );
 	
 			writer.optimize();
+		
+			println "Done adding index for NEW_STREAM_ENTRY_COMMENT";
+				
 		}
 		finally
 		{

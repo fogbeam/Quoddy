@@ -183,7 +183,7 @@ class UpdateRssFeedSubscriptionsJob
 							def newContentMsg = [msgType:'NEW_RSS_FEED_ITEM', activityId:activity.id, activityUuid:activity.uuid ];
 							
 							println "sending messages to JMS";
-							log.debug( "sending new entry message to JMS searchQueue" );
+							log.debug( "sending new entry message to JMS quoddySearchQueue" );
 							
 							// send message to request search indexing
 							jmsService.send( queue: 'quoddySearchQueue', newContentMsg, 'standard', null );

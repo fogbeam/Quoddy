@@ -111,8 +111,14 @@ class SearchService
 		Query userQuery = queryParser.parse(queryString);
 		BooleanQuery query = new BooleanQuery();
 		query.add(userQuery, BooleanClause.Occur.MUST );
-		TermQuery docTypeTerm = new TermQuery(new Term("docType","docType.statusUpdate"));
-		query.add( docTypeTerm, BooleanClause.Occur.MUST );
+		
+		BooleanQuery docTypeQuery = new BooleanQuery();
+		TermQuery docTypeTermStatusUpdate = new TermQuery(new Term("docType","docType.statusUpdate"));
+		TermQuery docTypeTermComment = new TermQuery(new Term("docType","docType.streamEntryComment"));
+		docTypeQuery.add(docTypeTermStatusUpdate, BooleanClause.Occur.SHOULD );
+		docTypeQuery.add(docTypeTermComment, BooleanClause.Occur.SHOULD );
+		
+		query.add( docTypeQuery, BooleanClause.Occur.MUST );
 		
 		TopDocs hits = searcher.search(query, 20);
 		
@@ -122,13 +128,38 @@ class SearchService
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
-			String docType = result.get("docType")
-			String uuid = result.get("activityUuid");
-			// lookup our object by it's UUID and assign it to the searchResult instance
-			ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
-			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
 			
-			searchResults.add( searchResult );
+			String docType = result.get("docType")
+			switch( docType )
+			{
+				case "docType.statusUpdate":
+					String uuid = result.get("activityUuid");
+		
+					// lookup our object by it's UUID and assign it to the searchResult instance
+					ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
+					SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
+			
+					searchResults.add( searchResult );
+					break;
+				case "docType.streamEntryComment":
+					// this is a comment ON an item, not the item itself. Use the
+					// entry_id or entry_uuid to lookup the underlying object...
+					String uuid = result.get("activityUuid");
+				
+					// lookup our object by it's UUID and assign it to the searchResult instance
+					ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
+					SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
+					
+					searchResults.add( searchResult );
+				
+					break;
+				
+				default:
+					
+					// Do nothing...
+					break;
+				
+			}
 		}
 		
 				
