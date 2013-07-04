@@ -46,6 +46,7 @@ import org.fogbeam.quoddy.stream.CalendarFeedItem
 import org.fogbeam.quoddy.stream.Question
 import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.StatusUpdate
+import org.fogbeam.quoddy.stream.StreamItemBase
 import org.fogbeam.quoddy.stream.StreamItemComment
 
 class SearchService
@@ -128,38 +129,15 @@ class SearchService
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
+			String docType = result.get( "docType" );
+			String uuid = result.get("activityUuid");
 			
-			String docType = result.get("docType")
-			switch( docType )
-			{
-				case "docType.statusUpdate":
-					String uuid = result.get("activityUuid");
-		
-					// lookup our object by it's UUID and assign it to the searchResult instance
-					ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
-					SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
+			// lookup our object by it's UUID and assign it to the searchResult instance
+			ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
+			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
+				
+			searchResults.add( searchResult );
 			
-					searchResults.add( searchResult );
-					break;
-				case "docType.streamEntryComment":
-					// this is a comment ON an item, not the item itself. Use the
-					// entry_id or entry_uuid to lookup the underlying object...
-					String uuid = result.get("activityUuid");
-				
-					// lookup our object by it's UUID and assign it to the searchResult instance
-					ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
-					SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
-					
-					searchResults.add( searchResult );
-				
-					break;
-				
-				default:
-					
-					// Do nothing...
-					break;
-				
-			}
 		}
 		
 				
@@ -646,7 +624,6 @@ class SearchService
 
 		println "adding ActivitiUserTask object to Search Index";
 		
-		// TODO: implement adding ActivitiUserTask objects to Search Index
 		Document doc = new Document();
 		
 		doc.add( new Field( "docType", "docType.activitiUserTask", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
@@ -661,7 +638,50 @@ class SearchService
 
 		writer.addDocument( doc );
 		writer.optimize();
+		
+		addCommentsToIndex( writer, asi, item );
+		
 	}
+	
+	private void addCommentsToIndex( final IndexWriter writer, final ActivityStreamItem asi, final StreamItemBase item )
+	{
+		
+		def comments = item.comments;
+		
+		if( comments == null )
+		{
+			return;
+		}
+		
+		for( StreamItemComment comment : comments )
+		{
+		
+			Document doc = new Document();
+		
+		 
+			doc.add( new Field( "docType", "docType.streamEntryComment", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+
+				
+			doc.add( new Field( "objectUuid", comment.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( comment.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+		
+			doc.add( new Field( "activityUuid", asi.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( asi.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			doc.add( new Field( "entryUuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "entryId", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+		
+			doc.add( new Field( "content", comment.text, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		
+			writer.addDocument( doc );
+		}
+		
+		writer.optimize();
+		
+	}
+	
 	
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final ActivityStreamItem item )
 	{
@@ -681,6 +701,8 @@ class SearchService
 			
 		writer.addDocument( doc );
 		writer.optimize();
+		
+		addCommentsToIndex( writer, asi, item );
 	}
 
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final StatusUpdate item )
@@ -699,6 +721,8 @@ class SearchService
 			
 		writer.addDocument( doc );
 		writer.optimize();
+		
+		addCommentsToIndex( writer, asi, item );
 	}
 	
 		
@@ -727,6 +751,8 @@ class SearchService
 		
 		writer.addDocument( doc );
 		writer.optimize();
+		
+		addCommentsToIndex( writer, asi, item );
 
 	}
 	
@@ -750,6 +776,8 @@ class SearchService
 		
 		writer.addDocument( doc );
 		writer.optimize();
+		
+		addCommentsToIndex( writer, asi, item );
 	}	
 	
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final Question item )
@@ -768,8 +796,9 @@ class SearchService
 //			doc.add( new Field( "tags", "", Field.Store.YES, Field.Index.ANALYZED ));
 
 			writer.addDocument( doc );
-		
 			writer.optimize();
+			
+			addCommentsToIndex( writer, asi, item );
 		
 	}
 
@@ -833,6 +862,8 @@ class SearchService
 		
 		writer.addDocument( doc );
 		writer.optimize();
+		
+		addCommentsToIndex( writer, asi, item );
 	}
 		
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final StreamItemComment item )
@@ -853,8 +884,9 @@ class SearchService
 		*/
 		
 		writer.addDocument( doc );
-	
 		writer.optimize();
+		
+		addCommentsToIndex( writer, asi, item );
 		
 	}
 
