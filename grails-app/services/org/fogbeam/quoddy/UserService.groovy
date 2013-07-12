@@ -1,9 +1,7 @@
 package org.fogbeam.quoddy;
 
-import java.util.List
-
 import org.fogbeam.quoddy.profile.Profile
-import org.fogbeam.quoddy.social.FriendRequest;
+import org.fogbeam.quoddy.social.FriendRequest
 
 class UserService {
 
@@ -31,6 +29,39 @@ class UserService {
 		return user;
 			
 	}
+	
+	
+	public AccountRole findAccountRoleByName( final String name )
+	{
+		println "searching for AccountRole named ${name}";
+		
+		List<AccountRole> roles = AccountRole.executeQuery( "select role from AccountRole as role where role.name = :name", [name:name]);
+		
+		AccountRole role = null;
+		if( roles.size == 1 )
+		{
+			role = roles[0];
+		}
+
+		println "returning role ${role}";
+		return role;
+	}
+	
+	public AccountRole createAccountRole( AccountRole role )
+	{
+		
+		println "UserService.createAccountRole() - about to create role: ${role.toString()}";
+	
+		if( !role.save(flush: true))
+		{
+			role.errors.each { println it };
+			throw new RuntimeException( "couldn't create AccountRole: ${role.toString()}" );
+		}
+		
+		println "returning role: ${role}";
+		return role;
+	}
+	
 	
 	public void createUser( User user ) 
 	{

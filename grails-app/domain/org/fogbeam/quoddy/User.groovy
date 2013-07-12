@@ -67,13 +67,10 @@ class User implements Serializable
 		currentStatus lazy:false; // eagerly fetch the currentStatus
     }
 	
-    // static hasMany = [savedEntries : Entry, hiddenEntries: Entry];
-    static hasMany = [oldStatusUpdates:StatusUpdate]
-	
+    static hasMany = [oldStatusUpdates:StatusUpdate, roles: AccountRole, permissions: String]
 	static mappedBy = [oldStatusUpdates:'creator']
-	
-    // static mappedBy = [savedEntries : "savers", hiddenEntries:"hiders" ];
 
+	
     public void setUuid( String uuid ){
     	
     	// never overwrite existing uuid value with NULL
