@@ -128,3 +128,4 @@ jms {
 	}
 }
      
+security.shiro.redirect.uri = "/login/index";

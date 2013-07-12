@@ -9,7 +9,7 @@ The dialog window can be moved, resized and closed with the 'x' icon.</p>
 </div>
 
 <div class="activityStreamFooter" style="clear:both;">
-	<g:if test="${session.user}">
+	<shiro:authenticated>
 		<center><a href="#" id="loadMoreLink">Get More Events</a></center>
-	</g:if>
+	</shiro:authenticated>
 </div>

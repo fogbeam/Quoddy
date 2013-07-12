@@ -10,7 +10,7 @@
 			<ul class="nav nav-pills">
 
 				<li class="dropdown">
-				<g:if test="${session.user}">
+				<shiro:authenticated>
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Streams
 							<b class="caret"></b>
 						</a>
@@ -32,11 +32,11 @@
 									</g:link></li>
 							</g:each>
 						</ul>
-					</g:if>
+					</shiro:authenticated>
 				</li>
 
 				<li class="dropdown">
-					<g:if test="${session.user}">
+					<shiro:authenticated>
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Lists
 							<b class="caret"></b>
 						</a>
@@ -51,11 +51,11 @@
 										</g:link></li>
 								</g:each>
 							</ul>
-					</g:if>
+					</shiro:authenticated>
 				</li>
 
 				<li class="dropdown">
-				<g:if test="${session.user}">
+				<shiro:authenticated>
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Groups
 							<b class="caret"></b>
 						</a>
@@ -71,11 +71,11 @@
 										</g:link></li>
 								</g:each>
 							</ul>
-					</g:if>
+					</shiro:authenticated>
 				</li>
 
 				<li class="dropdown">
-					<g:if test="${session.user}">
+					<shiro:authenticated>
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Subscriptions
 							<b class="caret"></b>
 						</a>
@@ -113,12 +113,13 @@
 							
 							
 						</ul>
-					</g:if>
+					</shiro:authenticated>
 				</li>
 
 			</ul>
 		</div>
-		<g:if test="${session.user != null}">
+		
+		<shiro:authenticated>
 			<g:form name="updateStatusForm" controller="status"
 				action="updateStatus">
 				<input type="text" id="statusText" name="statusText" class="span6" />
@@ -141,7 +142,7 @@
 
 				</div>
 			</g:if>
-		</g:if>
+		</shiro:authenticated>
 	</div>
 </body>
 </html>

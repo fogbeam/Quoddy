@@ -34,5 +34,8 @@
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/quartz-1.0-RC9/src/groovy"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/quartz-1.0-RC9/src/java"/>
         <wb-resource deploy-path="/" source-path="/grails-app/jobs"/>
+        <wb-resource deploy-path="/" source-path="/grails-app/realms"/>
+        <wb-resource deploy-path="/" source-path="/grails-app/listeners"/>
+        <wb-resource deploy-path="/" source-path="/grails-app/resources"/>
     </wb-module>
 </project-modules>

@@ -1,7 +1,8 @@
 package org.fogbeam.quoddy
 
+import org.apache.shiro.SecurityUtils
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
-import org.fogbeam.quoddy.stream.ActivityStreamItem;
+import org.fogbeam.quoddy.stream.ActivityStreamItem
 
 @Mixin(SidebarPopulatorMixin)
 class HomeController {
@@ -30,11 +31,11 @@ class HomeController {
     	else
     	{
 			println "Looking up User in session";
-			
-    		if( session.user != null )
+			user = SecurityUtils.subject.principal;
+    		if( user != null )
     		{
 				println "Found User in Session";
-    			user = userService.findUserByUserId( session.user.userId );
+    			user = userService.findUserByUserId( user.userId );
     		}
 			else
 			{

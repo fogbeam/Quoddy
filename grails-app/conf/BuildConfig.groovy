@@ -28,13 +28,16 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
         // runtime 'mysql:mysql-connector-java:5.1.5'
-	compile "org.grails:grails-webflow:$grailsVersion"
+		compile "org.grails:grails-webflow:$grailsVersion"
     }
     
    plugins {
-   compile ':webflow:2.0.0', {
-     exclude 'grails-webflow'
-   }
-
-}
+	   compile ':webflow:2.0.0', {
+		   exclude 'grails-webflow'
+	   }
+	   
+	   runtime( ":shiro:1.1.4" ){
+		exclude 'quartz';   
+	   }
+   	}
 }
