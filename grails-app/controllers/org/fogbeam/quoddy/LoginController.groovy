@@ -3,9 +3,11 @@ package org.fogbeam.quoddy;
 import org.apache.shiro.SecurityUtils
 import org.apache.shiro.authc.AuthenticationException
 import org.apache.shiro.authc.UsernamePasswordToken
+import org.apache.shiro.grails.ConfigUtils
 import org.apache.shiro.web.util.WebUtils
 
-class LoginController {
+class LoginController 
+{
 
 	
 	// def loginService;
@@ -46,6 +48,9 @@ class LoginController {
 			// password is incorrect.
 			SecurityUtils.subject.login(authToken)
 
+			
+			session.user = SecurityUtils.subject.principal;
+			
 			log.info "Redirecting to '${targetUri}'."
 			redirect(uri: targetUri)
 		}
@@ -74,8 +79,24 @@ class LoginController {
 				
     }
     
-    def logout = {
+    def logout = 
+	{
     	session.user = null;
-    	redirect( uri:'/');
+		
+		// Log the user out of the application.
+		def principal = SecurityUtils.subject?.principal
+		SecurityUtils.subject?.logout()
+		// For now, redirect back to the home page.
+		if (ConfigUtils.getCasEnable() && ConfigUtils.isFromCas(principal)) 
+		{
+			redirect(uri:ConfigUtils.getLogoutUrl())
+		}
+		else 
+		{
+			redirect(uri: "/")
+		}
+		
+		ConfigUtils.removePrincipal(principal)
+		
     }
 }

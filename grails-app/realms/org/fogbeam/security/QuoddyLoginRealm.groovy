@@ -88,12 +88,15 @@ class QuoddyLoginRealm
         // the required permission's type and project code.
         
 		User user = userService.findUserByUserId( principal.userId );
-        Set<String>permissions = user.permissions;
+        boolean retval = false;
+		
+	
+		Set<String> permissions = user.permissions;
 
         // Try each of the permissions found and see whether any of
         // them confer the required permission.
         
-		def retval = permissions?.find { permString ->
+		retval = permissions?.find { permString ->
             // Create a real permission instance from the database
             // permission.
             def perm = shiroPermissionResolver.resolvePermission(permString)
@@ -146,7 +149,7 @@ class QuoddyLoginRealm
 				return false
             }
         }
-
+		
         if (retval != null) 
 		{
             // Found a matching permission!

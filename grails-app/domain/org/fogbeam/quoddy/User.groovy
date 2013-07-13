@@ -65,7 +65,11 @@ class User implements Serializable
     static mapping = {
     	table 'uzer'
 		currentStatus lazy:false; // eagerly fetch the currentStatus
-    }
+    	roles lazy: false;		  // eagerly fetch roles
+		permissions lazy:false;   // eagerly fetch permissions
+	}
+	
+	static fetchMode = [roles: 'eager', permissions:'eager'];
 	
     static hasMany = [oldStatusUpdates:StatusUpdate, roles: AccountRole, permissions: String]
 	static mappedBy = [oldStatusUpdates:'creator']
