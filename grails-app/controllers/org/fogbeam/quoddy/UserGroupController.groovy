@@ -242,7 +242,7 @@ class UserGroupController
 			ActivityStreamItem activity = new ActivityStreamItem(content:newStatus.text);
 			activity.title = "Internal Activity";
 			activity.url = new URL( "http://www.example.com" );
-			activity.verb = "status_update";
+			activity.verb = "quoddy_group_ytstatus_update";
 			activity.owner = user;
 			activity.published = new Date(); // set published to "now"
 			activity.targetUuid = group.uuid;

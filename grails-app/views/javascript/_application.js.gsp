@@ -12,17 +12,35 @@
 					autoOpen: false,
 					show: {
 					effect: "blind",
-					duration: 1000
+					duration: 200
 					},
 					hide: {
 					effect: "explode",
-					duration: 1000
-					}
+					duration: 1500
+					},
+					buttons: [ { text: "Cancel", click: function() { $j( this ).dialog( "close" ); } },
+							   { text: "Submit", click: function() 
+				   					{ 
+				   						
+				   						var shareItemUuid = $j(this).data('shareItemUuid');
+				   							
+				   						// find our form object and submit it...
+				   						$j('#shareItemUuid').val( shareItemUuid );
+				   						$j('#shareItemForm').submit();
+				   						// alert("submitting...");
+				   						$j( this ).dialog( "close" );
+				   					
+				   					} 
+							 	} 
+							 ]
 				});
 
 
 				$j( ".shareButton" ).click(function() {
-					$j( "#dialog" ).dialog( "open" );
+				
+					var name = $j(this).attr('name');
+					var shareItemUuid = name.split( "." )[1];
+					$j( "#dialog" ).data('shareItemUuid', shareItemUuid).dialog( "open" );
 				});
 
 

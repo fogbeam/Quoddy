@@ -91,7 +91,7 @@ class EventStreamService {
 			query = query + " where item.published >= :cutoffDate " + 
 							" and ( item.owner.id in (:friendIds) and not ( item.owner <> :owner and item.objectClass = 'BusinessEventSubscriptionItem' ) " + 
 							" and not ( item.owner <> :owner and item.objectClass = 'CalendarFeedItem' ) ) " + 
-							" and item.targetUuid = :targetUuid ";
+							" and ( item.targetUuid = :targetUuid or item.targetUuid = :userUuid)";
 			
 							
 			println "query now: ${query}";
@@ -180,7 +180,7 @@ class EventStreamService {
 			def parameters = ['cutoffDate':cutoffDate,
 					 // 'oldestOriginTime':new Date(oldestOriginTime),
 					 'friendIds':friendIds,
-					 'targetUuid':streamPublic.uuid, 'owner': user]
+					 'targetUuid':streamPublic.uuid, 'owner': user, 'userUuid': user.uuid]
 			
 			if( !userStream.includeAllUsers && !userStream.includeSelfOnly ) 
 			{
@@ -355,11 +355,13 @@ class EventStreamService {
 				friendIds.add( user.id );
 				ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 				List<ActivityStreamItem> queryResults = 
-					ActivityStreamItem.executeQuery( "select item from ActivityStreamItem as item where item.published >= :cutoffDate and item.owner.id in (:friendIds) and item.effectiveDate < :oldestOriginTime and item.targetUuid = :targetUuid order by item.effectiveDate desc",
+					ActivityStreamItem.executeQuery( "select item from ActivityStreamItem as item where item.published >= :cutoffDate and item.owner.id in (:friendIds) and item.effectiveDate < :oldestOriginTime " +
+						" and ( item.targetUuid = :targetUuid or item.targetUuid = :userUuid) order by item.effectiveDate desc",
 						['cutoffDate':cutoffDate, 
 						 'oldestOriginTime':new Date(oldestOriginTime), 
 						 'friendIds':friendIds, 
-						 'targetUuid':streamPublic.uuid], 
+						 'targetUuid':streamPublic.uuid,
+						 'userUuid':user.uuid], 
 					    ['max': recordsToRetrieve ]);
 			
 					println "adding ${queryResults.size()} activities read from DB";

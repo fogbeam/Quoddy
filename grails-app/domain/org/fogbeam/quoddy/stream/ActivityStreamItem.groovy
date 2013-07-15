@@ -160,7 +160,12 @@ class ActivityStreamItem implements Serializable
 	{
 		this.uuid = java.util.UUID.randomUUID().toString();
 	}
-	
+
+	static mapping = 
+	{
+		tablePerHierarchy false
+	}
+		
 	static constraints = {
 		
 		content( size: 0..1024, nullable:true);

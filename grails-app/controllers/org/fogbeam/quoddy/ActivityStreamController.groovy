@@ -3,7 +3,8 @@ package org.fogbeam.quoddy
 import org.codehaus.jackson.map.ObjectMapper
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.integration.activitystream.ActivityStreamEntry
-import org.fogbeam.quoddy.stream.ActivityStreamItem;
+import org.fogbeam.quoddy.stream.ActivityStreamItem
+import org.fogbeam.quoddy.stream.ResharedActivityStreamItem
 import org.fogbeam.quoddy.stream.StreamItemBase
 
 
@@ -22,7 +23,6 @@ class ActivityStreamController
 	def calendarFeedSubscriptionService;
 	def activitiUserTaskSubscriptionService;
 	def rssFeedSubscriptionService;
-	
 	
 	
 	def getQueueSize =
@@ -170,6 +170,69 @@ class ActivityStreamController
 		
 		return model;
 				
+	}
+	
+	
+	def shareItem =
+	{
+		
+		println "ActivityStreamController.shareItem invoked:";
+		println "params: ${params}";
+		
+		/*  So, what data should we be receiving?  At a minimum, the id (or uuid) of the thing being
+		 *  shared, the id (or uuid) of the person sharing it, and one or more shareTarget id's.  Optionally
+		 *  there could be a comment associated with the sharing activity.
+		 *
+		 *  For an initial version, let's make some simplifying assumptions.  You can only share to a
+		 *  USER (no groups or other 'things' and you can only share to ONE target at a time.
+		 *  
+		 *  NOTE: we also have to be able to handle weird situations like "somebody shared this to me (an individual user)
+		 *  and now I want to reshare it to somebody else", or even "I now want to share this to my public stream".
+		 *   
+		 */
+		
+		String shareItemUuid = params.shareItemUuid;
+		String shareItemComment = params.shareItemComment;
+		String shareTargetUserId = params.shareTargetUserId;
+		
+		// look up the existing ActivityStreamItem representing this item
+		ActivityStreamItem originalItem = eventStreamService.getActivityStreamItemByUuid( shareItemUuid );
+		
+		// look up the "share target user" by userId
+		User shareTargetUser = userService.findUserByUserId( shareTargetUserId );
+		
+		// this should mean a new ActivityStreamItem instance, which "points" to the same underlying
+		// streamObject as the one being shared, no?  Or should an ActivityStreamItem be able to be the "target"
+		// of another ASI in turn?  If there's a comment associated with the reshare activity, what do we
+		// hang the comment off of?  Should we create a new StreamObject type just for reshares?  
+		
+		  
+		ResharedActivityStreamItem newStreamItem = new ResharedActivityStreamItem();
+		newStreamItem.verb = "quoddy_item_reshare";
+		newStreamItem.originalItem = originalItem;
+		
+		newStreamItem.title = "Reshared ActivityStreamItem";
+		newStreamItem.url = new URL( "http://www.example.com" );
+		newStreamItem.published = new Date(); // set published to "now"
+		
+		newStreamItem.targetUuid = shareTargetUser.uuid;
+		newStreamItem.owner = session.user;
+		
+		newStreamItem.streamObject = originalItem.streamObject;
+		newStreamItem.objectClass = originalItem.objectClass;
+		
+		// NOTE: we added "name" to StreamItemBase, but how is it really going
+		// to be used?  Do we *really* need this??
+		newStreamItem.name = newStreamItem.title;
+		
+		// newStreamItem.effectiveDate = newStreamItem.published;
+		
+		eventStreamService.saveActivity( newStreamItem );
+		
+		
+		
+		
+		
 	}
 	
 }
