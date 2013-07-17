@@ -594,7 +594,7 @@ public class SearchQueueInputService
 			
 			//establish a connection within 10 seconds
 			// client.getHttpConnectionManager().getParams().setConnectionTimeout(10000);
-			HttpGet httpget = new HttpGet(linkUrl);
+			HttpGet httpget = new HttpGet(rssFeedItem.linkUrl);
 			InputStream httpStream = null;
 			try
 			{
