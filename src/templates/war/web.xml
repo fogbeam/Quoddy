@@ -51,6 +51,15 @@
         <listener-class>org.codehaus.groovy.grails.web.context.GrailsContextLoaderListener</listener-class>
     </listener>
 
+	<listener>
+		<listener-class>org.fogbeam.quoddy.listeners.QuoddySessionListener</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.fogbeam.quoddy.listeners.UITestSessionListener</listener-class>
+	</listener>
+
+
     <!-- Grails dispatcher servlet -->
     <servlet>
         <servlet-name>grails</servlet-name>

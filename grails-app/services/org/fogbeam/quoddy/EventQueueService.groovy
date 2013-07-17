@@ -1,12 +1,11 @@
 package org.fogbeam.quoddy
 
-import java.util.Set
-
 import javax.jms.Message
 
-import org.fogbeam.quoddy.social.FriendCollection;
-import org.fogbeam.quoddy.stream.ShareTarget;
-import org.fogbeam.quoddy.stream.StreamItemBase;
+import org.fogbeam.quoddy.social.FriendCollection
+import org.fogbeam.quoddy.stream.ActivityStreamItem
+import org.fogbeam.quoddy.stream.ShareTarget
+import org.fogbeam.quoddy.stream.StreamItemBase
 
 class EventQueueService 
 {	
@@ -42,7 +41,7 @@ class EventQueueService
 			// messages that were to the public stream.  We'll come back to deal with
 			// common group membership and other scenarios later.
 			def streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC);
-			StreamItemBase event = (StreamItemBase)msg.getObject();
+			ActivityStreamItem event = (ActivityStreamItem)msg.getObject();
 			if( ! event.targetUuid.equals( streamPublic.uuid ))
 			{
 				return;
@@ -78,7 +77,8 @@ class EventQueueService
 				}
 			}
 			User targetUser = userService.findUserByUserId( key );
-			if( friends.contains( targetUser.uuid ) || msgCreator.uuid.equals( targetUser.uuid ) )
+			if( friends.contains( targetUser.uuid ) || 
+				( msgCreator.uuid.equals( targetUser.uuid ) && !event.objectClass.equals('StatusUpdate') ) )
 			{
 				println "match found, offering message";
 				Deque<Map> userQueue = entry.getValue();

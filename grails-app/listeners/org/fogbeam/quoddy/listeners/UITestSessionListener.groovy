@@ -68,7 +68,8 @@ class UITestSessionListener implements
 	@Override
 	public void attributeReplaced(HttpSessionBindingEvent event) 
 	{
-		println "attributeReplaced";
+		// org.apache.shiro.web.session.HttpServletSession.HOST_SESSION_KEY
+		// println "attributeReplaced: " + event.name;
 	}
 
 	void attributeAdded(ServletContextAttributeEvent event) 
