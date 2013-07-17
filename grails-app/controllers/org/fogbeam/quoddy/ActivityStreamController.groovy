@@ -52,6 +52,16 @@ class ActivityStreamController
 	def getContentHtml = 
 	{
 		
+		// NOTE: this should be receiving a streamId parameter.  If there isn't one
+		// we can assume the default stream for the user in question.  And since this is the
+		// only place we call this variation of eventStreamService.getRecentActivitiesForUser,
+		// we should be able to delete it (or force it to default to the default user stream
+		// and then call the other version)
+		
+		
+		// also, if this stuff is really supposed to be paginated, we need to fix this to include
+		// an offset parameter for the call to eventStreamService.getRecentActivitiesForUser
+		
 		def user = session.user;
 		def page = params.page;
 		if( !page ) 
@@ -63,8 +73,20 @@ class ActivityStreamController
 		if( user != null )
 		{
 			user = userService.findUserByUserId( session.user.userId );
-			// activities = eventStreamService.getRecentFriendActivitiesForUser( user );
-			items = eventStreamService.getRecentActivitiesForUser( user, 25 * Integer.parseInt( page ) );
+			
+			UserStream selectedStream = null;
+			if( params.streamId )
+			{
+				Long streamId = Long.valueOf( params.streamId );
+				selectedStream = userStreamService.findStreamById( streamId );
+			}
+			else
+			{
+				selectedStream = userStreamService.getStreamForUser( user, UserStream.DEFAULT_STREAM );
+			}
+			
+			
+			items = eventStreamService.getRecentActivitiesForUser( user, 25 * Integer.parseInt( page ), selectedStream );
 		}
 		else
 		{

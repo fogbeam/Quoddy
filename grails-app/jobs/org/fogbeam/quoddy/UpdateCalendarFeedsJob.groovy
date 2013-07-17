@@ -1,8 +1,7 @@
 package org.fogbeam.quoddy
 
 
-import java.util.Date;
-
+import grails.util.GrailsNameUtils
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.ComponentList
 import net.fortuna.ical4j.model.component.*
@@ -13,9 +12,9 @@ import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.DefaultHttpClient
 import org.fogbeam.quoddy.stream.ActivityStreamItem
-import org.fogbeam.quoddy.stream.CalendarFeedItem;
-import org.fogbeam.quoddy.stream.ShareTarget;
-import org.fogbeam.quoddy.subscription.CalendarFeedSubscription;
+import org.fogbeam.quoddy.stream.CalendarFeedItem
+import org.fogbeam.quoddy.stream.ShareTarget
+import org.fogbeam.quoddy.subscription.CalendarFeedSubscription
 
 
 class UpdateCalendarFeedsJob 
@@ -153,7 +152,7 @@ class UpdateCalendarFeedsJob
 							activity.targetUuid = streamPublic.uuid;
 							activity.owner = feed.owner;
 							activity.streamObject = event;
-							activity.objectClass = event.class.getName();
+							activity.objectClass = GrailsNameUtils.getShortName( event.class );
 							
 							// NOTE: we added "name" to StreamItemBase, but how is it really going
 							// to be used?  Do we *really* need this??

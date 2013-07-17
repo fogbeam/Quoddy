@@ -1,9 +1,10 @@
 package org.fogbeam.quoddy;
 
-import org.fogbeam.quoddy.User;
-import org.fogbeam.quoddy.stream.ActivityStreamItem;
-import org.fogbeam.quoddy.stream.ShareTarget;
-import org.fogbeam.quoddy.stream.StatusUpdate;
+import grails.util.GrailsNameUtils
+
+import org.fogbeam.quoddy.stream.ActivityStreamItem
+import org.fogbeam.quoddy.stream.ShareTarget
+import org.fogbeam.quoddy.stream.StatusUpdate
 
 class StatusController {
 
@@ -77,7 +78,7 @@ class StatusController {
 			activity.targetUuid = streamPublic.uuid;
 			activity.owner = user;
 			activity.streamObject = newStatus;
-			activity.objectClass = newStatus.class.getName();
+			activity.objectClass = GrailsNameUtils.getShortName( newStatus.class );       
 			
 			// NOTE: we added "name" to StreamItemBase, but how is it really going
 			// to be used?  Do we *really* need this??

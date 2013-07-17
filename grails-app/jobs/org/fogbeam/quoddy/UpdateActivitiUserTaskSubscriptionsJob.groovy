@@ -2,6 +2,7 @@ package org.fogbeam.quoddy
 
 
 
+import grails.util.GrailsNameUtils
 import groovyx.net.http.RESTClient
 import net.fortuna.ical4j.model.component.*
 
@@ -108,7 +109,7 @@ class UpdateActivitiUserTaskSubscriptionsJob
 						activity.targetUuid = streamPublic.uuid;
 						activity.owner = owner;
 						activity.streamObject = userTask;
-						activity.objectClass = userTask.class.getName();
+						activity.objectClass = GrailsNameUtils.getShortName( userTask.class );
 						
 						// NOTE: we added "name" to StreamItemBase, but how is it really going
 						// to be used?  Do we *really* need this??
