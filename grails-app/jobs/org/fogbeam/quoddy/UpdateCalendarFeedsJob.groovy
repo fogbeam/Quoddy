@@ -1,7 +1,6 @@
 package org.fogbeam.quoddy
 
 
-import grails.util.GrailsNameUtils
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.model.ComponentList
 import net.fortuna.ical4j.model.component.*
@@ -14,6 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.CalendarFeedItem
 import org.fogbeam.quoddy.stream.ShareTarget
+import org.fogbeam.quoddy.stream.constants.EventTypeNames
 import org.fogbeam.quoddy.subscription.CalendarFeedSubscription
 
 
@@ -143,17 +143,21 @@ class UpdateCalendarFeedsJob
 							println "successfully saved CalendarEvent.  Uid: ${event.uid}, Id: ${event.id}, Uuid: ${event.uuid}";	
 							// if the event update was successful
 							
-							ActivityStreamItem activity = new ActivityStreamItem(content:"fuckme");
+							ActivityStreamItem activity = new ActivityStreamItem(content:"TBD");
 							
 							activity.title = "CalendarFeed Subscription Item Received";
 							activity.url = new URL( "http://example.com/" );
 							activity.verb = "calendar_feed_subscription_item_received";
+							activity.actorObjectType = "CalendarFeedSubscription";
+							activity.actorUuid = feed.uuid;
+							activity.targetObjectType = "STREAM_PUBLIC";
 							activity.published = new Date(); // set published to "now"
 							activity.targetUuid = streamPublic.uuid;
 							activity.owner = feed.owner;
 							activity.streamObject = event;
-							activity.objectClass = GrailsNameUtils.getShortName( event.class );
+							activity.objectClass = EventTypeNames.CALENDAR_FEED_ITEM.name;
 							
+														
 							// NOTE: we added "name" to StreamItemBase, but how is it really going
 							// to be used?  Do we *really* need this??
 							activity.name = activity.title;

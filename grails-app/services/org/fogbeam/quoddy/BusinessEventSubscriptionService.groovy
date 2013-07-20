@@ -1,10 +1,11 @@
 package org.fogbeam.quoddy
 
 import org.fogbeam.quoddy.stream.ActivityStreamItem
-import org.fogbeam.quoddy.stream.ShareTarget;
-import org.fogbeam.quoddy.stream.StreamItemBase;
-import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem;
-import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
+import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
+import org.fogbeam.quoddy.stream.ShareTarget
+import org.fogbeam.quoddy.stream.StreamItemBase
+import org.fogbeam.quoddy.stream.constants.EventTypeNames
+import org.fogbeam.quoddy.subscription.BusinessEventSubscription
 
 class BusinessEventSubscriptionService
 {
@@ -83,11 +84,15 @@ class BusinessEventSubscriptionService
 				activity.title = "Business Event Subscription Item Received";
 				activity.url = new URL( "http://www.example.com" );
 				activity.verb = "business_event_subscription_item_received";
+				activity.actorObjectType = "BusinessEventSubscription";
+				activity.actorUuid = owningSubscription.uuid;
+				activity.targetObjectType = "STREAM_PUBLIC";
 				activity.published = new Date(); // set published to "now"
 				activity.targetUuid = streamPublic.uuid;
 				activity.owner = owner;
 				activity.streamObject = subEvent;
-				activity.objectClass = subEvent.class.getName();
+				activity.objectClass = EventTypeNames.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name;				
+				
 				
 				// NOTE: we added "name" to StreamItemBase, but how is it really going
 				// to be used?  Do we *really* need this??
@@ -107,7 +112,7 @@ class BusinessEventSubscriptionService
 			
 				
 				// send message for UI notification
-				jmsService.send( queue: 'uitestActivityQueue', subEvent, 'standard', null );
+				jmsService.send( queue: 'uitestActivityQueue', activity, 'standard', null );
 				
 			}
 			   

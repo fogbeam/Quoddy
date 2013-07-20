@@ -1,11 +1,10 @@
 package org.fogbeam.quoddy;
 
-import java.util.Calendar
-
-import org.fogbeam.quoddy.stream.ActivityStreamItem;
-import org.fogbeam.quoddy.stream.EventType;
-import org.fogbeam.quoddy.stream.ShareTarget;
-import org.fogbeam.quoddy.stream.StreamItemBase;
+import org.fogbeam.quoddy.stream.ActivityStreamItem
+import org.fogbeam.quoddy.stream.EventType
+import org.fogbeam.quoddy.stream.ShareTarget
+import org.fogbeam.quoddy.stream.StreamItemBase
+import org.fogbeam.quoddy.stream.constants.EventTypeNames
 
 class EventStreamService {
 
@@ -30,30 +29,180 @@ class EventStreamService {
 	}
 	
 	
-	public List<ActivityStreamItem> getRecentActivitiesForUser( final User user, final int maxCount, final UserStream userStream )
+	
+	
+	
+	/* NOTE: note to self, we got rid of the overload of this method that does not take a UserStream
+	 * parameter, and now we assume that we'll always have SOME UserStream in play, even if it's the
+	 * (pre-defined, system) "default" stream.  So now we need to merge some logic that had originally been
+	 * written into *that* overload, that never made it into this one, that manages retrieving messages
+	 * from the userQueue, and then adjusting the db query to allow for messages retrieved from the queue.
+	 * 
+	 *  Part of the problem with this, is that we can no longer blindly read messages off of the queue, since
+	 *  they might not match the filters of the selected stream, and therefore should not appear in the
+	 *  current result set.  Now we'll have to make the cache stream aware.  That probably means that the
+	 *  poll method that updates the notification count in the UI, will also have to be made stream aware.
+	 *  
+	 *  further note: this will lead to weirdness, like "I'm sitting here watching stream X, and a new message
+	 *  comes in that matches stream Y, but not stream X, so the user won't (given the way notifications work now)
+	 *  see any visible indicator that something new is waiting for them.  Sooo... do we need two notifications, one
+	 *  that's stream specific, and one that's system-wide?  Hmmm...   
+	 */
+	
+	public List<ActivityStreamItem> getRecentActivitiesForUser( 
+									    final User user, 
+										final int maxCount, 
+										final UserStream userStream 
+								     )
 	{
-		
 		
 		println "getting recent activities for user, using stream: ${userStream}";
 		println "streamId = ${userStream.id}";
 		
-		// ok, in this version we select the events to return, based on the specification defined by the
-		// passed in userStream instance.
+		/*
+		 
+		 so what do we do here?  Ok... we receive a request for up to maxCount recent activities.
+		 Since, by definition, the stuff in the queue is most recent, we read up to maxCount entries
+		 from the queue. If the queue has more than maxCount activities we ??? (what? Blow away the
+		 extras? Leave 'em hanging around for later? Force a flush to the db? ???)
+		 
+		 If the queue had less than maxCount records (down to as few as NONE), we retrieve
+		 up to (maxCount - readfromQueueCount) matching records from the db.
 		
-		// in the very earliest cut of this, we're going to ignore messages waiting on the queue and just
-		// go straight to the database.  Once we're confident we have all the selectors and filters
-		// working that way, we can revisit what to do about queued messages.
+		 The resulting list is the union of the set of activities retrieved from the queue and
+		 the activities loaded from the DB.
 		
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.HOUR_OF_DAY, -2160 );
-		Date cutoffDate = cal.getTime();
+		 Note: Since we really want to show "newest at top" or "newest first" we really wish this
+		 "queue" were actually a stack, so we'd be starting with the newest messages and
+		 getting progressively older ones.  We need to explore the possibility of having our
+		 underlying messaging system offer stack semantics, OR implement an intermediate
+		 queue, that reads the messages from the underlying messaging fabric, and offers them
+		 to us in the right order.  Possibly explore using Camel for this, or roll our own
+		 thing?
+		
+		 we could also just read everything that's currently on the queue, sort by timestamp,
+		 use up to maxCount of the messages, and then throw away anything that's left-over.
+		 but if we do too much of this, we wind up throwing away a lot of queued messages, which
+		 negates the benefit of not having to read from the DB.
+		
+		 ok, just to get something prototyped... let's pretend that the queue we're reading from
+		 right here *is* the "intermediate queue" and everything is just magically in the right order.
+		 "no problem in computer science that you can't solve by adding a layer of abstraction" right?
+		
+		 Also, for now let's pretend that the queue we're reading from has aleady been filtered so that
+		 it only contains messages that we are interested in; including expiring messages for age, etc.
+	
+		  Additional NOTE: now that we are making the event queue stuff "stream aware", we have more
+		  of a possibility of something being pushed onto the queue which matches NO sream and
+		  will NEVER be read from the queue at all.  So we really need to implement a "reaper" job
+		  that will reap the old messages from the queue so it doesn't keep unused messages around
+		  forever.  Events will still be in the db if the user ever configures their stream(s)
+		  such that that message should appear.
+		  
+		*/
+		
+		int msgsOnQueue = eventQueueService.getQueueSizeForUser( user.userId, userStream );
+		println "Messages available on queue: ${msgsOnQueue}";
+		int msgsToRead = 0;
+		if( msgsOnQueue > 0 )
+		{
+			if( msgsOnQueue <= maxCount )
+			{
+				msgsToRead = msgsOnQueue;
+			}
+			else
+			{
+				msgsToRead = maxCount - msgsOnQueue;
+			}
+		}
+		
+		println "Messages to read from queue: ${msgsToRead}";
+		
+		// long oldestOriginTime = Long.MAX_VALUE;
+		long oldestOriginTime = new Date().getTime();
+		
+		// NOTE: we could avoid iterating over this list again by returning the "oldest message time"
+		// as part of this call.  But it'll mean wrapping this stuff up into an object of some
+		// sort, or returning a Map of Maps instead of a List of Maps
+		List<ActivityStreamItem> messages = eventQueueService.getMessagesForUser( user.userId, msgsToRead, userStream );
+		for( ActivityStreamItem msg : messages )
+		{
+			// println "msg.originTime: ${msg.originTime}";
+			if( msg.published.time < oldestOriginTime )
+			{
+				oldestOriginTime = msg.published.time;
+			}
+		}
+		
+		println "oldestOriginTime: ${oldestOriginTime}";
+		println "as date: " + new Date( oldestOriginTime);
 		
 		List<ActivityStreamItem> recentActivityStreamItems = new ArrayList<ActivityStreamItem>();
 		
-					
-		List<User> friends = userService.listFriends( user );
-		if( friends != null && friends.size() >= 0 )
+		// NOTE: we wouldn't really want to iterate over this list here... better
+		// to build up this list above, and never bother storing the JMS Message instances
+		// at all...  but for now, just to get something so we can prototype the
+		// behavior up through the UI...
+		
+		// TODO: now that we are passing notifications for different kinds of
+		// events through this mechanism, this has to be smarter... It can't just
+		// convert everything to an activity, it has to convert to Activity, SubscriptionEvent,
+		// CalendarEvent, etc., depending on what the notification is for.
+		for( int i = 0; i < messages.size(); i++ )
 		{
+			ActivityStreamItem activityStreamItem = messages.get(i);
+			// println "got message: ${msg} off of queue";
+			
+			activityStreamItem.streamObject = existDBService.populateSubscriptionEventWithXmlDoc( activityStreamItem.streamObject );
+			
+			recentActivityStreamItems.add( activityStreamItem );
+		}
+		
+		println "recentActivityStreamItems.size() = ${recentActivityStreamItems.size()}"
+		
+		/* NOTE: here, we need to make sure we don't retrieve anything NEWER than the OLDEST
+		 * message we may have in hand - that we received from the queue.  Otherwise, we risk
+		 * showing the same event twice.
+		 */
+		
+		
+		
+		// now, do we need to go to the DB to get some more activities?
+		if( maxCount > msgsToRead )
+		{
+				
+			int recordsToRetrieve = maxCount - msgsToRead;
+			println "retrieving up to ${recordsToRetrieve} records from the database";
+			
+			// NOTE: get up to recordsToRetrieve records, but don't retrieve anything that
+			// would already be in our working set.
+			// also... we need to make a distinction between the "get recent" method which has
+			// this cutoff logic and the generic "get older" method that can be used to incrementally
+			// step backwards into history as far as (they want to go | as far as we let them go)
+			
+			
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.HOUR_OF_DAY, -2160 );
+			Date cutoffDate = cal.getTime();
+			
+			println "Using ${cutoffDate} as cutoffDate";
+			println "Using ${new Date(oldestOriginTime)} as oldestOriginTime";
+					
+						
+			List<User> friends = userService.listFriends( user );
+			
+			/* NOTE: we're changing this to remove the check for 
+			 *
+			 *     if( friends != null && friends.size() >= 0 )
+			 *
+			 *  Because we "cheat" further down and force the user to be his/her own friend
+			 *  so users see their own posts in their stream.  Since we *always* have to have
+			 *  a valid friends collection, if we get a null collection here, we just instantiate a
+			 *  new, empty list.  Likewise, if we get back an empty list, we don't have to do
+			 *  anything special, as we're going to add the user to it manually anyway. 
+			 */
+			
+			
 			println "Found ${friends.size()} friends";
 			List<Integer> friendIds = new ArrayList<Integer>();
 			for( User friend: friends )
@@ -88,12 +237,13 @@ class EventStreamService {
 			}
 			println "query now: ${query}";
 			
-			query = query + " where item.published >= :cutoffDate " + 
+			query = query + " where item.published >= :cutoffDate " +
+							" and item.published < :oldestOriginTime " + 
 							" and ( item.owner.id in (:friendIds)  " + 
-							        " and not ( item.owner <> :owner and item.objectClass = 'BusinessEventSubscriptionItem' ) " + 
-							        " and not ( item.owner <> :owner and item.objectClass = 'CalendarFeedItem' ) " +
-									" and not ( item.owner <> :owner and item.objectClass = 'RssFeedItem' ) " +
-									" and not ( item.owner <> :owner and item.objectClass = 'ActivitiUserTask' ) " +
+							        " and not ( item.owner <> :owner and item.objectClass = '${EventTypeNames.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name}' ) " + 
+							        " and not ( item.owner <> :owner and item.objectClass = '${EventTypeNames.CALENDAR_FEED_ITEM.name}' ) " +
+									" and not ( item.owner <> :owner and item.objectClass = '${EventTypeNames.RSS_FEED_ITEM.name}' ) " +
+									" and not ( item.owner <> :owner and item.objectClass = '${EventTypeNames.ACTIVITI_USER_TASK.name}' ) " +
 								  ") " + 
 							" and ( item.targetUuid = :targetUuid or item.targetUuid = :userUuid)";
 			
@@ -181,10 +331,13 @@ class EventStreamService {
 			friendIds.add( user.id );
 			ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 			
-			def parameters = ['cutoffDate':cutoffDate,
-					 // 'oldestOriginTime':new Date(oldestOriginTime),
+			def parameters = 
+					['cutoffDate':cutoffDate,
+					 'oldestOriginTime':new Date(oldestOriginTime),
 					 'friendIds':friendIds,
-					 'targetUuid':streamPublic.uuid, 'owner': user, 'userUuid': user.uuid]
+					 'targetUuid':streamPublic.uuid, 
+					 'owner': user, 
+					 'userUuid': user.uuid]
 			
 			if( !userStream.includeAllUsers && !userStream.includeSelfOnly ) 
 			{
@@ -194,24 +347,20 @@ class EventStreamService {
 			println "Using parameters map: ${parameters}";
 			
 			List<ActivityStreamItem> queryResults =
-				ActivityStreamItem.executeQuery( query,
-					parameters,
-					['max': maxCount ]);
+				ActivityStreamItem.executeQuery( query, parameters, ['max': maxCount ]);
 		
-				println "adding ${queryResults.size()} activities read from DB";
-				for( ActivityStreamItem event : queryResults ) {
+			println "adding ${queryResults.size()} activities read from DB";
+			
+			for( ActivityStreamItem event : queryResults ) 
+			{
 					
 					println "Populating XML into SubscriptionEvents";
 					println "event = ${event}";
 					event.streamObject = existDBService.populateSubscriptionEventWithXmlDoc( event.streamObject );
 					recentActivityStreamItems.add( event );
-				}
-		}
-		else
-		{
-			println( "no friends, so no activity read from DB" );
-		}
+			}
 		
+		}
 		
 		return recentActivityStreamItems;
 	}

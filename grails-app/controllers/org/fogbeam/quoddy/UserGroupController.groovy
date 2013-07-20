@@ -1,10 +1,9 @@
 package org.fogbeam.quoddy
 
-import grails.util.GrailsNameUtils
-
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.StatusUpdate
+import org.fogbeam.quoddy.stream.constants.EventTypeNames
 
 
 @Mixin(SidebarPopulatorMixin)
@@ -242,11 +241,15 @@ class UserGroupController
 			activity.title = "Internal Activity";
 			activity.url = new URL( "http://www.example.com" );
 			activity.verb = "quoddy_group_ytstatus_update";
+			activity.actorObjectType = "User";
+			activity.actorUuid = user.uuid;
+			activity.targetObjectType = "UserGroup";
+			
 			activity.owner = user;
 			activity.published = new Date(); // set published to "now"
 			activity.targetUuid = group.uuid;
 			activity.streamObject = newStatus;
-			activity.objectClass = GrailsNameUtils.getShortName( newStatus.class );
+			activity.objectClass = EventTypeNames.STATUS_UPDATE.name;
 						
 			// NOTE: we added "name" to EventBase, but how is it really going
 			// to be used?  Do we *really* need this??

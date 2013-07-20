@@ -1,10 +1,9 @@
 package org.fogbeam.quoddy;
 
-import grails.util.GrailsNameUtils
-
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.StatusUpdate
+import org.fogbeam.quoddy.stream.constants.EventTypeNames
 
 class StatusController {
 
@@ -74,12 +73,16 @@ class StatusController {
 			activity.title = "Internal ActivityStreamItem";
 			activity.url = new URL( "http://www.example.com" );
 			activity.verb = "quoddy_status_update";
+			activity.actorObjectType = "User";
+			activity.actorUuid = user.uuid;
+			activity.targetObjectType = "STREAM_PUBLIC";
 			activity.published = new Date(); // set published to "now"
 			activity.targetUuid = streamPublic.uuid;
 			activity.owner = user;
 			activity.streamObject = newStatus;
-			activity.objectClass = GrailsNameUtils.getShortName( newStatus.class );       
+			activity.objectClass = EventTypeNames.STATUS_UPDATE.name;    
 			
+
 			// NOTE: we added "name" to StreamItemBase, but how is it really going
 			// to be used?  Do we *really* need this??
 			activity.name = activity.title;

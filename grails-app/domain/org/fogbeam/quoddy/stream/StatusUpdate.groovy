@@ -16,7 +16,7 @@ class StatusUpdate extends StreamItemBase implements Serializable
 	
 	public String getTemplateName()
 	{
-		println "returning /renderActivity from StatusUpdate";
+		// println "returning /renderActivity from StatusUpdate";
 		return "/renderActivity";
 	}
 	

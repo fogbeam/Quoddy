@@ -6,3 +6,4 @@ class EventType implements Serializable
 	String name;
 	Date dateCreated;
 }
+

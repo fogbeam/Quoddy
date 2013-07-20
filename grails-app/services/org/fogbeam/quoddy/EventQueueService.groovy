@@ -4,14 +4,19 @@ import javax.jms.Message
 
 import org.fogbeam.quoddy.social.FriendCollection
 import org.fogbeam.quoddy.stream.ActivityStreamItem
+import org.fogbeam.quoddy.stream.EventType
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.StreamItemBase
+import org.fogbeam.quoddy.stream.constants.EventTypeNames
 
 class EventQueueService 
 {	
-	def userService;
+	static scope = "singleton";
 	
-	Map<String, Deque<Map>> eventQueues = new HashMap<String, Deque<Map>>();
+	def userService;
+	def eventTypeService;
+	
+	Map<String, Deque<ActivityStreamItem>> eventQueues = new HashMap<String, Deque<ActivityStreamItem>>();
 	
 	static expose = ['jms']
 	static destination = "uitestActivityQueue"; // TODO: rename this to something more meaningful
@@ -24,9 +29,9 @@ class EventQueueService
 		
 		// now, figure out which user(s) are interested in this message, and put it on
 		// all the appropriate queues
-		Set<Map.Entry<String, Deque<Map>>> entries = eventQueues.entrySet();
+		Set<Map.Entry<String, Deque<ActivityStreamItem>>> entries = eventQueues.entrySet();
 		println "got entrySet from eventQueues object: ${entries}";
-		for( Map.Entry<String, Deque<Map>> entry : entries )
+		for( Map.Entry<String, Deque<ActivityStreamItem>> entry : entries )
 		{
 			println "entry: ${entry}";
 			println "key: ${entry.getKey()}";
@@ -78,23 +83,14 @@ class EventQueueService
 			}
 			User targetUser = userService.findUserByUserId( key );
 			if( friends.contains( targetUser.uuid ) || 
-				( msgCreator.uuid.equals( targetUser.uuid ) && !event.objectClass.equals('StatusUpdate') ) )
+				( msgCreator.uuid.equals( targetUser.uuid ) && 
+						!event.objectClass.equals(EventTypeNames.STATUS_UPDATE.name ) ) )
 			{
 				println "match found, offering message";
 				Deque<Map> userQueue = entry.getValue();
 				if( msg instanceof Message )
 				{
-					println "Message being offered";
-					
-					// Map internalMsg = new HashMap();
-					// TODO: turn this into a plain old Map
-					// Enumeration mapNames = msg.getMapNames();
-					// while( mapNames.hasMoreElements())
-					// {
-						// String name = mapNames.nextElement();
-						// internalMsg.put( name, msg.getObject(name)); 	
-					// }
-					
+					println "Message being offered";					
 					println "putting message on user queue for user ${key}";
 					userQueue.offerFirst( event );
 				}
@@ -108,35 +104,248 @@ class EventQueueService
 		println "done processing eventQueue instances";
 	}
 	
-	public long getQueueSizeForUser( final String userId )
-	{
-		// println "getting queue size for user: ${userId}";
+	def userStreamAwareQueueFilter =
+	{  
+		userStream, it ->
 		
-		long queueSize = 0;
-		Deque<Map> userQueue = eventQueues.get( userId ); 
-		if( userQueue != null )
+		
+		println "invoking userStreamAwareQueueFilter for userStream";
+		
+		// "it" is an ActivityStreamItem reference now that we've gone
+		// to the revamped domain model
+		
+		boolean countThisOne = false;
+		
+		// will come into play for determining if the
+		// item was created by a subscription and potentially also
+		// for determining who posted this item
+		// actorUuid
+		// actorObjectType
+
+		// will come into play for determining if the target
+		// is "public", a particular group, a specific user, etc.
+		// it.targetObjectType
+		// it.targetUuid
+		
+		// it.objectClass
+
+		
+		switch( it.actorObjectType )
 		{
-			queueSize = userQueue.size();
+			case "User":
+			
+				println "this was submitted directly by a User";
+				
+				// check to see if the target is stream_public
+				// if it is, we just need to see if the owner's uuid
+				// is in the included list
+				if( it.targetObjectType.equals( "STREAM_PUBLIC" ))
+				{
+					println "targetObjectType == STREAM_PUBLIC";
+					
+					// is includeAllUsers set to TRUE? If so, we don't have
+					// to do any explicit checking against the actorUuid
+					
+					if( userStream.includeAllUsers )
+					{
+						println "includeallUsers is on!";
+						// tentatively set this to true (this may be overridden further down)
+						countThisOne = true;
+					}
+					else
+					{
+						// we do have to check to see if the user is in the included users
+						// list
+						if( userStream.userUuidsIncluded.contains( it.actorUuid ) )
+						{
+							println "actorUuid was in included list";
+							countThisOne = true;
+						}
+					}
+				}
+				else
+				{
+					
+					if( it.targetObjectType.equals( "UserGroup" ) )
+					{
+						
+						println "targetObjectType == UserGroup";
+						// check if the target is a group? If it is, check
+						// if the targetUuid is in the included list
+						
+						if( userStream.includeAllGroups )
+						{
+							// tentatively set this to true (this may be overridden further down)
+							countThisOne = true;
+						}
+						else
+						{
+							// we do have to check to see if the group is in the included groups
+							// list
+							if( userStream.userGroupUuidsIncluded.contains( it.targetUuid ))
+							{
+								countThisOne = true;
+							}
+						}
+						
+					}
+					else if( it.targetObjectType.equals( "UserList" ) )
+					{
+						
+						println "targetObjectType == UserList";
+						
+						// check if the target is a list? If it is, check
+						// if the targetUuid is in the included list
+						
+						if( userStream.includeAllLists )
+						{
+							// tentatively set this to true (this may be overridden further down)
+							countThisOne = true;
+						}
+						else
+						{
+							// we do have to check to see if the list is in the included groups
+							// list
+							if( userStream.userListUuidsIncluded.contains( it.targetUuid ))
+							{
+								countThisOne = true;
+							}
+						}
+						
+					}
+					
+					// what if it was shared straight to a User as the target?  We wouldn't do anything
+					// special here, but just leave it down to a combination of "is user (actor) included"
+					// and "is event type included"
+					
+					
+				}
+				
+									
+				break;
+				
+			case "BaseSubscription":
+			case "ActivitiUserTaskSubscription":
+			case "ActivityStreamsSubscription":
+			case "BusinessEventSubscription":
+			case "CalendarFeedSubscription":
+			case "RssFeedSubscription":
+				// this was submitted by a subscription of some sort
+				// check if the subscription is in the included list
+			
+				println "this is a Subscription of some sort";
+				
+				if( userStream.includeAllSubscriptions )
+				{
+					println "includeAllSubscriptions is on!";
+					countThisOne = true;
+				}
+				else
+				{
+					if( userStream.subscriptionUuidsIncluded.contains(it.actorUuid))
+					{
+						countThisOne = true;
+					}
+				}
+			
+								
+				break;
+				
+			default:
+				// right now there really isn't any other possibility for this
+				println "INVALID";
+				break;
+		}
+			
+		// regardless of the target or the actor, we still need to check the eventType
+		// check if the eventType (objectClass) is in the included
+		// list
+		if( userStream.includeAllEventTypes )
+		{
+			// since all eventTypes are included, our current event type
+			// is definitely OK.  If we passed all the filters up to here,
+			// leave an existing "true" value alone
+		}
+		else
+		{
+			// but if there *are* event type filters, we have to check
+			// ours, and if it isn't included, we have to set countThisOne
+			// to false
+			
+			// TODO: look up the actual EventType instance using the provided
+			// objectClass value. NOTE: this means we have to rework every place
+			// we insert an objectClass value to make sure we use a valid value
+			// for a corresponding eventType.  We should probably have an enum or
+			// something for these names.
+			EventType eventType = eventTypeService.findEventTypeByName( it.objectClass );
+			if( ! userStream.eventTypesIncluded.contains( eventType ))
+			{
+				countThisOne = false;
+			}
 		}
 		
-		// println "Queue size for user: ${userId} = ${queueSize}";
+		println "returning countThisOne: ${countThisOne}";
+		return countThisOne;
+	}
+	
+	
+	// TODO: we can no longer just blindly send the size of the queue, since we
+	// have to do this in a "stream aware" fashion.  So we'll have to iterate the
+	// pending messages and evaluate against the provided UserStream.
+	// in a future version, we might calculate these sizes against each existing
+	// UserStream and update them as messages are pushed to us. 
+	// we might also optimize this by just caching the value and only recalculate
+	// it if the overall queue size has changed relative to last time we were called.
+	public long getQueueSizeForUser( final String userId, final UserStream userStream )
+	{
+		println "getting queue size for user: ${userId}";
+		
+		long queueSize = 0;
+		Deque<ActivityStreamItem> userQueue = eventQueues.get( userId ); 
+		if( userQueue != null )
+		{
+			println "found a userQueue";
+			// look at each message on the queue, without removing it
+			// and evaluate it against the UserStream object we were passed.
+			def filter = userStreamAwareQueueFilter.curry( userStream );
+			queueSize = userQueue.count(filter); 
+		}
+		else
+		{
+			println "No userQueue found!";
+			println "eventQueues.size: ${eventQueues.size}";
+		}
+		println "Queue size for user: ${userId} = ${queueSize}";
 		
 		return queueSize;	
 	}
 	
-	public List<StreamItemBase> getMessagesForUser( final String userId, final int msgCount )
+	public List<ActivityStreamItem> getMessagesForUser( final String userId, final int msgCount, final UserStream userStream )
 	{
+		
+		// TODO: this should return ActivityStreamItem instances!
+		
 		println "getting messages for user: ${userId}, msgCount: ${msgCount}";
-		List<StreamItemBase> messages = new ArrayList<Map>();
+		List<ActivityStreamItem> messages = new ArrayList<Map>();
 		Deque<Map> userQueue = eventQueues.get( userId );
 		if( userQueue != null )
 		{
 			println "got userQueue for user ${userId}";
+
+			// collect the messages that match
+			def filter = userStreamAwareQueueFilter.curry( userStream );
+			Collection matchingMessages = userQueue.findAll( filter );
+			List<ActivityStreamItem> tempList = matchingMessages.asList();
+			
+			// iterate through up to msgCount of the messages
+			// and add the message to the collection we return as well as
+			// remove it from the queue.  We can't just return all of them
+			// as there may be more messages pending than were requested.
 			for( int i = 0; i < msgCount; i++ )
 			{
-				// get message from queue, put it in return set	
-				StreamItemBase msg = userQueue.pollFirst();
-				messages.add( msg ); 
+				ActivityStreamItem item = tempList.get(i);
+				messages.add( item );
+				userQueue.removeFirstOccurrence( item ); 
 			}
 		}
 		
@@ -148,15 +357,14 @@ class EventQueueService
 	{
 		println "registering eventqueue for user: ${userId}";
 		
-		if( !eventQueues.containsKey( userId ))
+		if( eventQueues.containsKey( userId ))
 		{
-			Deque<String> userQueue = new ArrayDeque<String>();
-			eventQueues.put( userId, userQueue ); 
+			eventQueues.remove( userId );
 		}
-		else
-		{
-			println "We already have an event queue for this user: ${userId}";
-		}
+
+		Deque<String> userQueue = new ArrayDeque<String>();
+		eventQueues.put( userId, userQueue );
+		
 	}
 
 	public void unRegisterEventQueueForUser( final String userId )

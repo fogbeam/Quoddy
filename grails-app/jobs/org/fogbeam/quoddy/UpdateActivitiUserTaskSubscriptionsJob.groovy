@@ -2,7 +2,6 @@ package org.fogbeam.quoddy
 
 
 
-import grails.util.GrailsNameUtils
 import groovyx.net.http.RESTClient
 import net.fortuna.ical4j.model.component.*
 
@@ -12,6 +11,7 @@ import org.apache.http.protocol.HttpContext
 import org.fogbeam.quoddy.stream.ActivitiUserTask
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ShareTarget
+import org.fogbeam.quoddy.stream.constants.EventTypeNames
 import org.fogbeam.quoddy.subscription.ActivitiUserTaskSubscription
 
 
@@ -105,12 +105,16 @@ class UpdateActivitiUserTaskSubscriptionsJob
 						activity.title = "ActivitiUserTask Received";
 						activity.url = new URL( "http://example.com/" );
 						activity.verb = "activiti_user_task_received";
+						activity.actorObjectType = "ActivitiUserTaskSubscription";
+						activity.actorUuid = owningSubscription.uuid;
+						activity.targetObjectType = "STREAM_PUBLIC";
 						activity.published = new Date(); // set published to "now"
 						activity.targetUuid = streamPublic.uuid;
 						activity.owner = owner;
 						activity.streamObject = userTask;
-						activity.objectClass = GrailsNameUtils.getShortName( userTask.class );
+						activity.objectClass = EventTypeNames.ACTIVITI_USER_TASK.name;
 						
+								
 						// NOTE: we added "name" to StreamItemBase, but how is it really going
 						// to be used?  Do we *really* need this??
 						activity.name = activity.title;

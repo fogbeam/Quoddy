@@ -50,7 +50,6 @@ class UITestSessionListener implements
 			def userId = user.userId;
 			println "user ${userId} added to session.";	
 		
-			// TODO: Register an event queue for user
 			println "Register an event queue for user ${userId}";
 			eventQueueService.registerEventQueueForUser( userId );
 		}

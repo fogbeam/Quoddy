@@ -172,11 +172,11 @@ class ActivityStreamItem implements Serializable
 		updated(nullable:true);
 		icon(nullable:true);
 		uuid( nullable: false);
-		actorUuid(nullable:true);
+		actorUuid(nullable:false);
 		actorUrl(nullable:true);
 		actorContent(nullable:true);
 		actorDisplayName(nullable:true);
-		actorObjectType(nullable:true);
+		actorObjectType(nullable:false);
 		actorImageUrl(nullable:true);
 		actorImageHeight(nullable:true);
 		actorImageWidth(nullable:true);
@@ -192,11 +192,11 @@ class ActivityStreamItem implements Serializable
 		objectImageHeight(nullable:true);
 		objectImageWidth(nullable:true);
 		
-		targetUuid(nullable:true);
+		targetUuid(nullable:false);
 		targetUrl(nullable:true);
 		targetContent(nullable:true);
 		targetDisplayName(nullable:true);
-		targetObjectType(nullable:true);
+		targetObjectType(nullable:false);
 		targetImageUrl(nullable:true);
 		targetImageHeight(nullable:true);
 		targetImageWidth(nullable:true);

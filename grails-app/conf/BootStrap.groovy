@@ -5,6 +5,7 @@ import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.stream.EventType
 import org.fogbeam.quoddy.stream.ShareTarget
+import org.fogbeam.quoddy.stream.constants.EventTypeNames
 
 class BootStrap {
 
@@ -50,43 +51,17 @@ class BootStrap {
 	 void createEventTypes()
 	 {
 	 	
-		EventType calendarFeedItemType = EventType.findByName( "CalendarFeedItem" );
-		if( calendarFeedItemType == null )
-		{
-			calendarFeedItemType = new EventType( name:"CalendarFeedItem" );
-			calendarFeedItemType.save();
-		}
-		
-		EventType activityStreamItemType = EventType.findByName( "ActivityStreamItem" );
-		if( activityStreamItemType == null )
-		{
-			activityStreamItemType = new EventType( name:"ActivityStreamItem" );
-			activityStreamItemType.save();
-		}
-		
-		EventType businessEventSubscriptionItemType = EventType.findByName( "BusinessEventSubscriptionItem" );
-		if( businessEventSubscriptionItemType == null )
-		{
-			businessEventSubscriptionItemType = new EventType( name:"BusinessEventSubscriptionItem" );
-			businessEventSubscriptionItemType.save();
-		}
-
-		
-	 	// new types, not used yet
-		EventType rssFeedItemType = EventType.findByName( "RssFeedItem" );
-		if( calendarFeedItemType == null )
-		{
-			rssFeedItemType = new EventType( name:"RssFeedItem" );
-			rssFeedItemType.save();
-		}
-		
-		EventType questionItemType = EventType.findByName( "Question" );
-		if( questionItemType == null )
-		{
-			questionItemType = new EventType( name:"Question" );
-			questionItemType.save();
-		}
-		
+		 // create these in a loop off the EventTypes enum
+		 
+		 for( EventTypeNames eventTypeName : EventTypeNames.values() )
+		 {
+		 	EventType et = EventType.findByName( eventTypeName.name );
+			if( et == null )
+			{
+				et = new EventType( name: eventTypeName.name );
+				et.save();
+			}
+		 }
 		
 	 }
 	 

@@ -2,7 +2,6 @@ package org.fogbeam.quoddy
 
 
 
-import grails.util.GrailsNameUtils
 import net.fortuna.ical4j.model.component.*
 
 import org.apache.http.HttpEntity
@@ -18,6 +17,7 @@ import org.apache.tika.sax.BodyContentHandler
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.ShareTarget
+import org.fogbeam.quoddy.stream.constants.EventTypeNames
 import org.fogbeam.quoddy.subscription.RssFeedSubscription
 
 import com.sun.syndication.feed.synd.SyndEntry
@@ -140,8 +140,7 @@ class UpdateRssFeedSubscriptionsJob
 							rssFeedItem.targetUuid  = streamPublic.uuid;
 							rssFeedItem.owner = sub.owner;
 							rssFeedItem.owningSubscription = sub;
-							
-							
+														
 							rssFeedItem = rssFeedItemService.saveItem( rssFeedItem );
 							
 						}
@@ -165,11 +164,16 @@ class UpdateRssFeedSubscriptionsJob
 							activity.title = "RssFeedItem Received";
 							activity.url = new URL( "http://example.com/" );
 							activity.verb = "rss_feed_item_received";
+							activity.actorObjectType = "RssFeedSubscription";
+							activity.actorUuid = sub.uuid;
+							activity.targetObjectType = "STREAM_PUBLIC";
+
 							activity.published = new Date(); // set published to "now"
 							activity.targetUuid = streamPublic.uuid;
 							activity.owner = sub.owner;
 							activity.streamObject = rssFeedItem;
-							activity.objectClass = GrailsNameUtils.getShortName( rssFeedItem.class );
+							activity.objectClass = EventTypeNames.RSS_FEED_ITEM.name;
+														
 							
 							// NOTE: we added "name" to StreamItemBase, but how is it really going
 							// to be used?  Do we *really* need this??

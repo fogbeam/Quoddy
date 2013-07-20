@@ -34,8 +34,19 @@ class ActivityStreamController
 		long queueSize = 0;
 		if( session.user != null )
 		{
+			UserStream userStream = null;
+			// TODO: Include UserStream.  Use default if no userStreamId is provided.
+			if( params.userStreamId )
+			{
+				userStream = userStreamService.findStreamById( Long.parseLong( params.userStreamId  ) );
+			}
+			else 
+			{
+				userStream = userStreamService.getStreamForUser( session.user, UserStream.DEFAULT_STREAM  );	
+			}
+			
 			// println "checking queueSize for user: ${session.user.userId}";
-			queueSize = eventQueueService.getQueueSizeForUser( session.user.userId );
+			queueSize = eventQueueService.getQueueSizeForUser( session.user.userId, userStream );
 		}
 		
 		// println "got queueSize as ${queueSize}"; 
@@ -231,22 +242,25 @@ class ActivityStreamController
 		  
 		ResharedActivityStreamItem newStreamItem = new ResharedActivityStreamItem();
 		newStreamItem.verb = "quoddy_item_reshare";
-		newStreamItem.originalItem = originalItem;
-		
-		newStreamItem.title = "Reshared ActivityStreamItem";
-		newStreamItem.url = new URL( "http://www.example.com" );
-		newStreamItem.published = new Date(); // set published to "now"
-		
+		newStreamItem.actorObjectType = "User";
+		newStreamItem.targetObjectType = "User";
+		newStreamItem.actorUuid = session.user.uuid;
 		newStreamItem.targetUuid = shareTargetUser.uuid;
 		newStreamItem.owner = session.user;
-		
-		newStreamItem.streamObject = originalItem.streamObject;
 		newStreamItem.objectClass = originalItem.objectClass;
+		newStreamItem.streamObject = originalItem.streamObject;
+		newStreamItem.published = new Date(); // set published to "now"
+		
+		newStreamItem.originalItem = originalItem;
+		newStreamItem.title = "Reshared ActivityStreamItem";
+		newStreamItem.url = new URL( "http://www.example.com" );	
 		
 		// NOTE: we added "name" to StreamItemBase, but how is it really going
 		// to be used?  Do we *really* need this??
 		newStreamItem.name = newStreamItem.title;
 		
+		// NOTE: are we eliminating the idea of "effective date" or do we
+		// just need to rethink it?
 		// newStreamItem.effectiveDate = newStreamItem.published;
 		
 		eventStreamService.saveActivity( newStreamItem );
