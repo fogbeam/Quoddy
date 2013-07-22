@@ -9,7 +9,7 @@
 	<body>
 	
 		<h3>Select the event types you would like in this stream.</h3>
-        <g:form controller="userStream" action="createWizard" method="POST">
+        <g:form controller="userStreamDefinition" action="createWizard" method="POST">
         	<g:select optionKey="id" optionValue="name" 
         		name="eventTypes" 
         		from="${eventTypes}"

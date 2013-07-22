@@ -9,7 +9,7 @@ class HomeController {
 
 	def userService;
 	def eventStreamService;
-	def userStreamService;
+	def userStreamDefinitionService;
 	def userListService;
 	def userGroupService;
 	def businessEventSubscriptionService;
@@ -48,20 +48,20 @@ class HomeController {
 		{
 			// TODO: this should take the selected UserStream into account when
 			// determining what activities to include in the activities list
-			UserStream selectedStream = null;
+			UserStreamDefinition selectedStream = null;
 			if( params.streamId )
 			{
 				Long streamId = Long.valueOf( params.streamId );
-				selectedStream = userStreamService.findStreamById( streamId );
+				selectedStream = userStreamDefinitionService.findStreamById( streamId );
 			}
 			else 
 			{
-				selectedStream = userStreamService.getStreamForUser( user, UserStream.DEFAULT_STREAM );	
+				selectedStream = userStreamDefinitionService.getStreamForUser( user, UserStreamDefinition.DEFAULT_STREAM );	
 			}
 			
 			
 			activities = eventStreamService.getRecentActivitiesForUser( user, 25, selectedStream );
-			model.putAll( [user:user, activities:activities] );
+			model.putAll( [user:user, activities:activities, streamId:params.streamId] );
 			
 			Map sidebarCollections = populateSidebarCollections( this, user );
 			model.putAll( sidebarCollections );

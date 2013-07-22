@@ -5,11 +5,11 @@ import org.fogbeam.quoddy.stream.EventType;
 import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
 
 @Mixin(SidebarPopulatorMixin)
-class UserStreamController
+class UserStreamDefinitionController
 {
 	def userService;
 	def eventStreamService;
-	def userStreamService;
+	def userStreamDefinitionService;
 	def userListService;
 	def userGroupService;
 	def businessEventSubscriptionService;
@@ -23,8 +23,8 @@ class UserStreamController
 	{
 		User user = null;
 		
-		def systemDefinedStreams = new ArrayList<UserStream>();
-		def userDefinedStreams = new ArrayList<UserStream>();
+		def systemDefinedStreams = new ArrayList<UserStreamDefinition>();
+		def userDefinedStreams = new ArrayList<UserStreamDefinition>();
 
 		def userLists = new ArrayList<UserList>();
 		def userGroups = new ArrayList<UserGroup>();
@@ -64,13 +64,13 @@ class UserStreamController
 				
 				println "stage2";
 			   
-				UserStream streamToCreate = new UserStream();
+				UserStreamDefinition streamToCreate = new UserStreamDefinition();
 				streamToCreate.name = params.streamName;
 				streamToCreate.description = params.streamDescription;
 				
 				def user = userService.findUserByUserId( session.user.userId );
 				streamToCreate.owner = user;
-				streamToCreate.definedBy = UserStream.DEFINED_USER;
+				streamToCreate.definedBy = UserStreamDefinition.DEFINED_USER;
 				flow.streamToCreate = streamToCreate;
 			
 				
@@ -84,7 +84,7 @@ class UserStreamController
 			on("stage3"){
 				println "stage3";
 				println "params: ${params}";
-				UserStream streamToCreate = flow.streamToCreate;
+				UserStreamDefinition streamToCreate = flow.streamToCreate;
 				// eventTypes:[219, 218]
 				String[] eventTypes = request.getParameterValues( 'eventTypes' );
 				
@@ -112,7 +112,7 @@ class UserStreamController
 			on( "stage4") {
 				println "stage4";
 				println "params: ${params}";
-				UserStream streamToCreate = flow.streamToCreate;
+				UserStreamDefinition streamToCreate = flow.streamToCreate;
 				
 				String userFilter = params.userFilter;
 				
@@ -165,7 +165,7 @@ class UserStreamController
 				// save user lists
 				println( "stage5" );
 				println "params: ${params}";
-				UserStream streamToCreate = flow.streamToCreate;
+				UserStreamDefinition streamToCreate = flow.streamToCreate;
 				
 				// userLists
 				String[] userListUuids = request.getParameterValues( 'userLists' );
@@ -194,7 +194,7 @@ class UserStreamController
 			on( "stage6") {
 				println "stage6";
 				println "params: ${params}";
-				UserStream streamToCreate = flow.streamToCreate;
+				UserStreamDefinition streamToCreate = flow.streamToCreate;
 				// save groups
 		
 				String[] userGroupUuids = request.getParameterValues( 'userGroups' );
@@ -225,7 +225,7 @@ class UserStreamController
 			on( "finishWizard") {
 				println "finishing Wizard";
 				println "params: ${params}";
-				UserStream streamToCreate = flow.streamToCreate;
+				UserStreamDefinition streamToCreate = flow.streamToCreate;
 				
 				// save subscriptions
 				// subscriptionUuidsIncluded
@@ -251,7 +251,7 @@ class UserStreamController
 		finish {
 			action {
 				println "create using params: ${params}"
-				UserStream streamToCreate = flow.streamToCreate;
+				UserStreamDefinition streamToCreate = flow.streamToCreate;
 				
 				if( !streamToCreate.save() )
 				{
@@ -263,7 +263,7 @@ class UserStreamController
 	   }
 		
 	   exitWizard {
-			redirect(controller:"userStream", action:"index");
+			redirect(controller:"userStreamDefinition", action:"index");
 	   }
 		
 		
@@ -278,8 +278,8 @@ class UserStreamController
 			action {
 				def streamId = params.streamId;
 				println "Editing UserStream with id: ${streamId}";
-				UserStream streamToEdit = null;
-				streamToEdit = UserStream.findById( streamId );
+				UserStreamDefinition streamToEdit = null;
+				streamToEdit = UserStreamDefinition.findById( streamId );
 		
 				Set<EventType> eventTypes = eventTypeService.findAllEventTypes();
 				
@@ -294,7 +294,7 @@ class UserStreamController
 				
 				println "transitioning to stage2";
 			   
-				UserStream streamToEdit = flow.streamToEdit;
+				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				streamToEdit.name = params.streamName;
 				streamToEdit.description = params.streamDescription;
 
@@ -312,7 +312,7 @@ class UserStreamController
 			   
 				println "params: ${params}";
 				
-				UserStream streamToEdit = flow.streamToEdit;
+				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				
 				
 				String[] eventTypes = request.getParameterValues( 'eventTypes' );
@@ -345,7 +345,7 @@ class UserStreamController
 			on( "stage4") {
 				println "stage4";
 				println "params: ${params}";
-				UserStream streamToEdit = flow.streamToEdit;
+				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				
 				// save users
 				String[] userUuids = request.getParameterValues( 'users' );
@@ -377,7 +377,7 @@ class UserStreamController
 				// save user lists
 				println( "stage5" );
 				println "params: ${params}";
-				UserStream streamToEdit = flow.streamToEdit;
+				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				
 				// userLists
 				String[] userListUuids = request.getParameterValues( 'userLists' );
@@ -406,7 +406,7 @@ class UserStreamController
 			on( "stage6") {
 				println "stage6";
 				println "params: ${params}";
-				UserStream streamToEdit = flow.streamToEdit;
+				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				// save groups
 		
 				String[] userGroupUuids = request.getParameterValues( 'userGroups' );
@@ -437,7 +437,7 @@ class UserStreamController
 			on( "finishWizard") {
 				println "finishing Wizard";
 				println "params: ${params}";
-				UserStream streamToEdit = flow.streamToEdit;
+				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				
 				// save subscriptions
 				// subscriptionUuidsIncluded
@@ -463,7 +463,7 @@ class UserStreamController
 			action {
 				println "update using params: ${params}"
 				def streamId = params.streamId;
-				UserStream streamToEdit = flow.streamToEdit;
+				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				
 				if( !streamToEdit.save() )
 				{
@@ -476,7 +476,7 @@ class UserStreamController
 		}
 		
 		exitWizard {
-			redirect(controller:"userStream", action:"index");
+			redirect(controller:"userStreamDefinition", action:"index");
 	   }
 	}
 	
@@ -485,9 +485,9 @@ class UserStreamController
 	{
 		def streamId = params.id;
 		println "Editing UserStream with id: ${streamId}";
-		UserStream streamToEdit = null;
+		UserStreamDefinition streamToEdit = null;
 		
-		streamToEdit = UserStream.findById( streamId );
+		streamToEdit = UserStreamDefinition.findById( streamId );
 		
 		
 		[streamToEdit:streamToEdit];	
@@ -499,13 +499,13 @@ class UserStreamController
 		// TODO: implement this...
 		println "update using params: ${params}"
 		def streamId = params.streamId;
-		UserStream streamToEdit = null;
+		UserStreamDefinition streamToEdit = null;
 		
-		streamToEdit = UserStream.findById( streamId );
+		streamToEdit = UserStreamDefinition.findById( streamId );
 		
 		streamToEdit.name = params.streamName;
 		streamToEdit.save();
 		
-		redirect(controller:"userStream", action:"index");
+		redirect(controller:"userStreamDefinition", action:"index");
 	}
 }

@@ -109,7 +109,7 @@ class BootStrap {
 			userRole.addToPermissions( "userGroup:*" );
 			userRole.addToPermissions( "userHome:*" );
 			userRole.addToPermissions( "userList:*" );
-			userRole.addToPermissions( "userStream:*" );
+			userRole.addToPermissions( "userStreamDefinition:*" );
 			
 			userRole = userService.createAccountRole( userRole ); 
 			

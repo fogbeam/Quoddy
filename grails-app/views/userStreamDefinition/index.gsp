@@ -24,18 +24,18 @@
 		<p>Manage existing streams and create new ones.</p>
 		</div>
 		<div class="span4 offset3">
-		<g:link controller="userStream" action="createWizard" class="btn-large btn btn-primary">Create a New Stream</g:link>
+		<g:link controller="userStreamDefinition" action="createWizard" class="btn-large btn btn-primary">Create a New Stream</g:link>
 		</div>
 	<div class="clear"></div>
 	</div>
 
 		<ul>
 			<g:each var="stream" in="${sysDefinedStreams}">
-				<li><g:link controller="userStream" action="editWizard" params="[streamId:stream.id]" >${stream.name}</g:link> </li>
+				<li><g:link controller="userStreamDefinition" action="editWizard" params="[streamId:stream.id]" >${stream.name}</g:link> </li>
 			</g:each>
 				
 			<g:each var="stream" in="${userDefinedStreams}">
-				<li><g:link controller="userStream" action="editWizard" params="[streamId:stream.id]" >${stream.name}</g:link></li>
+				<li><g:link controller="userStreamDefinition" action="editWizard" params="[streamId:stream.id]" >${stream.name}</g:link></li>
 			</g:each> 
 		</div>
 		</ul>

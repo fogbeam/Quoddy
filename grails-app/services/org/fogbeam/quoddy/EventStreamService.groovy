@@ -52,7 +52,7 @@ class EventStreamService {
 	public List<ActivityStreamItem> getRecentActivitiesForUser( 
 									    final User user, 
 										final int maxCount, 
-										final UserStream userStream 
+										final UserStreamDefinition userStream 
 								     )
 	{
 		
@@ -233,7 +233,7 @@ class EventStreamService {
 			if( !userStream.includeAllUsers && !userStream.includeSelfOnly )
 			{
 				println "filtering by user";
-				query = query + ", UserStream as stream ";
+				query = query + ", UserStreamDefinition as stream ";
 			}
 			println "query now: ${query}";
 			
@@ -282,7 +282,7 @@ class EventStreamService {
 						query = query + " or ";
 						
 					}
-					query = query + " item.objectClass = " + eventType.name;
+					query = query + " item.objectClass = '" + eventType.name + "'";
 				}
 				query = query + " )";
 				println "query now: ${query}";

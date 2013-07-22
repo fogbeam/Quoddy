@@ -11,7 +11,7 @@ class UserGroupController
 {
 	def eventStreamService;
 	def userService;
-	def userStreamService;
+	def userStreamDefinitionService;
 	def userListService;
 	def userGroupService;
 	def businessEventSubscriptionService;

@@ -15,7 +15,7 @@
 							<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu">
-							<li><g:link controller="userStream" action="index">Manage Streams<i
+							<li><g:link controller="userStreamDefinition" action="index">Manage Streams<i
 										class="icon-cog"></i>
 								</g:link></li>
 

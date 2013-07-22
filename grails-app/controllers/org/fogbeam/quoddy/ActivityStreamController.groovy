@@ -16,7 +16,7 @@ class ActivityStreamController
 	def userService;
 	def jmsService;
 	def eventQueueService;
-	def userStreamService;
+	def userStreamDefinitionService;
 	def userListService;
 	def userGroupService;
 	def businessEventSubscriptionService;
@@ -34,15 +34,15 @@ class ActivityStreamController
 		long queueSize = 0;
 		if( session.user != null )
 		{
-			UserStream userStream = null;
+			UserStreamDefinition userStream = null;
 			// TODO: Include UserStream.  Use default if no userStreamId is provided.
-			if( params.userStreamId )
+			if( params.streamId )
 			{
-				userStream = userStreamService.findStreamById( Long.parseLong( params.userStreamId  ) );
+				userStream = userStreamDefinitionService.findStreamById( Long.parseLong( params.streamId  ) );
 			}
 			else 
 			{
-				userStream = userStreamService.getStreamForUser( session.user, UserStream.DEFAULT_STREAM  );	
+				userStream = userStreamDefinitionService.getStreamForUser( session.user, UserStreamDefinition.DEFAULT_STREAM  );	
 			}
 			
 			// println "checking queueSize for user: ${session.user.userId}";
@@ -85,15 +85,15 @@ class ActivityStreamController
 		{
 			user = userService.findUserByUserId( session.user.userId );
 			
-			UserStream selectedStream = null;
+			UserStreamDefinition selectedStream = null;
 			if( params.streamId )
 			{
 				Long streamId = Long.valueOf( params.streamId );
-				selectedStream = userStreamService.findStreamById( streamId );
+				selectedStream = userStreamDefinitionService.findStreamById( streamId );
 			}
 			else
 			{
-				selectedStream = userStreamService.getStreamForUser( user, UserStream.DEFAULT_STREAM );
+				selectedStream = userStreamDefinitionService.getStreamForUser( user, UserStreamDefinition.DEFAULT_STREAM );
 			}
 			
 			
@@ -109,56 +109,7 @@ class ActivityStreamController
 		
 	}
 	
-	def index = {
-		
-		switch(request.method){
-			case "POST":
-				// def originTime = new Date().getTime();
-			  println "Create\n"
-			  // String json = request.reader.text;
-			  String json = params.activityJson;
-			  println("Got json:\n " + json );
-			  
-			  ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
-			  
-			  // convert from JSON to Groovy classes
-			  ActivityStreamEntry streamEntry = mapper.readValue(json, ActivityStreamEntry.class);
-			  
-			  // map to our internal representation and save / msg
-			  ActivityStreamItem activity = activityStreamTransformerService.getActivity( streamEntry );
-			  eventStreamService.saveActivity( activity );
-			  
-			  // send notification message
-			  // Map msg = new HashMap();
-			  // msg.creator = activity.owner.userId;
-			  // msg.text = activity.content;
-			  // msg.targetUuid = activity.targetUuid;
-			  // msg.published = activity.published;
-			  // msg.originTime = activity.dateCreated.time;
-			  // TODO: figure out what to do with "effectiveDate" here
-			  // msg.effectiveDate = msg.originTime;
-			  
-			  // msg.actualEvent = activity;
-			  
-			  println "sending message to JMS";
-			  jmsService.send( queue: 'uitestActivityQueue', /* msg */ activity, 'standard', null );
-			  
-			  // println streamEntry.toString();
-			  
-			  break
-			case "GET":
-			  println "Retrieve\n"
-			  break
-			case "PUT":
-			  println "Update\n"
-			  break
-			case "DELETE":
-			  println "Delete\n"
-			  break
-		  }
-		
-		render "OK";
-	}
+
 	
 	def viewUserStream = {
 		
@@ -263,11 +214,7 @@ class ActivityStreamController
 		// just need to rethink it?
 		// newStreamItem.effectiveDate = newStreamItem.published;
 		
-		eventStreamService.saveActivity( newStreamItem );
-		
-		
-		
-		
+		eventStreamService.saveActivity( newStreamItem );		
 		
 	}
 	

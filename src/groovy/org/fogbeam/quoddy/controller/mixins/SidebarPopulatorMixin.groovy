@@ -3,7 +3,7 @@ package org.fogbeam.quoddy.controller.mixins
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.UserGroup
 import org.fogbeam.quoddy.UserList
-import org.fogbeam.quoddy.UserStream
+import org.fogbeam.quoddy.UserStreamDefinition
 import org.fogbeam.quoddy.subscription.ActivitiUserTaskSubscription
 import org.fogbeam.quoddy.subscription.BusinessEventSubscription
 import org.fogbeam.quoddy.subscription.CalendarFeedSubscription
@@ -13,8 +13,8 @@ class SidebarPopulatorMixin
 {
 	Map populateSidebarCollections( def controller, User user )
 	{
-		def systemDefinedStreams = new ArrayList<UserStream>();
-		def userDefinedStreams = new ArrayList<UserStream>();
+		def systemDefinedStreams = new ArrayList<UserStreamDefinition>();
+		def userDefinedStreams = new ArrayList<UserStreamDefinition>();
 		def userLists = new ArrayList<UserList>();
 		def userGroups = new ArrayList<UserGroup>();
 		def businessEventSubscriptions = new ArrayList<BusinessEventSubscription>();
@@ -23,9 +23,9 @@ class SidebarPopulatorMixin
 		def rssFeedSubscriptions = new ArrayList<RssFeedSubscription>();
 		
 		
-		def tempSysStreams = controller.userStreamService.getSystemDefinedStreamsForUser( user );
+		def tempSysStreams = controller.userStreamDefinitionService.getSystemDefinedStreamsForUser( user );
 		systemDefinedStreams.addAll( tempSysStreams );
-		def tempUserStreams = controller.userStreamService.getUserDefinedStreamsForUser( user );
+		def tempUserStreams = controller.userStreamDefinitionService.getUserDefinedStreamsForUser( user );
 		userDefinedStreams.addAll( tempUserStreams );
 	
 		def tempUserLists = controller.userListService.getListsForUser( user );

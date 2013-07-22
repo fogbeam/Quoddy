@@ -1,9 +1,11 @@
 package org.fogbeam.quoddy.stream
 
-import java.io.Serializable;
+import javax.xml.bind.annotation.XmlAccessType
+import javax.xml.bind.annotation.XmlAccessorType
+import javax.xml.bind.annotation.XmlRootElement
+
 
 import org.fogbeam.quoddy.User
-
 
 
 /* TODO: map the fields of this class to the activitystrea.ms protocol */
@@ -153,6 +155,7 @@ Following is a simple, minimal example of a JSON serialized activity:
 	url 					JSON [RFC4627] String				An IRI [RFC3987] identifying a resource providing an HTML representation of the object. An object MAY contain a url property 
  
 */
+
 class ActivityStreamItem implements Serializable
 {
 	
@@ -183,6 +186,7 @@ class ActivityStreamItem implements Serializable
 
 		streamObject( nullable:true );
 		objectClass( nullable:false );
+		
 		objectUuid(nullable:true);
 		objectUrl(nullable:true);
 		objectContent(nullable:true);
@@ -208,30 +212,28 @@ class ActivityStreamItem implements Serializable
 	}
 	
 	static transients = ['templateName'];
+		
 	
-	String  name;
-	String  uuid;
-	String 	content;
-	Date	published;
-	String	title;
-	Date	updated;
-	URL		url;
-	String	verb;
-	URL 	icon;
-	User 	owner;
+	String 			content;
+	Date			published;
+	String			title;
+	Date			updated;
+	URL				url;
+	String			verb;
+	URL 			icon;
 	
 	
-	String 	actorUuid;
-	String 	actorUrl;
-	String	actorContent;
-	String 	actorDisplayName;
-	String 	actorObjectType;
-	String 	actorImageUrl;
-	String 	actorImageHeight;
-	String	actorImageWidth;
+	String 			actorUuid;
+	String 			actorUrl;
+	String			actorContent;
+	String 			actorDisplayName;
+	String 			actorObjectType;
+	String 			actorImageUrl;
+	String 			actorImageHeight;
+	String			actorImageWidth;
 
-	StreamItemBase 	streamObject;
-	String 			objectClass;
+
+	
 	String 			objectUuid;
 	String			objectUrl;
 	String			objectContent;
@@ -241,21 +243,25 @@ class ActivityStreamItem implements Serializable
 	String			objectImageHeight;
 	String			objectImageWidth;
 		
-	// TODO: should we define the Target as an object ref
-	// as well??
-	String	targetUrl;
-	String	targetUuid;
-	String	targetContent;
-	String	targetDisplayName;
-	String 	targetObjectType;
-	String	targetImageUrl;
-	String 	targetImageHeight;
-	String	targetImageWidth;
-	
-	String 	generatorUrl
-	String	providerUrl;
 
-	Date 	dateCreated;
+	String			targetUrl;
+	String			targetUuid;
+	String			targetContent;
+	String			targetDisplayName;
+	String 			targetObjectType;
+	String			targetImageUrl;
+	String 			targetImageHeight;
+	String			targetImageWidth;
+	
+	String 			generatorUrl
+	String			providerUrl;
+
+	String  		name;
+	String  		uuid;
+	User 			owner;
+	StreamItemBase 	streamObject;
+	String 			objectClass;
+	Date 			dateCreated;
 	
 	
 	public String getTemplateName()

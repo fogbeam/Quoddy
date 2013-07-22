@@ -7,14 +7,14 @@ import org.fogbeam.quoddy.stream.EventType;
  * are included, as well as an filters or other preferences that will affect which items
  * are included in the stream.
  */
-class UserStream implements Serializable
+class UserStreamDefinition implements Serializable
 {
 	public static final String DEFINED_USER = "DEFINED_BY_USER";
 	public static final String DEFINED_SYSTEM = "DEFINED_BY_SYSTEM";
 	public static final String DEFAULT_STREAM = "Default";
 	
 	
-	public UserStream()
+	public UserStreamDefinition()
 	{
 		this.uuid = java.util.UUID.randomUUID().toString();
 	}

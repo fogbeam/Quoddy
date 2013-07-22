@@ -14,7 +14,7 @@ import org.fogbeam.quoddy.subscription.RssFeedSubscription
 class SubscriptionController
 {
 	def userService;
-	def userStreamService;
+	def userStreamDefinitionService;
 	def userListService;
 	def userGroupService;
 	def businessEventSubscriptionService;
@@ -26,8 +26,8 @@ class SubscriptionController
 	{
 		User user = null;
 		
-		def systemDefinedStreams = new ArrayList<UserStream>();
-		def userDefinedStreams = new ArrayList<UserStream>(); 
+		def systemDefinedStreams = new ArrayList<UserStreamDefinition>();
+		def userDefinedStreams = new ArrayList<UserStreamDefinition>(); 
 		def userLists = new ArrayList<UserList>();
 		def userGroups = new ArrayList<UserGroup>();
 		def eventSubscriptions = new ArrayList<BusinessEventSubscription>();

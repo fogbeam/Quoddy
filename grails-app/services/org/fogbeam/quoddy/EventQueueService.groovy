@@ -296,7 +296,7 @@ class EventQueueService
 	// UserStream and update them as messages are pushed to us. 
 	// we might also optimize this by just caching the value and only recalculate
 	// it if the overall queue size has changed relative to last time we were called.
-	public long getQueueSizeForUser( final String userId, final UserStream userStream )
+	public long getQueueSizeForUser( final String userId, final UserStreamDefinition userStream )
 	{
 		println "getting queue size for user: ${userId}";
 		
@@ -320,7 +320,7 @@ class EventQueueService
 		return queueSize;	
 	}
 	
-	public List<ActivityStreamItem> getMessagesForUser( final String userId, final int msgCount, final UserStream userStream )
+	public List<ActivityStreamItem> getMessagesForUser( final String userId, final int msgCount, final UserStreamDefinition userStream )
 	{
 		
 		// TODO: this should return ActivityStreamItem instances!

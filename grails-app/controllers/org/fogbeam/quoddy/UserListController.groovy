@@ -7,7 +7,7 @@ import org.fogbeam.quoddy.stream.ActivityStreamItem
 class UserListController
 {
 	def userService;
-	def userStreamService;
+	def userStreamDefinitionService;
 	def userListService;
 	def userGroupService;
 	def businessEventSubscriptionService;

@@ -9,7 +9,7 @@
 	<body>
 	
 		<h3>Select users to include in this stream.</h3>
-        <g:form controller="userStream" action="createWizard" method="POST">
+        <g:form controller="userStreamDefinition" action="createWizard" method="POST">
 			<g:select optionKey="uuid" optionValue="fullName" 
         		name="users" 
         		from="${users}"
