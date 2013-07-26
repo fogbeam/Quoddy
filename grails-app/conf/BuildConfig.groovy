@@ -29,8 +29,10 @@ grails.project.dependency.resolution = {
 
         // runtime 'mysql:mysql-connector-java:5.1.5'
 		compile "org.grails:grails-webflow:$grailsVersion"
-    }
-    
+		def excludes = {
+            	    excludes group:"org.restlet.gae", name:'org.restlet.ext.json'
+    		}
+	}    
    plugins {
 	   compile ':webflow:2.0.0', {
 		   exclude 'grails-webflow'
@@ -39,5 +41,10 @@ grails.project.dependency.resolution = {
 	   runtime( ":shiro:1.1.4" ){
 		exclude 'quartz';   
 	   }
+	   runtime( ":jaxrs:0.8" )
+	   {
+               exclude group:"org.restlet.gae", name:'org.restlet.ext.json'
+           }
+
    	}
 }
