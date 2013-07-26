@@ -25,11 +25,13 @@ import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.Version
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.search.SearchResult
+import org.fogbeam.quoddy.stream.ActivitiUserTask
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
 import org.fogbeam.quoddy.stream.CalendarFeedItem
 import org.fogbeam.quoddy.stream.Question
 import org.fogbeam.quoddy.stream.RssFeedItem
+import org.fogbeam.quoddy.stream.StatusUpdate
 import org.fogbeam.quoddy.stream.StreamItemBase;
 import org.fogbeam.quoddy.stream.StreamItemComment
 
@@ -65,7 +67,7 @@ class SearchService
 		{
 			Document result = searcher.doc( doc.doc );
 			String docType = result.get("docType")
-			String uuid = result.get("uuid");
+			String uuid = result.get("activityUuid");
 			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType);
 			
 			searchResults.add( searchResult );
@@ -107,9 +109,9 @@ class SearchService
 		{
 			Document result = searcher.doc( doc.doc );
 			String docType = result.get("docType")
-			String uuid = result.get("uuid");
+			String uuid = result.get("activityUuid");
 			// lookup our object by it's UUID and assign it to the searchResult instance
-			StreamItemBase item = eventStreamService.getEventByUuid( uuid );
+			ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
 			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
 			
 			searchResults.add( searchResult );
@@ -150,9 +152,9 @@ class SearchService
 		{
 			Document result = searcher.doc( doc.doc );
 			String docType = result.get("docType")
-			String uuid = result.get("uuid");
+			String uuid = result.get("activityUuid");
 			// lookup our object by it's UUID and assign it to the searchResult instance
-			StreamItemBase item = eventStreamService.getEventByUuid( uuid );
+			ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
 			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
 			
 			searchResults.add( searchResult );
@@ -195,9 +197,9 @@ class SearchService
 		{
 			Document result = searcher.doc( doc.doc );
 			String docType = result.get("docType")
-			String uuid = result.get("uuid");
+			String uuid = result.get("activityUuid");
 			// lookup our object by it's UUID and assign it to the searchResult instance
-			StreamItemBase item = eventStreamService.getEventByUuid( uuid );
+			ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
 			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
 			
 			searchResults.add( searchResult );
@@ -239,9 +241,9 @@ class SearchService
 		{
 			Document result = searcher.doc( doc.doc );
 			String docType = result.get("docType")
-			String uuid = result.get("uuid");
+			String uuid = result.get("activityUuid");
 			// lookup our object by it's UUID and assign it to the searchResult instance
-			StreamItemBase item = eventStreamService.getEventByUuid( uuid );
+			ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
 			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
 			
 			searchResults.add( searchResult );
@@ -281,9 +283,9 @@ class SearchService
 		{
 			Document result = searcher.doc( doc.doc );
 			String docType = result.get("docType")
-			String uuid = result.get("uuid");
+			String uuid = result.get("activityUuid");
 			// lookup our object by it's UUID and assign it to the searchResult instance
-			StreamItemBase item = eventStreamService.getEventByUuid( uuid );
+			ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
 			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
 			
 			searchResults.add( searchResult );
@@ -471,18 +473,26 @@ class SearchService
 		try
 		{
 			indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+			
+			
+			println "rebuildGeneralIndex";
+			println "indexDirLocation: ${indexDirLocation}";
+			
 			indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index") );
 			writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.LIMITED);
 			writer.setUseCompoundFile(false);
 	
 					
 			// get all Activities...
-			List<StreamItemBase> items = eventStreamService.getAllStreamItems();
+			List<ActivityStreamItem> items = eventStreamService.getAllActivityStreamItems();
 		
 			// iterate the list and store each to the DB
-			for( StreamItemBase item : items )
+			for( ActivityStreamItem item : items )
 			{
-				addToIndex( writer, item );		
+				println "indexing ASI with id: ${item.id}, uuid: ${item.uuid} and objectClass: ${item.objectClass}";
+				// if streamObject is null, the only valid scenario is for this ASI to be a 3rd party (remote)
+				// ActivityStreamItem, so the object we're indexing is the ASI itself.
+				addToIndex( writer, item, ( ( item.streamObject != null ) ? item.streamObject : item ) );		
 			}
 		}
 		finally
@@ -517,46 +527,78 @@ class SearchService
 		
 	}
 	
-	public void addToIndex( final IndexWriter writer, final ActivityStreamItem item )
+	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final ActivitiUserTask task )
 	{
+		// let's just let this stay a NOP for right this minute... there are bigger
+		// fish to fry
+		// TODO: implement adding ActivitiUserTask objects to Search Index	
+		println "TODO: implement adding ActivitiUserTask objects to Search Index";
+	}
+	
+	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final ActivityStreamItem item )
+	{
+		println "addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final ActivityStreamItem item )";
+		
 		Document doc = new Document();
 		
-		if( item.verb.equals( "quoddy_status_update" ))
-		{
-			doc.add( new Field( "docType", "docType.statusUpdate", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-		}
-		else
-		{
-			doc.add( new Field( "docType", "docType.activityStreamItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-		}
+		doc.add( new Field( "docType", "docType.activityStreamItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+
 		
-		doc.add( new Field( "uuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-		doc.add( new Field( "id", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "objectUuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "objectId", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityUuid", asi.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityId", Long.toString( asi.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );		
+				
 		doc.add( new Field( "content", item.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
 			
 		writer.addDocument( doc );
 		writer.optimize();
 	}
-	
-	public void addToIndex( final IndexWriter writer, final CalendarFeedItem item )
+
+	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final StatusUpdate item )
 	{
+		println "addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final StatusUpdate item )";
 		Document doc = new Document();
 		
-			doc.add( new Field( "docType", "docType.calendarFeedItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-			doc.add( new Field( "uuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "id", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "docType", "docType.statusUpdate", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
 		
-			// extract content from the item and add to appropriate fields
-			doc.add( new Field( "startDate", DateTools.dateToString(item.startDate, DateTools.Resolution.MINUTE ), Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ) );
-			doc.add( new Field( "endDate", DateTools.dateToString(item.endDate, DateTools.Resolution.MINUTE ), Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ) );
-			doc.add( new Field( "dateEventCreated", DateTools.dateToString(item.dateEventCreated, DateTools.Resolution.MINUTE ), Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ) );
-			doc.add( new Field( "status", item.status, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
-			doc.add( new Field( "summary", item.summary, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
-			doc.add( new Field( "description", item.description, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
-			doc.add( new Field( "location", item.location, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		doc.add( new Field( "objectUuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "objectId", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityUuid", asi.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityId", Long.toString( asi.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );		
+		
+		doc.add( new Field( "content", item.text, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
 			
-			writer.addDocument( doc );
-			writer.optimize();
+		writer.addDocument( doc );
+		writer.optimize();
+	}
+	
+		
+	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final CalendarFeedItem item )
+	{
+		println "addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final CalendarFeedItem item )";
+		
+		Document doc = new Document();
+		
+		doc.add( new Field( "docType", "docType.calendarFeedItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+			
+			
+		doc.add( new Field( "objectUuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "objectId", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityUuid", asi.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityId", Long.toString( asi.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+		// extract content from the item and add to appropriate fields
+		doc.add( new Field( "startDate", DateTools.dateToString(item.startDate, DateTools.Resolution.MINUTE ), Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ) );
+		doc.add( new Field( "endDate", DateTools.dateToString(item.endDate, DateTools.Resolution.MINUTE ), Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ) );
+		doc.add( new Field( "dateEventCreated", DateTools.dateToString(item.dateEventCreated, DateTools.Resolution.MINUTE ), Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ) );
+		doc.add( new Field( "status", item.status, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		doc.add( new Field( "summary", item.summary, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		doc.add( new Field( "description", item.description, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		doc.add( new Field( "location", item.location, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		
+		writer.addDocument( doc );
+		writer.optimize();
 
 	}
 	
@@ -564,28 +606,36 @@ class SearchService
 	 * Lucene index at all? Having it together is a convenience, but we can search for
 	 * this stuff right out of the eXistDB database, no? 
 	 */
-	public void addToIndex( final IndexWriter writer, final BusinessEventSubscriptionItem item )
+	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final BusinessEventSubscriptionItem item )
 	{
 		
 		Document doc = new Document();
 	
 		doc.add( new Field( "docType", "docType.businessEventSubscriptionItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-		doc.add( new Field( "uuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-		doc.add( new Field( "id", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		
+		doc.add( new Field( "objectUuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "objectId", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityUuid", asi.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityId", Long.toString( asi.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
 		doc.add( new Field( "summary", item.summary, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
 		
 		writer.addDocument( doc );
 		writer.optimize();
 	}	
 	
-	public void addToIndex( final IndexWriter writer, final Question item )
+	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final Question item )
 	{
 		Document doc = new Document();
 		
 			doc.add( new Field( "docType", "docType.question", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-			doc.add( new Field( "uuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "id", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-//			doc.add( new Field( "url", msg['url'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectUuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityUuid", asi.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( asi.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			//			doc.add( new Field( "url", msg['url'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 //			doc.add( new Field( "title", msg['title'], Field.Store.YES, Field.Index.ANALYZED ) );
 //			doc.add( new Field( "tags", "", Field.Store.YES, Field.Index.ANALYZED ));
 
@@ -595,31 +645,40 @@ class SearchService
 		
 	}
 
-	public void addToIndex( final IndexWriter writer, final RssFeedItem item )
+	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final RssFeedItem item )
 	{
 		Document doc = new Document();
 		
 		doc.add( new Field( "docType", "docType.rssFeedItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-		doc.add( new Field( "uuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-		doc.add( new Field( "id", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "objectUuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "objectId", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityUuid", asi.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityId", Long.toString( asi.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+		
+		
 		// doc.add( new Field( "content", statusUpdateActivity.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
 		
 		writer.addDocument( doc );
 		writer.optimize();
 	}
 		
-	public void addToIndex( final IndexWriter writer, final StreamItemComment item )
+	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final StreamItemComment item )
 	{
 		Document doc = new Document();
-		
+		 
 		doc.add( new Field( "docType", "docType.streamEntryComment", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-		
+		doc.add( new Field( "objectUuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "objectId", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityUuid", asi.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityId", Long.toString( asi.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+		/*
 		doc.add( new Field( "entry_id", Long.toString( item.event.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 		doc.add( new Field( "entry_uuid", item.event.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 		
-		doc.add( new Field( "id", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-		doc.add( new Field( "uuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 		doc.add( new Field( "content", item.text, Field.Store.NO, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		*/
 		
 		writer.addDocument( doc );
 	
@@ -635,6 +694,10 @@ class SearchService
 		println "reindexing ${users.size()} users";
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		println "rebuildPersonIndex";
+		println "indexDirLocation: ${indexDirLocation}";
+		
+		
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
 		IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.LIMITED);
 		writer.setUseCompoundFile(false);
@@ -681,7 +744,8 @@ class SearchService
 	{
 	
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		log.debug( "indexDirLocation: ${indexDirLocation}" );
+		println( "initializeGeneralIndex" );
+		println( "indexDirLocation: ${indexDirLocation}" );
 		if( indexDirLocation )
 		{
 			File indexFile = new java.io.File( indexDirLocation + "/general_index" );
@@ -713,7 +777,8 @@ class SearchService
 	public void initializePersonIndex()
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		log.debug( "indexDirLocation: ${indexDirLocation}" );
+		println( "initializePersonIndex" );
+		println( "indexDirLocation: ${indexDirLocation}" );
 		if( indexDirLocation )
 		{
 			File indexFile = new java.io.File( indexDirLocation + "/person_index" );

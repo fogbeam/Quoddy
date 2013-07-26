@@ -10,7 +10,7 @@
 	
 		<h3>Edit Event Subscription</h3>
 		<p />
-		<g:form controller="eventSubscription" action="editWizard" method="POST">
+		<g:form controller="subscription" action="editWizard" method="POST">
 			<g:hiddenField name="subscriptionId" value="${subscriptionToEdit.id}" />
 			<label for="subscriptionName">Name:</label> <g:textField name="subscriptionName" value="${subscriptionToEdit.name}"/>
 			<br />

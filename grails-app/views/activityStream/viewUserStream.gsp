@@ -110,11 +110,11 @@
 			<div id="messageCount">
 				<a href="#" id="refreshMessagesLink">0 messages pending</a>
 			</div>
-			<g:if test="${activities != null}">
+			<g:if test="${statusUpdatesForUser != null}">
 
 				<div id="activityStream">
 
-					<g:render template="/activityStream" />
+					<g:render template="/activityStream" bean="${statusUpdatesForUser}" var="activities" />
 
 				</div>
 			</g:if>

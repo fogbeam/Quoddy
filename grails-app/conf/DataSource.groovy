@@ -18,7 +18,9 @@ hibernate {
 environments {
 	development {
 		dataSource {
-			dbCreate = "update" // one of 'create', 'create-drop','update'
+			dbCreate = "create-drop" // one of 'create', 'create-drop','update'
+						//create-drop to drop/rebuild all tables
+						//update to persist data
 			url = "jdbc:postgresql:quoddy2";
 			// dbCreate = "create-drop"
 			// url = "jdbc:hsqldb:mem:devDb

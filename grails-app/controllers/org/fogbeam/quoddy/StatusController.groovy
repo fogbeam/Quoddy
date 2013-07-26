@@ -1,9 +1,9 @@
 package org.fogbeam.quoddy;
 
-import org.fogbeam.quoddy.StatusUpdate;
 import org.fogbeam.quoddy.User;
 import org.fogbeam.quoddy.stream.ActivityStreamItem;
 import org.fogbeam.quoddy.stream.ShareTarget;
+import org.fogbeam.quoddy.stream.StatusUpdate;
 
 class StatusController {
 
@@ -29,7 +29,17 @@ class StatusController {
 			println "constructing our new StatusUpdate object...";
 			// construct a status object
 			println "statusText: ${params.statusText}";
-			StatusUpdate newStatus = new StatusUpdate( text: params.statusText, creator: user );
+			StatusUpdate newStatus = new StatusUpdate( text:params.statusText,creator : user);
+			newStatus.effectiveDate = new Date(); // now
+			newStatus.targetUuid = "ABC123";
+			newStatus.name = "321CBA";
+			
+			// save the newStatus 
+			if( !newStatus.save() )
+			{
+				println( "Saving newStatus FAILED");
+				newStatus.errors.allErrors.each { println it };
+			}
 			
 			// put the old "currentStatus" in the oldStatusUpdates collection
 			// addToComments
@@ -66,20 +76,22 @@ class StatusController {
 			activity.published = new Date(); // set published to "now"
 			activity.targetUuid = streamPublic.uuid;
 			activity.owner = user;
+			activity.streamObject = newStatus;
+			activity.objectClass = newStatus.class.getName();
 			
 			// NOTE: we added "name" to StreamItemBase, but how is it really going
 			// to be used?  Do we *really* need this??
 			activity.name = activity.title;
-			activity.effectiveDate = activity.published;
+			// activity.effectiveDate = activity.published;
 			
 			eventStreamService.saveActivity( activity );
 			
 			
-			def msg = [msgType:'NEW_STATUS_UPDATE', activityId:activity.id, activityUuid:activity.uuid ];
+			def newContentMsg = [msgType:'NEW_STATUS_UPDATE', activityId:activity.id, activityUuid:activity.uuid ];
 				
 			println "sending message to JMS";
 			// jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
-			sendJMSMessage("quoddySearchQueue", msg );
+			sendJMSMessage("quoddySearchQueue", newContentMsg );
 			
 			jmsService.send( queue: 'uitestActivityQueue', activity, 'standard', null );
 			

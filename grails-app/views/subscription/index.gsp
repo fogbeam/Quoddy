@@ -25,14 +25,14 @@
     <p>Manage existing event subscriptions and create new ones.</p>
     </div>
     <div class="span4 offset3">
-		<g:link controller="eventSubscription" action="createWizard" class="btn btn-primary btn-large">Create New Subscription</g:link>
+		<g:link controller="subscription" action="createWizard" class="btn btn-primary btn-large">Create New Subscription</g:link>
     </div>
   <div class="clear"></div>
   </div>
 
 		<ul>
 			<g:each var="subscription" in="${eventSubscriptions}">
-				<li><g:link controller="eventSubscription" action="editWizard" event="start" params="[subscriptionId:subscription.id]" >${subscription.name}</g:link> </li>
+				<li><g:link controller="subscription" action="editWizard" event="start" params="[subscriptionId:subscription.id]" >${subscription.name}</g:link> </li>
 			</g:each>
 		</ul>		
 	</div>

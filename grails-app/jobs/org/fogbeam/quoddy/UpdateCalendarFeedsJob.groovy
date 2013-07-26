@@ -12,6 +12,7 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.DefaultHttpClient
+import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.CalendarFeedItem;
 import org.fogbeam.quoddy.stream.ShareTarget;
 import org.fogbeam.quoddy.subscription.CalendarFeedSubscription;
@@ -23,6 +24,8 @@ class UpdateCalendarFeedsJob
 	def group = "MyGroup";
 	def volatility = false;
 	def jmsService;
+	
+	def eventStreamService;
 	
 	static triggers = {
 	}
@@ -118,7 +121,7 @@ class UpdateCalendarFeedsJob
 						// is some delta applied to the startDate
 						Calendar cal = Calendar.getInstance();
 						cal.setTime( comp.startDate?.date ); 
-						cal.add(Calendar.HOUR_OF_DAY, -8 );
+						cal.add(Calendar.DAY_OF_MONTH, -15 );
 						Date effectiveDate = cal.getTime();
 						event.effectiveDate = effectiveDate;
 						
@@ -136,17 +139,44 @@ class UpdateCalendarFeedsJob
 							event.errors.allErrors.each { println it };
 						}
 						else
-						{
+						{ // if the CalendarFeedItem save was successful...
+							
 							println "successfully saved CalendarEvent.  Uid: ${event.uid}, Id: ${event.id}, Uuid: ${event.uuid}";	
+							// if the event update was successful
+							
+							ActivityStreamItem activity = new ActivityStreamItem(content:"fuckme");
+							
+							activity.title = "CalendarFeed Subscription Item Received";
+							activity.url = new URL( "http://example.com/" );
+							activity.verb = "calendar_feed_subscription_item_received";
+							activity.published = new Date(); // set published to "now"
+							activity.targetUuid = streamPublic.uuid;
+							activity.owner = feed.owner;
+							activity.streamObject = event;
+							activity.objectClass = event.class.getName();
+							
+							// NOTE: we added "name" to StreamItemBase, but how is it really going
+							// to be used?  Do we *really* need this??
+							activity.name = activity.title;
+							
+							// activity.effectiveDate = activity.published;
+							
+							eventStreamService.saveActivity( activity );
+							
+							
+							def newContentMsg = [msgType:'NEW_CALENDAR_FEED_ITEM', activityId:activity.id, activityUuid:activity.uuid ];
+							
+							println "sending messages to JMS";
+							
+							// send message to request search indexing
+							jmsService.send( queue: 'quoddySearchQueue', newContentMsg, 'standard', null );
+							
+			
+											
+							// TODO: send JMS message for UI notifications
+						
+	
 						}
-						
-						
-						// send JMS message for UI notifications
-						
-						// send JMS message for indexing and additional processing
-						def msg = [ id:event.id, uuid:event.uuid, msgType:'NEW_CALENDAR_FEED_ITEM'];
-						jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
-						
 						
 					}
 				}
