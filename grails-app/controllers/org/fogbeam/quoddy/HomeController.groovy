@@ -1,18 +1,22 @@
 package org.fogbeam.quoddy
 
+import org.apache.shiro.SecurityUtils
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
-import org.fogbeam.quoddy.stream.ActivityStreamItem;
+import org.fogbeam.quoddy.stream.ActivityStreamItem
 
 @Mixin(SidebarPopulatorMixin)
 class HomeController {
 
 	def userService;
 	def eventStreamService;
-	def userStreamService;
+	def userStreamDefinitionService;
 	def userListService;
 	def userGroupService;
-	def eventSubscriptionService;
-	
+	def businessEventSubscriptionService;
+	def calendarFeedSubscriptionService;
+	def activitiUserTaskSubscriptionService;
+	def rssFeedSubscriptionService;
+		
     def index = {
     		
     	def userId = params.userId;
@@ -27,11 +31,11 @@ class HomeController {
     	else
     	{
 			println "Looking up User in session";
-			
-    		if( session.user != null )
+			user = SecurityUtils.subject.principal;
+    		if( user != null )
     		{
 				println "Found User in Session";
-    			user = userService.findUserByUserId( session.user.userId );
+    			user = userService.findUserByUserId( user.userId );
     		}
 			else
 			{
@@ -44,20 +48,20 @@ class HomeController {
 		{
 			// TODO: this should take the selected UserStream into account when
 			// determining what activities to include in the activities list
-			UserStream selectedStream = null;
+			UserStreamDefinition selectedStream = null;
 			if( params.streamId )
 			{
 				Long streamId = Long.valueOf( params.streamId );
-				selectedStream = userStreamService.findStreamById( streamId );
+				selectedStream = userStreamDefinitionService.findStreamById( streamId );
 			}
 			else 
 			{
-				selectedStream = userStreamService.getStreamForUser( user, UserStream.DEFAULT_STREAM );	
+				selectedStream = userStreamDefinitionService.getStreamForUser( user, UserStreamDefinition.DEFAULT_STREAM );	
 			}
 			
 			
 			activities = eventStreamService.getRecentActivitiesForUser( user, 25, selectedStream );
-			model.putAll( [user:user, activities:activities] );
+			model.putAll( [user:user, activities:activities, streamId:params.streamId] );
 			
 			Map sidebarCollections = populateSidebarCollections( this, user );
 			model.putAll( sidebarCollections );

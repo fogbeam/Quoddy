@@ -13,7 +13,7 @@
 		</g:if>
 		
 		<li><a href="/login">Login</a></li>
-		<g:if test="${session.user != null}">
+		<shiro:authenticated>
 			<li><a href="/login/logout">Logout</a></li>
 			<li><a href="/user/editAccount">Edit Account Info</a></li>
 			<li><a href="/user/editProfile">Edit Profile</a></li>
@@ -26,6 +26,6 @@
 			<li><a href="/search/searchFriends">Search Friends</a></li>
 			<li><a href="/search/searchIFollow">Search People I Follow</a></li>
 			<li><a href="/user/listOpenFriendRequests">List Pending Friend Requests</a></li>
-		</g:if>			
+		</shiro:authenticated>			
 	</ul>
 </div>

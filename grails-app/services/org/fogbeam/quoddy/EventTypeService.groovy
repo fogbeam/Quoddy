@@ -21,4 +21,12 @@ class EventTypeService
 		return eventType;	
 	}
 	
+	public EventType findEventTypeByName( final String name )
+	{
+		EventType eventType = EventType.findByName( name );
+		
+		return eventType;
+	}
+	
+	
 }

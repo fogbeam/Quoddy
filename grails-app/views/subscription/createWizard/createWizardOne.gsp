@@ -1,21 +1,23 @@
 <html>
 	
 	<head>
-		<title>Quoddy: Create Event Subscription</title>
+		<title>Quoddy: Create Subscription</title>
 		<meta name="layout" content="main" />
 	     <nav:resources />		
 	</head>
 	
 	<body>
 	<div class="hero-unit span6">	
-		<h2>Create Event Subscription</h2>
+		<h2>Create Subscription</h2>
 		<g:form controller="subscription" action="createWizard" method="POST">
-		
-			<g:radio name="subscriptionType" value="rssFeed" /> <span>RSS Feed</span>
-			<br />
-			<g:radio name="subscriptionType" value="activitiUserTask" /> <span>Activiti User Task</span>
-			<br />
+
+			<g:radio name="subscriptionType" value="activitiUserTask" /> <span>Activiti User Task Subscription</span>
+			<br />		
 			<g:radio name="subscriptionType" value="businessEvent"/> <span>Business Event Subscription</span>
+			<br />
+			<g:radio name="subscriptionType" value="calendarFeed" /> <span>Calendar Feed Subscription</span>
+			<br />
+			<g:radio name="subscriptionType" value="rssFeed" /> <span>RSS Feed Subscription</span>
 			<br />
 			<g:submitButton name="stage2" class="btn btn-large" value="Next" />
 		</g:form>

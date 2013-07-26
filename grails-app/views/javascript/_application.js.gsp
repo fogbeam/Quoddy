@@ -12,17 +12,35 @@
 					autoOpen: false,
 					show: {
 					effect: "blind",
-					duration: 1000
+					duration: 200
 					},
 					hide: {
 					effect: "explode",
-					duration: 1000
-					}
+					duration: 1500
+					},
+					buttons: [ { text: "Cancel", click: function() { $j( this ).dialog( "close" ); } },
+							   { text: "Submit", click: function() 
+				   					{ 
+				   						
+				   						var shareItemUuid = $j(this).data('shareItemUuid');
+				   							
+				   						// find our form object and submit it...
+				   						$j('#shareItemUuid').val( shareItemUuid );
+				   						$j('#shareItemForm').submit();
+				   						// alert("submitting...");
+				   						$j( this ).dialog( "close" );
+				   					
+				   					} 
+							 	} 
+							 ]
 				});
 
 
 				$j( ".shareButton" ).click(function() {
-					$j( "#dialog" ).dialog( "open" );
+				
+					var name = $j(this).attr('name');
+					var shareItemUuid = name.split( "." )[1];
+					$j( "#dialog" ).data('shareItemUuid', shareItemUuid).dialog( "open" );
 				});
 
 
@@ -46,7 +64,8 @@
 										// now reload the content of the activity stream DIV
 										// so that we pick up the new addition.  That sets us up to
 										// add our timer based stuff to update things dynamically.
-										$j('#activityStream').load( "${ createLink(controller:'activityStream', action:'getContentHtml')}" );
+										$j('#activityStream').load( "${ createLink(controller:'activityStream', action:'getContentHtml',
+																		params:['streamId':streamId])}" );
 										
 									}, 
 
@@ -60,7 +79,8 @@
 				$j(this).everyTime( 2000, 
 								function() 
 								{
-									$j.get( "${ createLink(controller:'activityStream', action:'getQueueSize')}", 
+									$j.get( "${ createLink(controller:'activityStream', action:'getQueueSize',
+															 params:['streamId':streamId ] )}", 
 											function(data) 
 											{
 												$j('#refreshMessagesLink').html( data + " messages pending" );
@@ -71,7 +91,7 @@
 
 				$j('#refreshMessagesLink').bind( 'click', function() {
 
-					$j('#activityStream').load( "${ createLink(controller:'activityStream', action:'getContentHtml')}" );
+					$j('#activityStream').load( "${ createLink(controller:'activityStream', action:'getContentHtml', params:['streamId':streamId ] )}" );
 					return false;
 				})
 				
@@ -86,7 +106,7 @@
 						// load more content from the server, pass the page so it knows how much
 						// to return us...
 						
-						$j('#activityStream').load( "${ createLink(controller:'activityStream', action:'getContentHtml')}" + "?page=" + page );
+						$j('#activityStream').load( "${ createLink(controller:'activityStream', action:'getContentHtml', params:['streamId':streamId, 'page':page ] )}" );
 					}
 					
 					return false;

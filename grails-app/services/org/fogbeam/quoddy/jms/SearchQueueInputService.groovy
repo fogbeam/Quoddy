@@ -3,6 +3,12 @@ package org.fogbeam.quoddy.jms
 import javax.jms.MapMessage
 import org.fogbeam.quoddy.SemanticEnhancement
 
+import org.apache.http.HttpEntity
+import org.apache.http.HttpException
+import org.apache.http.HttpResponse
+import org.apache.http.client.HttpClient
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.DefaultHttpClient
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.DateTools
 import org.apache.lucene.document.Document
@@ -15,11 +21,19 @@ import org.apache.lucene.index.IndexWriter.MaxFieldLength
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.Version
+<<<<<<< HEAD
 import org.fogbeam.quoddy.EventStreamService;
+=======
+import org.apache.tika.metadata.Metadata
+import org.apache.tika.parser.AutoDetectParser
+import org.apache.tika.parser.Parser
+import org.apache.tika.sax.BodyContentHandler
+>>>>>>> f6f6ad8d4512220df5e49575b1b97631d5fd2b23
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
 import org.fogbeam.quoddy.stream.CalendarFeedItem
+import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.StatusUpdate
 
 //import groovyx.net.http.RESTClient
@@ -54,7 +68,7 @@ public class SearchQueueInputService
     	}
     	else
     	{
-			log.info( "Received message: ${msg}" );
+			println( "Received message: ${msg}" );
 			println "Received message: ${msg}";
 			MapMessage mapMessage = (MapMessage)msg;
     		String msgType = mapMessage.getString( "msgType" );
@@ -157,7 +171,11 @@ public class SearchQueueInputService
 			else if( msgType.equals( "NEW_STREAM_ENTRY_COMMENT" ))
     		{
     			
+<<<<<<< HEAD
 		    	log.debug( "adding document to index" );
+=======
+		    	println( "adding StreamEntryComment to index" );
+>>>>>>> f6f6ad8d4512220df5e49575b1b97631d5fd2b23
 				newStreamEntryComment( msg );
     		}
 			else if( msgType.equals( "NEW_USER" ) )
@@ -405,7 +423,7 @@ public class SearchQueueInputService
 		
 		try
 		{
-			ActivityStreamItem besItemActivity = eventStreamService.getActivityStreamEventById( msg.getLong("activityId") );
+			ActivityStreamItem besItemActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 			BusinessEventSubscriptionItem besItem = besItemActivity.streamObject;
 			besItem = existDBService.populateSubscriptionEventWithXmlDoc( besItem );
 			// println( "Trying to add Document to index" );
@@ -508,7 +526,7 @@ public class SearchQueueInputService
 		
 		try
 		{
-			ActivityStreamItem genericActivityStreamItem = eventStreamService.getActivityStreamEventById( msg.getLong("activityId") );
+			ActivityStreamItem genericActivityStreamItem = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 
 			// println( "Trying to add Document to index" );
 			
@@ -521,6 +539,10 @@ public class SearchQueueInputService
 			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			
+			/* 
+			 * TODO: this is wrong.  Or it should be.  We *should* have a streamObject even for "external" activitystrea.ms 
+			 * objects.
+			 */ 
 			doc.add( new Field( "objectUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "objectId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			
@@ -529,6 +551,7 @@ public class SearchQueueInputService
 			writer.addDocument( doc );
 			writer.optimize();
 			// println( "Updated Lucene Index for new StatusUpdate" );
+			
 		}
 		finally
 		{
@@ -568,12 +591,14 @@ public class SearchQueueInputService
 	/* RssFeedItem */
 	private void newRssFeedItem( def msg )
 	{
+		println "newRssFeedItem indexing new item...";
+		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		println( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
-		// TODO: fix this so it will eventually give up, to deal with the pathological case
+		// this will eventually give up, to deal with the pathological case
 		// where we never do get the required lock.
 		int count = 0;
 		println( "Trying to acquire IndexWriter");
@@ -598,22 +623,80 @@ public class SearchQueueInputService
 		
 		try
 		{
-			// ActivityStreamItem statusUpdateActivity = eventStreamService.getEventById( msg.getLong("activityId") );
+			ActivityStreamItem activityStreamItem = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 
-			// println( "Trying to add Document to index" );
+			println( "Trying to add Document to index" );
 			
-//			writer.setUseCompoundFile(true);
-//
-//			Document doc = new Document();
-//		
-//			doc.add( new Field( "docType", "docType.rssFeedItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-//			doc.add( new Field( "uuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-//			doc.add( new Field( "id", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-//			doc.add( new Field( "content", statusUpdateActivity.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
-//			
-//			writer.addDocument( doc );
-//			writer.optimize();
-			// println( "Updated Lucene Index for new StatusUpdate" );
+			RssFeedItem rssFeedItem = activityStreamItem.streamObject;
+			
+			/* Note:  We *could* archive the content of the Item when we initially encounter it, and
+			 * that would save having to re-download the content now.  That could matter if we're
+			 * in a re-index scenario after the resource has become unavailable, and now we're
+			 * unable to index this item.  OTOH, if it's not available anymore, you can ask if it
+			 * *should* be indexed.   Anyway, we'll go with the approach of re-downloading for now...
+			 */
+
+			HttpClient client = new DefaultHttpClient();
+			
+			//establish a connection within 10 seconds
+			// client.getHttpConnectionManager().getParams().setConnectionTimeout(10000);
+			HttpGet httpget = new HttpGet(rssFeedItem.linkUrl);
+			InputStream httpStream = null;
+			try
+			{
+				HttpResponse httpResponse = client.execute(httpget);
+				HttpEntity entity = httpResponse.getEntity();
+				
+				httpStream = entity.content;
+				
+			}
+			catch ( HttpException he) {
+			   log.error("Http error connecting to '" + url + "'");
+			   log.error(he.getMessage());
+			}
+			catch (IOException ioe){
+			   // ioe.printStackTrace();
+			   log.error("Unable to connect to '" + url + "'");
+			   log.error( ioe );
+			}
+	   
+			// extract text with Tika
+			String content = "";
+			try
+			{
+				org.xml.sax.ContentHandler textHandler = new BodyContentHandler(-1);
+				Metadata metadata = new Metadata();
+				Parser parser = new AutoDetectParser();
+				parser.parse(httpStream, textHandler, metadata);
+				
+				content = textHandler.toString()?.replaceAll('\\s+', ' ');
+							
+			}
+			catch( Exception e )
+			{
+				e.printStackTrace();
+			}
+			
+						
+			writer.setUseCompoundFile(true);
+			
+			Document doc = new Document();
+
+			doc.add( new Field( "docType", "docType.rssFeedItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+			
+			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			
+			/* TODO: this is wrong... use the id/uuid of the streamObject here */
+			doc.add( new Field( "objectUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			
+			doc.add( new Field( "content", content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+
+			writer.addDocument( doc );
+			writer.optimize();
+			println( "Updated Lucene Index for new RssFeedItem" );
+		
 		}
 		finally
 		{
@@ -719,8 +802,10 @@ public class SearchQueueInputService
 	
 	private void newStreamEntryComment( def msg )
 	{
+		
+		println "adding NEW_STREAM_ENTRY_COMMENT to index!";
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation ) );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
@@ -755,20 +840,31 @@ public class SearchQueueInputService
 	
 			Document doc = new Document();
 			
-			/* 
+			 
 			doc.add( new Field( "docType", "docType.streamEntryComment", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
-		
-			doc.add( new Field( "entry_id", Long.toString( msg['entry_id'] ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "entry_uuid", msg['entry_uuid'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-		
-			doc.add( new Field( "id", Long.toString( msg['comment_id'] ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "uuid", msg['comment_uuid'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			doc.add( new Field( "content", msg['comment_text'], Field.Store.NO, Field.Index.ANALYZED, Field.TermVector.YES ) );
-			*/
+
+					
+			doc.add( new Field( "objectUuid", msg.getString('comment_uuid'), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( msg.getLong('comment_id')), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId")), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "entryUuid", msg.getString('entry_uuid'), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "entryId", Long.toString( msg.getLong('entry_id')), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "content", msg.getString('comment_text'), Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			
 			
 			writer.addDocument( doc );
 	
 			writer.optimize();
+		
+			println "Done adding index for NEW_STREAM_ENTRY_COMMENT";
+				
 		}
 		finally
 		{
@@ -991,4 +1087,25 @@ public class SearchQueueInputService
 		searchService.rebuildGeneralIndex();
 	}
 	
+<<<<<<< HEAD
 }
+=======
+	
+	private String nodeToString(org.w3c.dom.Node node) 
+	{
+		StringWriter sw = new StringWriter();
+		try 
+		{
+			Transformer t = TransformerFactory.newInstance().newTransformer();
+			t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+			t.setOutputProperty(OutputKeys.INDENT, "yes");
+			t.transform(new DOMSource(node), new StreamResult(sw));
+		} 
+		catch (TransformerException te) {
+			System.out.println("nodeToString Transformer Exception");
+		}
+		
+		return sw.toString();
+	}
+}
+>>>>>>> f6f6ad8d4512220df5e49575b1b97631d5fd2b23

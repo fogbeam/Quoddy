@@ -111,7 +111,7 @@ class UserGroupService
 
 		
 		List<ActivityStreamItem> queryResults =
-			ActivityStreamItem.executeQuery( "select activity from Activity as activity where activity.dateCreated >= :cutoffDate and activity.targetUuid = :targetUuid order by activity.dateCreated desc",
+			ActivityStreamItem.executeQuery( "select activity from ActivityStreamItem as activity where activity.dateCreated >= :cutoffDate and activity.targetUuid = :targetUuid order by activity.dateCreated desc",
 			['cutoffDate':cutoffDate, 'targetUuid':group.uuid], ['max': maxCount ]);
 
 		if( queryResults )
@@ -126,6 +126,7 @@ class UserGroupService
 	}
 	
 	
+	/*
 	public List<StreamItemBase> getRecentEventsForGroup( final UserGroup group, final int maxCount )
 	{
 		println "getRecentEventsForGroup: ${group.id} - ${maxCount}";
@@ -152,6 +153,7 @@ class UserGroupService
 		
 		return recentEvents;
 	}
+	*/
 	
 	
 }

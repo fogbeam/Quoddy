@@ -50,7 +50,6 @@ class UITestSessionListener implements
 			def userId = user.userId;
 			println "user ${userId} added to session.";	
 		
-			// TODO: Register an event queue for user
 			println "Register an event queue for user ${userId}";
 			eventQueueService.registerEventQueueForUser( userId );
 		}
@@ -68,7 +67,8 @@ class UITestSessionListener implements
 	@Override
 	public void attributeReplaced(HttpSessionBindingEvent event) 
 	{
-		println "attributeReplaced";
+		// org.apache.shiro.web.session.HttpServletSession.HOST_SESSION_KEY
+		// println "attributeReplaced: " + event.name;
 	}
 
 	void attributeAdded(ServletContextAttributeEvent event) 

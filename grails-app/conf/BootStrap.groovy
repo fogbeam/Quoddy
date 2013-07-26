@@ -1,16 +1,11 @@
 import grails.util.Environment
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer
-import org.apache.lucene.document.Document
-import org.apache.lucene.index.IndexWriter
-import org.apache.lucene.index.IndexWriter.MaxFieldLength
-import org.apache.lucene.store.Directory
-import org.apache.lucene.store.NIOFSDirectory
-import org.apache.lucene.util.Version
+import org.fogbeam.quoddy.AccountRole
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.profile.Profile
-import org.fogbeam.quoddy.stream.EventType;
-import org.fogbeam.quoddy.stream.ShareTarget;
+import org.fogbeam.quoddy.stream.EventType
+import org.fogbeam.quoddy.stream.ShareTarget
+import org.fogbeam.quoddy.stream.constants.EventTypeNames
 
 class BootStrap {
 
@@ -18,20 +13,23 @@ class BootStrap {
 	def userService;
 	def siteConfigService;
 	def searchService;
+	def environment;
 	
 	def init = { servletContext ->
      
 		
 		
-		 switch( Environment.current )
+		 switch( Environment.current  )
 	     {
 	         case Environment.DEVELOPMENT:
+			 	 createRoles();
 	             createSomeUsers();
 				 createShareTargets();
 				 createEventTypes();
 	             break;
 	         case Environment.PRODUCTION:
 	             println "No special configuration required";
+				 createRoles();
 				 createSomeUsers();
 				 createShareTargets();
 				 createEventTypes();
@@ -53,43 +51,17 @@ class BootStrap {
 	 void createEventTypes()
 	 {
 	 	
-		EventType calendarFeedItemType = EventType.findByName( "CalendarFeedItem" );
-		if( calendarFeedItemType == null )
-		{
-			calendarFeedItemType = new EventType( name:"CalendarFeedItem" );
-			calendarFeedItemType.save();
-		}
-		
-		EventType activityStreamItemType = EventType.findByName( "ActivityStreamItem" );
-		if( activityStreamItemType == null )
-		{
-			activityStreamItemType = new EventType( name:"ActivityStreamItem" );
-			activityStreamItemType.save();
-		}
-		
-		EventType businessEventSubscriptionItemType = EventType.findByName( "BusinessEventSubscriptionItem" );
-		if( businessEventSubscriptionItemType == null )
-		{
-			businessEventSubscriptionItemType = new EventType( name:"BusinessEventSubscriptionItem" );
-			businessEventSubscriptionItemType.save();
-		}
-
-		
-	 	// new types, not used yet
-		EventType rssFeedItemType = EventType.findByName( "RssFeedItem" );
-		if( calendarFeedItemType == null )
-		{
-			rssFeedItemType = new EventType( name:"RssFeedItem" );
-			rssFeedItemType.save();
-		}
-		
-		EventType questionItemType = EventType.findByName( "Question" );
-		if( questionItemType == null )
-		{
-			questionItemType = new EventType( name:"Question" );
-			questionItemType.save();
-		}
-		
+		 // create these in a loop off the EventTypes enum
+		 
+		 for( EventTypeNames eventTypeName : EventTypeNames.values() )
+		 {
+		 	EventType et = EventType.findByName( eventTypeName.name );
+			if( et == null )
+			{
+				et = new EventType( name: eventTypeName.name );
+				et.save();
+			}
+		 }
 		
 	 }
 	 
@@ -108,10 +80,100 @@ class BootStrap {
 		 }
 	 }
 	 
+	 
+	 void createRoles()
+	 {
+		 
+		 println "Creating roles...";
+		 AccountRole userRole = userService.findAccountRoleByName( "user" );
+		 if( userRole != null )
+		 {
+			 println "Existing AccountRole user found";
+		 }
+		 else
+		 {
+			 println "No existing AccountRole user found, so creating now...";
+			 
+			userRole = new AccountRole( name: "user" );
+			userRole.addToPermissions( "activityStream:*" );
+			userRole.addToPermissions( "comment:*" );
+			userRole.addToPermissions( "home:*" );
+			userRole.addToPermissions( "login:*" );
+			userRole.addToPermissions( "openSocial:*" );
+			userRole.addToPermissions( "profilePic:*" );
+			userRole.addToPermissions( "search:*" );
+			userRole.addToPermissions( "status:*" );
+			userRole.addToPermissions( "subscription:*" );
+			userRole.addToPermissions( "tag:*" );
+			userRole.addToPermissions( "user:*" );
+			userRole.addToPermissions( "userGroup:*" );
+			userRole.addToPermissions( "userHome:*" );
+			userRole.addToPermissions( "userList:*" );
+			userRole.addToPermissions( "userStreamDefinition:*" );
+			
+			userRole = userService.createAccountRole( userRole ); 
+			
+			if( !userRole )
+			{
+				println "Error creating userRole";
+			}
+
+		 }
+		 
+		 AccountRole adminRole = userService.findAccountRoleByName( "admin" );
+		 if( adminRole != null )
+		 {
+			 println "Existing AccountRole admin found";
+		 }
+		 else
+		 {
+			 println "No existing AccountRole admin found, so creating now...";
+			 
+			 adminRole = new AccountRole( name: "admin" );
+			 
+			 adminRole.addToPermissions( "admin:*" );
+			 adminRole.addToPermissions( "calendar:*" );
+			 adminRole.addToPermissions( "special:*" );
+			 adminRole.addToPermissions( "dummy:*" );
+			 adminRole.addToPermissions( "reports:*" );
+			 adminRole.addToPermissions( "schedule:*" );
+			 adminRole.addToPermissions( "siteConfigEntry:*" );
+			 adminRole.addToPermissions( "userSettings:*" );
+			 adminRole.addToPermissions( "importUser:*" );
+			 adminRole.addToPermissions( "installer:*" );
+			 
+			 adminRole = userService.createAccountRole( adminRole );
+		 
+			 if( !adminRole )
+			 {
+				 println "Error creating adminRole";
+			 }
+			 
+		 }
+
+		 
+		 
+	 }
+	 
      void createSomeUsers()
      {
-	 	println "Creating some users!";
+		 println "Creating some users!";
      
+		 AccountRole userRole = userService.findAccountRoleByName( "user" );
+		 
+		 if( userRole == null )
+		 {
+			 println "did not locate user role!";
+		 }
+		 
+		 
+		 AccountRole adminRole = userService.findAccountRoleByName( "admin" );
+		 if( adminRole == null )
+		 {
+			 println "did not locate admin role!";
+		 }
+
+		 
 		 boolean prhodesFound = false;
  
 		 User userPrhodes= userService.findUserByUserId( "prhodes" );
@@ -139,6 +201,10 @@ class BootStrap {
 			  // profile.userUuid = "abc123";
 			  profilePrhodes.setOwner( userPrhodes );
 			  userPrhodes.profile = profilePrhodes;
+			  
+			  userPrhodes.addToRoles( userRole );
+			  userPrhodes.addToRoles( adminRole );
+			  
 			  
 			  userService.createUser( userPrhodes );
 			 
@@ -170,7 +236,11 @@ class BootStrap {
 				// profile.userUuid = "abc123";
 				profileSarah.setOwner( userSarah );
 				userSarah.profile = profileSarah;
-				
+
+				userSarah.addToRoles( userRole );
+				userSarah.addToRoles( adminRole );
+  
+								
 				userService.createUser( userSarah );
 			   
 			}
@@ -202,29 +272,35 @@ class BootStrap {
 				  profileEric.setOwner( userEric );
 				  userEric.profile = profileEric;
 				  
+				  userEric.addToRoles( userRole );
+				  userEric.addToRoles( adminRole );
+	
 				  userService.createUser( userEric );
 				 
-		}
+			}
 		  		  
 		  for( int i = 0; i < 20; i++ )
 		  {
 			  if( userService.findUserByUserId( "testuser${i}" ) == null )
 			  {
 				  println "Fresh Database, creating TESTUSER ${i} user";
-				  def testUser = new User(
+				  User testUser = new User(
 								  userId: "testuser${i}",
-								password: "secret",
 								firstName: "Test",
 								lastName: "User${i}",
 								email: "testuser${i}@example.com",
 								bio:"stuff",
 								displayName: "Test User${i}" );
 				  
+					testUser.password = "secret";
 					Profile profile = new Profile();
 					// profile.userUuid = testUser.uuid;
 					profile.setOwner( testUser );
 					testUser.profile = profile;
 							
+					testUser.addToRoles( userRole );
+					
+					println "about to create user: ${testUser.toString()}";
 					userService.createUser( testUser );
 			  }
 			  else

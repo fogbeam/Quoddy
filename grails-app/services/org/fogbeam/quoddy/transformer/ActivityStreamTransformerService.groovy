@@ -15,7 +15,7 @@ class ActivityStreamTransformerService
 	private static final String RFC3339_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 	def userService;
 	
-	public ActivityStreamItem getActivity( ActivityStreamEntry entry )
+	public ActivityStreamItem transform( ActivityStreamEntry entry )
 	{
 		ActivityStreamItem activity = new ActivityStreamItem();
 		
@@ -35,7 +35,7 @@ class ActivityStreamTransformerService
 		}
 		
 		activity.published = sdf.parse( eventPublishedDate );
-		activity.effectiveDate = activity.published;
+		// activity.effectiveDate = activity.published;
 		activity.verb = entry.verb;
 		
 		// NOTE: we added "name" to EventBase, but how is it really going
@@ -43,17 +43,58 @@ class ActivityStreamTransformerService
 		activity.name = activity.title;
 		
 		// do user translation
-		println "Looking for user ${entry.actor.id}";
-		User userActor = userService.findUserByUserId(entry.actor.id); 
-		if( userActor )
+		
+		/* should evaluate the objectClass or whatever of the incoming Actor instance */
+		if( entry.actor )
 		{
-			println "Found user: ${userActor}";
-			activity.owner = userActor; 
+			println "Looking for user ${entry.actor.id}";
+			
+			User userActor = userService.findUserByUserId(entry.actor.id); 
+			if( userActor )
+			{
+				println "Found user: ${userActor}";
+				activity.owner = userActor; 
+				activity.actorUuid = userActor.uuid;
+				activity.actorObjectType = entry.actor.objectType;
+				activity.actorUrl = entry.actor.url;
+				activity.actorDisplayName = entry.actor.displayName;
+			}
+			else
+			{
+				println "failed to lookup Actor as a User in our system.";	
+			}
 		}
 		else
 		{
-			println "failed to lookup Actor as a User in our system.";	
+			throw new RuntimeException( "cannot complete transform: No Actor in incoming Activity" );
 		}
+		
+		if( entry.target )
+		{
+			// look up the target based on the target objectType and target id
+			activity.targetUuid = entry.target.id;
+			activity.targetObjectType = entry.target.objectType;
+			
+			
+		}
+		else
+		{
+			throw new RuntimeException( "cannot complete transform: No Target in incoming Activity" );
+		}
+
+				
+		if( entry.object )
+		{
+			activity.objectClass = entry.object.objectType;
+			activity.objectObjectType = entry.object.objectType;
+			activity.objectUuid = entry.object.id;
+			
+		}		
+		else
+		{
+			throw new RuntimeException( "cannot complete transform: No Object in incoming Activity" );
+		}
+
 		
 		return activity;		
 	}	

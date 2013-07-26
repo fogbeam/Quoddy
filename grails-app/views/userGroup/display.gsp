@@ -24,7 +24,7 @@
 		</g:else>
 		
 		<p />
-        <g:if test="${session.user != null}">
+        <shiro:authenticated>
   
 			<g:form name="postToGroupForm" controller="userGroup" action="postToGroup" >
 				<g:hiddenField name="groupId" value="${group.id}" />
@@ -42,7 +42,7 @@
 				
 				</div>
 			</g:if>
-		</g:if>
+		</shiro:authenticated>
 		</div>
 	</body>
 </html>

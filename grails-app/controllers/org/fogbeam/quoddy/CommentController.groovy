@@ -37,15 +37,17 @@ class CommentController {
 			
 			eventStreamService.saveActivity( item );
 			
-	    	// send JMS message saying "new entry submitted"
-	    	/* def newCommentMessage = [msgType:"NEW_COMMENT", entry_id:entry.id, entry_uuid:entry.uuid, 
-	    	                       	comment_id:newComment.id, comment_uuid:newComment.uuid, comment_text:newComment.text ];
-	          */
+	    	// send JMS message saying "new comment added"
+	    	def newCommentMessage = [msgType:"NEW_STREAM_ENTRY_COMMENT",  
+									  activityId:item.id, activityUuid:item.uuid,  
+	    	                       	  entry_id:item.streamObject.id, entry_uuid:item.streamObject.uuid,
+									  comment_id:newComment.id, comment_uuid:newComment.uuid, 
+									  comment_text:newComment.text ];
 			
 	    	// send a JMS message to our testQueue
-			// sendJMSMessage("searchQueue", newCommentMessage );			
+			sendJMSMessage("quoddySearchQueue", newCommentMessage );			
 			
-			log.debug( "saved StreamItemComment for user ${user.userId}, item ${item.id}" );
+			println( "saved StreamItemComment for user ${user.userId}, item ${item.id}" );
 		}
 		else
 		{

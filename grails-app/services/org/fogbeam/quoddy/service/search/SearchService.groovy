@@ -1,8 +1,18 @@
 package org.fogbeam.quoddy.service.search
 
-import java.io.File
-import java.util.List;
+import javax.xml.transform.OutputKeys
+import javax.xml.transform.Transformer
+import javax.xml.transform.TransformerException
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
 
+import org.apache.http.HttpEntity
+import org.apache.http.HttpException
+import org.apache.http.HttpResponse
+import org.apache.http.client.HttpClient
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.DefaultHttpClient
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.DateTools
 import org.apache.lucene.document.Document
@@ -23,6 +33,10 @@ import org.apache.lucene.search.BooleanClause.Occur
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.Version
+import org.apache.tika.metadata.Metadata
+import org.apache.tika.parser.AutoDetectParser
+import org.apache.tika.parser.Parser
+import org.apache.tika.sax.BodyContentHandler
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.search.SearchResult
 import org.fogbeam.quoddy.stream.ActivitiUserTask
@@ -32,7 +46,7 @@ import org.fogbeam.quoddy.stream.CalendarFeedItem
 import org.fogbeam.quoddy.stream.Question
 import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.StatusUpdate
-import org.fogbeam.quoddy.stream.StreamItemBase;
+import org.fogbeam.quoddy.stream.StreamItemBase
 import org.fogbeam.quoddy.stream.StreamItemComment
 
 class SearchService
@@ -41,6 +55,7 @@ class SearchService
 	def siteConfigService;
 	def userService;
 	def eventStreamService;
+	def existDBService;
 	
 	public List<SearchResult> doEverythingSearch( final String queryString )
 	{
@@ -97,8 +112,14 @@ class SearchService
 		Query userQuery = queryParser.parse(queryString);
 		BooleanQuery query = new BooleanQuery();
 		query.add(userQuery, BooleanClause.Occur.MUST );
-		TermQuery docTypeTerm = new TermQuery(new Term("docType","docType.statusUpdate"));
-		query.add( docTypeTerm, BooleanClause.Occur.MUST );
+		
+		BooleanQuery docTypeQuery = new BooleanQuery();
+		TermQuery docTypeTermStatusUpdate = new TermQuery(new Term("docType","docType.statusUpdate"));
+		TermQuery docTypeTermComment = new TermQuery(new Term("docType","docType.streamEntryComment"));
+		docTypeQuery.add(docTypeTermStatusUpdate, BooleanClause.Occur.SHOULD );
+		docTypeQuery.add(docTypeTermComment, BooleanClause.Occur.SHOULD );
+		
+		query.add( docTypeQuery, BooleanClause.Occur.MUST );
 		
 		TopDocs hits = searcher.search(query, 20);
 		
@@ -108,13 +129,15 @@ class SearchService
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
-			String docType = result.get("docType")
+			String docType = result.get( "docType" );
 			String uuid = result.get("activityUuid");
+			
 			// lookup our object by it's UUID and assign it to the searchResult instance
 			ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
 			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
-			
+				
 			searchResults.add( searchResult );
+			
 		}
 		
 				
@@ -165,6 +188,50 @@ class SearchService
 	}
 	
 	
+	public List<SearchResult> doActivitiUserTaskSearch( final String queryString )
+	{
+		println "in doActivitiUserTaskSearch";
+		
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		// println( "got indexDirLocation as: ${indexDirLocation}");
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		
+		
+		IndexSearcher searcher = new IndexSearcher( indexDir );
+	
+		StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
+		String[] fields = ["content", "status", "description", "location", "summary" ];
+		MultiFieldQueryParser queryParser = new MultiFieldQueryParser( Version.LUCENE_30, fields, analyzer );
+		
+		Query userQuery = queryParser.parse(queryString);
+		BooleanQuery query = new BooleanQuery();
+		query.add(userQuery, BooleanClause.Occur.MUST );
+		TermQuery docTypeTerm = new TermQuery(new Term("docType", "docType.activitiUserTask"));
+		query.add( docTypeTerm, BooleanClause.Occur.MUST );
+		
+		TopDocs hits = searcher.search(query, 20);
+		
+		List<SearchResult> searchResults = new ArrayList<SearchResult>();
+		ScoreDoc[] docs = hits.scoreDocs;
+		println "Search returned " + docs.length + " results";
+		for( ScoreDoc doc : docs )
+		{
+			Document result = searcher.doc( doc.doc );
+			String docType = result.get("docType")
+			String uuid = result.get("activityUuid");
+			// lookup our object by it's UUID and assign it to the searchResult instance
+			ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
+			
+			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
+			
+			searchResults.add( searchResult );
+		}
+		
+		
+		return searchResults;
+
+	}
+	
 	public List<SearchResult> doBusinessSubscriptionItemSearch( final String queryString )
 	{
 		
@@ -200,6 +267,13 @@ class SearchService
 			String uuid = result.get("activityUuid");
 			// lookup our object by it's UUID and assign it to the searchResult instance
 			ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
+			
+			BusinessEventSubscriptionItem besItem = item.streamObject;
+			besItem = existDBService.populateSubscriptionEventWithXmlDoc( besItem );
+			item.streamObject = besItem;
+			
+			// need to populate the XMLDoc data...
+			
 			SearchResult searchResult = new SearchResult(uuid:uuid, docType:docType, object:item);
 			
 			searchResults.add( searchResult );
@@ -492,6 +566,23 @@ class SearchService
 				println "indexing ASI with id: ${item.id}, uuid: ${item.uuid} and objectClass: ${item.objectClass}";
 				// if streamObject is null, the only valid scenario is for this ASI to be a 3rd party (remote)
 				// ActivityStreamItem, so the object we're indexing is the ASI itself.
+				
+				
+				Object streamObject = item.streamObject;
+				if( streamObject != null )
+				{
+					streamObject = existDBService.populateSubscriptionEventWithXmlDoc( streamObject );
+					item.streamObject = streamObject;	
+					
+					if( streamObject instanceof BusinessEventSubscriptionItem )
+					{
+						String xmlString = nodeToString( streamObject.xmlDoc );
+						streamObject.summary = xmlString;
+					}
+									
+				}
+				
+				
 				addToIndex( writer, item, ( ( item.streamObject != null ) ? item.streamObject : item ) );		
 			}
 		}
@@ -527,13 +618,70 @@ class SearchService
 		
 	}
 	
-	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final ActivitiUserTask task )
+	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final ActivitiUserTask item )
 	{
-		// let's just let this stay a NOP for right this minute... there are bigger
-		// fish to fry
-		// TODO: implement adding ActivitiUserTask objects to Search Index	
-		println "TODO: implement adding ActivitiUserTask objects to Search Index";
+		
+
+		println "adding ActivitiUserTask object to Search Index";
+		
+		Document doc = new Document();
+		
+		doc.add( new Field( "docType", "docType.activitiUserTask", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+
+		
+		doc.add( new Field( "objectUuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "objectId", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityUuid", asi.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		doc.add( new Field( "activityId", Long.toString( asi.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+				
+		doc.add( new Field( "content", item.description, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+
+		writer.addDocument( doc );
+		writer.optimize();
+		
+		addCommentsToIndex( writer, asi, item );
+		
 	}
+	
+	private void addCommentsToIndex( final IndexWriter writer, final ActivityStreamItem asi, final StreamItemBase item )
+	{
+		
+		def comments = item.comments;
+		
+		if( comments == null )
+		{
+			return;
+		}
+		
+		for( StreamItemComment comment : comments )
+		{
+		
+			Document doc = new Document();
+		
+		 
+			doc.add( new Field( "docType", "docType.streamEntryComment", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+
+				
+			doc.add( new Field( "objectUuid", comment.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( comment.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+		
+			doc.add( new Field( "activityUuid", asi.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( asi.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			doc.add( new Field( "entryUuid", item.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "entryId", Long.toString( item.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+		
+			doc.add( new Field( "content", comment.text, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		
+			writer.addDocument( doc );
+		}
+		
+		writer.optimize();
+		
+	}
+	
 	
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final ActivityStreamItem item )
 	{
@@ -553,6 +701,8 @@ class SearchService
 			
 		writer.addDocument( doc );
 		writer.optimize();
+		
+		addCommentsToIndex( writer, asi, item );
 	}
 
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final StatusUpdate item )
@@ -571,6 +721,8 @@ class SearchService
 			
 		writer.addDocument( doc );
 		writer.optimize();
+		
+		addCommentsToIndex( writer, asi, item );
 	}
 	
 		
@@ -599,6 +751,8 @@ class SearchService
 		
 		writer.addDocument( doc );
 		writer.optimize();
+		
+		addCommentsToIndex( writer, asi, item );
 
 	}
 	
@@ -622,6 +776,8 @@ class SearchService
 		
 		writer.addDocument( doc );
 		writer.optimize();
+		
+		addCommentsToIndex( writer, asi, item );
 	}	
 	
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final Question item )
@@ -640,8 +796,9 @@ class SearchService
 //			doc.add( new Field( "tags", "", Field.Store.YES, Field.Index.ANALYZED ));
 
 			writer.addDocument( doc );
-		
 			writer.optimize();
+			
+			addCommentsToIndex( writer, asi, item );
 		
 	}
 
@@ -655,12 +812,58 @@ class SearchService
 		doc.add( new Field( "activityUuid", asi.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 		doc.add( new Field( "activityId", Long.toString( asi.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 
+		/* TODO - BIG TODO: get rid of all the duplicated code between this class and the SearchQueueInputService
+		 * class.  We should do this indexing stuff in ONE place 
+		 **/
 		
 		
-		// doc.add( new Field( "content", statusUpdateActivity.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		HttpClient client = new DefaultHttpClient();
+		
+		//establish a connection within 10 seconds
+		// client.getHttpConnectionManager().getParams().setConnectionTimeout(10000);
+		HttpGet httpget = new HttpGet(item.linkUrl);
+		InputStream httpStream = null;
+		try
+		{
+			HttpResponse httpResponse = client.execute(httpget);
+			HttpEntity entity = httpResponse.getEntity();
+			
+			httpStream = entity.content;
+			
+		}
+		catch ( HttpException he) {
+		   log.error("Http error connecting to '" + url + "'");
+		   log.error(he.getMessage());
+		}
+		catch (IOException ioe){
+		   // ioe.printStackTrace();
+		   log.error("Unable to connect to '" + url + "'");
+		   log.error( ioe );
+		}
+   
+		// extract text with Tika
+		String content = "";
+		try
+		{
+			org.xml.sax.ContentHandler textHandler = new BodyContentHandler(-1);
+			Metadata metadata = new Metadata();
+			Parser parser = new AutoDetectParser();
+			parser.parse(httpStream, textHandler, metadata);
+			
+			content = textHandler.toString()?.replaceAll('\\s+', ' ');
+						
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
+
+		doc.add( new Field( "content", content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
 		
 		writer.addDocument( doc );
 		writer.optimize();
+		
+		addCommentsToIndex( writer, asi, item );
 	}
 		
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final StreamItemComment item )
@@ -681,8 +884,9 @@ class SearchService
 		*/
 		
 		writer.addDocument( doc );
-	
 		writer.optimize();
+		
+		addCommentsToIndex( writer, asi, item );
 		
 	}
 
@@ -806,4 +1010,23 @@ class SearchService
 		}
 		
 	}
+	
+	
+	private String nodeToString(org.w3c.dom.Node node)
+	{
+		StringWriter sw = new StringWriter();
+		try
+		{
+			Transformer t = TransformerFactory.newInstance().newTransformer();
+			t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+			t.setOutputProperty(OutputKeys.INDENT, "yes");
+			t.transform(new DOMSource(node), new StreamResult(sw));
+		}
+		catch (TransformerException te) {
+			System.out.println("nodeToString Transformer Exception");
+		}
+		
+		return sw.toString();
+	}
+	
 }

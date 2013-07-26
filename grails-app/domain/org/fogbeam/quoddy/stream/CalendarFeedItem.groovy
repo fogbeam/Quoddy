@@ -31,7 +31,6 @@ class CalendarFeedItem extends StreamItemBase
 	String url;
 	Date lastModified;
 	String uid;
-	CalendarFeedSubscription owningFeed;
 
 	Date dateCreated;
 

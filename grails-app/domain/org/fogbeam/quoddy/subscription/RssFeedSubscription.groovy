@@ -1,5 +1,14 @@
 package org.fogbeam.quoddy.subscription;
 
-public class RssFeedSubscription
+import java.io.Serializable;
+
+import org.fogbeam.quoddy.User
+
+public class RssFeedSubscription extends BaseSubscription implements Serializable
 {
+	static constraints = {
+		url( nullable:false);
+	}
+	
+	String url;
 }

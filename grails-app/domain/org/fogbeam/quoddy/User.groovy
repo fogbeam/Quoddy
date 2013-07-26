@@ -30,6 +30,12 @@ class User implements Serializable
 		dateCreated()
     }
 	
+	public String toString()
+	{
+		return "id: ${id} uuid: ${uuid}, userId: ${userId}, password: ${password}, firstName: ${firstName}, lastName: ${lastName}, homepage: ${homepage}";
+		
+	}
+	
 	@XmlElement
     String uuid;
 	@XmlElement
@@ -59,15 +65,16 @@ class User implements Serializable
     static mapping = {
     	table 'uzer'
 		currentStatus lazy:false; // eagerly fetch the currentStatus
-    }
+    	roles lazy: false;		  // eagerly fetch roles
+		permissions lazy:false;   // eagerly fetch permissions
+	}
 	
-    // static hasMany = [savedEntries : Entry, hiddenEntries: Entry];
-    static hasMany = [oldStatusUpdates:StatusUpdate]
+	static fetchMode = [roles: 'eager', permissions:'eager'];
 	
+    static hasMany = [oldStatusUpdates:StatusUpdate, roles: AccountRole, permissions: String]
 	static mappedBy = [oldStatusUpdates:'creator']
-	
-    // static mappedBy = [savedEntries : "savers", hiddenEntries:"hiders" ];
 
+	
     public void setUuid( String uuid ){
     	
     	// never overwrite existing uuid value with NULL

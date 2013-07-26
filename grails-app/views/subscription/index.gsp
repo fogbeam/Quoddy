@@ -31,8 +31,26 @@
   </div>
 
 		<ul>
-			<g:each var="subscription" in="${eventSubscriptions}">
-				<li><g:link controller="subscription" action="editWizard" event="start" params="[subscriptionId:subscription.id]" >${subscription.name}</g:link> </li>
+			<g:each var="subscription" in="${businessEventSubscriptions}">
+				<li><g:link controller="subscription" action="editWizard" event="start" params="[subscriptionId:subscription.id,subscriptionType:subscription.class.simpleName]" >${subscription.name}</g:link> </li>
+			</g:each>
+		</ul>
+		
+		<ul>
+			<g:each var="subscription" in="${calendarFeedSubscriptions}">
+				<li><g:link controller="subscription" action="editWizard" event="start" params="[subscriptionId:subscription.id,subscriptionType:subscription.class.simpleName]" >${subscription.name}</g:link> </li>
+			</g:each>
+		</ul>
+		
+		<ul>
+			<g:each var="subscription" in="${activitiUserTaskSubscriptions}">
+				<li><g:link controller="subscription" action="editWizard" event="start" params="[subscriptionId:subscription.id,subscriptionType:subscription.class.simpleName]" >${subscription.name}</g:link> </li>
+			</g:each>
+		</ul>	
+		
+		<ul>
+			<g:each var="subscription" in="${rssFeedSubscriptions}">
+				<li><g:link controller="subscription" action="editWizard" event="start" params="[subscriptionId:subscription.id,subscriptionType:subscription.class.simpleName]" >${subscription.name}</g:link> </li>
 			</g:each>
 		</ul>		
 	</div>

@@ -1,11 +1,9 @@
 package org.fogbeam.quoddy
 
-import java.util.List;
-
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
-import org.fogbeam.quoddy.stream.ActivityStreamItem;
-import org.fogbeam.quoddy.stream.StatusUpdate;
-import org.fogbeam.quoddy.stream.StreamItemBase
+import org.fogbeam.quoddy.stream.ActivityStreamItem
+import org.fogbeam.quoddy.stream.StatusUpdate
+import org.fogbeam.quoddy.stream.constants.EventTypeNames
 
 
 @Mixin(SidebarPopulatorMixin)
@@ -13,10 +11,13 @@ class UserGroupController
 {
 	def eventStreamService;
 	def userService;
-	def userStreamService;
+	def userStreamDefinitionService;
 	def userListService;
 	def userGroupService;
-	def eventSubscriptionService;
+	def businessEventSubscriptionService;
+	def calendarFeedSubscriptionService;
+	def activitiUserTaskSubscriptionService;
+	def rssFeedSubscriptionService;
 	
 	def index =
 	{
@@ -139,8 +140,8 @@ class UserGroupController
 			def user = userService.findUserByUserId( session.user.userId );
 			// println "Doing display with params: ${params}";
 			
-			def items = new ArrayList<StreamItemBase>();
-			
+			// def items = new ArrayList<StreamItemBase>();
+			List<ActivityStreamItem> activities = new ArrayList<ActivityStreamItem>();
 			
 			Map model = [:];
 			if( user )
@@ -159,13 +160,13 @@ class UserGroupController
 					}
 				}
 			
-				// activities = userGroupService.getRecentActivitiesForGroup( group, 25 ); 
-				items = userGroupService.getRecentEventsForGroup( group, 25 );
+				activities = userGroupService.getRecentActivitiesForGroup( group, 25 ); 
+				// items = userGroupService.getRecentEventsForGroup( group, 25 );
 				
 				model.putAll( [ group:group,
 								user: user,
 								userIsGroupMember:userIsGroupMember,
-								activities:items] );
+								activities:activities] );
 				
 				Map sidebarCollections = populateSidebarCollections( this, user );
 				model.putAll( sidebarCollections );
@@ -226,25 +227,34 @@ class UserGroupController
 			// construct a status object
 			println "statusText: ${params.statusText}";
 			StatusUpdate newStatus = new StatusUpdate( text: params.statusText, creator: user );
+			newStatus.effectiveDate = new Date();
+			newStatus.targetUuid = group.uuid; // NOTE: can we take 'targetUuid' out of StatusUpdate??
+			newStatus.name = "321BCA";
 			
 			if( !newStatus.save() )
 			{
 				println "Save StatusUpdate FAILED!";
-					
+				newStatus.errors.allErrors.each { println it };	
 			}
 			
 			ActivityStreamItem activity = new ActivityStreamItem(content:newStatus.text);
 			activity.title = "Internal Activity";
 			activity.url = new URL( "http://www.example.com" );
-			activity.verb = "status_update";
+			activity.verb = "quoddy_group_ytstatus_update";
+			activity.actorObjectType = "User";
+			activity.actorUuid = user.uuid;
+			activity.targetObjectType = "UserGroup";
+			
 			activity.owner = user;
 			activity.published = new Date(); // set published to "now"
 			activity.targetUuid = group.uuid;
+			activity.streamObject = newStatus;
+			activity.objectClass = EventTypeNames.STATUS_UPDATE.name;
 						
 			// NOTE: we added "name" to EventBase, but how is it really going
 			// to be used?  Do we *really* need this??
 			activity.name = activity.title;
-			activity.effectiveDate = activity.published;
+			activity.published = activity.published;
 			
 			eventStreamService.saveActivity( activity );
 			

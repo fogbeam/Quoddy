@@ -8,7 +8,7 @@
 		</g:if>
 		
 		<li><a href="${createLink(controller:'login') }">Login</a></li>
-		<g:if test="${session.user != null}">
+		<shiro:authenticated>
 			<li><a href="${createLink(controller:'login', action:'logout')}">Logout</a></li>
 			<li><a href="${createLink(controller:'user', action:'editAccount')}">Edit Account Info</a></li>
 			<li><a href="${createLink(controller:'user', action:'editProfile')}">Edit Profile</a></li>
@@ -24,6 +24,6 @@
 			<li><a href="${createLink(controller:'userGroup', action:'list')}">List All Groups</a></li>
 			<li><a href="${createLink(controller:'schedule', action:'index')}">Manage Scheduled Jobs</a></li>
 			<li><a href="${createLink(controller:'calendar', action:'index')}">Manage Calendar Feeds</a></li>
-		</g:if>			
+		</shiro:authenticated>
 	</ul>
 </div>

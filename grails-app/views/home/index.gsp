@@ -10,12 +10,12 @@
 			<ul class="nav nav-pills">
 
 				<li class="dropdown">
-				<g:if test="${session.user}">
+				<shiro:authenticated>
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Streams
 							<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu">
-							<li><g:link controller="userStream" action="index">Manage Streams<i
+							<li><g:link controller="userStreamDefinition" action="index">Manage Streams<i
 										class="icon-cog"></i>
 								</g:link></li>
 
@@ -32,11 +32,11 @@
 									</g:link></li>
 							</g:each>
 						</ul>
-					</g:if>
+					</shiro:authenticated>
 				</li>
 
 				<li class="dropdown">
-					<g:if test="${session.user}">
+					<shiro:authenticated>
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Lists
 							<b class="caret"></b>
 						</a>
@@ -51,11 +51,11 @@
 										</g:link></li>
 								</g:each>
 							</ul>
-					</g:if>
+					</shiro:authenticated>
 				</li>
 
 				<li class="dropdown">
-				<g:if test="${session.user}">
+				<shiro:authenticated>
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Groups
 							<b class="caret"></b>
 						</a>
@@ -71,11 +71,11 @@
 										</g:link></li>
 								</g:each>
 							</ul>
-					</g:if>
+					</shiro:authenticated>
 				</li>
 
 				<li class="dropdown">
-					<g:if test="${session.user}">
+					<shiro:authenticated>
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Subscriptions
 							<b class="caret"></b>
 						</a>
@@ -83,19 +83,42 @@
 							<g:link controller="subscription" action="index">Manage Subscriptions<i
 									class="icon-cog"></i>
 							</g:link>
-							<g:each var="subscription" in="${eventSubscriptions}">
-								<li><g:link controller="subscription" action="display"
+							<li class="divider"></li>
+							<g:each var="subscription" in="${businessEventSubscriptions}">
+								<li><g:link controller="subscription" action="displayBusinessEventSubscription"
 										params="[subscriptionId:subscription.id]">
 										${subscription.name}
 									</g:link></li>
 							</g:each>
+							<li class="divider"></li>
+							<g:each var="subscription" in="${calendarFeedSubscriptions}">
+								<li><g:link controller="subscription" action="displayCalendarFeedSubscription"
+										params="[subscriptionId:subscription.id]">
+										${subscription.name}
+									</g:link></li>
+							</g:each>
+							<li class="divider"></li>
+							<g:each var="subscription" in="${activitiUserTaskSubscriptions}">
+								<li><g:link controller="subscription" action="displayActivitiUserTaskSubscription"
+										params="[subscriptionId:subscription.id]">
+										${subscription.name}
+									</g:link></li>
+							</g:each>							
+							<li class="divider"></li>
+							<g:each var="subscription" in="${rssFeedSubscriptions}">
+								<li><g:link controller="subscription" action="displayRssFeedSubscription"
+										params="[subscriptionId:subscription.id]">
+										${subscription.name}
+									</g:link></li>
+							</g:each>							
 						</ul>
-					</g:if>
+					</shiro:authenticated>
 				</li>
 
 			</ul>
 		</div>
-		<g:if test="${session.user != null}">
+		
+		<shiro:authenticated>
 			<g:form name="updateStatusForm" controller="status"
 				action="updateStatus">
 				<input type="text" id="statusText" name="statusText" class="span6" />
@@ -118,7 +141,7 @@
 
 				</div>
 			</g:if>
-		</g:if>
+		</shiro:authenticated>
 	</div>
 </body>
 </html>

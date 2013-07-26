@@ -1,28 +1,39 @@
 package org.fogbeam.quoddy
 
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+import org.fogbeam.quoddy.stream.ActivitiUserTask
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
+import org.fogbeam.quoddy.stream.CalendarFeedItem
+import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.subscription.ActivitiUserTaskSubscription
-import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
+import org.fogbeam.quoddy.subscription.BusinessEventSubscription
+import org.fogbeam.quoddy.subscription.CalendarFeedSubscription
+import org.fogbeam.quoddy.subscription.RssFeedSubscription
 
 @Mixin(SidebarPopulatorMixin)
 class SubscriptionController
 {
 	def userService;
-	def userStreamService;
+	def userStreamDefinitionService;
 	def userListService;
 	def userGroupService;
-	def eventSubscriptionService;
+	def businessEventSubscriptionService;
+	def calendarFeedSubscriptionService;
+	def activitiUserTaskSubscriptionService;
+	def rssFeedSubscriptionService;
 	
 	def index =
 	{
 		User user = null;
 		
-		def systemDefinedStreams = new ArrayList<UserStream>();
-		def userDefinedStreams = new ArrayList<UserStream>(); 
+		def systemDefinedStreams = new ArrayList<UserStreamDefinition>();
+		def userDefinedStreams = new ArrayList<UserStreamDefinition>(); 
 		def userLists = new ArrayList<UserList>();
 		def userGroups = new ArrayList<UserGroup>();
 		def eventSubscriptions = new ArrayList<BusinessEventSubscription>();
+		def calendarFeedSubscriptions = new ArrayList<CalendarFeedSubscription>();
+		def activitiUserTaskSubscriptions = new ArrayList<ActivitiUserTaskSubscription>();
+		def rssFeedSubscriptions = new ArrayList<RssFeedSubscription>();
 		
 		if( session.user != null )
 		{
@@ -46,7 +57,7 @@ class SubscriptionController
 		}
 	}
 
-	def display =
+	def displayBusinessEventSubscription =
 	{
 		
 		
@@ -62,7 +73,74 @@ class SubscriptionController
 			Map model = [:];
 			if( user )
 			{
-				subEvents = eventSubscriptionService.getRecentEventsForSubscription( subscription, 25 );
+				subEvents = businessEventSubscriptionService.getRecentEventsForSubscription( subscription, 25 );
+				model.putAll( [ activities:subEvents ] );
+				
+				Map sidebarCollections = this.populateSidebarCollections( this, user );
+				model.putAll( sidebarCollections );
+				
+			}
+			
+			return model;
+		}
+		else
+		{
+			redirect( controller:"home", action:"index");
+		}
+		
+	}
+
+	def displayCalendarFeedSubscription =
+	{
+		
+		
+		if( session.user != null )
+		{
+			def user = userService.findUserByUserId( session.user.userId );
+			// println "Doing display with params: ${params}";
+			def subEvents = new ArrayList<CalendarFeedItem>();
+								
+			
+			CalendarFeedSubscription subscription = CalendarFeedSubscription.findById( params.subscriptionId );
+			
+			Map model = [:];
+			if( user )
+			{
+				subEvents = calendarFeedSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
+				model.putAll( [ activities:subEvents ] );
+				
+				Map sidebarCollections = this.populateSidebarCollections( this, user );
+				model.putAll( sidebarCollections );
+				
+			}
+			
+			return model;
+		}
+		else
+		{
+			redirect( controller:"home", action:"index");
+		}
+		
+	}
+
+	
+	def displayActivitiUserTaskSubscription =
+	{
+		
+		
+		if( session.user != null )
+		{
+			def user = userService.findUserByUserId( session.user.userId );
+			// println "Doing display with params: ${params}";
+			def subEvents = new ArrayList<ActivitiUserTask>();
+								
+			
+			ActivitiUserTaskSubscription subscription = ActivitiUserTaskSubscription.findById( params.subscriptionId );
+			
+			Map model = [:];
+			if( user )
+			{
+				subEvents = activitiUserTaskSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
 				model.putAll( [ activities:subEvents ] );
 				
 				Map sidebarCollections = this.populateSidebarCollections( this, user );
@@ -79,6 +157,41 @@ class SubscriptionController
 		
 	}
 		
+
+	def displayRssFeedSubscription =
+	{
+		
+		
+		if( session.user != null )
+		{
+			def user = userService.findUserByUserId( session.user.userId );
+			// println "Doing display with params: ${params}";
+			def subEvents = new ArrayList<RssFeedItem>();
+								
+			
+			RssFeedSubscription subscription = RssFeedSubscription.findById( params.subscriptionId );
+			
+			Map model = [:];
+			if( user )
+			{
+				subEvents = rssFeedSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
+				model.putAll( [ activities:subEvents ] );
+				
+				Map sidebarCollections = this.populateSidebarCollections( this, user );
+				model.putAll( sidebarCollections );
+				
+			}
+			
+			return model;
+		}
+		else
+		{
+			redirect( controller:"home", action:"index");
+		}
+		
+	}
+
+				
 	def createWizardFlow =
 	{
 		start {
@@ -101,13 +214,17 @@ class SubscriptionController
 		 action {
 			 String subscriptionType = params.subscriptionType;
 			 
-			 if( subscriptionType.equals( "businessEvent" ) )
+			 if( subscriptionType.equals( "activitiUserTask" ) )
+			 {
+				 activitiUserTask();
+			 }
+			 else if( subscriptionType.equals( "businessEvent" ) )
 			 {
 				 businessEventSubscription();
 			 }
-			 else if( subscriptionType.equals( "activitiUserTask" ) )
+			 else if( subscriptionType.equals( "calendarFeed" ) )
 			 {
-				 activitiUserTask();
+				 calendarFeed();
 			 }
 			 else if( subscriptionType.equals( "rssFeed" ) )
 			 {
@@ -115,15 +232,17 @@ class SubscriptionController
 			 }
 			 
 		   }	
-		   on( "businessEventSubscription" ).to("createBusinessEventSubscriptionWizardOne")
 		   on( "activitiUserTask" ).to("createActivitiUserTaskSubscriptionWizardOne")
-		   on( "rssFeed" ).to("createBusinessEventSubscriptionWizardOne")
+		   on( "businessEventSubscription" ).to("createBusinessEventSubscriptionWizardOne")
+		   on( "calendarFeed" ).to("createCalendarFeedSubscriptionWizardOne")
+		   on( "rssFeed" ).to("createRssFeedSubscriptionWizardOne")
 		}
 		
 				
 		createBusinessEventSubscriptionWizardOne {
 				
 				on( "stage2" ) {
+					println "Creating BES with params: ${params}";
 					BusinessEventSubscription subscriptionToCreate = new BusinessEventSubscription();
 					subscriptionToCreate.name = params.subscriptionName;
 					subscriptionToCreate.description = params.subscriptionDescription;
@@ -132,6 +251,7 @@ class SubscriptionController
 					def user = userService.findUserByUserId( session.user.userId );
 					subscriptionToCreate.owner = user;
 				
+					println "about to create: ${subscriptionToCreate}";
 					flow.subscriptionToCreate = subscriptionToCreate;
 			
 				}.to("createBusinessEventSubscriptionWizardTwo")
@@ -157,6 +277,8 @@ class SubscriptionController
 				println "create using params: ${params}"
 
 				BusinessEventSubscription subscriptionToCreate = flow.subscriptionToCreate;
+				
+				println "about to save: ${ subscriptionToCreate.toString()}";
 				
 				if( !subscriptionToCreate.save() )
 				{
@@ -201,7 +323,72 @@ class SubscriptionController
 			on("success").to("exitWizard");
 		}
 		
+		createCalendarFeedSubscriptionWizardOne {
+			
+			on( "stage2" ){
+
+				CalendarFeedSubscription calendarFeedToCreate = new CalendarFeedSubscription();
+				
+				calendarFeedToCreate.url = params.calFeedUrl;
+				calendarFeedToCreate.name = params.calFeedName;
+		   
+				def user = userService.findUserByUserId( session.user.userId );
+				calendarFeedToCreate.owner = user;
+			
+				flow.calendarFeedToCreate = calendarFeedToCreate;
+			
+			}.to( "finishCalendarFeedSubscription")
+		}
+
+		finishCalendarFeedSubscription {
+			action {
+				println "create using params: ${params}"
+
+				CalendarFeedSubscription calendarFeedToCreate = flow.calendarFeedToCreate;
+				
+				if( !calendarFeedToCreate.save() )
+				{
+					println( "Saving CalendarFeedSubscription FAILED");
+					calendarFeedToCreate.errors.allErrors.each { println it };
+				}
+				
+			}
+			on("success").to("exitWizard");
+	   }
+
 		
+	   createRssFeedSubscriptionWizardOne {
+		   on( "stage2" ){
+			   RssFeedSubscription subscriptionToCreate = new RssFeedSubscription();
+			   subscriptionToCreate.name = params.subscriptionName;
+			   subscriptionToCreate.url = params.subscriptionUrl;
+			   
+			   def user = userService.findUserByUserId( session.user.userId );
+			   subscriptionToCreate.owner = user;
+		   
+			   flow.subscriptionToCreate = subscriptionToCreate;
+		   }.to( "finishCreateRssFeedSubscription")
+	   }
+		
+	   
+	   finishCreateRssFeedSubscription {
+		   
+		   action {
+			   println "create using params: ${params}"
+
+			   RssFeedSubscription subscriptionToCreate = flow.subscriptionToCreate;
+			   
+			   if( !subscriptionToCreate.save() )
+			   {
+				   println( "Saving RssFeedSubscription FAILED");
+				   subscriptionToCreate.errors.allErrors.each { println it };
+			   }
+			   
+		   }
+		   on("success").to("exitWizard");
+		   
+	   }
+	   
 	   exitWizard {
 			redirect(controller:"subscription", action:"index");
 	   }
@@ -213,15 +400,62 @@ class SubscriptionController
 		start {
 			action {
 				def subscriptionId = params.subscriptionId;
-				println "Editing BusinessEventSubscription with id: ${subscriptionId}";	
-				BusinessEventSubscription subscriptionToEdit = null;
-				subscriptionToEdit = BusinessEventSubscription.findById( subscriptionId );
-				[subscriptionToEdit: subscriptionToEdit];
+				println "Editing Subscription with id: ${subscriptionId}";
+				
+				def subscriptionType = params.subscriptionType;
+				println "subscriptionType: ${subscriptionType}";
+				
+				
+				switch( subscriptionType )
+				{
+					case "ActivitiUserTaskSubscription":
+					
+						ActivitiUserTaskSubscription subscriptionToEdit = null;
+						subscriptionToEdit = ActivitiUserTaskSubscription.findById( subscriptionId );
+						flow.subscriptionToEdit = subscriptionToEdit;
+	
+						activitiUserTaskSubscription();
+						break;
+						
+					case "BusinessEventSubscription":
+	
+						BusinessEventSubscription subscriptionToEdit = null;
+						subscriptionToEdit = BusinessEventSubscription.findById( subscriptionId );
+						flow.subscriptionToEdit = subscriptionToEdit;
+	
+						businessEventSubscription();
+						break;
+						
+					case "CalendarFeedSubscription":
+						
+						CalendarFeedSubscription subscriptionToEdit = null;
+						subscriptionToEdit = CalendarFeedSubscription.findById( subscriptionId );
+						flow.subscriptionToEdit = subscriptionToEdit;
+	
+						calendarFeedSubscription();
+						break;
+						
+					case "RssFeedSubscription":
+					
+						RssFeedSubscription subscriptionToEdit = null;
+						subscriptionToEdit = RssFeedSubscription.findById( subscriptionId );
+						flow.subscriptionToEdit = subscriptionToEdit;
+	
+						rssFeedSubscription();
+						break;
+					default:
+						break;
+					
+				}
+				
 			}
-			on("success").to( "editWizardOne" )
+			on( "activitiUserTaskSubscription" ).to("editActivitiUserTaskSubscriptionWizardOne")
+			on( "businessEventSubscription" ).to("editBusinessEventSubscriptionWizardOne")
+			on( "calendarFeedSubscription" ).to("editCalendarFeedSubscriptionWizardOne")
+			on( "rssFeedSubscription" ).to("editRssFeedSubscriptionWizardOne")
 		}
 		
-		editWizardOne {
+		editBusinessEventSubscriptionWizardOne {
 			on("stage2") {
 				
 				println "transitioning to stage2";
@@ -230,19 +464,19 @@ class SubscriptionController
 				subscriptionToEdit.name = params.subscriptionName;
 				subscriptionToEdit.description = params.subscriptionDescription;
 					
-			}.to( "editWizardTwo" );
+			}.to( "editBusinessEventSubscriptionWizardTwo" );
 			
 		}
 		
-		editWizardTwo {
+		editBusinessEventSubscriptionWizardTwo {
 			on( "finishWizard" ) {
 				println "finishing wizard";
 				[];	
-			}.to( "finish" );	
+			}.to( "finishBusinessEventSubscriptionWizard" );	
 		}
 		
 		/* an action state to do the final save/update on the object */
-		finish {
+		finishBusinessEventSubscriptionWizard {
 			action {
 				println "update using params: ${params}"
 				
@@ -260,10 +494,90 @@ class SubscriptionController
 			}
 			on("success").to("exitWizard");
 		}
+			
+		/* activiti user task */
+		editActivitiUserTaskSubscriptionWizardOne {
+			on("finish") {
+				
+				ActivitiUserTaskSubscription subscriptionToEdit = flow.subscriptionToEdit;
+				subscriptionToEdit.name = params.subscriptionName;
+				subscriptionToEdit.description = params.subscriptionDescription;
+				subscriptionToEdit.activitiServer = params.activitiServer;
+				subscriptionToEdit.candidateGroup = params.candidateGroup;
+				subscriptionToEdit.assignee = params.assignee;
+				
+				
+			}.to( "finishActivitiUserTaskSubscriptionWizardOne" )
+		}
+		
+		finishActivitiUserTaskSubscriptionWizardOne 
+		{
+			action {
+				
+				println "update using params: ${params}";
+				
+				ActivitiUserTaskSubscription subscriptionToEdit = flow.subscriptionToEdit;
+				
+				if( !subscriptionToEdit.save() )
+				{
+					println( "Saving BusinessEventSubscription FAILED");
+					subscriptionToEdit.errors.allErrors.each { println it };
+				}
+				
+			}
+			on( "success").to("exitWizard");
+		}
+		
+		/* calendar feed */
+		editCalendarFeedSubscriptionWizardOne {
+			on("finish") {
+				CalendarFeedSubscription subscriptionToEdit = flow.subscriptionToEdit;
+				subscriptionToEdit.name = params.calFeedName;
+				subscriptionToEdit.url = params.calFeedUrl;
+			}.to( "finishCalendarFeedSubscriptionWizardOne" )
+		}
+		
+		finishCalendarFeedSubscriptionWizardOne
+		{
+			action {
+				
+				println "update using params: ${params}";
+				
+				CalendarFeedSubscription subscriptionToEdit = flow.subscriptionToEdit;
+				
+				if( !subscriptionToEdit.save() )
+				{
+					println( "Saving CalendarFeedSubscription FAILED");
+					subscriptionToEdit.errors.allErrors.each { println it };
+				}
+				
+			}
+			on( "success").to("exitWizard");
+		}
+
 	
+		/* rss feed */
+		editRssFeedSubscriptionWizardOne {
+			on("finish") {
+				
+			}.to( "finishRssFeedSubscriptionWizardOne" )
+		}
+		
+		finishRssFeedSubscriptionWizardOne
+		{
+			action {
+				
+				println "update using params: ${params}";
+			}
+			on( "success").to("exitWizard");
+		}
+
+
 		exitWizard {
 			redirect(controller:"subscription", action:"index");
 		}
+
+				
 	}	
 	
 	
