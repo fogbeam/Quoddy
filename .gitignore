@@ -1,0 +1,8 @@
+/profilepics
+/target
+/target-eclipse
+/old_libs
+/index
+*.ser
+*.bak
+*.*~
