@@ -17,6 +17,9 @@ class ShiroSecurityFilters {
 				if( controllerName.equals( "jaxrs" ))
 					return true;
                 
+				if( controllerName.equals( "special" ))
+					return true;	
+					
 				// Access control by convention.
                 accessControl()
             }

@@ -1,7 +1,7 @@
 package org.fogbeam.quoddy
 
 import org.codehaus.jackson.map.ObjectMapper
-import org.fogbeam.quoddy.integration.activitystream.ActivityStreamEntry
+import org.fogbeam.protocol.activitystreams.ActivityStreamEntry
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 
 class ActivityStreamOldControllerMethods

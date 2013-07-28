@@ -190,6 +190,7 @@ class ActivityStreamItem implements Serializable
 		objectUuid(nullable:true);
 		objectUrl(nullable:true);
 		objectContent(nullable:true);
+		objectSummary(nullable:true);
 		objectDisplayName(nullable:true);
 		objectObjectType(nullable:true);
 		objectImageUrl(nullable:true);
@@ -237,6 +238,7 @@ class ActivityStreamItem implements Serializable
 	String 			objectUuid;
 	String			objectUrl;
 	String			objectContent;
+	String			objectSummary;
 	String			objectDisplayName;
 	String			objectObjectType;
 	String			objectImageUrl;
