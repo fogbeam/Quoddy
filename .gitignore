@@ -6,3 +6,11 @@
 *.ser
 *.bak
 *.*~
+bin/
+error_log.txt
+js_bad.js
+js_good.js
+notes_do_not_checkin.txt
+prhodes_meetup_all.ics
+query_debug.txt
+web-app/js/prototype/
