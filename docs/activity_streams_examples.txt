@@ -1,0 +1,182 @@
+POST /rest1/api/person HTTP/1.1
+Content-Type: application/xml
+Accept: application/xml
+Host: localhost:8080
+Content-Length: 82
+
+<person>
+  <firstName>Sam</firstName>
+  <lastName>Hill</lastName>
+</person>
+
+
+POST /rest1/api/person HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Host: localhost:8080
+Content-Length: 58
+
+{"class":"Person","firstName":"Fabien","lastName":"Barel"}
+
+
+
+PUT /rest1/api/person/1 HTTP/1.1
+Content-Type: application/xml
+Accept: application/xml
+Host: localhost:8080
+Content-Length: 85
+
+<person>
+  <firstName>Samuel</firstName>
+  <lastName>Hill</lastName>
+</person>
+
+
+
+DELETE /rest1/api/person/1 HTTP/1.1
+Accept: application/xml
+Host: localhost:8080
+
+
+POST /rest1/api/activitystream HTTP/1.1
+Content-Type: application/json
+Accept: text/plain
+Host: localhost:8080
+Content-Length: 676
+
+{
+    "published": "2011-02-10T15:04:55Z",
+    "actor": {
+      "url": "http://example.org/martin",
+      "objectType" : "person",
+      "id": "tag:example.org,2011:martin",
+      "image": {
+        "url": "http://example.org/martin/image",
+        "width": 250,
+        "height": 250
+      },
+      "displayName": "Martin Smith"
+    },
+    "verb": "post",
+    "object" : {
+      "url": "http://example.org/blog/2011/02/entry",
+      "id": "tag:example.org,2011:abc123/xyz"
+    },
+    "target" : {
+      "url": "http://example.org/blog/",
+      "objectType": "blog",
+      "id": "tag:example.org,2011:abc123",
+      "displayName": "Martin's Blog"
+}}
+
+
+
+
+POST /rest1/api/activitystream HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Host: localhost:8080
+Content-Length: 97
+
+
+{
+    "class":"ActivityStream",
+    "published": "2011-02-10T15:04:55Z",
+    "verb": "post"
+}
+
+
+
+
+POST /rest1/api/activitystream HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Host: localhost:8080
+Content-Length: 185
+
+
+{
+	"class":"ActivityStream",
+    "published": "2011-02-10T15:04:55Z",
+    "verb": "post",
+    "actor": {
+		"firstName":"Martin",
+		"lastName":"Smith"
+    }
+}
+
+"id": "tag:example.org,2011:martin",
+
+POST /rest2/activityStream/add HTTP/1.1
+Content-Type: application/xml
+Accept: application/xml,text/plain
+Host: localhost:8080
+Content-Length: 82
+
+<person>
+  <firstName>Sam</firstName>
+  <lastName>Hill</lastName>
+</person>
+
+
+POST /quoddy/activityStream/index HTTP/1.1
+Content-Type: application/json
+Accept: text/plain
+Host: localhost:8080
+Content-Length: 676
+
+{
+    "published": "2011-02-10T15:04:55Z",
+    "actor": {
+      "url": "http://example.org/martin",
+      "objectType" : "person",
+      "id": "tag:example.org,2011:martin",
+      "image": {
+        "url": "http://example.org/martin/image",
+        "width": 250,
+        "height": 250
+      },
+      "displayName": "Martin Smith"
+    },
+    "verb": "post",
+    "object" : {
+      "url": "http://example.org/blog/2011/02/entry",
+      "id": "tag:example.org,2011:abc123/xyz"
+    },
+    "target" : {
+      "url": "http://example.org/blog/",
+      "objectType": "blog",
+      "id": "tag:example.org,2011:abc123",
+      "displayName": "Martin's Blog"
+}}
+
+---------------------------------------------------------------------------------------------
+
+{
+	"title":"Test User1 Posted Another Entry To Her Blog!",
+    "published": "2012-01-16T15:04:55Z",
+    "actor": {
+      "url": "http://example.org/testuser1",
+      "objectType" : "person",
+      "id": "testuser1",
+      "image": {
+        "url": "http://example.org/testuser1/image",
+        "width": 250,
+        "height": 250
+      },
+      "displayName": "Test User1"
+    },
+    "content":"Test User1 Posted Another Entry To Her Blog!",
+    "verb": "post",
+    "url":"http://example.org/testuser1/blog/2012/01/entry",
+    "object" : {
+      "url": "http://example.org/testuser1/blog/2012/01/entry",
+      "id": "tag:example.org,2012:abc123/xyz"
+    },
+    "target" : {
+      "url": "http://example.org/testuser1/blog/",
+      "objectType": "blog",
+      "id": "tag:example.org,2011:abc123",
+      "displayName": "Test User1's Blog"
+	}
+}
