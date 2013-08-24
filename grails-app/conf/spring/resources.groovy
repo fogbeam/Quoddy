@@ -1,5 +1,6 @@
-import org.springframework.ldap.core.support.LdapContextSource;
-import org.springframework.ldap.core.LdapTemplate;
+// import org.springframework.ldap.core.support.LdapContextSource;
+// import org.springframework.ldap.core.LdapTemplate;
+
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
 
 // Place your Spring DSL code here
@@ -11,7 +12,7 @@ beans = {
 		userDn="uid=admin,ou=system"
 		password="secret"
 	}   
-
+	
 	// the LDAP server we use if we're using LDAP as the backing store for
 	// accounts
 	ldapTemplate(org.springframework.ldap.core.LdapTemplate, ref("contextSource"))
@@ -23,8 +24,8 @@ beans = {
 	// etc...  for now we're assuming the simple case just to get stuff up and running, but
 	// this could get complicated.
 	ldapPersonService(org.fogbeam.quoddy.LdapPersonService){
-				ldapTemplate = ref("ldapTemplate")
-			}
+		ldapTemplate = ref("ldapTemplate")
+	}
 	
 	switch( CH.config.friends.backingStore )
 	{

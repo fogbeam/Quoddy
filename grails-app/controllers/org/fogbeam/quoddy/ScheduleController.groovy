@@ -1,12 +1,14 @@
 package org.fogbeam.quoddy
 
-import java.util.List
-
 import org.codehaus.groovy.grails.commons.ArtefactHandler
 import org.codehaus.groovy.grails.commons.GrailsClass
 import org.quartz.JobDetail
-import org.quartz.SimpleTrigger
+import org.quartz.JobKey
 import org.quartz.Trigger
+import org.quartz.TriggerKey
+import org.quartz.impl.matchers.GroupMatcher
+import org.quartz.impl.matchers.StringMatcher
+import org.quartz.impl.triggers.SimpleTriggerImpl
 
 class ScheduleController {
 
@@ -43,19 +45,20 @@ class ScheduleController {
 		def jobFullName = null;
 		for( String aJobGroup : jobGroups )
 		{
-			for(String aJobName : jobManagerService.quartzScheduler.getJobNames(aJobGroup))
+			GroupMatcher groupMatcher = new GroupMatcher( aJobGroup, StringMatcher.StringOperatorName.EQUALS )
+			for(JobKey aJobKey : jobManagerService.quartzScheduler.getJobKeys(groupMatcher))
 			{
-				JobDetail detail = jobManagerService.quartzScheduler.getJobDetail(aJobName, aJobGroup);
+				JobDetail detail = jobManagerService.quartzScheduler.getJobDetail(aJobKey);
 				
 				println "detail: ${detail}";
 				
-				if( detail.fullName.contains( params.id ))
+				if( detail.key.name.contains( params.id ))
 				{
 					println "found a match for ${detail.fullName}";			
-					triggers = jobManagerService.quartzScheduler.getTriggersOfJob(aJobName, aJobGroup);
-					jobName = aJobName;
-					jobGroup = aJobGroup;
-					jobFullName = detail.fullName;
+					triggers = jobManagerService.quartzScheduler.getTriggersOfJob(aJobKey);
+					jobName = aJobKey.name
+					jobGroup = aJobKey.group
+					jobFullName = aJobKey.name;
 				}
 				
 			}
@@ -66,7 +69,8 @@ class ScheduleController {
 	
 	def createTrigger =
 	{
-		log.debug( "createTrigger:" );
+		println( "createTrigger:" );
+		println "params: ${params}";
 		
 		List<String> jobGroups = jobManagerService.quartzScheduler.getJobGroupNames();
 		def triggers = null;
@@ -75,20 +79,27 @@ class ScheduleController {
 		def jobFullName = null;
 		for( String aJobGroup : jobGroups )
 		{
-			for(String aJobName : jobManagerService.quartzScheduler.getJobNames(aJobGroup))
+			GroupMatcher groupMatcher = new GroupMatcher( aJobGroup, StringMatcher.StringOperatorName.EQUALS )
+			
+			for(JobKey aJobKey : jobManagerService.quartzScheduler.getJobKeys(groupMatcher))
 			{
 
-				JobDetail detail = jobManagerService.quartzScheduler.getJobDetail(aJobName, aJobGroup);
+				println "aJobKey: ${aJobKey}";
+				
+				JobDetail detail = jobManagerService.quartzScheduler.getJobDetail(aJobKey);
 					
-				if( detail?.fullName?.contains( params.id ))
+				println "jobDetail: ${detail}";
+				println "params.id = ${params.id}";
+				
+				if( detail?.key?.name?.contains( params.id ))
 				{						
-					triggers = jobManagerService.quartzScheduler.getTriggersOfJob(aJobName, aJobGroup);
-					jobName = aJobName;
-					jobGroup = aJobGroup;
-					jobFullName = detail.fullName;
+					triggers = jobManagerService.quartzScheduler.getTriggersOfJob(aJobKey);
+					jobName = aJobKey.name;
+					jobGroup = aJobKey.group;
+					jobFullName = detail.description;
 				}
 				else {
-					log.debug( "no job detail or no fullname found!" );
+					println( "no job detail or no fullname found!" );
 				}
 			}
 		}
@@ -114,7 +125,7 @@ class ScheduleController {
 		else
 		{
 			// SimpleTrigger(String name, String group, int repeatCount, long repeatInterval)
-			Trigger trigger = new SimpleTrigger( params.triggerName, params.triggerGroup, Integer.parseInt(params.repeatCount), Long.parseLong(params.recurrenceInterval));
+			Trigger trigger = new SimpleTriggerImpl( params.triggerName, params.triggerGroup, Integer.parseInt(params.repeatCount), Long.parseLong(params.recurrenceInterval));
 			// jobClass.newInstance().schedule( Long.parseLong( recurrenceInterval ), SimpleTrigger.REPEAT_INDEFINITELY, sparams );
 			jobClass.newInstance().schedule( trigger );
 		}
@@ -135,26 +146,26 @@ class ScheduleController {
 	{
 		log.debug( "Edit Trigger, params: ${params}" );
 		
-		Trigger theTrigger = jobManagerService.quartzScheduler.getTrigger(params.triggerName, params.triggerGroup);
+		Trigger theTrigger = jobManagerService.quartzScheduler.getTrigger( new TriggerKey( params.triggerName, params.triggerGroup ));
 		[trigger: theTrigger];
 	}
 
 	
 	def deleteTrigger =
 	{
-		jobManagerService.quartzScheduler.unscheduleJob(params.triggerName, params.triggerGroup);
+		jobManagerService.quartzScheduler.unscheduleJob( new TriggerKey( params.triggerName, params.triggerGroup ) );
 		redirect(action:"index");
 	}
 		
 	def saveTrigger =
 	{
-
-		Trigger theTrigger = jobManagerService.quartzScheduler.getTrigger(params.oldTriggerName, params.oldTriggerGroup);
+		TriggerKey theKey = new TriggerKey( params.oldTriggerName, params.oldTriggerGroup )
+		Trigger theTrigger = jobManagerService.quartzScheduler.getTrigger(theKey);
 		Trigger newTrigger = theTrigger.clone();
 		newTrigger.name = params.triggerName;
 		newTrigger.group = params.triggerGroup;
 		newTrigger.repeatInterval = Long.parseLong( params.recurrenceInterval );
-		jobManagerService.quartzScheduler.rescheduleJob(params.oldTriggerName, params.oldTriggerGroup, newTrigger);
+		jobManagerService.quartzScheduler.rescheduleJob( theKey, newTrigger);
 			
 		redirect(action:"index");
 	}

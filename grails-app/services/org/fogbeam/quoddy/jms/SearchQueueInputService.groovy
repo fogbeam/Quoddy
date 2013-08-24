@@ -1,0 +1,1061 @@
+package org.fogbeam.quoddy.jms
+
+import javax.jms.MapMessage
+import javax.xml.transform.OutputKeys
+import javax.xml.transform.Transformer
+import javax.xml.transform.TransformerException
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
+
+import org.apache.http.HttpEntity
+import org.apache.http.HttpException
+import org.apache.http.HttpResponse
+import org.apache.http.client.HttpClient
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.DefaultHttpClient
+import org.apache.lucene.analysis.standard.StandardAnalyzer
+import org.apache.lucene.document.DateTools
+import org.apache.lucene.document.Document
+import org.apache.lucene.document.Field
+import org.apache.lucene.index.IndexReader
+import org.apache.lucene.index.IndexWriter
+import org.apache.lucene.index.Term
+import org.apache.lucene.index.TermDocs
+import org.apache.lucene.index.IndexWriter.MaxFieldLength
+import org.apache.lucene.store.Directory
+import org.apache.lucene.store.NIOFSDirectory
+import org.apache.lucene.util.Version
+import org.apache.tika.metadata.Metadata
+import org.apache.tika.parser.AutoDetectParser
+import org.apache.tika.parser.Parser
+import org.apache.tika.sax.BodyContentHandler
+import org.fogbeam.quoddy.User
+import org.fogbeam.quoddy.stream.ActivityStreamItem
+import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
+import org.fogbeam.quoddy.stream.CalendarFeedItem
+import org.fogbeam.quoddy.stream.RssFeedItem
+import org.fogbeam.quoddy.stream.StatusUpdate
+
+
+
+
+
+
+public class SearchQueueInputService
+{
+	
+	def siteConfigService;
+	def eventStreamService;
+	def searchService;
+	def userService;
+	def existDBService;
+	
+    static expose = ['jms']
+    static destination = "quoddySearchQueue"                 
+    
+    def onMessage(msg)
+    { 
+    	
+    	/* note: what we would ordinarily do where is turn around and copy this message
+    	 * to other queue's, topics, etc., or otherwise route it as needed.  But for
+    	 * now we just assume we are the "indexer" job.
+    	 */
+    	
+    	log.debug( "GOT MESSAGE: ${msg}" ); 
+    
+    	if( msg instanceof java.lang.String )
+    	{    		
+    	}
+    	else
+    	{
+			println( "Received message: ${msg}" );
+			println "Received message: ${msg}";
+			MapMessage mapMessage = (MapMessage)msg;
+    		String msgType = mapMessage.getString( "msgType" );
+    		if( msgType == null || msgType.isEmpty())
+			{
+				println( "No msgType received!" );
+				return;
+			}
+			
+			
+			if( msgType.equals( "REINDEX_ALL" ))
+			{
+				rebuildAllIndexes();
+			}
+			else if( msgType.equals( "REINDEX_PERSON" ))
+			{
+				rebuildPersonIndex();
+			}
+			else if( msgType.equals( "REINDEX_GENERAL" ))
+			{
+				rebuildGeneralIndex();
+			}
+			else if( msgType.equals( "NEW_STATUS_UPDATE" )) // TODO: rename all this to STREAM_POST or something.
+    		{
+		    	// add document to index
+		    	log.info( "adding Status Update ActivityStreamItem to index: ${mapMessage.getString('activityUuid')}" );				
+				newStatusUpdate( msg );
+
+    		}
+			else if( msgType.equals( "NEW_CALENDAR_FEED_ITEM" ))
+    		{
+		    	log.info( "adding CalendarFeedItem to index" );
+				newCalendarFeedItem( msg );
+    		}
+			else if( msgType.equals( "NEW_BUSINESS_EVENT_SUBSCRIPTION_ITEM" ))
+			{
+				log.info( "adding BusinessEventSubscriptionItem to index" );
+				newBusinessEventSubscriptionItem( msg );
+			}
+			else if( msgType.equals( "NEW_ACTIVITY_STREAM_ITEM" ))
+			{
+				log.info( "adding ActivityStreamItem to index" );
+				newActivityStreamItem( msg );
+			}
+			else if( msgType.equals( "NEW_RSS_FEED_ITEM" ))
+			{
+				log.info( "adding RssFeedItem to index" );
+				newRssFeedItem( msg );
+			}
+			else if( msgType.equals( "NEW_QUESTION" ))
+    		{
+		    	// add document to index
+		    	log.debug( "adding Question to index" );
+				newQuestion( msg );
+				
+    		}
+			else if( msgType.equals( "NEW_STREAM_ENTRY_COMMENT" ))
+    		{
+    			
+		    	println( "adding StreamEntryComment to index" );
+				newStreamEntryComment( msg );
+    		}
+			else if( msgType.equals( "NEW_USER" ) )
+			{
+				log.debug( "adding new User to Person index" );
+				newUser( msg );
+			}
+			else 
+    		{
+    			println( "Bad message type: ${msgType}" );
+    		}
+    	}
+    }
+
+	
+	
+	private void newStatusUpdate( def msg )
+	{
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		println( "got indexDirLocation as: ${indexDirLocation}");
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		IndexWriter writer = null;
+		
+		// TODO: fix this so it will eventually give up, to deal with the pathological case
+		// where we never do get the required lock.
+		int count = 0;
+		println( "Trying to acquire IndexWriter");
+		while( writer == null )
+		{
+			count++;
+			if( count > 3 ) {
+				println( "tried to obtain Lucene lock 3 times, giving up..." );
+				return;
+			}
+			try
+			{
+				writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), false, MaxFieldLength.UNLIMITED );
+			}
+			catch( org.apache.lucene.store.LockObtainFailedException lfe )
+			{
+				Thread.sleep( 1200 );
+			}
+		}
+		
+		println( "opened Writer" );
+		
+		try
+		{
+			ActivityStreamItem statusUpdateActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
+			StatusUpdate statusUpdate = statusUpdateActivity.streamObject;
+			
+			// println( "Trying to add Document to index" );
+			
+			writer.setUseCompoundFile(true);
+
+			Document doc = new Document();
+		
+			doc.add( new Field( "docType", "docType.statusUpdate", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+			
+			doc.add( new Field( "objectUuid", statusUpdate.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( statusUpdate.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId")), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		
+			doc.add( new Field( "content", statusUpdateActivity.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+		
+				
+			writer.addDocument( doc );
+			writer.optimize();
+			// println( "Updated Lucene Index for new StatusUpdate" );
+		}
+		finally
+		{
+				
+			try
+			{
+				if( writer != null )
+				{
+					writer.close();
+				}
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+				e.printStackTrace();
+			}
+			
+			try
+			{
+				if( indexDir != null )
+				{
+					indexDir.close();
+				}
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+				e.printStackTrace();
+			}
+		}
+
+		println( "done with onMessage() call" );
+	}
+	
+	
+	/* CalendarFeedItem */
+	private void newCalendarFeedItem( def msg )
+	{
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		println( "got indexDirLocation as: ${indexDirLocation}");
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		IndexWriter writer = null;
+		
+		// TODO: fix this so it will eventually give up, to deal with the pathological case
+		// where we never do get the required lock.
+		int count = 0;
+		println( "Trying to acquire IndexWriter");
+		while( writer == null )
+		{
+			count++;
+			if( count > 3 ) {
+				println( "tried to obtain Lucene lock 3 times, giving up..." );
+				return;
+			}
+			try
+			{
+				writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), false, MaxFieldLength.UNLIMITED );
+			}
+			catch( org.apache.lucene.store.LockObtainFailedException lfe )
+			{
+				Thread.sleep( 1200 );
+			}
+		}
+		
+		println( "opened Writer" );
+		
+		try
+		{
+			ActivityStreamItem calendarFeedItemActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
+			CalendarFeedItem calendarFeedItem = calendarFeedItemActivity.streamObject;
+			
+			println( "Trying to add Document to index" );
+			
+			writer.setUseCompoundFile(true);
+
+			Document doc = new Document();
+			
+			doc.add( new Field( "docType", "docType.calendarFeedItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+				
+			doc.add( new Field( "objectUuid", calendarFeedItem.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( calendarFeedItem.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId")), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+		
+			// extract content from the item and add to appropriate fields
+			doc.add( new Field( "startDate", DateTools.dateToString(calendarFeedItem.startDate, DateTools.Resolution.MINUTE ), Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ) );
+			doc.add( new Field( "endDate", DateTools.dateToString(calendarFeedItem.endDate, DateTools.Resolution.MINUTE ), Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ) );
+			doc.add( new Field( "dateEventCreated", DateTools.dateToString(calendarFeedItem.dateEventCreated, DateTools.Resolution.MINUTE ), Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ) );
+			doc.add( new Field( "status", calendarFeedItem.status, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			doc.add( new Field( "summary", calendarFeedItem.summary, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			doc.add( new Field( "description", calendarFeedItem.description, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			doc.add( new Field( "location", calendarFeedItem.location, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			
+			writer.addDocument( doc );
+			writer.optimize();
+			
+			println( "Updated Lucene Index for new CalendarFeedItem" );			
+
+		}
+		finally
+		{
+				
+			try
+			{
+				if( writer != null )
+				{
+					writer.close();
+				}
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+				e.printStackTrace();
+			}
+			
+			try
+			{
+				if( indexDir != null )
+				{
+					indexDir.close();
+				}
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+				e.printStackTrace();
+			}
+		}
+
+		println( "done with onMessage() call" );
+	}
+	
+	
+	/* BusinessEventSubscriptionItem */
+	/* Question: Should we even store this stuff in the Lucene
+	 * index at all?  We already have the XML stored in the xmlDb, should
+	 * the searchService just be "smart" and query that? For now, let's assume
+	 * that we create a synthetic "summary" or "description" entry from business events
+	 * and index that.  When we go "advanced search" on Business Events we can go
+	 * straight to the xmlDb.
+	 */
+	private void newBusinessEventSubscriptionItem( def msg )
+	{
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		println( "got indexDirLocation as: ${indexDirLocation}");
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		IndexWriter writer = null;
+		
+		// TODO: fix this so it will eventually give up, to deal with the pathological case
+		// where we never do get the required lock.
+		int count = 0;
+		println( "Trying to acquire IndexWriter");
+		while( writer == null )
+		{
+			count++;
+			if( count > 3 ) {
+				println( "tried to obtain Lucene lock 3 times, giving up..." );
+				return;
+			}
+			try
+			{
+				writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), false, MaxFieldLength.UNLIMITED );
+			}
+			catch( org.apache.lucene.store.LockObtainFailedException lfe )
+			{
+				Thread.sleep( 1200 );
+			}
+		}
+		
+		println( "opened Writer" );
+		
+		try
+		{
+			ActivityStreamItem besItemActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
+			BusinessEventSubscriptionItem besItem = besItemActivity.streamObject;
+			besItem = existDBService.populateSubscriptionEventWithXmlDoc( besItem );
+			
+			// println( "Trying to add Document to index" );
+			
+			writer.setUseCompoundFile(true);
+
+			Document doc = new Document();
+		
+			doc.add( new Field( "docType", "docType.businessEventSubscriptionItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+			
+			doc.add( new Field( "objectUuid", besItem.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( besItem.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId")), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			// TODO: figure out how to convert from any one of a bazillion different possible XML messages, to something
+			// we can index.  
+			if( besItem.xmlDoc != null )
+			{
+				String xmlString = nodeToString( besItem.xmlDoc );
+				doc.add( new Field( "content", xmlString, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			}
+			else
+			{
+				println( "WARNING: NO XML DOC AVAILABLE IN BES_ITEM" );	
+			}
+			
+			writer.addDocument( doc );
+			writer.optimize();
+			// println( "Updated Lucene Index for new StatusUpdate" );
+		}
+		finally
+		{
+				
+			try
+			{
+				if( writer != null )
+				{
+					writer.close();
+				}
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+				e.printStackTrace();
+			}
+			
+			try
+			{
+				if( indexDir != null )
+				{
+					indexDir.close();
+				}
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+				e.printStackTrace();
+			}
+		}
+
+		println( "done with onMessage() call" );
+	}
+	
+	
+	/* ActivityStreamItem */
+	private void newActivityStreamItem( def msg )
+	{
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		println( "got indexDirLocation as: ${indexDirLocation}");
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		IndexWriter writer = null;
+		
+		// TODO: fix this so it will eventually give up, to deal with the pathological case
+		// where we never do get the required lock.
+		int count = 0;
+		println( "Trying to acquire IndexWriter");
+		while( writer == null )
+		{
+			count++;
+			if( count > 3 ) {
+				println( "tried to obtain Lucene lock 3 times, giving up..." );
+				return;
+			}
+			try
+			{
+				writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), false, MaxFieldLength.UNLIMITED );
+			}
+			catch( org.apache.lucene.store.LockObtainFailedException lfe )
+			{
+				Thread.sleep( 1200 );
+			}
+		}
+		
+		println( "opened Writer" );
+		
+		try
+		{
+			ActivityStreamItem genericActivityStreamItem = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
+
+			// println( "Trying to add Document to index" );
+			
+			writer.setUseCompoundFile(true);
+
+			Document doc = new Document();
+		
+			doc.add( new Field( "docType", "docType.activityStreamItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+			
+			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			
+			/* 
+			 * TODO: this is wrong.  Or it should be.  We *should* have a streamObject even for "external" activitystrea.ms 
+			 * objects.
+			 */ 
+			doc.add( new Field( "objectUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			
+			doc.add( new Field( "content", genericActivityStreamItem.content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			
+			writer.addDocument( doc );
+			writer.optimize();
+			// println( "Updated Lucene Index for new StatusUpdate" );
+			
+		}
+		finally
+		{
+				
+			try
+			{
+				if( writer != null )
+				{
+					writer.close();
+				}
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+				e.printStackTrace();
+			}
+			
+			try
+			{
+				if( indexDir != null )
+				{
+					indexDir.close();
+				}
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+				e.printStackTrace();
+			}
+		}
+
+		println( "done with onMessage() call" );
+	}
+	
+	
+	
+	/* RssFeedItem */
+	private void newRssFeedItem( def msg )
+	{
+		println "newRssFeedItem indexing new item...";
+		
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		println( "got indexDirLocation as: ${indexDirLocation}");
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		IndexWriter writer = null;
+		
+		// this will eventually give up, to deal with the pathological case
+		// where we never do get the required lock.
+		int count = 0;
+		println( "Trying to acquire IndexWriter");
+		while( writer == null )
+		{
+			count++;
+			if( count > 3 ) {
+				println( "tried to obtain Lucene lock 3 times, giving up..." );
+				return;
+			}
+			try
+			{
+				writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), false, MaxFieldLength.UNLIMITED );
+			}
+			catch( org.apache.lucene.store.LockObtainFailedException lfe )
+			{
+				Thread.sleep( 1200 );
+			}
+		}
+		
+		println( "opened Writer" );
+		
+		try
+		{
+			ActivityStreamItem activityStreamItem = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
+
+			println( "Trying to add Document to index" );
+			
+			RssFeedItem rssFeedItem = activityStreamItem.streamObject;
+			
+			/* Note:  We *could* archive the content of the Item when we initially encounter it, and
+			 * that would save having to re-download the content now.  That could matter if we're
+			 * in a re-index scenario after the resource has become unavailable, and now we're
+			 * unable to index this item.  OTOH, if it's not available anymore, you can ask if it
+			 * *should* be indexed.   Anyway, we'll go with the approach of re-downloading for now...
+			 */
+
+			HttpClient client = new DefaultHttpClient();
+			
+			//establish a connection within 10 seconds
+			// client.getHttpConnectionManager().getParams().setConnectionTimeout(10000);
+			HttpGet httpget = new HttpGet(rssFeedItem.linkUrl);
+			InputStream httpStream = null;
+			try
+			{
+				HttpResponse httpResponse = client.execute(httpget);
+				HttpEntity entity = httpResponse.getEntity();
+				
+				httpStream = entity.content;
+				
+			}
+			catch ( HttpException he) {
+			   log.error("Http error connecting to '" + url + "'");
+			   log.error(he.getMessage());
+			}
+			catch (IOException ioe){
+			   // ioe.printStackTrace();
+			   log.error("Unable to connect to '" + url + "'");
+			   log.error( ioe );
+			}
+	   
+			// extract text with Tika
+			String content = "";
+			try
+			{
+				org.xml.sax.ContentHandler textHandler = new BodyContentHandler(-1);
+				Metadata metadata = new Metadata();
+				Parser parser = new AutoDetectParser();
+				parser.parse(httpStream, textHandler, metadata);
+				
+				content = textHandler.toString()?.replaceAll('\\s+', ' ');
+							
+			}
+			catch( Exception e )
+			{
+				e.printStackTrace();
+			}
+			
+						
+			writer.setUseCompoundFile(true);
+			
+			Document doc = new Document();
+
+			doc.add( new Field( "docType", "docType.rssFeedItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+			
+			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			
+			/* TODO: this is wrong... use the id/uuid of the streamObject here */
+			doc.add( new Field( "objectUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( msg.getLong("activityId") ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			
+			doc.add( new Field( "content", content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+
+			writer.addDocument( doc );
+			writer.optimize();
+			println( "Updated Lucene Index for new RssFeedItem" );
+		
+		}
+		finally
+		{
+				
+			try
+			{
+				if( writer != null )
+				{
+					writer.close();
+				}
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+				e.printStackTrace();
+			}
+			
+			try
+			{
+				if( indexDir != null )
+				{
+					indexDir.close();
+				}
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+				e.printStackTrace();
+			}
+		}
+
+		println( "done with onMessage() call" );
+	}
+	
+	
+	
+	
+	/* Question */
+	private void newQuestion( def msg )
+	{
+	
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		IndexWriter writer = null;
+		
+		// TODO: fix this so it will eventually give up, to deal with the pathological case
+		// where we never do get the required lock.
+		while( writer == null )
+		{
+			try
+			{
+				writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), false, MaxFieldLength.UNLIMITED );
+			}
+			catch( org.apache.lucene.store.LockObtainFailedException lfe )
+			{
+				Thread.sleep( 1200 );
+			}
+		}
+		
+		try
+		{
+			writer.setUseCompoundFile(true);
+	
+			Document doc = new Document();
+		
+			doc.add( new Field( "docType", "docType.question", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+		
+			/*	doc.add( new Field( "uuid", msg['uuid'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "id", Long.toString( msg['id'] ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "url", msg['url'], Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "title", msg['title'], Field.Store.YES, Field.Index.ANALYZED ) );
+			doc.add( new Field( "tags", "", Field.Store.YES, Field.Index.ANALYZED ));
+			*/
+			
+			writer.addDocument( doc );
+		
+			writer.optimize();
+		}
+		finally
+		{
+			try
+			{
+				writer.close();
+			}
+			catch( Exception e ) {
+				// ignore this for now, but add a log message at least
+				e.printStackTrace();
+			}
+			
+			try
+			{
+				indexDir.close();
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	
+	private void newStreamEntryComment( def msg )
+	{
+		
+		println "adding NEW_STREAM_ENTRY_COMMENT to index!";
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		IndexWriter writer = null;
+		
+		// TODO: fix this so it will eventually give up, to deal with the pathological case
+		// where we never do get the required lock.
+		int luceneLockRetryCount = 0;
+		while( writer == null )
+		{
+			try
+			{
+				writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), false, MaxFieldLength.UNLIMITED );
+			}
+			catch( org.apache.lucene.store.LockObtainFailedException lfe )
+			{
+				luceneLockRetryCount++;
+				if( luceneLockRetryCount > 10 )
+				{
+					log.error( "Failed to obtain lock for Lucene store", e );
+					return;
+				}
+				else
+				{
+					Thread.sleep( 1200 );
+					continue;
+				}
+			}
+		}
+		
+		try
+		{
+			
+			writer.setUseCompoundFile(true);
+	
+			Document doc = new Document();
+			
+			 
+			doc.add( new Field( "docType", "docType.streamEntryComment", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+
+					
+			doc.add( new Field( "objectUuid", msg.getString('comment_uuid'), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "objectId", Long.toString( msg.getLong('comment_id')), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "activityUuid", msg.getString("activityUuid"), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "activityId", Long.toString( msg.getLong("activityId")), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "entryUuid", msg.getString('entry_uuid'), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+			doc.add( new Field( "entryId", Long.toString( msg.getLong('entry_id')), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+
+			
+			doc.add( new Field( "content", msg.getString('comment_text'), Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
+			
+			
+			writer.addDocument( doc );
+	
+			writer.optimize();
+		
+			println "Done adding index for NEW_STREAM_ENTRY_COMMENT";
+				
+		}
+		finally
+		{
+			try
+			{
+				writer.close();
+			}
+			catch( Exception e ) {
+				// ignore this for now, but add a log message at least
+			}
+			
+			try
+			{
+				indexDir.close();
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+			}
+		}
+	}
+	
+	
+	private void newUser( def msg )
+	{
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index" ) );
+		IndexWriter writer = null;
+
+		
+		int luceneLockRetryCount = 0;
+		while( writer == null )
+		{
+			try
+			{
+				writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), false, MaxFieldLength.UNLIMITED );
+			}
+			catch( org.apache.lucene.store.LockObtainFailedException lfe )
+			{
+				luceneLockRetryCount++;
+				if( luceneLockRetryCount > 10 )
+				{
+					log.error( "Failed to obtain lock for Lucene store", e );
+					return;
+				}
+				else
+				{
+					Thread.sleep( 1200 );
+					continue;
+				}
+			}
+		}
+		
+		try
+		{
+			
+			User user = userService.findUserByUuid( msg['user_uuid']);
+			
+			writer.setUseCompoundFile(true);
+	
+			Document doc = new Document();
+			
+			doc.add( new Field( "fullName", user.getFullName(),
+				Field.Store.YES, Field.Index.ANALYZED ) );
+			
+			
+			writer.addDocument( doc );
+	
+			writer.optimize();
+		}
+		finally
+		{
+			try
+			{
+				writer.close();
+			}
+			catch( Exception e ) {
+				// ignore this for now, but add a log message at least
+			}
+			
+			try
+			{
+				indexDir.close();
+			}
+			catch( Exception e )
+			{
+				// ignore this for now, but add a log message at least
+			}
+		}
+			
+	}
+	
+	
+    private void addTag( final String uuid, final String tagName )
+    {
+    	log.debug( "addTag called with uuid: ${uuid} and tagName: ${tagName}" );
+    	
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+    	Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation ) );
+    	IndexReader indexReader = IndexReader.open( indexDir, false );
+    	
+    	Term uuidTerm = new Term( "uuid", uuid );
+    	TermDocs termDocs = indexReader.termDocs(uuidTerm);
+    	
+    	if( termDocs.next() )
+    	{
+    		int docNum = termDocs.doc();
+    		indexReader.deleteDocument( docNum );
+    		indexReader.close();
+    		
+    		IndexWriter writer = null;
+			
+			// TODO: fix this so it will eventually give up, to deal with the pathological case
+			// where we never do get the required lock.
+			while( writer == null )
+			{
+				try
+				{
+					writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), false, MaxFieldLength.UNLIMITED );
+				}
+				catch( org.apache.lucene.store.LockObtainFailedException lfe )
+				{
+					Thread.sleep( 1200 );
+				}
+			}
+			
+	   		writer.setUseCompoundFile( true );
+			
+			try
+			{
+				/* Entry entry = entryService.findByUuid( uuid );
+				Document doc = new Document();
+				doc.add( new Field( "docType", "docType.tag", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+				doc.add( new Field( "uuid", entry.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+				doc.add( new Field( "id", Long.toString(entry.id), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+				doc.add( new Field( "url", entry.url, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
+				doc.add( new Field( "title", entry.title, Field.Store.YES, Field.Index.ANALYZED ) );
+	
+				String tagString = "";
+				entry.tags.each { tagString += it.name + " " };
+				doc.add( new Field( "tags", tagString, Field.Store.YES, Field.Index.ANALYZED ) );
+				*/
+				
+				/* use HttpClient to load the page, then extract the content and index it.
+				* We'll assume HTTP only links for now... */
+		
+								
+				log.debug( "adding document to writer" );
+				writer.addDocument( doc );		;
+	    		writer.optimize();
+			}
+			finally
+			{
+				
+				try
+				{
+					if( input != null )
+					{
+						input.close();
+					}
+				}
+				catch( Exception e )
+				{
+					// ignore this for now, but add a log message at least
+				}
+			
+				try
+				{
+					if( client != null )
+					{
+						log.debug( "calling connectionManager.shutdown()" );
+						client.getConnectionManager().shutdown();
+					}
+				}
+				catch( Exception e )
+				{
+					// ignore this for now, but add a log message at least
+				}
+				
+				
+				try
+				{
+					writer.close();
+				}
+				catch( Exception e ) {
+					// ignore this for now, but add a log message at least
+				}
+				
+				try
+				{
+					indexDir.close();
+				}
+				catch( Exception e )
+				{
+					// ignore this for now, but add a log message at least
+				}
+			}
+    	}
+    	else
+    	{
+    		// no document with that uuid???
+    		log.debug( "no document for uuid: ${uuid}" );
+    	}
+    }
+    
+    private void rebuildAllIndexes()
+    {
+		log.warn( "doing rebuildIndex" );
+		searchService.rebuildGeneralIndex();
+		searchService.rebuildPersonIndex();	    	
+    }
+	
+	private void rebuildPersonIndex()
+	{
+		searchService.rebuildPersonIndex();
+	}
+	
+	private void rebuildGeneralIndex()
+	{
+		searchService.rebuildGeneralIndex();
+	}
+	
+	
+	private String nodeToString(org.w3c.dom.Node node) 
+	{
+		StringWriter sw = new StringWriter();
+		try 
+		{
+			Transformer t = TransformerFactory.newInstance().newTransformer();
+			t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+			t.setOutputProperty(OutputKeys.INDENT, "yes");
+			t.transform(new DOMSource(node), new StreamResult(sw));
+		} 
+		catch (TransformerException te) {
+			System.out.println("nodeToString Transformer Exception");
+		}
+		
+		return sw.toString();
+	}
+}

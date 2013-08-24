@@ -1,5 +1,11 @@
 package org.fogbeam.quoddy.stream
 
+import javax.xml.bind.annotation.XmlAccessType
+import javax.xml.bind.annotation.XmlAccessorType
+import javax.xml.bind.annotation.XmlRootElement
+
+
+import org.fogbeam.quoddy.User
 
 
 /* TODO: map the fields of this class to the activitystrea.ms protocol */
@@ -149,42 +155,53 @@ Following is a simple, minimal example of a JSON serialized activity:
 	url 					JSON [RFC4627] String				An IRI [RFC3987] identifying a resource providing an HTML representation of the object. An object MAY contain a url property 
  
 */
-class ActivityStreamItem extends StreamItemBase implements Serializable
-{
 
+class ActivityStreamItem implements Serializable
+{
+	
 	public ActivityStreamItem()
 	{
 		this.uuid = java.util.UUID.randomUUID().toString();
 	}
-	
+
+	static mapping = 
+	{
+		tablePerHierarchy false
+	}
+		
 	static constraints = {
 		
+		content( size: 0..1024, nullable:true);
 		updated(nullable:true);
 		icon(nullable:true);
-		
-		actorUuid(nullable:true);
+		uuid( nullable: false);
+		actorUuid(nullable:false);
 		actorUrl(nullable:true);
 		actorContent(nullable:true);
 		actorDisplayName(nullable:true);
-		actorObjectType(nullable:true);
+		actorObjectType(nullable:false);
 		actorImageUrl(nullable:true);
 		actorImageHeight(nullable:true);
 		actorImageWidth(nullable:true);
 
+		streamObject( nullable:true );
+		objectClass( nullable:false );
+		
 		objectUuid(nullable:true);
 		objectUrl(nullable:true);
 		objectContent(nullable:true);
+		objectSummary(nullable:true);
 		objectDisplayName(nullable:true);
 		objectObjectType(nullable:true);
 		objectImageUrl(nullable:true);
 		objectImageHeight(nullable:true);
 		objectImageWidth(nullable:true);
 		
-		targetUuid(nullable:true);
+		targetUuid(nullable:false);
 		targetUrl(nullable:true);
 		targetContent(nullable:true);
 		targetDisplayName(nullable:true);
-		targetObjectType(nullable:true);
+		targetObjectType(nullable:false);
 		targetImageUrl(nullable:true);
 		targetImageHeight(nullable:true);
 		targetImageWidth(nullable:true);
@@ -196,52 +213,70 @@ class ActivityStreamItem extends StreamItemBase implements Serializable
 	}
 	
 	static transients = ['templateName'];
-	
-	String 	content;
-	Date	published;
-	String	title;
-	Date	updated;
-	URL		url;
-	String	verb;
-	URL 	icon;
-	String 	uuid;
-
-	String 	actorUuid;
-	String 	actorUrl;
-	String	actorContent;
-	String 	actorDisplayName;
-	String 	actorObjectType;
-	String 	actorImageUrl;
-	String 	actorImageHeight;
-	String	actorImageWidth;
-
-	String 	objectUuid;
-	String	objectUrl;
-	String	objectContent;
-	String	objectDisplayName;
-	String	objectObjectType;
-	String	objectImageUrl;
-	String	objectImageHeight;
-	String	objectImageWidth;
 		
-	String	targetUrl;
-	String	targetContent;
-	String	targetDisplayName;
-	String 	targetObjectType;
-	String	targetImageUrl;
-	String 	targetImageHeight;
-	String	targetImageWidth;
 	
-	String 	generatorUrl
-	String	providerUrl;
+	String 			content;
+	Date			published;
+	String			title;
+	Date			updated;
+	URL				url;
+	String			verb;
+	URL 			icon;
+	
+	
+	String 			actorUuid;
+	String 			actorUrl;
+	String			actorContent;
+	String 			actorDisplayName;
+	String 			actorObjectType;
+	String 			actorImageUrl;
+	String 			actorImageHeight;
+	String			actorImageWidth;
 
-	Date 	dateCreated;
+
+	
+	String 			objectUuid;
+	String			objectUrl;
+	String			objectContent;
+	String			objectSummary;
+	String			objectDisplayName;
+	String			objectObjectType;
+	String			objectImageUrl;
+	String			objectImageHeight;
+	String			objectImageWidth;
+		
+
+	String			targetUrl;
+	String			targetUuid;
+	String			targetContent;
+	String			targetDisplayName;
+	String 			targetObjectType;
+	String			targetImageUrl;
+	String 			targetImageHeight;
+	String			targetImageWidth;
+	
+	String 			generatorUrl
+	String			providerUrl;
+
+	String  		name;
+	String  		uuid;
+	User 			owner;
+	StreamItemBase 	streamObject;
+	String 			objectClass;
+	Date 			dateCreated;
 	
 	
 	public String getTemplateName()
 	{
-		return "/renderActivity";
+		if( streamObject != null )
+		{
+			println "returning streamObject.getTemplateName() value";
+			return streamObject.getTemplateName();
+		}
+		else
+		{
+			println "returning renderActivity";
+			return "/renderActivity";	
+		}
 	}
-	
-	
 }

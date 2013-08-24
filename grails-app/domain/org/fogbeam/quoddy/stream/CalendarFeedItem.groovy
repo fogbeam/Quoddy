@@ -3,13 +3,8 @@ package org.fogbeam.quoddy.stream
 import org.fogbeam.quoddy.subscription.CalendarFeedSubscription;
 
 
-class CalendarFeedItem extends StreamItemBase implements Serializable
+class CalendarFeedItem extends StreamItemBase
 {
-	
-	public CalendarFeedItem()
-	{
-		this.uuid = java.util.UUID.randomUUID().toString();
-	}
 	
 	static constraints =
 	{
@@ -36,9 +31,7 @@ class CalendarFeedItem extends StreamItemBase implements Serializable
 	String url;
 	Date lastModified;
 	String uid;
-	CalendarFeedSubscription owningFeed;
 
-	String uuid;
 	Date dateCreated;
 
 	

@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.fogbeam.quoddy.profile.Profile;
+import org.fogbeam.quoddy.stream.StatusUpdate;
 
 @XmlRootElement
 @XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.NONE)
@@ -28,6 +29,12 @@ class User implements Serializable
 		email(nullable:true)
 		dateCreated()
     }
+	
+	public String toString()
+	{
+		return "id: ${id} uuid: ${uuid}, userId: ${userId}, password: ${password}, firstName: ${firstName}, lastName: ${lastName}, homepage: ${homepage}";
+		
+	}
 	
 	@XmlElement
     String uuid;
@@ -53,19 +60,21 @@ class User implements Serializable
 	String bio;
 	@XmlElement
 	String email;
-	static transients = [ "password", "homepage", "displayName", "bio",  ]
-	
+	static transients = [ "password", "homepage", "displayName", "bio", "templateName" ]
 	
     static mapping = {
     	table 'uzer'
 		currentStatus lazy:false; // eagerly fetch the currentStatus
-    }
+    	roles lazy: false;		  // eagerly fetch roles
+		permissions lazy:false;   // eagerly fetch permissions
+	}
 	
-    // static hasMany = [savedEntries : Entry, hiddenEntries: Entry];
-    static hasMany = [oldStatusUpdates:StatusUpdate]
-    
-    // static mappedBy = [savedEntries : "savers", hiddenEntries:"hiders" ];
+	static fetchMode = [roles: 'eager', permissions:'eager'];
+	
+    static hasMany = [oldStatusUpdates:StatusUpdate, roles: AccountRole, permissions: String]
+	static mappedBy = [oldStatusUpdates:'creator']
 
+	
     public void setUuid( String uuid ){
     	
     	// never overwrite existing uuid value with NULL
@@ -82,4 +91,10 @@ class User implements Serializable
 
 	public void setFullName( String fullName )
 	{}	
+	
+	public String getTemplateName()
+	{
+		return "/renderUser";
+	}
+	
 }

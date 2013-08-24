@@ -1,11 +1,14 @@
 package org.fogbeam.quoddy
 
 import org.codehaus.jackson.map.ObjectMapper
-import org.fogbeam.quoddy.integration.activitystream.ActivityStreamEntry
-import org.fogbeam.quoddy.stream.ActivityStreamItem;
+import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+import org.fogbeam.protocol.activitystreams.ActivityStreamEntry
+import org.fogbeam.quoddy.stream.ActivityStreamItem
+import org.fogbeam.quoddy.stream.ResharedActivityStreamItem
 import org.fogbeam.quoddy.stream.StreamItemBase
 
 
+@Mixin(SidebarPopulatorMixin)
 class ActivityStreamController 
 {
 	def eventStreamService;
@@ -13,6 +16,14 @@ class ActivityStreamController
 	def userService;
 	def jmsService;
 	def eventQueueService;
+	def userStreamDefinitionService;
+	def userListService;
+	def userGroupService;
+	def businessEventSubscriptionService;
+	def calendarFeedSubscriptionService;
+	def activitiUserTaskSubscriptionService;
+	def rssFeedSubscriptionService;
+	
 	
 	def getQueueSize =
 	{	
@@ -23,8 +34,19 @@ class ActivityStreamController
 		long queueSize = 0;
 		if( session.user != null )
 		{
+			UserStreamDefinition userStream = null;
+			// TODO: Include UserStream.  Use default if no userStreamId is provided.
+			if( params.streamId )
+			{
+				userStream = userStreamDefinitionService.findStreamById( Long.parseLong( params.streamId  ) );
+			}
+			else 
+			{
+				userStream = userStreamDefinitionService.getStreamForUser( session.user, UserStreamDefinition.DEFAULT_STREAM  );	
+			}
+			
 			// println "checking queueSize for user: ${session.user.userId}";
-			queueSize = eventQueueService.getQueueSizeForUser( session.user.userId );
+			queueSize = eventQueueService.getQueueSizeForUser( session.user.userId, userStream );
 		}
 		
 		// println "got queueSize as ${queueSize}"; 
@@ -41,6 +63,16 @@ class ActivityStreamController
 	def getContentHtml = 
 	{
 		
+		// NOTE: this should be receiving a streamId parameter.  If there isn't one
+		// we can assume the default stream for the user in question.  And since this is the
+		// only place we call this variation of eventStreamService.getRecentActivitiesForUser,
+		// we should be able to delete it (or force it to default to the default user stream
+		// and then call the other version)
+		
+		
+		// also, if this stuff is really supposed to be paginated, we need to fix this to include
+		// an offset parameter for the call to eventStreamService.getRecentActivitiesForUser
+		
 		def user = session.user;
 		def page = params.page;
 		if( !page ) 
@@ -52,8 +84,20 @@ class ActivityStreamController
 		if( user != null )
 		{
 			user = userService.findUserByUserId( session.user.userId );
-			// activities = eventStreamService.getRecentFriendActivitiesForUser( user );
-			items = eventStreamService.getRecentActivitiesForUser( user, 25 * Integer.parseInt( page ) );
+			
+			UserStreamDefinition selectedStream = null;
+			if( params.streamId )
+			{
+				Long streamId = Long.valueOf( params.streamId );
+				selectedStream = userStreamDefinitionService.findStreamById( streamId );
+			}
+			else
+			{
+				selectedStream = userStreamDefinitionService.getStreamForUser( user, UserStreamDefinition.DEFAULT_STREAM );
+			}
+			
+			
+			items = eventStreamService.getRecentActivitiesForUser( user, 25 * Integer.parseInt( page ), selectedStream );
 		}
 		else
 		{
@@ -65,54 +109,113 @@ class ActivityStreamController
 		
 	}
 	
-	def index = {
+
+	
+	def viewUserStream = {
 		
-		switch(request.method){
-			case "POST":
-				// def originTime = new Date().getTime();
-			  println "Create\n"
-			  // String json = request.reader.text;
-			  String json = params.activityJson;
-			  println("Got json:\n " + json );
-			  
-			  ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
-			  
-			  // convert from JSON to Groovy classes
-			  ActivityStreamEntry streamEntry = mapper.readValue(json, ActivityStreamEntry.class);
-			  
-			  // map to our internal representation and save / msg
-			  ActivityStreamItem activity = activityStreamTransformerService.getActivity( streamEntry );
-			  eventStreamService.saveActivity( activity );
-			  
-			  // send notification message
-			  // Map msg = new HashMap();
-			  // msg.creator = activity.owner.userId;
-			  // msg.text = activity.content;
-			  // msg.targetUuid = activity.targetUuid;
-			  // msg.published = activity.published;
-			  // msg.originTime = activity.dateCreated.time;
-			  // TODO: figure out what to do with "effectiveDate" here
-			  // msg.effectiveDate = msg.originTime;
-			  
-			  // msg.actualEvent = activity;
-			  
-			  println "sending message to JMS";
-			  jmsService.send( queue: 'uitestActivityQueue', /* msg */ activity, 'standard', null );
-			  
-			  // println streamEntry.toString();
-			  
-			  break
-			case "GET":
-			  println "Retrieve\n"
-			  break
-			case "PUT":
-			  println "Update\n"
-			  break
-			case "DELETE":
-			  println "Delete\n"
-			  break
-		  }
+		println "viewUserStream: ";
+		User user = session.user;
 		
-		render "OK";
+		
+		String userId = params.userId;
+		println "userId: ${userId}";
+		def page = params.page;
+		if( !page )
+		{
+			page = "1";
+		}
+		
+		
+		if( userId == null || userId.isEmpty() )
+		{
+			flash.message = "No UserId sent!";	
+			return [];
+		}
+		
+		User requestedUser = userService.findUserByUserId( userId );
+		
+		List<StreamItemBase> statusUpdatesForUser = null;
+		if( requestedUser != null )
+		{
+			println "getting status updates for user ${requestedUser.userId}";
+			statusUpdatesForUser = eventStreamService.getStatusUpdatesForUser( requestedUser );
+				
+		}
+		else 
+		{
+			println "NO user";
+		}
+		
+		Map model = [:];
+		
+		model.putAll( [user:user, statusUpdatesForUser:statusUpdatesForUser] );
+		Map sidebarCollections = populateSidebarCollections( this, user );
+		model.putAll( sidebarCollections );
+		
+		return model;
+				
 	}
+	
+	
+	def shareItem =
+	{
+		
+		println "ActivityStreamController.shareItem invoked:";
+		println "params: ${params}";
+		
+		/*  So, what data should we be receiving?  At a minimum, the id (or uuid) of the thing being
+		 *  shared, the id (or uuid) of the person sharing it, and one or more shareTarget id's.  Optionally
+		 *  there could be a comment associated with the sharing activity.
+		 *
+		 *  For an initial version, let's make some simplifying assumptions.  You can only share to a
+		 *  USER (no groups or other 'things' and you can only share to ONE target at a time.
+		 *  
+		 *  NOTE: we also have to be able to handle weird situations like "somebody shared this to me (an individual user)
+		 *  and now I want to reshare it to somebody else", or even "I now want to share this to my public stream".
+		 *   
+		 */
+		
+		String shareItemUuid = params.shareItemUuid;
+		String shareItemComment = params.shareItemComment;
+		String shareTargetUserId = params.shareTargetUserId;
+		
+		// look up the existing ActivityStreamItem representing this item
+		ActivityStreamItem originalItem = eventStreamService.getActivityStreamItemByUuid( shareItemUuid );
+		
+		// look up the "share target user" by userId
+		User shareTargetUser = userService.findUserByUserId( shareTargetUserId );
+		
+		// this should mean a new ActivityStreamItem instance, which "points" to the same underlying
+		// streamObject as the one being shared, no?  Or should an ActivityStreamItem be able to be the "target"
+		// of another ASI in turn?  If there's a comment associated with the reshare activity, what do we
+		// hang the comment off of?  Should we create a new StreamObject type just for reshares?  
+		
+		  
+		ResharedActivityStreamItem newStreamItem = new ResharedActivityStreamItem();
+		newStreamItem.verb = "quoddy_item_reshare";
+		newStreamItem.actorObjectType = "User";
+		newStreamItem.targetObjectType = "User";
+		newStreamItem.actorUuid = session.user.uuid;
+		newStreamItem.targetUuid = shareTargetUser.uuid;
+		newStreamItem.owner = session.user;
+		newStreamItem.objectClass = originalItem.objectClass;
+		newStreamItem.streamObject = originalItem.streamObject;
+		newStreamItem.published = new Date(); // set published to "now"
+		
+		newStreamItem.originalItem = originalItem;
+		newStreamItem.title = "Reshared ActivityStreamItem";
+		newStreamItem.url = new URL( "http://www.example.com" );	
+		
+		// NOTE: we added "name" to StreamItemBase, but how is it really going
+		// to be used?  Do we *really* need this??
+		newStreamItem.name = newStreamItem.title;
+		
+		// NOTE: are we eliminating the idea of "effective date" or do we
+		// just need to rethink it?
+		// newStreamItem.effectiveDate = newStreamItem.published;
+		
+		eventStreamService.saveActivity( newStreamItem );		
+		
+	}
+	
 }

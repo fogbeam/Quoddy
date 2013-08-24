@@ -1,9 +1,7 @@
 package org.fogbeam.quoddy;
 
-import java.util.List
-
 import org.fogbeam.quoddy.profile.Profile
-import org.fogbeam.quoddy.social.FriendRequest;
+import org.fogbeam.quoddy.social.FriendRequest
 
 class UserService {
 
@@ -32,9 +30,44 @@ class UserService {
 			
 	}
 	
+	
+	public AccountRole findAccountRoleByName( final String name )
+	{
+		println "searching for AccountRole named ${name}";
+		
+		List<AccountRole> roles = AccountRole.executeQuery( "select role from AccountRole as role where role.name = :name", [name:name]);
+		
+		AccountRole role = null;
+		if( roles.size == 1 )
+		{
+			role = roles[0];
+		}
+
+		println "returning role ${role}";
+		return role;
+	}
+	
+	public AccountRole createAccountRole( AccountRole role )
+	{
+		
+		println "UserService.createAccountRole() - about to create role: ${role.toString()}";
+	
+		if( !role.save(flush: true))
+		{
+			role.errors.each { println it };
+			throw new RuntimeException( "couldn't create AccountRole: ${role.toString()}" );
+		}
+		
+		println "returning role: ${role}";
+		return role;
+	}
+	
+	
 	public void createUser( User user ) 
 	{
 		
+		
+		println "UserService.createUser() - about to create user: ${user.toString()}";
 		/* save the user into the uzer table, we need that for associations with other
 		* "system things"
 		*/
@@ -48,9 +81,9 @@ class UserService {
 			accountService.createUser( user );
 			// ldapPersonService.createUser( user );
 			// create system defined Stream entries for this newly created user
-			UserStream defaultStream = new UserStream();
-			defaultStream.name = UserStream.DEFAULT_STREAM;
-			defaultStream.definedBy = UserStream.DEFINED_SYSTEM;
+			UserStreamDefinition defaultStream = new UserStreamDefinition();
+			defaultStream.name = UserStreamDefinition.DEFAULT_STREAM;
+			defaultStream.definedBy = UserStreamDefinition.DEFINED_SYSTEM;
 			defaultStream.owner = user;
 			defaultStream.includeAllEventTypes = true;
 			defaultStream.includeAllUsers = true;

@@ -1,61 +1,102 @@
 package org.fogbeam.quoddy;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
+import org.apache.shiro.SecurityUtils
+import org.apache.shiro.authc.AuthenticationException
+import org.apache.shiro.authc.UsernamePasswordToken
+import org.apache.shiro.grails.ConfigUtils
+import org.apache.shiro.web.util.WebUtils
 
-import org.fogbeam.quoddy.ldap.LDAPPerson 
-import org.fogbeam.quoddy.ldap.PersonAttributeMapper 
-import org.springframework.ldap.core.DistinguishedName 
-import org.springframework.ldap.filter.AndFilter;
-import org.springframework.ldap.filter.EqualsFilter;
-import org.springframework.ldap.NameNotFoundException
-
-import sun.misc.BASE64Encoder;
-
-class LoginController {
+class LoginController 
+{
 
 	
-	def loginService;
+	// def loginService;
 	
-    def index = { }
+     def index = { }
     
-    def login = {
+	 /* NOTE: 2013-07-11 - switching to using Apache Shiro for Authentication / Authorization, so this
+	  * all changes now.  Instead of calling our loginService directly, we hand off processing to
+	  * Shiro, which will invoke a Realm instance.  
+	  */
+    def login = 
+	{
     	
-    	def userId = params.username;
-    	def password = params.password;
-    	
-		User user = null;
+		def authToken = new UsernamePasswordToken(params.username, params.password as String)
 		
+		// Support for "remember me"
+		if (params.rememberMe) 
+		{
+			authToken.rememberMe = true
+		}
+		
+		// If a controller redirected to this page, redirect back
+		// to it. Otherwise redirect to the root URI.
+		def targetUri = params.targetUri ?: "/"
+		
+		// Handle requests saved by Shiro filters.
+		def savedRequest = WebUtils.getSavedRequest(request)
+		if (savedRequest) 
+		{
+			targetUri = savedRequest.requestURI - request.contextPath
+			if (savedRequest.queryString) targetUri = targetUri + '?' + savedRequest.queryString
+		}
+				
+		try
+		{
+			// Perform the actual login. An AuthenticationException
+			// will be thrown if the username is unrecognised or the
+			// password is incorrect.
+			SecurityUtils.subject.login(authToken)
 
 			
-		// do login through login service, which might ultimately be authenticating
-		// against an LDAP backend, a local DB backend, or something else.
-		// NOTE: if we want to allow flexibility in configuring authentication
-		// backends, using JAAS or whatever, how do we manage acquiring the
-		// proper credentials when we don't know all the steps in the auth
-		// process in advance?  We'd need to hand in a Handler that can return
-		// results to the browser (kinda ugly) or get a list of required
-		// credentials in advance, drive the user through any multi-step stuff
-		// then submit the credentials.
-		
-		user = loginService.doUserLogin( userId, password );
-
-				
-		if( user )
+			session.user = SecurityUtils.subject.principal;
+			
+			log.info "Redirecting to '${targetUri}'."
+			redirect(uri: targetUri)
+		}
+		catch (AuthenticationException ex)
 		{
-    		session.user = user;
-    		redirect( controller:'home', action:'index')
-    	}
-    	else
-    	{
-    		flash.message = "Login Failed";
-    		redirect( action:'index');
-    	}
+			// Authentication failed, so display the appropriate message
+			// on the login page.
+			log.info "Authentication failure for user '${params.username}'."
+			flash.message = message(code: "login.failed")
+
+			// Keep the username and "remember me" setting so that the
+			// user doesn't have to enter them again.
+			def m = [ username: params.username ]
+			if (params.rememberMe) {
+				m["rememberMe"] = true
+			}
+
+			// Remember the target URI too.
+			if (params.targetUri) {
+				m["targetUri"] = params.targetUri
+			}
+
+			// Now redirect back to the login page.
+			redirect(action: "login", params: m)
+		}
+				
     }
     
-    def logout = {
+    def logout = 
+	{
     	session.user = null;
-    	redirect( uri:'/');
+		
+		// Log the user out of the application.
+		def principal = SecurityUtils.subject?.principal
+		SecurityUtils.subject?.logout()
+		// For now, redirect back to the home page.
+		if (ConfigUtils.getCasEnable() && ConfigUtils.isFromCas(principal)) 
+		{
+			redirect(uri:ConfigUtils.getLogoutUrl())
+		}
+		else 
+		{
+			redirect(uri: "/")
+		}
+		
+		ConfigUtils.removePrincipal(principal)
+		
     }
 }

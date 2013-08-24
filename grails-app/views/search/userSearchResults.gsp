@@ -7,11 +7,11 @@
 	<body>
 		<p />
 		<ul>
-			<g:each in="${allUsers}" var="user">
+			<g:each in="${allUsers}" var="result">
 			
 				<!-- display discrete entries here -->
 				<li>
-					<g:link controller="user" action="viewUser" params="[userId:user.userId]">${user.fullName}</g:link>
+					<g:link controller="user" action="viewUser" params="[userId:result.object.userId]">${result.object.fullName}</g:link>
 				</li>
 			</g:each>
 		</ul>

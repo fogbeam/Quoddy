@@ -9,32 +9,14 @@ import org.fogbeam.quoddy.User;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-class BusinessEventSubscription implements Serializable
+class BusinessEventSubscription extends BaseSubscription implements Serializable
 {
-	public BusinessEventSubscription()
-	{
-		this.uuid = java.util.UUID.randomUUID().toString();
-	}
-	
-	@XmlElement
-	String 	uuid;
-	@XmlElement
-	Date 	dateCreated;
-	@XmlElement
-	String 	name;
-	@XmlElement
-	String 	description;
 	@XmlElement
 	String 	xQueryExpression;
-	@XmlElement
-	User 	owner;
-	
-	static mapping = {
-		owner lazy:false; // eagerly fetch the owner
-	}
 
+		
 	public String toString()
 	{
-		return "BusinessEventSubscription[ uuid: ${uuid}, name: ${name}, owner: ${owner.userId}, xQuery: ${xQueryExpression}]";	
+		return "BusinessEventSubscription[ uuid: ${uuid}, name: ${name}, owner: ${owner?.userId}, xQuery: ${xQueryExpression}]";	
 	}		
 }

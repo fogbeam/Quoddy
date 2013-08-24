@@ -12,7 +12,7 @@
 	<div class="aseTitleBar">
 		<!-- http://localhost:8080/quoddy/user/viewUser?userId=testuser2 -->
 		<span class="aseTitleBarUserLink"> <a
-			href="${createLink(controller:'user', action:'viewUser', params:[userId:item.owner.userId])}">
+			href="${createLink(controller:'activityStream', action:'viewUserStream', params:[userId:item.owner.userId])}">
 				${item.owner.fullName}
 		</a>
 		</span> <span class="aseTitleBarPermalink"> <a href="#"
@@ -35,9 +35,16 @@
 	
 	<!-- begin aseFooter -->
 	<div class="aseFooter">
-		<span class="plusOneButton">+1</span> <span class="shareButton">Share</span>
-		<span class="showHideCommentsButton"> <a href="#">Show Comments</a>
+		<span class="plusOneButton" id="plusOneButton.${item.uuid}" name="plusOneButton.${item.uuid}" >
+			<a href="#">+1</a>
+		</span> 
+		<span class="shareButton" id="shareButton.${item.uuid}" name="shareButton.${item.uuid}" >
+			<a href="#">Share</a>
 		</span>
+		<span class="showHideCommentsButton"> 
+			<a href="#">Show Comments</a>
+		</span>
+		
 	</div>
 	<!--  end aseFooter -->
 	
@@ -55,7 +62,7 @@
 			<div id="commentsArea" class="commentsArea">
 				<!--  render comments on the Event here -->
 				<g:render template="/renderComments" var="comments"
-					bean="${item.comments}" />
+					bean="${item.streamObject.comments}" />
 			</div>
 			<!-- end commentsArea -->
 			

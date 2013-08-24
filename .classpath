@@ -1,259 +1,176 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="spring/" kind="src" path="grails-app/conf"/>
-	<classpathentry kind="src" path="grails-app/conf/spring"/>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="src" path="src/groovy"/>
+	<classpathentry kind="src" path="grails-app/conf"/>
 	<classpathentry kind="src" path="grails-app/controllers"/>
 	<classpathentry kind="src" path="grails-app/domain"/>
 	<classpathentry kind="src" path="grails-app/services"/>
-	<classpathentry kind="src" path="grails-app/ldap"/>
-	<classpathentry kind="src" path="test/unit"/>
-	<classpathentry kind="src" path="test/integration"/>
-	<classpathentry kind="src" path="src/groovy"/>
-	<classpathentry kind="src" path="grails-app/jobs"/>
-	<classpathentry kind="src" path="src/java"/>
-	<classpathentry kind="src" path="grails-app/resources"/>
 	<classpathentry kind="src" path="grails-app/taglib"/>
-	<classpathentry kind="lib" path="lib/activation.jar"/>
-	<classpathentry kind="lib" path="lib/commons-math-2.1.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-core-3.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/mail.jar"/>
-	<classpathentry kind="lib" path="lib/smack.jar"/>
-	<classpathentry kind="lib" path="lib/commons-lang-2.5.jar"/>
-	<classpathentry kind="lib" path="lib/commons-pool-1.5.4.jar"/>
-	<classpathentry kind="lib" path="lib/ldapbp-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/org.springframework.asm-3.0.5.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/org.springframework.expression-3.0.5.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/spring-beans-3.0.5.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/spring-context-3.0.5.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/spring-core-3.0.5.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/spring-jdbc-3.0.5.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/spring-tx-3.0.5.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/spring-ldap-1.3.1.RELEASE-all.jar"/>
-	<classpathentry kind="lib" path="lib/aopalliance-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/commons-beanutils-core-1.7.0.jar"/>
-	<classpathentry kind="lib" path="lib/commons-betwixt-0.8.jar"/>
-	<classpathentry kind="lib" path="lib/commons-collections-3.2.1.jar"/>
-	<classpathentry kind="lib" path="lib/commons-digester-1.7.jar"/>
-	<classpathentry kind="lib" path="lib/commons-fileupload-1.2.jar"/>
-	<classpathentry kind="lib" path="lib/commons-io-1.4.jar"/>
-	<classpathentry kind="lib" path="lib/geronimo-stax-api_1.0_spec-1.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/guice-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/icu4j-3.8.jar"/>
-	<classpathentry kind="lib" path="lib/jdom-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/jsecurity-0.9.0.jar"/>
-	<classpathentry kind="lib" path="lib/json-20070829.jar"/>
-	<classpathentry kind="lib" path="lib/json-simple-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/rome-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/sanselan-0.97-incubator.jar"/>
-	<classpathentry kind="lib" path="lib/xpp3_min-1.1.4c.jar"/>
-	<classpathentry kind="lib" path="lib/xstream-1.3.1.jar"/>
-	<classpathentry kind="lib" path="lib/caja-r4314.jar"/>
-	<classpathentry kind="lib" path="lib/commons-beanutils-1.8.3.jar"/>
-	<classpathentry kind="lib" path="lib/commons-codec-1.4.jar"/>
-	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="lib/ehcache-core-2.2.0.jar"/>
-	<classpathentry kind="lib" path="lib/guava-r07.jar"/>
-	<classpathentry kind="lib" path="lib/guice-multibindings-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/htmlparser-r4209.jar"/>
-	<classpathentry kind="lib" path="lib/httpclient-4.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/httpcore-4.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/jasper-el-6.0.29.jar"/>
-	<classpathentry kind="lib" path="lib/joda-time-1.6.2.jar"/>
-	<classpathentry kind="lib" path="lib/juel-impl-2.1.3.jar"/>
-	<classpathentry kind="lib" path="lib/modules-0.3.2.jar"/>
-	<classpathentry kind="lib" path="lib/nekohtml-1.9.14.jar"/>
-	<classpathentry kind="lib" path="lib/oauth-20100527.jar"/>
-	<classpathentry kind="lib" path="lib/oauth-consumer-20090617.jar"/>
-	<classpathentry kind="lib" path="lib/oauth-httpclient4-20090913.jar"/>
-	<classpathentry kind="lib" path="lib/oauth-provider-20100527.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.5.6.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-jdk14-1.5.6.jar"/>
-	<classpathentry kind="src" path="grails-app/src"/>
+	<classpathentry kind="src" path="grails-app/utils"/>
+	<classpathentry kind="src" path="test/integration"/>
+	<classpathentry kind="src" path="test/unit"/>
+	<classpathentry kind="src" path="grails-app/ldap"/>
+	<classpathentry kind="src" path="grails-app/jobs"/>
+	<classpathentry kind="src" path="grails-app/realms"/>
 	<classpathentry kind="src" path="grails-app/listeners"/>
+	<classpathentry kind="src" path="grails-app/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
-	<classpathentry kind="lib" path="/usr/java/junit3.8.1/junit.jar"/>
-	<classpathentry kind="lib" path="lib/arq-2.8.7.jar"/>
-	<classpathentry kind="lib" path="lib/concurrent.jar"/>
-	<classpathentry kind="lib" path="lib/iri-0.8.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-aop-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-appclient.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-aspect-jdk50-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-common-core.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-deployers-client-spi.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-deployers-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-deployers-core-spi.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-deployers-core.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-deployment.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-ejb3-common-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-ejb3-core-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-ejb3-ext-api.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-ejb3-proxy-clustered-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-ejb3-proxy-impl-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-ejb3-proxy-spi-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-ejb3-security-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-ha-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-ha-legacy-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-iiop-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-integration.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-j2se.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-javaee.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-jsr77-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-logging-jdk.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-logging-log4j.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-logging-spi.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-main-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-mdr.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-messaging-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-remoting.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-security-spi.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-serialization.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-srp-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-system-client.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-system-jmx-client.jar"/>
-	<classpathentry kind="lib" path="lib/jbosscx-client.jar"/>
-	<classpathentry kind="lib" path="lib/jbossjts-integration.jar"/>
-	<classpathentry kind="lib" path="lib/jbossjts.jar"/>
-	<classpathentry kind="lib" path="lib/jbosssx-as-client.jar"/>
-	<classpathentry kind="lib" path="lib/jbosssx-client.jar"/>
-	<classpathentry kind="lib" path="lib/jena-2.6.4.jar"/>
-	<classpathentry kind="lib" path="lib/jmx-client.jar"/>
-	<classpathentry kind="lib" path="lib/jmx-invoker-adaptor-client.jar"/>
-	<classpathentry kind="lib" path="lib/jnp-client.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
-	<classpathentry kind="lib" path="lib/sample.jar"/>
-	<classpathentry kind="lib" path="lib/shiro-core-1.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/shiro-web-1.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/trove.jar"/>
-	<classpathentry kind="lib" path="lib/wstx-asl-3.2.9.jar"/>
-	<classpathentry kind="lib" path="lib/xercesImpl-2.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-all-1.9.3.jar"/>
-	<classpathentry kind="lib" path="lib/ical4j-1.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/postgresql-9.1-901.jdbc4.jar"/>
-	<classpathentry kind="lib" path="lib/exist-fluent.jar"/>
-	<classpathentry kind="lib" path="lib/exist-optional.jar"/>
-	<classpathentry kind="lib" path="lib/exist.jar"/>
-	<classpathentry kind="lib" path="lib/excalibur-cli-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/jgroups-all-2.2.6.jar"/>
-	<classpathentry kind="lib" path="lib/jline-0.9.94.jar"/>
-	<classpathentry kind="lib" path="lib/xmldb.jar"/>
-	<classpathentry kind="lib" path="lib/xmlrpc-client-3.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/xmlrpc-common-3.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/xmlrpc-server-3.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/serializer.jar"/>
-	<classpathentry kind="lib" path="lib/xalan.jar"/>
-	<classpathentry kind="lib" path="lib/ws-commons-util-1.0.2.jar"/>
 	<classpathentry kind="src" path=".link_to_grails_plugins/code-coverage-1.2/grails-app/i18n">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/jaxrs-0.5-m1/grails-app/conf">
+	<classpathentry kind="src" path=".link_to_grails_plugins/hibernate-2.2.3/grails-app/i18n">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.5-m1/grails-app/controllers">
+	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/jaxrs-0.8/grails-app/conf">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.5-m1/src/groovy">
+	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.8/grails-app/controllers">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.5-m1/src/java">
+	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.8/grails-app/i18n">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.8/grails-app/resources">
+		<attributes>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.8/src/groovy">
+		<attributes>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.8/src/java">
+		<attributes>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/jms-1.2/grails-app/services">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/jms-1.2/grails-app/utils">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/jms-1.2/src/groovy">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/jms-1.2/src/java">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/grails-app/conf">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/grails-app/i18n">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/grails-app/services">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/grails-app/taglib">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/jquery-1.4.4.1/src/groovy">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/navigation-1.1.1/grails-app/i18n">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/navigation-1.1.1/grails-app/services">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/navigation-1.1.1/grails-app/taglib">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/quartz-1.0-RC1/grails-app/conf">
+	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/quartz-1.0-RC9/grails-app/conf">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/quartz-1.0-RC1/grails-app/services">
+	<classpathentry kind="src" path=".link_to_grails_plugins/quartz-1.0-RC9/grails-app/i18n">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/quartz-1.0-RC1/src/groovy">
+	<classpathentry kind="src" path=".link_to_grails_plugins/quartz-1.0-RC9/grails-app/services">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/quartz-1.0-RC1/src/java">
+	<classpathentry kind="src" path=".link_to_grails_plugins/quartz-1.0-RC9/src/groovy">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/tomcat-1.3.7.BUILD-SNAPSHOT/src/groovy">
+	<classpathentry kind="src" path=".link_to_grails_plugins/quartz-1.0-RC9/src/java">
 		<attributes>
-			<attribute name="com.springsource.sts.grails.core.SOURCE_FOLDER" value="true"/>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="com.springsource.sts.grails.core.CLASSPATH_CONTAINER"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/shiro-1.1.4/grails-app/conf">
+		<attributes>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/shiro-1.1.4/grails-app/i18n">
+		<attributes>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/shiro-1.1.4/grails-app/services">
+		<attributes>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/shiro-1.1.4/grails-app/taglib">
+		<attributes>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/shiro-1.1.4/src/groovy">
+		<attributes>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/shiro-1.1.4/src/java">
+		<attributes>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.grails.ide.eclipse.core.CLASSPATH_CONTAINER"/>
+	<classpathentry kind="output" path="target-eclipse/classes"/>
 </classpath>

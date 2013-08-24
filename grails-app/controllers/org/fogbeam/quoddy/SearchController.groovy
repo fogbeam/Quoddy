@@ -1,41 +1,205 @@
 package org.fogbeam.quoddy
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer 
-import org.apache.lucene.document.Document 
-import org.apache.lucene.document.Field 
-import org.apache.lucene.index.IndexWriter 
-import org.apache.lucene.index.Term 
-import org.apache.lucene.index.IndexWriter.MaxFieldLength 
-import org.apache.lucene.queryParser.QueryParser 
-import org.apache.lucene.search.BooleanQuery 
-import org.apache.lucene.search.IndexSearcher 
-import org.apache.lucene.search.Query 
-import org.apache.lucene.search.ScoreDoc 
-import org.apache.lucene.search.TermQuery 
-import org.apache.lucene.search.TopDocs 
-import org.apache.lucene.search.BooleanClause.Occur 
-import org.apache.lucene.store.Directory 
-import org.apache.lucene.store.FSDirectory 
-import org.apache.lucene.store.NIOFSDirectory 
-import org.apache.lucene.util.Version 
-import org.fogbeam.quoddy.User;
+
+import org.apache.lucene.analysis.standard.StandardAnalyzer
+import org.apache.lucene.document.Document
+import org.apache.lucene.document.Field
+import org.apache.lucene.index.IndexWriter
+import org.apache.lucene.index.Term
+import org.apache.lucene.index.IndexWriter.MaxFieldLength
+import org.apache.lucene.queryParser.MultiFieldQueryParser
+import org.apache.lucene.queryParser.QueryParser
+import org.apache.lucene.search.BooleanQuery
+import org.apache.lucene.search.IndexSearcher
+import org.apache.lucene.search.Query
+import org.apache.lucene.search.ScoreDoc
+import org.apache.lucene.search.TermQuery
+import org.apache.lucene.search.TopDocs
+import org.apache.lucene.search.BooleanClause.Occur
+import org.apache.lucene.store.Directory
+import org.apache.lucene.store.FSDirectory
+import org.apache.lucene.store.NIOFSDirectory
+import org.apache.lucene.util.Version
+import org.fogbeam.quoddy.search.SearchResult
+
 
 class SearchController 
 {
 
+	def siteConfigService;
 	def userService;
+	def searchService;
+	def jmsService;
 	
 	def index = 
-	{
-		println "WTF?";
-		
+	{	
 		[]		
 	}
 	
 	
-	def searchEverything =
+	def doAdvancedSearch =
 	{
 		
+		// search using supplied parameters and return the
+		// model for rendering...
+		String queryString = params.queryString;
+		
+		println "doAdvancedSearch, queryString: ${queryString}";
+		
+		boolean bSearchEverything = false;
+		boolean bSearchStatusUpdates = false;
+		boolean bSearchCalendarFeedItems = false;
+		boolean bSearchBusSubItems = false;
+		boolean bSearchActivitiUserTasks = false;
+		boolean bSearchRssFeedItems = false;
+		boolean bSearchActivityStreamItems = false;		
+		boolean bSearchUsers = false;
+		boolean bSearchFriends = false;
+		
+		String searchEverything = params.searchEverything;
+		println "searchEverything: ${searchEverything}";
+		bSearchEverything = searchEverything ? true: false;
+		
+		if( bSearchEverything )
+		{
+			println( "setting all flags to true");
+			bSearchStatusUpdates = true;
+			bSearchCalendarFeedItems = true;
+			bSearchBusSubItems = true;
+			bSearchActivitiUserTasks = true;
+			bSearchRssFeedItems = true;
+			bSearchActivityStreamItems = true;
+			bSearchUsers = true;
+			bSearchFriends = true;
+		}
+		else
+		{
+
+		
+			String searchStatusUpdates = params.searchStatusUpdates;
+			bSearchStatusUpdates = searchStatusUpdates ? true: false;
+			println "searchStatusUpdates: ${searchStatusUpdates}";
+		
+			String searchCalendarFeedItems = params.searchCalendarFeedItems;
+			bSearchCalendarFeedItems = searchCalendarFeedItems ? true : false;
+			println "searchCalendarFeedItems: ${searchCalendarFeedItems}";
+		
+			String searchBusSubItems = params.searchBusSubItems;
+			bSearchBusSubItems = searchBusSubItems ? true : false;
+			println "searchBusSubItems: ${searchBusSubItems}";
+					
+			String searchActivitiUserTasks = params.searchActivitiUserTasks;
+			bSearchActivitiUserTasks = searchActivitiUserTasks ? true : false;
+			println "searchActivitiUserTasks: ${searchActivitiUserTasks}";
+			
+			String searchRssFeedItems = params.searchRssFeedItems;
+			bSearchRssFeedItems = searchRssFeedItems ? true : false;
+			println "searchRssFeedItems: ${searchRssFeedItems}";
+		
+			String searchActivityStreamItems = params.searchActivityStreamItems;
+			bSearchActivityStreamItems = searchActivityStreamItems ? true : false;
+			println "searchActivityStreamItems: ${searchActivityStreamItems}";
+			
+			String searchUsers = params.searchUsers;
+			bSearchUsers = searchUsers ? true : false;
+			println "searchUsers: ${searchUsers}";
+			
+			String searchFriends = params.searchFriends;
+			bSearchFriends = searchFriends ? true : false;
+			println "searchFriends: ${searchFriends}";
+		
+		}
+		
+		
+		List<SearchResult> searchResults = null;
+		
+//		if( bSearchEverything )
+//		{
+//			searchResults = searchService.doEverythingSearch( queryString );
+//		}
+//		else 
+//		{
+		
+		searchResults = new ArrayList<SearchResult>();	
+		if( bSearchStatusUpdates )
+		{
+			println "searching status updates";
+			List<SearchResult> tempResults = searchService.doStatusUpdateSearch( queryString );
+			println "SearchStatusUpdates returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchCalendarFeedItems )
+		{
+			println "searching calendar feed items";
+			List<SearchResult> tempResults = searchService.doCalendarFeedItemSearch( queryString );
+			println "SearchCalendarFeedItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchBusSubItems )
+		{
+			println "searching business event subscription items";
+			List<SearchResult> tempResults = searchService.doBusinessSubscriptionItemSearch( queryString );
+			println "SearchBusSubItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchActivitiUserTasks )
+		{
+			println "searching Activiti User Tasks";
+			List<SearchResult> tempResults = searchService.doActivitiUserTaskSearch( queryString );
+			println "SearchBusSubItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+			
+		}
+		
+		if( bSearchRssFeedItems )
+		{
+			println "searching rss feed items";
+			List<SearchResult> tempResults = searchService.doRssFeedItemSearch( queryString );
+			println "SearchRssFeedItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchActivityStreamItems )
+		{
+			println "searching activity stream items";
+			List<SearchResult> tempResults = searchService.doActivityStreamItemSearch( queryString );
+			println "SearchActivityStreamItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchUsers )
+		{
+			println "searching users";
+			List<SearchResult> tempResults = searchService.doUserSearch( queryString );
+			println "SearchUsers returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchFriends )
+		{
+			println "searching friends";
+			List<SearchResult> tempResults = searchService.doFriendSearch( queryString, session.user );
+			println "SearchFriends returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();		}
+
+		
+		// }
+		
+		
+		println "found some results: ${searchResults.size()}";
+		
+		render( view:'everythingSearchResults', model:[searchResults:searchResults]);
 	}
 	
 	def showAdvanced =
@@ -51,31 +215,10 @@ class SearchController
 		String queryString = params.queryString;
 		println "searching Users, queryString: ${queryString}";
 		
-		File indexDir = new File( "/development/lucene_indexes/quoddy/person_index" );
-		Directory fsDir = FSDirectory.open( indexDir );
+		List<SearchResult> results = searchService.doUserSearch();
+		println "found some users: ${results.size()}";
 		
-		IndexSearcher searcher = new IndexSearcher( fsDir );
-	
-		QueryParser queryParser = new QueryParser(Version.LUCENE_30, "fullName", new StandardAnalyzer(Version.LUCENE_30));
-		Query query = queryParser.parse(queryString);
-		
-		TopDocs hits = searcher.search(query, 20);
-		
-		def users = new ArrayList<User>();
-		ScoreDoc[] docs = hits.scoreDocs;
-		for( ScoreDoc doc : docs )
-		{
-			Document result = searcher.doc( doc.doc );
-			String userId = result.get("userId")
-			println( userId + " " + result.get("fullName"));
-		
-			users.add( userService.findUserByUserId(userId));
-		
-		}
-		
-		println "found some users: ${users.size()}";
-		
-		render( view:'userSearchResults', model:[allUsers:users]);
+		render( view:'userSearchResults', model:[allUsers:results]);
 	}
 
 	def searchIFollow = 
@@ -92,35 +235,11 @@ class SearchController
 		println "searching People, queryString: ${queryString}";
 				
 		
-		File indexDir = new File( "/development/lucene_indexes/quoddy/person_index" );
-		Directory fsDir = FSDirectory.open( indexDir );
 		
-		IndexSearcher searcher = new IndexSearcher( fsDir );
-
-		BooleanQuery outerQuery = new BooleanQuery();
+		List<SearchResult> results = searchService.doPeopleSearch( queryString );
+		println "found some users: ${results.size()}";
 		
-		QueryParser queryParser = new QueryParser(Version.LUCENE_30, "fullName", new StandardAnalyzer(Version.LUCENE_30));
-		Query userQuery = queryParser.parse(queryString);
-		
-		TopDocs hits = searcher.search( userQuery, 20);
-		
-		def users = new ArrayList<User>();
-		ScoreDoc[] docs = hits.scoreDocs;
-		for( ScoreDoc doc : docs )
-		{
-			Document result = searcher.doc( doc.doc );
-			String userId = result.get("userId")
-			println( userId + " " + result.get("fullName"));
-		
-			users.add( userService.findUserByUserId(userId));
-		
-		}
-		
-		println "found some users: ${users.size()}";
-		
-		
-		println "done"
-		render( view:'peopleSearchResults', model:[allUsers:users]);
+		render( view:'peopleSearchResults', model:[allUsers:results]);
 		
 	}
 	
@@ -131,62 +250,18 @@ class SearchController
 		
 		User user = session.user;
 		
-		// TODO: verify login...
 
 		// search users using supplied parameters and return the
 		// model for rendering...
 		String queryString = params.queryString;
 		println "searching IFollow, queryString: ${queryString}";
 				
-		// get a list of my friends
-		List<User> iFollow = userService.listIFollow( user );
-		
-		// use the list of iFollow ids as part of the lucene query.  Need to make sure that we
-		// specify that the id field must be a match.
-		
-		File indexDir = new File( "/development/lucene_indexes/quoddy/person_index" );
-		Directory fsDir = FSDirectory.open( indexDir );
-		
-		IndexSearcher searcher = new IndexSearcher( fsDir );
 
-		BooleanQuery outerQuery = new BooleanQuery();
-		
-		QueryParser queryParser = new QueryParser(Version.LUCENE_30, "fullName", new StandardAnalyzer(Version.LUCENE_30));
-		Query userQuery = queryParser.parse(queryString);
-		
-		BooleanQuery userIdQuery = new BooleanQuery();
-		for( User person : iFollow )
-		{
-			Term term = new Term( "userId", person.userId );
-			TermQuery termQuery = new TermQuery( term );
-			userIdQuery.add(termQuery, Occur.SHOULD );
-		}
-		
-		outerQuery.add( userQuery, Occur.MUST );
-		outerQuery.add( userIdQuery, Occur.MUST );
-		
-		System.out.println( "Query (" + outerQuery.getClass().getName() + "): "  + outerQuery.toString() );
+		List<SearchResult> results = searchService.doIFollowSearch( queryString );
+		println "found some users: ${results.size()}";
 		
 		
-		TopDocs hits = searcher.search( outerQuery, 20);
-		
-		def users = new ArrayList<User>();
-		ScoreDoc[] docs = hits.scoreDocs;
-		for( ScoreDoc doc : docs )
-		{
-			Document result = searcher.doc( doc.doc );
-			String userId = result.get("userId")
-			println( userId + " " + result.get("fullName"));
-		
-			users.add( userService.findUserByUserId(userId));
-		
-		}
-		
-		println "found some users: ${users.size()}";
-		
-		
-		println "done"
-		render( view:'iFollowSearchResults', model:[allUsers:users]);
+		render( view:'iFollowSearchResults', model:[allUsers:results]);
 		
 			
 	}
@@ -203,116 +278,54 @@ class SearchController
 		println "Searching Friends";	
 		
 		User user = session.user;
-		
-		// TODO: verify login...
+
 
 		// search users using supplied parameters and return the
 		// model for rendering...
 		String queryString = params.queryString;
 		println "searching Users, queryString: ${queryString}";
 				
-		// get a list of my friends
-		List<User> myFriends = userService.listFriends( user );
+		List<SearchResult> results = searchService.doFriendSearch( queryString );
 		
-		// use the list of friend ids as part of the lucene query.  Need to make sure that we
-		// specify that the id field must be a match.
-		
-		File indexDir = new File( "/development/lucene_indexes/quoddy/person_index" );
-		Directory fsDir = FSDirectory.open( indexDir );
-		
-		IndexSearcher searcher = new IndexSearcher( fsDir );
-
-		BooleanQuery outerQuery = new BooleanQuery();
-		
-		QueryParser queryParser = new QueryParser(Version.LUCENE_30, "fullName", new StandardAnalyzer(Version.LUCENE_30));
-		Query userQuery = queryParser.parse(queryString);
-		
-		BooleanQuery userIdQuery = new BooleanQuery();
-		for( User friend : myFriends )
-		{
-			Term term = new Term( "userId", friend.userId );
-			TermQuery termQuery = new TermQuery( term );
-			userIdQuery.add(termQuery, Occur.SHOULD );
-		}
-		
-		outerQuery.add( userQuery, Occur.MUST );
-		outerQuery.add( userIdQuery, Occur.MUST );
-		
-		System.out.println( "Query (" + outerQuery.getClass().getName() + "): "  + outerQuery.toString() );
-		
-		
-		TopDocs hits = searcher.search( outerQuery, 20);
-		
-		def users = new ArrayList<User>();
-		ScoreDoc[] docs = hits.scoreDocs;
-		for( ScoreDoc doc : docs )
-		{
-			Document result = searcher.doc( doc.doc );
-			String userId = result.get("userId")
-			println( userId + " " + result.get("fullName"));
-		
-			users.add( userService.findUserByUserId(userId));
-		
-		}
-		
-		println "found some users: ${users.size()}";
+		println "found some users: ${results.size()}";
 		
 		
 		println "done"
-		render( view:'friendSearchResults', model:[allUsers:users]);
+		render( view:'friendSearchResults', model:[allUsers:results]);
 		
 			
 	}
 	
 	
-	def rebuildIndex = {
+	def rebuildAll = {
+	
+		// send JMS message requesting ALL index rebuild
+		def msg = [ msgType:'REINDEX_ALL'];
+		jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
 		
-		// build the search index using Lucene
-		List<User> users = userService.findAllUsers();
-		println "reindexing ${users.size()} users";
-		Directory indexDir = new NIOFSDirectory( new java.io.File( "/development/lucene_indexes/quoddy/person_index" ) );
-		IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.LIMITED);
-		writer.setUseCompoundFile(false);		
-		
-		for( User user : users )
-		{	
-			Document doc = new Document();
-			
-			
-			doc.add( new Field( "fullName", user.getFullName(), 
-						Field.Store.YES, Field.Index.ANALYZED ) );
-			
-			String bio = user.getBio();
-			if( bio == null )
-			{
-				bio= "NA";	
-			}
-			
-			doc.add( new Field( "bio", bio, 
-					Field.Store.YES, Field.Index.ANALYZED ) );
-			
-			doc.add( new Field( "userId", user.userId, 
-					Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			
-			doc.add( new Field( "email", user.getEmail(), 
-					Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			
-			String homepage = user.getHomepage();
-			if( homepage == null ) 
-			{
-				homepage = "NA";
-			}
-			doc.add( new Field( "homepage", homepage, 
-					Field.Store.YES, Field.Index.NOT_ANALYZED ) );
-			
-			writer.addDocument( doc );
-		}
-		
-		writer.optimize();
-		writer.close();		
-		
-		println "done";
-		render( "<html><head><title>Index Rebuilt</head><body><h1>Index Rebuilt</h1></body></html>" );
+		render( "<html><head><title>Person Index Rebuilding...</title></head><body><h1>All Indexes Rebuilding...</h1></body></html>" );
 		
 	}
+	
+	def rebuildPersonIndex = {
+		
+		// TODO: send JMS message requesting PERSON index rebuild
+		def msg = [ msgType:'REINDEX_PERSON'];
+		jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
+		
+		render( "<html><head><title>Person Index Rebuilding...</title></head><body><h1>Person Index Rebuilding...</h1></body></html>" );
+		
+	}
+	
+	def rebuildGeneralIndex = {
+		
+		// TODO: send JMS message requesting GENERAL index rebuild
+		def msg = [ msgType:'REINDEX_GENERAL'];
+		jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
+		
+		render( "<html><head><title>General Index Rebuilding...</title></head><body><h1>General Index Rebuilding...</h1></body></html>" );
+		
+	}
+	
+	
 }

@@ -13,14 +13,26 @@
 <link rel="stylesheet" type="text/css"
 	href="${createLinkTo(dir:'css', file:'crappy_css_added_by_phil.css')}" />
 
+
+
 <link rel="stylesheet" type="text/css"
 	href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" />
+
+<link rel="stylesheet" type="text/css"
+ href="${createLinkTo(dir:'js/jquery-ui-1.10.3.custom/css/vader', file:'jquery-ui-1.10.3.custom.css') }" />
+
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<g:javascript library="jquery-1.7.1.min" />
+<!-- <g:javascript library="jquery-1.7.1.min" /> -->
+<g:javascript library="jquery-ui-1.10.3.custom/js/jquery-1.9.1" />
+
 <g:javascript>
           var $j = jQuery.noConflict();	
-        </g:javascript>
+</g:javascript>
+
+<g:javascript library="jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom" />
+
 
 <g:javascript library="dropdown" />
 <g:javascript>
@@ -49,13 +61,12 @@
 					</li>
 					
 					
-					
-					<g:if test="${session.user != null}">
+					<shiro:authenticated>
 						<li><a href="#">Email</a></li>
 						<li><a href="#">Reports</a></li>
 						<li><a href="#">Calendar</a></li>
 						<li><a href="#">Apps</a></li>
-					</g:if>
+					</shiro:authenticated>
 				</ul>
 				<div id="gbg" class="settingsNav navbar">
 					<ul class="topLevel">
@@ -90,24 +101,29 @@
 							data-toggle="dropdown" href="#">My Account<b class="caret"></b></a>
 							<ul class="dropdown-menu">
 								
-								<g:if test="${session.user != null}">
+								<shiro:authenticated>
 									<li><a
-										href="${createLink(controller:'user', action:'listOpenFriendRequests')}">Pending
-										Friend Requests</a></li>
+										href="${createLink(controller:'user', action:'listOpenFriendRequests')}">
+										Pending Friend Requests</a></li>
 									<li><a
-										href="${createLink(controller:'schedule', action:'index')}">Manage
-										Scheduled Jobs</a></li>
+										href="${createLink(controller:'schedule', action:'index')}">
+										Manage Scheduled Jobs</a></li>
+									
+									<!-- remove this once we've merged management of calendar
+									feeds into the main subscriptions wizard
 									<li><a
-										href="${createLink(controller:'calendar', action:'index')}">Manage
-										Calendar Feeds</a></li>
-									<li class="divider"></li>
+										href="${createLink(controller:'calendar', action:'index')}">
+										Manage Calendar Feeds</a></li>
+									
+									 -->									<li class="divider"></li>
+									
 									<li><a
-										href="${createLink(controller:'user', action:'editAccount')}">Edit
-										Account Info</a></li>
+										href="${createLink(controller:'user', action:'editAccount')}">
+										Edit Account Info</a></li>
 									<li><a
-										href="${createLink(controller:'user', action:'editProfile')}">Edit
-										Profile</a></li>
-								</g:if>
+										href="${createLink(controller:'user', action:'editProfile')}">
+										Edit Profile</a></li>
+								</shiro:authenticated>
 								
 								<li class="divider"></li>
 								<g:if test="${session.enable_self_registration == true}">
@@ -116,15 +132,16 @@
 										href="${createLink(controller:'user', action:'create')}">Register</a></li>
 								</g:if>
 								
-								<g:if test="${session.user == null}">
+								<shiro:authenticated>
 									<li><a href="${createLink(controller:'login') }">Login</a></li>
-								</g:if>
+								</shiro:authenticated>
 								
-								<g:if test="${session.user != null}">
+								<shiro:authenticated>
 									<li><a
 										href="${createLink(controller:'login', action:'logout')}">Logout</a></li>
-								</g:if>
-							</ul></li>
+								</shiro:authenticated>
+							</ul>
+						</li>
 					</ul>
 
 				</div>
@@ -137,9 +154,9 @@
 		<!-- left sidenav, global -->
 		
 		<div class="leftContentNav span3">
-			<g:if test="${session.user != null }">
+			<shiro:authenticated>
 				<g:render template="/leftSidebar" />
-			</g:if>
+			</shiro:authenticated>
 		</div>
 
 		<!-- layout main content area -->
