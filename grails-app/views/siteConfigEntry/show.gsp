@@ -1,5 +1,5 @@
 
-<%@ page import="org.fogbeam.neddick.SiteConfigEntry" %>
+<%@ page import="org.fogbeam.quoddy.system.settings.SiteConfigEntry" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
