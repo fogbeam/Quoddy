@@ -1821,7 +1821,8 @@
      *
      */
     this.startTour = function(tour, stepNum) {
-      var bubble,
+      // alert( "starting tour");
+    	var bubble,
           self = this;
 
       // loadTour if we are calling startTour directly. (When we call startTour

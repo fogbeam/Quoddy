@@ -12,6 +12,8 @@
 	href="${createLinkTo(dir:'css', file:'oagis.css')}" />
 <link rel="stylesheet" type="text/css"
 	href="${createLinkTo(dir:'css', file:'crappy_css_added_by_phil.css')}" />
+<link rel="stylesheet" type="text/css"
+	href="${createLinkTo(dir:'css', file:'hopscotch.css')}" />
 
 
 
@@ -26,6 +28,9 @@
 
 <!-- <g:javascript library="jquery-1.7.1.min" /> -->
 <g:javascript library="jquery-ui-1.10.3.custom/js/jquery-1.9.1" />
+
+<g:javascript library="hopscotch" />
+<g:javascript library="quoddy_intro_tour" />
 
 <g:javascript>
           var $j = jQuery.noConflict();	
@@ -142,6 +147,22 @@
 								</shiro:authenticated>
 							</ul>
 						</li>
+						
+						<!-- Help menu -->
+						<li class="dropdown"><a class="dropdown-toggle"
+							data-toggle="dropdown" href="#">Help<b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="#">Tutorial</a></li>
+								<li><a href="#" onclick="hopscotch.startTour(tour);">Interactive Tour</a></li>
+								<li><a href="#">Quoddy User Guide</a></li>
+								<li><a href="#">Quoddy Admin Guide</a></li>
+								<li><a href="#">Quoddy Developer Guide</a></li>
+								<li class="divider"></li>
+								<li><a href="#">About Quoddy</a></li>
+							</ul>
+						</li>
+						<!--  end Help menu -->
+					
 					</ul>
 
 				</div>
