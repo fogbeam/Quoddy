@@ -152,7 +152,7 @@
 						<li class="dropdown"><a class="dropdown-toggle"
 							data-toggle="dropdown" href="#">Help<b class="caret"></b></a>
 							<ul class="dropdown-menu">
-								<li><a href="#">Tutorial</a></li>
+								<li><a href="#">Quick-start Tutorial</a></li>
 								<li><a href="#" onclick="hopscotch.startTour(tour);">Interactive Tour</a></li>
 								<li><a href="#">Quoddy User Guide</a></li>
 								<li><a href="#">Quoddy Admin Guide</a></li>
