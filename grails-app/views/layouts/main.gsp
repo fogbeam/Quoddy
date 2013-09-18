@@ -152,11 +152,10 @@
 						<li class="dropdown"><a class="dropdown-toggle"
 							data-toggle="dropdown" href="#">Help<b class="caret"></b></a>
 							<ul class="dropdown-menu">
-								<li><a href="#">Quick-start Tutorial</a></li>
+								<li><a href="docs/index.html">Help Contents</a></li>
 								<li><a href="#" onclick="hopscotch.startTour(tour);">Interactive Tour</a></li>
-								<li><a href="#">Quoddy User Guide</a></li>
 								<li><a href="#">Quoddy Admin Guide</a></li>
-								<li><a href="#">Quoddy Developer Guide</a></li>
+								<li><a href="#">Quoddy Integration Guide</a></li>
 								<li class="divider"></li>
 								<li><a href="#">About Quoddy</a></li>
 							</ul>

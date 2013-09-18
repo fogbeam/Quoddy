@@ -1,0 +1,135 @@
+<?xml version="1.0" ?>
+                   
+<book xmlns="http://docbook.org/xml/5.0/xsd/docbook.xsd" xmlns:xi="http://www.w3.org/2001/XInclude" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://docbook.org/ns/docbook http://docbook.org/xml/5.0/xsd/docbook.xsd"
+		version="5.0">
+	<info>
+      	<title>Quoddy Help</title>
+		<author>
+        	<personname>
+        		<firstname>Phillip</firstname>
+        		<surname>Rhodes</surname>
+        	</personname>
+		</author>
+      	<copyright>
+      		<year>2013</year>
+      		<holder>Fogbeam Labs</holder>
+      	</copyright>
+	</info>	
+	<chapter>
+		
+		<title>Introduction to Quoddy</title>
+				
+		<para>
+			Quoddy is an Open Source Enterprise Social Network, which shares common "look and feel" elements, 
+			and substantial functionality, with consumer facing Social Networks like 
+			Facebook or Google+ as well as proprietary Enterprise Social Network products 
+			like the products from Jive Software and Yammer among others.   But unlike
+			consumer Social Networks, Quoddy is intended for organizational use and therefore has 
+			capabilities which make it uniquely suited to provide the social fabric to 
+			support organizational knowledge sharing, knowledge transfer, collaboration and 
+			decision support.
+		</para>
+
+      	<section>
+      	
+      		<title>The Activity Stream</title>
+			<para> The Activity Stream is the central element of the Quoddy interface.  The Activity Stream
+			takes up the right hand side of the main page in Quoddy, and displays Status Updates
+			from other users, Business Events from backend systems, Calendar Events from calendaring
+			/ groupware systems, User Tasks from BPM / workflow systems, User activity events from external
+			systems, Document links from Document Management Systems, and other events of interest to you, based on
+			the users you friend/follow, groups you join, and the subscriptions you define. 
+			</para>
+	   		<para>
+	   			Since Users do not necessarily want to see all content all the time, Quoddy has a concept known as
+	   			Stream Definitions.  A User creates a Stream Definition to collect a related group of Users, User Lists, Groups
+	   			and Subscriptions, and batch that content together.  When a User has multiple Stream Definitions, a simple
+	   			dropdown menu allows the User to toggle which collection is rendered into the main Activity Stream at
+	   			any given time.  
+	   		</para>
+	   	</section>		
+		
+		<section>
+      	
+      		<title>Friends &amp; Followers</title>
+			<para> Adding another User as a "Friend" requires that User's approval and creates a two way
+			connection between the two Users.  Following a User creates a one-way connection and does not
+			require approval from the User being followed. </para>
+
+	   	
+	   	</section>
+		
+		<section>
+      	
+      		<title> User Lists &amp; Groups</title>
+			<para> User Lists allow a User to group related people together, and quickly
+			filter their Activity Stream down to only updates from those Users.  A User
+			can have multiple such groups, and a simple dropdown menu allows the User to select
+			the active User List at any time.</para>
+	   		<para>
+	   			Groups support multi-user collaboration around a given topic, interest, project, or other
+	   			unifying concept.  Users may search for Groups which are of interest to them, join those
+	   			Groups, and then share content with, and recieve status updates from, those Groups.  A User
+	   			may join many Groups, and a simple dropdown menu allows the User to select which Group's content
+	   			they wish to view at any given time.
+	   		</para>
+	   	</section>
+
+		<section>
+      	
+      		<title>Subscriptions</title>
+			<para> Perhaps the most powerful and important feature in Quoddy, subscriptions
+			allow Users to register interest in various kinds of content from both within
+			their organization, and from outside the organiation, and then have that content
+			delivered straight to their Activity Stream.  </para>
+	   		<para>
+	   			More to come...
+	   		</para>
+	   	</section>
+		
+	</chapter>
+
+	<chapter>
+		<title>Using the Activity Stream</title>
+		<section>
+			<para>
+				Coming soon...
+			</para>
+		</section>
+	</chapter>
+	<chapter>
+		<title>Your User Profile</title>
+		<section>
+			<para>
+				Coming soon...
+			</para>
+		</section>
+	</chapter>
+	<chapter>
+		<title>Friends &amp; Followers</title>
+		<section>
+			<para>
+				Coming soon...
+			</para>
+		</section>
+	</chapter>
+	<chapter>
+		<title>Subscriptions</title>
+		<section>
+			<para>
+				Coming soon...
+			</para>
+		</section>		
+	</chapter>
+	<chapter>
+		<title>Neddick</title>
+		<section>
+			<para>
+				Coming soon...
+			</para>
+		</section>		
+	</chapter>
+	
+</book>
