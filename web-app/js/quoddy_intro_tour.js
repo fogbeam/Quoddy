@@ -18,12 +18,73 @@
             placement: "top",
             width: 350        	
         	
+        },
+        {
+            title: "Calendar Entry",
+            content: "",
+            target: ".calendarEntry",
+            placement: "top",
+            width: 350        	
+        	
+        },
+        {
+            title: "Neddick Link",
+            content: "",
+            target: ".neddickLink",
+            placement: "top",
+            width: 350        	
+        	
+        },
+        {
+            title: "RSS Feed Item",
+            content: "",
+            target: ".rssFeedItem",
+            placement: "top",
+            width: 350        	
+        	
+        },
+        {
+            title: "Business Event",
+            content: "",
+            target: ".businessSubscriptionEvent",
+            placement: "top",
+            width: 350        	
+        	
+        },
+        {
+            title: "Reshared Item",
+            content: "",
+            target: ".resharedActivityStreamEntry",
+            placement: "top",
+            width: 350        	
+        	
+        },
+        {
+            title: "Remote ActivityStream Item",
+            content: "",
+            target: ".remoteActivityStreamEntry",
+            placement: "top",
+            width: 350        	
+        	
+        },
+        {
+            title: "Activiti User Task",
+            content: "",
+            target: ".activitiUserTask",
+            placement: "top",
+            width: 350        	
+        	
         }
-      ],
+      ]
+    
+    
+      /* ,
       onStart: function() {
           alert( "onStart");
         },
        onError: function() {
     	   alert( "onError" );
        }
+      */
+    
     }
