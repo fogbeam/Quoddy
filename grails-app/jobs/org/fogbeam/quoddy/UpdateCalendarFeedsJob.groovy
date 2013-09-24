@@ -105,8 +105,17 @@ class UpdateCalendarFeedsJob
 						event.location = comp.location?.value;
 						event.uid = comp.uid.value;
 							
-						event.geoLat = comp.geographicPos?.getLatitude();
-						event.geoLong = comp.geographicPos?.getLongitude();
+						def latitude = comp.geographicPos?.getLatitude();
+						if( latitude )
+						{
+							event.geoLat = latitude;
+						} 
+						
+						def longitude = comp.geographicPos?.getLongitude();
+						if( longitude )
+						{
+							event.geoLong = longitude; 
+						}
 						
 						// note: effectiveDate is a new attribute on EventBase.  It
 						// represents the point in time that the event "becomes real"
