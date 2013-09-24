@@ -10,22 +10,20 @@
           target: "activityStream",
           placement: "top",
           width: 350
-        }
-      ]
-    };
-
-    // Start the tour!
-    // alert( "starting tour!");
-    // hopscotch.startTour(tour);
-        
-    
-/*
-    
-,
+        },
         {
-          title: "Step Two",
-          content: "Step Two",
-          target: document.querySelector("#content p"),
-          placement: "bottom"
+            title: "Status Update",
+            content: "This is a Status Update, shared by one of your Friends or someone you Follow.",
+            target: ".basicActivityStreamEntry",
+            placement: "top",
+            width: 350        	
+        	
         }
-    */
+      ],
+      onStart: function() {
+          alert( "onStart");
+        },
+       onError: function() {
+    	   alert( "onError" );
+       }
+    }
