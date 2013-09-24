@@ -29,12 +29,14 @@
 <!-- <g:javascript library="jquery-1.7.1.min" /> -->
 <g:javascript library="jquery-ui-1.10.3.custom/js/jquery-1.9.1" />
 
+<g:javascript>
+	var $j = jQuery.noConflict();	
+</g:javascript>
+
 <g:javascript library="hopscotch" />
 <g:javascript library="quoddy_intro_tour" />
 
-<g:javascript>
-          var $j = jQuery.noConflict();	
-</g:javascript>
+
 
 <g:javascript library="jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom" />
 
@@ -49,6 +51,8 @@
 <script type="text/javascript">
         	<g:render template="/javascript/application.js"/>
     	</script>
+
+<g:javascript library="application" />
 
 <g:layoutHead />
 
@@ -157,7 +161,7 @@
 								<li><a href="#">Quoddy Admin Guide</a></li>
 								<li><a href="#">Quoddy Integration Guide</a></li>
 								<li class="divider"></li>
-								<li><a href="#">About Quoddy</a></li>
+								<li><a href="#" onclick="testSelector();">About Quoddy</a></li>
 							</ul>
 						</li>
 						<!--  end Help menu -->

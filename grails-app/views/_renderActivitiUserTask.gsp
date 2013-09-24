@@ -17,7 +17,7 @@
 	</div>	
 	
 	
-	<div class="activityStreamEntry"> 
+	<div class="activityStreamEntry activitiUserTask"> 
 		<font color="red">ACTIVITI USER TASK</font>
 		<p>
 		    ${item.streamObject.name}

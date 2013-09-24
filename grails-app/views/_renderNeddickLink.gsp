@@ -18,7 +18,7 @@
 	</div>	
 	
 	
-	<div class="activityStreamEntry"> 
+	<div class="activityStreamEntry neddickLink"> 
 		<p>
 			<strong>${item.objectSummary}</strong>
 		</p>

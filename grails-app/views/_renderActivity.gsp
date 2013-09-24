@@ -24,7 +24,7 @@
 	<!--  end aseTitleBar -->
 	
 	<!-- begin activityStreamEntry -->
-	<div class="activityStreamEntry">
+	<div class="activityStreamEntry basicActivityStreamEntry">
 		${item.content}
 	</div>
 	<!-- end activityStreamEntry -->
