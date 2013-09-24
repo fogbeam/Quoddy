@@ -16,3 +16,5 @@ query_debug.txt
 web-app/js/prototype/
 stacktrace.log
 help/docs
+help/docs/*
+
