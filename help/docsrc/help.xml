@@ -17,7 +17,7 @@
       		<holder>Fogbeam Labs</holder>
       	</copyright>
 	</info>	
-	<chapter>
+	<chapter id="quoddyIntroChapter" xreflabel="Introduction to Quoddy" >
 		
 		<title>Introduction to Quoddy</title>
 				
@@ -32,15 +32,15 @@
 			decision support.
 		</para>
 
-      	<section>
+      	<section id="introActivityStreamSection" xreflabel="Activity Stream">
       	
       		<title>The Activity Stream</title>
 			<para> The Activity Stream is the central element of the Quoddy interface.  The Activity Stream
-			takes up the right hand side of the main page in Quoddy, and displays Status Updates
-			from other users, Business Events from backend systems, Calendar Events from calendaring
-			/ groupware systems, User Tasks from BPM / workflow systems, User activity events from external
-			systems, Document links from Document Management Systems, and other events of interest to you, based on
-			the users you friend/follow, groups you join, and the subscriptions you define. 
+				takes up the right hand side of the main page in Quoddy, and displays Status Updates
+				from other users, Business Events from backend systems, Calendar Events from calendaring
+				/ groupware systems, User Tasks from BPM / workflow systems, User activity events from external
+				systems, Document links from Document Management Systems, and other events of interest to you, based on
+				the users you friend/follow, groups you join, and the subscriptions you define. 
 			</para>
 	   		<para>
 	   			Since Users do not necessarily want to see all content all the time, Quoddy has a concept known as
@@ -51,23 +51,32 @@
 	   		</para>
 	   	</section>		
 		
-		<section>
+		<section id="friendsSection" xreflabel="Friends &amp; Followers">
       	
       		<title>Friends &amp; Followers</title>
 			<para> Adding another User as a "Friend" requires that User's approval and creates a two way
-			connection between the two Users.  Following a User creates a one-way connection and does not
-			require approval from the User being followed. </para>
+				connection between the two users.  Following a user creates a one-way connection and does not
+				require approval from the user being followed. 
+			</para>
+			<para>
+				By default, your <xref linkend="usingActivityStreamChapter"/> will be include Status Updates from users 
+				who you have Friended or Followed.  In turn, Friended users, or users who Follow you, will receive
+				your Status Updates by default.  However, configurable User Stream definitions in Quoddy allow you to fine
+				tune your Activity Stream at a finer level of detail, to ensure that you receive exactly the information
+				you need, and no more.  
+			</para>
 
 	   	
 	   	</section>
 		
-		<section>
+		<section id="introUserListGroupSection" xreflabel="User Lists &amp; Groups">
       	
       		<title> User Lists &amp; Groups</title>
 			<para> User Lists allow a User to group related people together, and quickly
-			filter their Activity Stream down to only updates from those Users.  A User
-			can have multiple such groups, and a simple dropdown menu allows the User to select
-			the active User List at any time.</para>
+				filter their Activity Stream down to only updates from those Users.  A User
+				can have multiple such groups, and a simple dropdown menu allows the User to select
+				the active User List at any time.
+			</para>
 	   		<para>
 	   			Groups support multi-user collaboration around a given topic, interest, project, or other
 	   			unifying concept.  Users may search for Groups which are of interest to them, join those
@@ -77,59 +86,234 @@
 	   		</para>
 	   	</section>
 
-		<section>
+		<section id="introSubscriptionSection" xreflabel="Subscriptions" >
       	
       		<title>Subscriptions</title>
-			<para> Perhaps the most powerful and important feature in Quoddy, subscriptions
-			allow Users to register interest in various kinds of content from both within
-			their organization, and from outside the organiation, and then have that content
-			delivered straight to their Activity Stream.  </para>
+			<para> 
+				Perhaps the most powerful and important feature in Quoddy, subscriptions
+				allow Users to register interest in various kinds of content from both within
+				their organization, and from outside the organiation, and then have that content
+				delivered straight to their Activity Stream.  
+			</para>
 	   		<para>
-	   			More to come...
+	   			Quoddy currently supports four types of Subscriptions:
+	   			<itemizedlist mark='opencircle'>
+					<listitem>
+						Activiti User Tasks
+					</listitem>
+					<listitem>
+						Business Events					
+					</listitem>
+					<listitem>
+						Calendar Feeds
+					</listitem>
+					<listitem>
+						RSS Feed Subscription					
+					</listitem>
+				</itemizedlist>
 	   		</para>
+	   		
+	   		For more information on configuring Subscriptions please see the <xref linkend="subscriptionsChapter"/> chapter. 
 	   	</section>
 		
 	</chapter>
 
-	<chapter>
+	<chapter id="usingActivityStreamChapter" xreflabel="Activity Stream">
+	
 		<title>Using the Activity Stream</title>
-		<section>
+		<section id="usingActivityStreamSection1">
+		    <title>Basics</title>
 			<para>
-				Coming soon...
+				Your Activity Stream will normally look something like the image below, filled with a variety of different
+				types of content, including a mix of Status Updates from Friends, Calendar Events, Business Events and RSS Feed Items from 
+				Subscriptions, etc. 
+			</para>
+			<imagedata fileref="images/activityStream1.png" width="550px" scalefit="1"/>
+			<para>
+				The Activity Stream area allows you to operate on this content in various ways, including:
+				<itemizedlist mark="opencircle">
+					<listitem>
+						Commenting
+					</listitem>
+					<listitem>
+						Voting
+					</listitem>
+					<listitem>
+						Sharing
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para>
+				Commenting provides a means to annotate content items with your personal observations, thoughts or insights, and
+				to reply to similar comments from other users.  These discussions around a piece of content, such as a report from the
+				Business Intelligence group, a Business Event, or other relevant enterprise content, facilitate the generation, capture
+				and reuse of valuable knowledge and can directly lead to better decision making, increased productivity and crucial
+				innovations. 
+			</para>
+			<para>
+				To interact with the Comments on an item in your stream, simply click "Show Comments" to show any
+				existing comments, or click inside the textbox labeled "Add a Comment" to leave your own comment.  To 
+				temporarily hide the comments associated with an item, click  the "Hide Comments" link.
+			</para>
+			<para>
+				To "Share" an item with another user, simply click the "Share" link near the bottom of the entry.  To add
+				a comment to the newly shared item, add your comment text in the uppermost textbox of the resulting dialog.  Type the username
+				of the user you are sharing the item with in the lower textbox and click "Submit" to complete the action.  Shared items
+				will appear in the Activity Stream of the user you share with. 
+			</para>
+			<para>
+			    (This feature is not yet implemented)
+				To Vote (or "+1") an item in your stream, simply click the "+1" link at the bottom of the item, near the
+				Comments area.  The current "score" of an item will reflect the number of users who have voted for it.  Voting
+				also marks an item as being of interest to you, and - in future versions of Quoddy - will be factored into
+				algorithms which automatically recommend content for you.  Future versions will also support the
+				ability to quickly access the list of items that you have voted for, and the ability to remove an
+				existing vote.
 			</para>
 		</section>
+		<section id="usingActivityStreamSection2">
+		    <title>User Stream Definitions</title>
+		    <para>
+		    	In order to provider users with fine-grained control over exactly which content appears in their Activity
+		    	Stream, Quoddy supports the creation and user of user defined "Stream" entries which define a collection of
+		    	requested content items by type, user, group, list, or subscription.  You may, for example, define a "Stream"
+		    	which only includes Business Events and nothing else.  Or, you may define a Stream which includes content
+		    	from three specifically designated users, plus events from a specific Calendar Feed, and Business
+		    	Events from one specified Business Event Subscription.   You may mix and match and tailor these definitions
+		    	to fit your exact criteria.
+		    </para>
+		    <para>
+		    	The default Stream entry includes all content from all uses that you have friended or followed, as well
+		    	as content from any Group you join, and all Subscriptions you create.  It is not recommended to
+		    	modify the default Stream definition, but rather to create new definitions to suit your requirements.  The
+		    	currently active Stream definition can be easily changed by selecting it from the "Streams" dropdown menu above
+		    	the Activity Stream area.
+		    </para>
+		    <para>
+		    	To create a new Stream definition, simply select the "Streams" dropdown menu, and click the "Manage Streams" lilnk, which will take
+		    	you to a page that looks like the page below:
+		    	<imagedata fileref="images/manageStreams1.png" width="550px" scalefit="1"/>
+		    </para>
+		  	<para>
+		  		To continue creating your new Stream definition, click the big blue "Create a New Stream" button, which begins
+		  		the New Stream Wizard.  The first page of the wizard will appear something like the image below:
+		  		
+		  		<imagedata fileref="images/newStreamWizard1.png" width="550px" scalefit="1"/>
+		  	</para>
+		  	<para>
+		  		Enter a name and a description for your new Stream, and click "Next" to proceed to the next page of the
+		  		New Stream Wizard.  The second page will appear something like the image below:
+		  		
+		  		<imagedata fileref="images/newStreamWizard2.png" width="550px" scalefit="1"/>
+		  		
+		  	</para>
+		  	<para>
+		  		
+		  		Select the types of content you wish to appear in your new stream (Ctrl+Click to select multiple items)
+		  		and click "Next" to go to the next page of the New Stream Wizard. The third page will appear something 
+		  		like the image below:
+		  		
+		  		<imagedata fileref="images/newStreamWizard3.png" width="550px" scalefit="1"/>
+		  	</para>
+		  	
+		  	<para>
+		  	
+		  		Select the users whose updates you wish to appear in your new stream  and click "Next" to go to the 
+		  		next page of the New Stream Wizard. The fourth page will appear something  like the image below:
+		  	
+		  		<imagedata fileref="images/newStreamWizard4.png" width="550px" scalefit="1"/>
+		  	</para>
+		  	
+		  	<para>
+		  		Select the User Lists that contain users whose updates you wish to appear in your new stream  and click "Next" to go to the 
+		  		next page of the New Stream Wizard. The fifth page will appear something  like the image below:
+
+		  	
+		  		<imagedata fileref="images/newStreamWizard5.png" width="550px" scalefit="1"/>
+		  	</para>
+		  	
+		  	<para>
+		  		Select the Groups whose updates you wish to appear in your new stream  and click "Next" to go to the 
+		  		next page of the New Stream Wizard. The sixth page will appear something  like the image below:
+		  		<imagedata fileref="images/newStreamWizard6.png" width="550px" scalefit="1"/>
+		  	</para>
+		  	
+		  	<para>
+		  		Select the Subscriptions whose content you wish to appear in your new stream  and click "Finish" to complete
+		  		the New Stream Wizard. This will return you to the "Manage Streams" page, and you will see your new
+		  		Stream listed along with the others. 
+		  		<imagedata fileref="images/newStreamWizard7.png" width="550px" scalefit="1"/>
+		  	</para>
+		  	
+		  	
+		</section>
+		
 	</chapter>
-	<chapter>
+	
+	<chapter id="userProfileChapter" xreflabel="User Profile">
 		<title>Your User Profile</title>
-		<section>
+		<section id="userProfileSection1">
+			<title>Basics</title>
 			<para>
 				Coming soon...
 			</para>
 		</section>
+
+		<section id="userProfileSection2">
+		    <title>Advanced</title>
+		    <para>Coming Soon...</para>
+		</section>
+
 	</chapter>
-	<chapter>
+
+
+	<chapter id="friendsFollowersChapter" xreflabel="Friends &amp; Followers">
 		<title>Friends &amp; Followers</title>
-		<section>
+		<section id="friendsFollowersSection1">
+			<title>Basics</title>
 			<para>
 				Coming soon...
 			</para>
 		</section>
+	
+		<section id="friendsFollowersSection2">
+		    <title>Advanced</title>
+		    <para>Coming Soon...</para>
+		</section>
+	
 	</chapter>
-	<chapter>
+	
+	
+	<chapter id="subscriptionsChapter" xreflabel="Subscriptions">
 		<title>Subscriptions</title>
-		<section>
+		<section id="subscriptionsSection1">
+			<title>Basics</title>
 			<para>
 				Coming soon...
 			</para>
 		</section>		
+		
+		<section id="subscriptionsSection2">
+		    <title>Advanced</title>
+		    <para>Coming Soon...</para>
+		</section>
+		
 	</chapter>
-	<chapter>
-		<title>Neddick</title>
-		<section>
+	
+	<chapter id="neddickIntegrationChapter" xreflabel="Neddick Integration">
+		<title>Neddick Integration</title>
+		<section id="neddickIntegrationSection1">
+			<title>Basics</title>
 			<para>
 				Coming soon...
 			</para>
 		</section>		
+		
+		<section id="neddickIntegraionSection2">
+		    <title>Advanced</title>
+		    <para>Coming Soon...</para>
+		</section>
+		
 	</chapter>
 	
 </book>
