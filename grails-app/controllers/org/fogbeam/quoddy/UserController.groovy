@@ -89,6 +89,15 @@ class UserController {
 		[]	
 	}	
 				   
+
+	
+	def manageUsers =
+	{
+		
+		
+		return [];
+	}
+	
 	def viewUser = 
 	{
 		
