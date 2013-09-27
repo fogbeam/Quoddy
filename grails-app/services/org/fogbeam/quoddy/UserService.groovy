@@ -158,7 +158,24 @@ class UserService {
 	
 		return users;	
 	}
+
+	/* note: page is 1 indexed */
+	public List<User> findAllUsers(final int max, final int page )
+	{
+		List<User> users = new ArrayList<User>();
+		int offset = ( (page * max) -max);
+		println "calculated offset as $offset";
+		List<User> temp = User.executeQuery( "select user from User as user order by user.fullName", ['offset':offset, 'max':max]);
+		if( temp )
+		{
+			users.addAll( temp );
+		}
 	
+		return users;
+	}
+
+	
+		
 	/* NOTE: we really need a custom comparator here, since we want to
 	 * avoid duplicate members in the resulting list, based on entity id (database key)
 	 * and the default behavior is using object identity.  It probably won't matter

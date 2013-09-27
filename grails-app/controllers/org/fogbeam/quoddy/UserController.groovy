@@ -3,6 +3,7 @@ package org.fogbeam.quoddy;
 import java.text.SimpleDateFormat
 
 import org.apache.commons.io.FilenameUtils
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.fogbeam.quoddy.profile.ContactAddress
 import org.fogbeam.quoddy.profile.EducationalExperience
 import org.fogbeam.quoddy.profile.HistoricalEmployer
@@ -10,16 +11,16 @@ import org.fogbeam.quoddy.profile.Interest
 import org.fogbeam.quoddy.profile.OrganizationAssociation
 import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.profile.Skill
-import org.fogbeam.quoddy.social.FriendRequest;
+import org.fogbeam.quoddy.search.SearchResult
+import org.fogbeam.quoddy.social.FriendRequest
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.commons.CommonsMultipartFile
-
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
 
 class UserController {
 
 	def userService;
 	def profileService;
+	def searchService;
 	def scaffold = false;
 
 	def sexOptions = [new SexOption( id:1, text:"Male" ), new SexOption( id:2, text:"Female" ) ];
@@ -93,9 +94,43 @@ class UserController {
 	
 	def manageUsers =
 	{
+		List<User> users = new ArrayList<User>();
+		
+		String queryString = params.queryString;
+		
+		if( queryString )
+		{
+			// use search...
+			List<SearchResult> searchResults = searchService.doUserSearch( queryString );
+			for( SearchResult result : searchResults )
+			{
+				users.add( userService.findUserByUuid( result.uuid ));
+			}
+			
+			
+		}
+		else
+		{
+			// otherwise, just grab everybody, up to the limit...
+			String strPageNumber = params.pageNumber;
+			int pageNumber = 1;
+			if( strPageNumber )
+			{
+				pageNumber = Integer.parseInt( strPageNumber );
+			}
+			
+			List<User> temp = userService.findAllUsers(30, pageNumber )
+			if( temp )
+			{
+				users.addAll( temp );
+			}
+			
+		}
 		
 		
-		return [];
+		println "found ${users.size()} users";
+		
+		[users:users];
 	}
 	
 	def viewUser = 
