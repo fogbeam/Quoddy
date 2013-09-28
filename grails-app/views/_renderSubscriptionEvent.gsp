@@ -70,10 +70,12 @@
 					id="cancelCommentBtn" class="cancelCommentBtn"
 					style="display: none;" type="submit" value="Cancel" />
 			</form>
+
 		</div>
 		<!--  end commentBoxWrapper -->
+
 	</div>
-	
 	<!--  end aseFooter -->		
-	</div>
+
 </div>
+<!--  end aseWrapper -->
