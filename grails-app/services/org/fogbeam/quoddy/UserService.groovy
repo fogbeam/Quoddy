@@ -2,6 +2,9 @@ package org.fogbeam.quoddy;
 
 import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.social.FriendRequest
+import org.fogbeam.quoddy.stream.ActivityStreamItem
+import org.fogbeam.quoddy.stream.StatusUpdate
+import org.fogbeam.quoddy.stream.StreamItemBase
 
 class UserService {
 
@@ -285,5 +288,123 @@ class UserService {
 		}
 		
 		return openRequests;
+	}
+	
+	public void deleteUser( final User user )
+	{
+
+		StatusUpdate oldStatus = user.currentStatus;
+		if( oldStatus != null )
+		{
+			println "found a current status with id: ${oldStatus.id}, deleting it...";
+			
+			ActivityStreamItem.executeUpdate( "delete ActivityStreamItem asi where asi.streamObject = :update", [update:oldStatus] );
+			
+			oldStatus.delete(flush:true);
+		}
+		else
+		{
+			println "no current status found to delete";	
+		}
+		
+		user.currentStatus = null;
+
+		if( !user.save(flush:true) )
+		{
+			user.errors.allErrors.each { println it; }
+		}
+		else
+		{
+			println "save()'d User after nulling out currentStatus";	
+		}
+		
+		friendService.removeFriendRelations( user );
+
+				
+		List<StatusUpdate> statusUpdates = new ArrayList<StatusUpdate>();
+		statusUpdates.addAll( user.oldStatusUpdates );
+		for( StatusUpdate update : statusUpdates )
+		{
+			println "removing old status with id: ${update.id}";
+			user.removeFromOldStatusUpdates( update );
+			
+			ActivityStreamItem.executeUpdate( "delete ActivityStreamItem asi where asi.streamObject = :update", [update:update] );
+			
+			int retCode = StatusUpdate.executeUpdate( "delete StatusUpdate su where su = :statusupdate",[statusupdate:update]);
+			println "retCode: ${retCode}";
+		}
+	
+		
+		List<StreamItemBase> streamItems = StreamItemBase.executeQuery( "select sib from StreamItemBase as sib where sib.owner = :owner", [owner:user] );
+		for( StreamItemBase sib : streamItems )
+		{
+			sib.delete( flush: true );
+		}
+		
+		List<ActivityStreamItem> items = ActivityStreamItem.executeQuery( "select asi from ActivityStreamItem as asi where asi.owner.id = :ownerid", [ownerid:user.id] );
+		for( ActivityStreamItem item : items )
+		{
+			item.delete(flush:true);
+		}
+		
+					
+		if( !user.save(flush:true) )
+		{
+			user.errors.allErrors.each { println it; }
+		}
+		else
+		{
+			println "save()'d User after nixing old StatusUpdates";
+		}
+		
+		List<AccountRole> roles = new ArrayList<AccountRole>();
+		roles.addAll( user.roles );
+		for( AccountRole role : roles )
+		{
+			println "removing role with id: ${role.id}";
+			user.removeFromRoles( role );
+		}
+
+		if( !user.save(flush:true) )
+		{
+			user.errors.allErrors.each { println it; }
+		}
+
+				
+		user.permissions.removeAll();
+		
+		List<UserStreamDefinition> streams = new ArrayList<UserStreamDefinition>();
+		println "adding all stream definitions to temporary collection";
+		streams.addAll( user.streams);
+		for( UserStreamDefinition streamDef : streams )
+		{
+			println "removing streamDef with id: ${streamDef.id}";
+			user.removeFromStreams( streamDef );
+		
+			println "deleting streamDef now";
+			streamDef.delete( flush:true);	
+		}
+		
+		if( !user.save(flush:true) )
+		{
+			user.errors.allErrors.each { println it; }
+		}
+		
+		User.executeUpdate( "delete User u where u.id = :userId", [userId:user.id]);
+	}
+	
+	public void disableUser( final User user )
+	{
+		user.disabled = true;
+		user.save( flush:true);
+		
 	}	
+	
+	public void enableUser( final User user )
+	{
+		user.disabled = false;
+		user.save( flush:true);
+		
+	}
+	
 }

@@ -16,6 +16,7 @@ class User implements Serializable
 	public User()
 	{
 		this.uuid = java.util.UUID.randomUUID().toString();
+		this.disabled = false;
 	}
 	
     static constraints = {
@@ -30,9 +31,10 @@ class User implements Serializable
 		dateCreated()
     }
 	
+	
 	public String toString()
 	{
-		return "id: ${id} uuid: ${uuid}, userId: ${userId}, password: ${password}, firstName: ${firstName}, lastName: ${lastName}, homepage: ${homepage}";
+		return "id: ${id} uuid: ${uuid}, userId: ${userId}, password: ${password}, firstName: ${firstName}, lastName: ${lastName}, homepage: ${homepage}, disabled: ${disabled}";
 		
 	}
 	
@@ -42,7 +44,9 @@ class User implements Serializable
 	String userId;
 	@XmlElement
     Date dateCreated;
-    Profile profile;
+    @XmlElement
+	boolean disabled;
+	Profile profile;
     StatusUpdate currentStatus;	
 	
 	/* stuff objects of this class "carry around" but aren't persisted as part of the object. 
@@ -64,14 +68,15 @@ class User implements Serializable
 	
     static mapping = {
     	table 'uzer'
-		currentStatus lazy:false; // eagerly fetch the currentStatus
+		currentStatus lazy:false, cascade:'delete'; // eagerly fetch the currentStatus
     	roles lazy: false;		  // eagerly fetch roles
-		permissions lazy:false;   // eagerly fetch permissions
+		permissions lazy:false, cascade:'delete';   // eagerly fetch permissions
+		streams cascade: 'delete';
 	}
 	
 	static fetchMode = [roles: 'eager', permissions:'eager'];
 	
-    static hasMany = [oldStatusUpdates:StatusUpdate, roles: AccountRole, permissions: String]
+    static hasMany = [oldStatusUpdates:StatusUpdate, roles: AccountRole, permissions: String, streams:UserStreamDefinition];
 	static mappedBy = [oldStatusUpdates:'creator']
 
 	

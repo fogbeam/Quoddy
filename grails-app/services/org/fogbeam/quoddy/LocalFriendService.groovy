@@ -154,4 +154,14 @@ class LocalFriendService
 		return openFriendRequests;		
 	}
 
+	public void removeFriendRelations( final User user )
+	{
+		List<FriendCollection> friendCollections = FriendCollection.executeQuery( "select fc from FriendCollection as fc where :uuid in elements(fc.friends)", 
+																				[uuid:user.uuid]); 
+		for( FriendCollection coll : friendCollections )
+		{
+			coll.removeFromFriends( user.uuid );
+		}
+	}
+	
 }

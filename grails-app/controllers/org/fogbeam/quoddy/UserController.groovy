@@ -152,6 +152,41 @@ class UserController {
 		
 	}
 
+	def editUser = 
+	{
+		User user = userService.findUserByUuid(  params.id );
+		
+		[user:user];
+	}
+	
+	def disableUser =
+	{
+		User user = userService.findUserByUuid(  params.id );
+		
+		userService.disableUser( user );
+		
+		redirect( controller:'user', action:'manageUsers');
+	}
+	
+	def enableUser = 
+	{
+		User user = userService.findUserByUuid(  params.id );
+		
+		userService.enableUser( user );
+		
+		redirect( controller:'user', action:'manageUsers');
+	}
+	
+	def deleteUser =
+	{
+		User user = userService.findUserByUuid(  params.id );
+		
+		userService.deleteUser( user );
+		
+		redirect( controller:'user', action:'manageUsers');
+	}
+	
+	
     def registerUser = 
 	{ UserRegistrationCommand urc ->
     

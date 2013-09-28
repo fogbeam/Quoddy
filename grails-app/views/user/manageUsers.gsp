@@ -36,14 +36,23 @@
 			<table class="table table-striped">
 				<g:each in="${users}" var="aUser">
 					<tr>
-						<td><a href="${createLink(controller:'user', action:'editUser')}">${aUser.id}</a></td>
+						<td><a href="${createLink(controller:'user', action:'editUser', params:[id:aUser.uuid])}">${aUser.id}</a></td>
 						<!-- <td>${aUser.uuid}</td> -->
 						<td>${aUser.fullName}</td>
 						<td>${aUser.userId}</td>
 						<td>${aUser.displayName}</td>
 						<td>${aUser.email}</td>
-						<td><a href="#">disable user</a></td>
-						<td><a href="#">delete user</a></td>
+						<td>disabled: ${aUser.disabled}</td>
+						<td>
+							<g:if test="${aUser.disabled == false}">
+								<a href="${createLink(controller:'user', action:'disableUser', params:[id:aUser.uuid])}">disable user</a></td>
+							</g:if>
+							<g:else>
+								<a href="${createLink(controller:'user', action:'enableUser', params:[id:aUser.uuid])}">enable user</a></td>
+							</g:else>
+							
+						<td><a href="${createLink(controller:'user', action:'deleteUser', params:[id:aUser.uuid])}">delete user</a></td>
+						
 					</tr>
 				</g:each>
 			</table>
