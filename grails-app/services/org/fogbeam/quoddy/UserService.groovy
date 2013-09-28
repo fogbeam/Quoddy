@@ -297,8 +297,28 @@ class UserService {
 		if( oldStatus != null )
 		{
 			println "found a current status with id: ${oldStatus.id}, deleting it...";
+
 			
-			ActivityStreamItem.executeUpdate( "delete ActivityStreamItem asi where asi.streamObject = :update", [update:oldStatus] );
+			
+			user.currentStatus = null;
+			
+			if( !user.save(flush:true) )
+			{
+				user.errors.allErrors.each { println it; }
+			}
+			else
+			{
+				println "save()'d User after nulling out currentStatus";
+			}
+			
+						
+			List<ActivityStreamItem> itemsToDelete = 
+							ActivityStreamItem.executeQuery( "select asi from ActivityStreamItem as asi where asi.streamObject = :update", [update:oldStatus] );
+			
+			for( ActivityStreamItem itemToDelete : itemsToDelete )
+			{
+				itemToDelete.delete( flush:true );	
+			}
 			
 			oldStatus.delete(flush:true);
 		}
@@ -307,16 +327,7 @@ class UserService {
 			println "no current status found to delete";	
 		}
 		
-		user.currentStatus = null;
 
-		if( !user.save(flush:true) )
-		{
-			user.errors.allErrors.each { println it; }
-		}
-		else
-		{
-			println "save()'d User after nulling out currentStatus";	
-		}
 		
 		friendService.removeFriendRelations( user );
 
@@ -328,9 +339,20 @@ class UserService {
 			println "removing old status with id: ${update.id}";
 			user.removeFromOldStatusUpdates( update );
 			
-			ActivityStreamItem.executeUpdate( "delete ActivityStreamItem asi where asi.streamObject = :update", [update:update] );
+			List<ActivityStreamItem> itemsToDelete = 
+							ActivityStreamItem.executeQuery( "select asi from ActivityStreamItem as asi where asi.streamObject = :update", [update:update] );
+	
+			for( ActivityStreamItem itemToDelete : itemsToDelete )
+			{
+				itemToDelete.delete(flush:true);
+			}				
+									
+			List<StatusUpdate> statusesToDelete = StatusUpdate.executeQuery( "select su from StatusUpdate as su where su = :statusupdate",[statusupdate:update]);
+			for( StatusUpdate statusToDelete : statusesToDelete )
+			{
+				statusToDelete.delete( flush: true );
+			}
 			
-			int retCode = StatusUpdate.executeUpdate( "delete StatusUpdate su where su = :statusupdate",[statusupdate:update]);
 			println "retCode: ${retCode}";
 		}
 	
@@ -390,7 +412,8 @@ class UserService {
 			user.errors.allErrors.each { println it; }
 		}
 		
-		User.executeUpdate( "delete User u where u.id = :userId", [userId:user.id]);
+		// User.executeUpdate( "delete User u where u.id = :userId", [userId:user.id]);
+		user.delete( flush: true );
 	}
 	
 	public void disableUser( final User user )
