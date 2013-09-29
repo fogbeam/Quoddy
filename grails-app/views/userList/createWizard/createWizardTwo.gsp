@@ -1,7 +1,7 @@
 <html>
 	
 	<head>
-		<title>Quoddy: Create LIST</title>
+		<title>Quoddy: Create User List</title>
 		<meta name="layout" content="main" />
 	     <nav:resources />
 	     <g:javascript src="userListWizard.js"/>		
@@ -9,21 +9,21 @@
 	
 	<body>
 	
-		<h3>Edit Users</h3>
+		<h3>Edit List Membership</h3>
         <g:form controller="userList" action="createWizard" method="POST">
             
-	        <g:select id="usersToAdd" name="usersToAdd" multiple="true" style="display:none;" />
-	        <g:select id="usersToRemove" name="usersToRemove" multiple="true" style="display:none;" />		
+	        <g:select id="usersToAdd" from="" name="usersToAdd" multiple="true" style="display:none;" />
+	        <g:select id="usersToRemove" from="" name="usersToRemove" multiple="true" style="display:none;" />		
 		
 			<div style="margin-top:20px;">
               <label for="users">Selected Users</label>
             </div>
-    	    <div style="float:left;margin-top:35px;margin-left:-85px;">                               
+    	    <div style="float:left;margin-top:35px;margin-left:10px;">                               
               <g:select name="users" from="" optionKey="id" optionValue="fullName" multiple="true">
               </g:select> 
         	</div>
          
-       		<div style="margin-left:300px;margin-top:7px;">
+       		<div style="margin-left:480px;margin-top:40px;">
        	 		<a href="#" onclick="removeFromSelected();return false;" style="color:red;text-decoration:none;">&gt;</a>
         		<br />
         		<a href="#" onclick="removeAllFromSelected(); return false;" style="color:red;text-decoration:none;">&gt;&gt;</a>
@@ -35,11 +35,11 @@
         	</div>
         
           
-        	<div style="margin-left:440px;margin-top:35px;">
+        	<div style="margin-left:550px;margin-top:-100px;">
               <label for="availableusers">Available Users</label>
         	</div>
-        	<div style="margin-left:320px;margin-top:7px;">                               
-              <g:select name="availableusers" from="${availableUsers}" optionKey="id" optionValue="fullName" multiple="true">
+        	<div style="margin-left:540px;margin-top:40px;">                               
+              <g:select style="margin-top:-35px;" name="availableusers" from="${availableUsers}" optionKey="id" optionValue="fullName" multiple="true">
               </g:select> 
         	</div> 
 

@@ -9,11 +9,11 @@
 	
 	<body>
   <div class="hero span6">
-		<h2>Edit Users</h2>
+		<h2>Manage List Members</h2>
         <g:form controller="userList" action="editWizard" method="POST">
             
-	        <g:select id="usersToAdd" name="usersToAdd" multiple="true" style="display:none;" />
-	        <g:select id="usersToRemove" name="usersToRemove" multiple="true" style="display:none;" />		
+	        <g:select id="usersToAdd" from="" name="usersToAdd" multiple="true" style="display:none;" />
+	        <g:select id="usersToRemove" from="" name="usersToRemove" multiple="true" style="display:none;" />		
 		
 			<div>
               <label for="users">Selected Users</label>
@@ -23,7 +23,7 @@
               </g:select> 
         	</div>
          
-       		<div>
+       		<div style="float:right;">
        	 		<a href="#" onclick="removeFromSelected();return false;" style="color:red;text-decoration:none;">&gt;</a>
         		<br />
         		<a href="#" onclick="removeAllFromSelected(); return false;" style="color:red;text-decoration:none;">&gt;&gt;</a>
@@ -33,10 +33,10 @@
         		<a href="#" onclick="addAllToSelected(); return false;" style="color:red;text-decoration:none;">&lt;&lt;</a>
         		<br />
         	</div>
-        	<div>
+        	<div style="float:right;">
               <label for="availableusers">Available Users</label>
         	</div>
-        	<div>
+        	<div style="float:right;">
               <g:select name="availableusers" from="${availableUsers}" optionKey="id" optionValue="fullName" multiple="true">
               </g:select> 
         	</div> 
