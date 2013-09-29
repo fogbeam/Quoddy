@@ -1,10 +1,14 @@
 package org.fogbeam.quoddy;
 
+import java.util.ArrayList
+import java.util.List
+
 import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.social.FriendRequest
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.StatusUpdate
 import org.fogbeam.quoddy.stream.StreamItemBase
+import org.fogbeam.quoddy.subscription.BaseSubscription
 
 class UserService {
 
@@ -13,7 +17,10 @@ class UserService {
 	def friendService;
 	
 	// same deal as the friendService...
-	def groupService;
+	def groupService; // TODO: figure out if we even use this anymore...
+	
+	def userGroupService;
+	def userListService;
 	
 	// and again...  when finished, this will either be LdapPersonService or LocalAccountService, but we don't care.
 	def accountService;
@@ -356,20 +363,21 @@ class UserService {
 			println "retCode: ${retCode}";
 		}
 	
-		
-		List<StreamItemBase> streamItems = StreamItemBase.executeQuery( "select sib from StreamItemBase as sib where sib.owner = :owner", [owner:user] );
-		for( StreamItemBase sib : streamItems )
-		{
-			sib.delete( flush: true );
-		}
-		
+
 		List<ActivityStreamItem> items = ActivityStreamItem.executeQuery( "select asi from ActivityStreamItem as asi where asi.owner.id = :ownerid", [ownerid:user.id] );
 		for( ActivityStreamItem item : items )
 		{
 			item.delete(flush:true);
 		}
 		
-					
+				
+		List<StreamItemBase> streamItems = StreamItemBase.executeQuery( "select sib from StreamItemBase as sib where sib.owner = :owner", [owner:user] );
+		for( StreamItemBase sib : streamItems )
+		{
+			sib.delete( flush: true );
+		}
+		
+			
 		if( !user.save(flush:true) )
 		{
 			user.errors.allErrors.each { println it; }
@@ -379,6 +387,16 @@ class UserService {
 			println "save()'d User after nixing old StatusUpdates";
 		}
 		
+		/* delete subscriptions */
+		List<BaseSubscription> subscriptions = 
+					BaseSubscription.executeQuery( "select sub from BaseSubscription as sub where sub.owner = :owner", [owner:user] );
+		
+		for( BaseSubscription sub : subscriptions )
+		{
+			sub.delete( flush: true );
+		}
+					
+					
 		List<AccountRole> roles = new ArrayList<AccountRole>();
 		roles.addAll( user.roles );
 		for( AccountRole role : roles )
@@ -412,7 +430,32 @@ class UserService {
 			user.errors.allErrors.each { println it; }
 		}
 		
-		// User.executeUpdate( "delete User u where u.id = :userId", [userId:user.id]);
+		
+		User sysGhostUser = this.findUserByUserId( "SYS_ghost_user" );
+		// find any groups this User owns, and change the ownership to the System "Ghost" User
+		List<UserGroup> usersOwnedGroups = userGroupService.getGroupsOwnedByUser( user );
+		for( UserGroup group : usersOwnedGroups )
+		{
+			group.owner = sysGhostUser;
+			group.save( flush:true );
+		}
+		
+		// remove this user from any groups that he/she is a (non-owning) member of
+		List<UserGroup> userMemberOfGroups = userGroupService.getGroupsWhereUserIsMember( user );
+		for ( UserGroup group : userMemberOfGroups )
+		{
+			// remove user from this group
+			group.removeFromGroupMembers( user );
+		}
+		
+		List<UserList> usersLists = userListService.getListsForUser( user );
+		for( UserList listToDelete : usersLists )
+		{
+			listToDelete.delete( flush: true );
+		} 
+		
+		
+	
 		user.delete( flush: true );
 	}
 	
