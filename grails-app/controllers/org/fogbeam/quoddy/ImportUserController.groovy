@@ -38,7 +38,7 @@ class ImportUserController
 				
 		// lookup LDAP Person records that match the query
 		// and return a list of those records
-		List<LDAPPerson> persons = ldapTemplate.search("ou=people,o=quoddy", memberFilter.encode(),
+		List<LDAPPerson> persons = ldapTemplate.search("ou=people,o=quoddy,dc=fogbeam,dc=com", memberFilter.encode(),
 			new PersonAttributeMapper());
 		
 	
@@ -48,31 +48,46 @@ class ImportUserController
 	def addImportedUsers = 
 	{
 		
-		// println params;
+		println params;
 		List<String> usersToAdd = new ArrayList<String>();
 		params.each { 
 		
 			String entry = it;
-			if( entry.startsWith( "importUser." ) && entry.endsWith("=on" ))
+			if( entry.startsWith( "importUser." ) && entry.endsWith( "=on"))
 			{
-				String temp1 = entry.replace( "importUser.", "" );
-				String temp2 = temp1.replace( "=on", "" );	
-				usersToAdd.add( temp2 );
+				println "entry: ${entry}";
+				String uid = entry.split("\\.")[1];
+				uid = uid.replace( "=on", "" );	
+				
+				usersToAdd.add( uid );
 			}	
 		};
 		
-		// TODO: lookup each of these users in LDAP, and create a 
+		// lookup each of these users in LDAP, and create a 
 		// corresponding record in the Uzer table
 		// note: now we really kinda have to deal with things like
 		// authSource and domain, etc.
 		usersToAdd.each 
 		{ 
-			LDAPPerson person = ldapPersonService.findPersonByCn( it );
-			User user = LdapPersonService.copyPersonToUser( person );
-			userService.importUser( user );
+			
+			AndFilter uidFilter = new AndFilter();
+			uidFilter.and(new EqualsFilter("objectclass", "person"));
+			uidFilter.and(new LikeFilter("uid", it ));
+			
+			List<LDAPPerson> persons = ldapTemplate.search("ou=people,o=quoddy,dc=fogbeam,dc=com", uidFilter.encode(),
+				new PersonAttributeMapper());
+			if( persons.size() == 1 )
+			{
+				User user = LdapPersonService.copyPersonToUser( persons[0] );
+				userService.importUser( user );
+			}
+			else
+			{
+				println "Wrong number of matching uids!";
+			}
 		};
 		
-		render( "<html><head></head><body onload=\"window.close();\"></body></html>");
+		redirect( controller: "user", action: "manageUsers" );
 	}	
 	
 }

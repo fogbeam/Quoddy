@@ -159,6 +159,94 @@ class UserController {
 		[user:user];
 	}
 	
+	def adminAddUser =
+	{
+		
+		[];
+	}
+	
+	def adminSaveUser =
+	{ UserRegistrationCommand urc ->
+		
+		if( urc.hasErrors() )
+		{
+				urc.errors.allErrors.each {println it};
+				flash.user = urc;
+				flash.message = "Error creating user!";
+				redirect( controller:'user', action:"adminAddUser" );
+		}
+		else
+		{
+			def user = new User( urc.properties );
+			user.password = urc.password;
+			
+			user = userService.createUser( user );
+			
+			if( user )
+			{
+					flash.message = "Account Created, ${urc.displayName ?: urc.userId}";
+					redirect(controller:'user', action: 'manageUsers')
+			}
+			else
+			{
+				// maybe not unique userId?
+				flash.user = urc;
+				redirect( controlle:'user', action:"adminAddUser" );
+			}
+		}
+		
+		
+	}
+	
+	def adminEditUser =
+	{
+		User user = userService.findUserByUuid(  params.id );
+		
+		[user:user];
+	}
+	
+	
+	def adminUpdateUser =
+	{ UserRegistrationCommand urc ->
+	
+		println "saving account for uuid: ${urc.uuid}";
+		User user = userService.findUserByUuid( urc.uuid );
+		if( user )
+		{
+			Map theNewProperties = new HashMap();
+			theNewProperties.putAll( urc.properties );
+			theNewProperties.remove( "userId" );
+			user.properties = theNewProperties;
+			
+			println "updating user as: ${user.toString()}";
+			
+			user = userService.updateUser( user );
+			
+			if( user )
+			{
+					flash.message = "Account updated, ${urc.displayName ?: urc.userId}";
+					println "message: ${flash.message}";
+					redirect(controller:'user', action: 'manageUsers')
+			}
+			else
+			{
+				flash.message = "Error updating account, ${urc.displayName ?: urc.userId}";
+				println "message: ${flash.message}";
+				// redirect(controller:'user', action: 'editUser');
+				render(view:'adminEditUser', model:[user:user]);
+			}
+			
+		}
+		else
+		{
+			flash.message = "Error updating account, ${urc.displayName ?: urc.userId}";
+			println "message: ${flash.message}";
+			render(view:'adminEditUser', model:[user:user]);
+		}
+
+	}
+	
+	
 	def disableUser =
 	{
 		User user = userService.findUserByUuid(  params.id );
@@ -204,7 +292,6 @@ class UserController {
         else
         {
                 def user = new User( urc.properties );
-                // user.profile = new Profile( urc.properties );
                 
 				user = userService.createUser( user );
 				
@@ -839,24 +926,7 @@ class UserController {
 		[user:user];
 	}	
 
-	def saveAccount = 
-	{ UserRegistrationCommand urc ->
-	
-		User user = new User( urc.properties );
-		user = userService.updateUser( user );
-		
-		if( user )
-		{
-				flash.message = "Account updated, ${urc.displayName ?: urc.userId}";
-				redirect(controller:'home', action: 'index')
-		}
-		else
-		{
-			flash.message = "Error updating account, ${urc.displayName ?: urc.userId}";
-			render(view:'editAccount', model:[user:user]);
-		}
-	}
-		
+
 	def listOpenFriendRequests = {
 
 		def user = null;

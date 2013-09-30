@@ -19,7 +19,7 @@ public class AdminController
 	{
 		println "importUsers";
 		
-		[]	
+		[];
 	}
 		
 }

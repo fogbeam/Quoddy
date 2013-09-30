@@ -74,7 +74,7 @@ class LoginController
 			}
 
 			// Now redirect back to the login page.
-			redirect(action: "login", params: m)
+		   redirect(controller: "login", action: "index", params: m)
 		}
 				
     }

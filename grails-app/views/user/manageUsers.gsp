@@ -7,20 +7,26 @@
 	</head>
 	
 	<body>
+		
 		<div class="adminContentArea">
 			<div class="row">
 				<div class="span2">
-					<a href="#" class="btn btn-primary">Add User</a>
+					<a href="${createLink(controller:'user', action:'adminAddUser')}" class="btn btn-primary">Add User</a>
 				
 				</div>
 				
 				<div class="span2">
-					<a href="#" class="btn btn-primary">Import Users</a>
+					<a href="${createLink(controller:'admin', action:'importUsers')}" class="btn btn-primary">Import Users</a>
 				</div>
 				
 				<div class="span8">&nbsp;</div>
 				
 			</div>
+	
+		<div class="flash" style="margin-top:25px;color:red;">
+			<g:message code= "${flash.message}" default="${flash.message}" />
+		</div>
+	
 		
 		<!--  a searchable user grid pane thing... -->
 		<!--  TODO: user table w/ search  -->
@@ -36,7 +42,7 @@
 			<table class="table table-striped">
 				<g:each in="${users}" var="aUser">
 					<tr>
-						<td><a href="${createLink(controller:'user', action:'editUser', params:[id:aUser.uuid])}">${aUser.id}</a></td>
+						<td><a href="${createLink(controller:'user', action:'adminEditUser', params:[id:aUser.uuid])}">${aUser.id}</a></td>
 						<!-- <td>${aUser.uuid}</td> -->
 						<td>${aUser.fullName}</td>
 						<td>${aUser.userId}</td>

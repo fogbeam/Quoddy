@@ -1,10 +1,10 @@
 package org.fogbeam.quoddy;
 
-import java.util.ArrayList
-import java.util.List
-
 import org.fogbeam.quoddy.profile.Profile
+import org.fogbeam.quoddy.social.FriendCollection
 import org.fogbeam.quoddy.social.FriendRequest
+import org.fogbeam.quoddy.social.FriendRequestCollection
+import org.fogbeam.quoddy.social.IFollowCollection
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.StatusUpdate
 import org.fogbeam.quoddy.stream.StreamItemBase
@@ -73,7 +73,7 @@ class UserService {
 	}
 	
 	
-	public void createUser( User user ) 
+	public User createUser( User user ) 
 	{
 		
 		
@@ -104,6 +104,17 @@ class UserService {
 				defaultStream.errors.allErrors.each { println it };
 				throw new RuntimeException( "couldn't create Default UserStream record for user: ${user.userId}" );
 			}
+			
+			FriendCollection friendCollection = new FriendCollection( ownerUuid: user.uuid );
+			friendCollection.save();
+			IFollowCollection iFollowCollection = new IFollowCollection( ownerUuid: user.uuid );
+			iFollowCollection.save();
+			FriendRequestCollection friendRequestCollection = new FriendRequestCollection( ownerUuid: user.uuid );
+			friendRequestCollection.save();
+			
+			
+			
+			
 		}
 		else
 		{
@@ -112,6 +123,7 @@ class UserService {
 			
 		}
 		
+		return user;
 	}
 
 	public void importUser( User user )
@@ -124,16 +136,48 @@ class UserService {
 			user.profile = new Profile();
 		}
 		
-		if( !user.save() )
+		if( user.save() )
 		{
-			user.errors.allErrors.each { println it };
+			// create system defined Stream entries for this newly created user
+			UserStreamDefinition defaultStream = new UserStreamDefinition();
+			defaultStream.name = UserStreamDefinition.DEFAULT_STREAM;
+			defaultStream.definedBy = UserStreamDefinition.DEFINED_SYSTEM;
+			defaultStream.owner = user;
+			defaultStream.includeAllEventTypes = true;
+			defaultStream.includeAllUsers = true;
+			
+			
+			if( !defaultStream.save())
+			{
+				defaultStream.errors.allErrors.each { println it };
+				throw new RuntimeException( "couldn't create Default UserStream record for user: ${user.userId}" );
+			}
+			
+			
+			FriendCollection friendCollection = new FriendCollection( ownerUuid: user.uuid );
+			friendCollection.save();
+			IFollowCollection iFollowCollection = new IFollowCollection( ownerUuid: user.uuid );
+			iFollowCollection.save();
+			FriendRequestCollection friendRequestCollection = new FriendRequestCollection( ownerUuid: user.uuid );
+			friendRequestCollection.save();
+			
+			
+		}
+		else
+		{
+			user.errors.allErrors.each { println it; }
 			throw new RuntimeException( "couldn't create User record for user: ${user.userId}" );
 		}	
 	}
 		
 	public User updateUser( User user )
 	{
-		throw new RuntimeException( "not implemented yet" );
+		if( ! user.save( flush: true ) )
+		{
+			user.errors.allErrors.each { println it; }
+		}
+		
+		return user;
 	}
 	
 	public void addToFollow( User destinationUser, User targetUser )

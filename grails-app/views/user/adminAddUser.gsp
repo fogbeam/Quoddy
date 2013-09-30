@@ -1,14 +1,14 @@
 <html>
     <head>
-        <title>Quoddy: Edit Account</title>
+        <title>Quoddy: Register New User</title>
         <meta name="layout" content="main"/>
         <nav:resources />
     </head>
     <body>
-           <div class="hero-unit span6">
+           <div style="margin-left:35px;padding-top:30px;">
 
               <!-- start body content -->
-              <h2>Edit Account</h2>
+              <h1>Register New User</h1>
 
              <g:hasErrors>
                  <div class="errors">
@@ -16,23 +16,26 @@
                  </div>
              </g:hasErrors>
 
-             <g:form action="saveAccount">
-             
-             	<g:hiddenField name="uuid" value="${user?.uuid}" />
+             <g:form action="adminSaveUser">
                  <dl>
                      <dt>User Id</dt>
-                     <dd><g:textField name="userId" value="${user?.userId}"/></dd>                     
-					 <dt>First Name</dt>
+                     <dd><g:textField name="userId" value="${user?.userId}"/></dd>
+                     <dt>Password</dt>
+                     <dd><g:passwordField name="password" value="${user?.password}"/></dd>
+                     <dt>Confirm Password</dt>
+                     <dd><g:passwordField name="passwordRepeat" value="${user?.passwordRepeat}"/></dd>
+                     
+                     <dt>First Name</dt>
                      <dd><g:textField name="firstName" value="${user?.firstName}"/></dd>
                      <dt>Last Name</dt>
-              		 <dd><g:textField name="lastName" value="${user?.lastName}"/></dd>
+                     <dd><g:textField name="lastName" value="${user?.lastName}"/></dd>
                      <dt>Display Name</dt>
                      <dd><g:textField name="displayName" value="${user?.displayName}"/></dd>
                      <dt>Bio</dt>
                      <dd><g:textArea name="bio" value="${user?.bio}"/></dd>
                      <dt>Email</dt>
                      <dd><g:textField name="email" value="${user?.email}"/></dd>
-                     <dt><g:submitButton class="btn btn-large" name="saveProfile" value="Save"/></dt>
+                     <dt><g:submitButton name="register" value="Register"/></dt>
                  </dl>
 
              </g:form>

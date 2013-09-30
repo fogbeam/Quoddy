@@ -10,6 +10,9 @@ public class LDAPPerson
 	public String uid;	
 	public String userpassword;
 	public String description;
+	public String dn;
+	public String fullName;
+	public String email;
 	
 	public String toString()
 	{

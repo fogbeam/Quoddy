@@ -30,7 +30,7 @@ class LdapPersonService
 		memberFilter.and(new EqualsFilter("objectclass", "person"));
 		memberFilter.and(new EqualsFilter("uid", userId ));
 		
-		List<LDAPPerson> persons = ldapTemplate.search("ou=people,o=quoddy", memberFilter.encode(),
+		List<LDAPPerson> persons = ldapTemplate.search("ou=people,o=quoddy,dc=fogbeam,dc=com", memberFilter.encode(),
 				 new PersonAttributeMapper());
 		
 			 
@@ -51,7 +51,7 @@ class LdapPersonService
 		memberFilter.and(new EqualsFilter("objectclass", "person"));
 		memberFilter.and(new EqualsFilter("cn", cn ));
 		
-		List<LDAPPerson> persons = ldapTemplate.search("ou=people,o=quoddy", memberFilter.encode(),
+		List<LDAPPerson> persons = ldapTemplate.search("ou=people,o=quoddy,dc=fogbeam,dc=com", memberFilter.encode(),
 				 new PersonAttributeMapper());
 		
 			 

@@ -28,6 +28,8 @@ class User implements Serializable
         profile( nullable: true )
         currentStatus(nullable:true)
 		email(nullable:true)
+		displayName( nullable:true)
+		bio( nullable:true)
 		dateCreated()
     }
 	
@@ -64,7 +66,8 @@ class User implements Serializable
 	String bio;
 	@XmlElement
 	String email;
-	static transients = [ "password", "homepage", "displayName", "bio", "templateName" ]
+	
+	static transients = [ "password", "templateName" ]
 	
     static mapping = {
     	table 'uzer'

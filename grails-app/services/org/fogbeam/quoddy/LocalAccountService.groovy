@@ -30,14 +30,6 @@ class LocalAccountService
 			println( "Saving LocalAccount FAILED");
 			account.errors.allErrors.each { println it };
 		}
-
-
-		FriendCollection friendCollection = new FriendCollection( ownerUuid: user.uuid );
-		friendCollection.save();
-		IFollowCollection iFollowCollection = new IFollowCollection( ownerUuid: user.uuid );
-		iFollowCollection.save();
-		FriendRequestCollection friendRequestCollection = new FriendRequestCollection( ownerUuid: user.uuid );
-		friendRequestCollection.save();
 		
 	}
 	
