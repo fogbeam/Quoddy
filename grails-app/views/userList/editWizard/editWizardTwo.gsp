@@ -8,39 +8,44 @@
 	</head>
 	
 	<body>
-  <div class="hero span6">
-		<h2>Manage List Members</h2>
-        <g:form controller="userList" action="editWizard" method="POST">
-            
-	        <g:select id="usersToAdd" from="" name="usersToAdd" multiple="true" style="display:none;" />
-	        <g:select id="usersToRemove" from="" name="usersToRemove" multiple="true" style="display:none;" />		
+	  	<div class="hero-unit span6">
 		
-			<div>
-              <label for="users">Selected Users</label>
-            </div>
-    	    <div>                               
-              <g:select name="users" from="${listToEdit.members}" optionKey="id" optionValue="fullName" multiple="true">
-              </g:select> 
-        	</div>
+        	<g:form controller="userList" action="editWizard" method="POST">
+            
+	        	<g:select id="usersToAdd" from="" name="usersToAdd" multiple="true" style="display:none;" />
+	        	<g:select id="usersToRemove" from="" name="usersToRemove" multiple="true" style="display:none;" />		
+		
+    	    	<div style="float:left;margin-top:40px;margin-left:-40px;width:47%">                               
+          	    	<label for="users">Selected Users</label>
+              		<br />
+              		<g:select name="users" from="${listToEdit.members}" optionKey="id" optionValue="fullName" multiple="true">
+              		</g:select> 
+        		</div>
          
-       		<div style="float:right;">
-       	 		<a href="#" onclick="removeFromSelected();return false;" style="color:red;text-decoration:none;">&gt;</a>
-        		<br />
-        		<a href="#" onclick="removeAllFromSelected(); return false;" style="color:red;text-decoration:none;">&gt;&gt;</a>
-        		<br />
-        		<a href="#" onclick="addToSelected(); return false;" style="color:red;text-decoration:none;">&lt;</a>
-        		<br />
-        		<a href="#" onclick="addAllToSelected(); return false;" style="color:red;text-decoration:none;">&lt;&lt;</a>
-        		<br />
-        	</div>
-        	<div style="float:right;">
-              <label for="availableusers">Available Users</label>
-        	</div>
-        	<div style="float:right;">
-              <g:select name="availableusers" from="${availableUsers}" optionKey="id" optionValue="fullName" multiple="true">
-              </g:select> 
-        	</div> 
-			<g:submitButton name="finishWizard" value="Finish" />
-		</g:form>
+       			<div style="float:left;margin-left:18px;margin-top:80px;width:6%" >
+	       	 		<a href="#" onclick="removeFromSelected();return false;" style="color:red;text-decoration:none;">&gt;</a>
+	        		<br />
+	        		<a href="#" onclick="removeAllFromSelected(); return false;" style="color:red;text-decoration:none;">&gt;&gt;</a>
+	        		<br />
+	        		<a href="#" onclick="addToSelected(); return false;" style="color:red;text-decoration:none;">&lt;</a>
+	        		<br />
+	        		<a href="#" onclick="addAllToSelected(); return false;" style="color:red;text-decoration:none;">&lt;&lt;</a>
+	        		<br />
+        		</div>
+        		
+
+        		<div style="float:left;margin-left:18px;margin-top:40px;width:47%" >
+					<label for="availableusers">Available Users</label>
+					<br />
+            	  	<g:select name="availableusers" from="${availableUsers}" optionKey="id" optionValue="fullName" multiple="true">
+            	  	</g:select> 
+        		</div> 
+				
+				<div style="clear:both;padding-top:35px;">
+					<g:submitButton name="finishWizard" value="Finish" />
+				</div>
+			
+			</g:form>
+		</div>
 	</body>
 </html>
