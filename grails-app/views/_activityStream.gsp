@@ -1,6 +1,6 @@
 <g:each in="${activities}" var="activity">
 	<g:render template="${activity.templateName}" var="item" bean="${activity}" />
-	<b>:)</b>
+	<b>:) ${activity.templateName}</b>
 </g:each>
 <g:each in="${se}" status="i" var="trip">
 	<b>hi</b>

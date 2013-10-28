@@ -5,9 +5,9 @@ dataSource {
 	driverClassName = "org.postgresql.Driver"
 	// username = "sa"
 	username = "postgres"
-	password = ""
+	password = "database"
 	// password = ""
-	logSql=false
+	logSql=true
 }
 hibernate {
     cache.use_second_level_cache=true
@@ -29,14 +29,17 @@ environments {
 	}
 	test {
 		dataSource {
+
 			dbCreate = "update"
 			url = "jdbc:hsqldb:mem:quoddy_test"
 		}
 	}
 	production {
 		dataSource {
+
 			dbCreate = "update" // one of 'create', 'create-drop','update'
 			url = "jdbc:postgresql:quoddy"
+
 		}
 	}
 }

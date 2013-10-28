@@ -39,7 +39,12 @@ grails.project.dependency.resolution = {
 		exclude 'quartz';   
 	   }
 
-	   compile ":jaxrs:0.8"
+	   runtime( ":jaxrs:0.8" )
+	   {
+//                exclude group:"org.restlet.gae", name:'org.restlet.ext.json'
+//               exclude group:"org.restlet.gae", name:'org.restlet.ext.servlet'               
+//	       exclude group:"org.restlet.gae", name:'org.restlet'
+           }
 
    	}
 }

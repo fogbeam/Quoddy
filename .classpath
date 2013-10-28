@@ -10,26 +10,25 @@
 	<classpathentry kind="src" path="grails-app/utils"/>
 	<classpathentry kind="src" path="test/integration"/>
 	<classpathentry kind="src" path="test/unit"/>
-
 	<classpathentry kind="src" path="grails-app/ldap"/>
 	<classpathentry kind="src" path="grails-app/jobs"/>
+
 	<classpathentry kind="src" path="grails-app/realms"/>
 	<classpathentry kind="src" path="grails-app/listeners"/>
 	<classpathentry kind="src" path="grails-app/resources"/>
 
 	<classpathentry kind="src" path="grails-app/providers"/>
 
+
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path=".link_to_grails_plugins/code-coverage-1.2/grails-app/i18n">
 		<attributes>
 			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
-
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/hibernate-2.2.3/grails-app/i18n">
 		<attributes>
 			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
-
 		</attributes>
 	</classpathentry>
 	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/jaxrs-0.8/grails-app/conf">
@@ -50,7 +49,6 @@
 	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.8/grails-app/resources">
 		<attributes>
 			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
-
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.8/src/groovy">
@@ -61,7 +59,6 @@
 	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.8/src/java">
 		<attributes>
 			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
-
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/jms-1.2/grails-app/services">
@@ -122,7 +119,6 @@
 	<classpathentry kind="src" path=".link_to_grails_plugins/navigation-1.1.1/grails-app/taglib">
 		<attributes>
 			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
-
 		</attributes>
 	</classpathentry>
 	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/quartz-1.0-RC9/grails-app/conf">
@@ -150,10 +146,14 @@
 			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path=".link_to_grails_plugins/rest-0.7/src/groovy">
+		<attributes>
+			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/shiro-1.1.4/grails-app/conf">
 		<attributes>
 			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
-
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/shiro-1.1.4/grails-app/i18n">
@@ -176,16 +176,16 @@
 			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-
-	
-
 	<classpathentry kind="src" path=".link_to_grails_plugins/shiro-1.1.4/src/java">
-
 		<attributes>
 			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.grails.ide.eclipse.core.CLASSPATH_CONTAINER"/>
+
 	<classpathentry combineaccessrules="false" kind="src" path="/jFriendOfAFriend"/>
+
+	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
+
 	<classpathentry kind="output" path="target-eclipse/classes"/>
 </classpath>

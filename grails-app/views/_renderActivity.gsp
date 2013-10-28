@@ -24,9 +24,11 @@
 	<!--  end aseTitleBar -->
 	
 	<!-- begin activityStreamEntry -->
+
 	<div class="activityStreamEntry basicActivityStreamEntry">
-		${item.content}
+		${item.content} ${item.uuid}
 	</div>
+
 	<!-- end activityStreamEntry -->
 	
 	<!-- begin aseClear -->

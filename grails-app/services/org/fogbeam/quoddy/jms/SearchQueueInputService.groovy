@@ -1,7 +1,14 @@
 package org.fogbeam.quoddy.jms
 
+import static groovyx.net.http.ContentType.URLENC
+
 import javax.jms.MapMessage
-import org.fogbeam.quoddy.SemanticEnhancement
+import javax.xml.transform.OutputKeys
+import javax.xml.transform.Transformer
+import javax.xml.transform.TransformerException
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
 
 import org.apache.http.HttpEntity
 import org.apache.http.HttpException
@@ -21,24 +28,17 @@ import org.apache.lucene.index.IndexWriter.MaxFieldLength
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.Version
-<<<<<<< HEAD
-import org.fogbeam.quoddy.EventStreamService;
-=======
 import org.apache.tika.metadata.Metadata
 import org.apache.tika.parser.AutoDetectParser
 import org.apache.tika.parser.Parser
 import org.apache.tika.sax.BodyContentHandler
->>>>>>> f6f6ad8d4512220df5e49575b1b97631d5fd2b23
+import org.fogbeam.quoddy.SemanticEnhancement
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
 import org.fogbeam.quoddy.stream.CalendarFeedItem
 import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.StatusUpdate
-
-//import groovyx.net.http.RESTClient
-import groovyx.net.http.HTTPBuilder
-import static groovyx.net.http.ContentType.URLENC
 
 public class SearchQueueInputService
 {
@@ -76,6 +76,7 @@ public class SearchQueueInputService
 			//begin get the contents of the update
 			//var msgContents to store the update contents
 			def msgContents = null
+			String msgUUID = null
 			ActivityStreamItem statusUpdateActivity = null
 
 			try{
@@ -89,6 +90,8 @@ public class SearchQueueInputService
 
 			try{
 				msgContents = statusUpdateActivity.content
+				msgUUID = statusUpdateActivity.uuid
+				System.out.println("::: msgUUID -> ${msgUUID}")
 			}catch(Exception e){
 				log.error(':::Unable to get update contents2.2')
 				log.error(e.printStackTrace())
@@ -100,8 +103,9 @@ public class SearchQueueInputService
 			//Begin Submitting the message to Stanbol
 			try{
 				println ":::Submitting to Stanbol -> ${msgContents}"
+				println ":::UUID to Stanbol -> ${msgUUID}"
 				def sem = new SemanticEnhancement()
-				sem.submitData(msgContents)
+				sem.submitData(msgContents,msgUUID)
 				//processStanbolOutput(submitToStanbol(msgContents, msg.getLong("activityId")))
 			}catch(Exception e){
 				//TODO:cache requests for later processing
@@ -171,11 +175,8 @@ public class SearchQueueInputService
 			else if( msgType.equals( "NEW_STREAM_ENTRY_COMMENT" ))
     		{
     			
-<<<<<<< HEAD
-		    	log.debug( "adding document to index" );
-=======
 		    	println( "adding StreamEntryComment to index" );
->>>>>>> f6f6ad8d4512220df5e49575b1b97631d5fd2b23
+
 				newStreamEntryComment( msg );
     		}
 			else if( msgType.equals( "NEW_USER" ) )
@@ -1087,9 +1088,6 @@ public class SearchQueueInputService
 		searchService.rebuildGeneralIndex();
 	}
 	
-<<<<<<< HEAD
-}
-=======
 	
 	private String nodeToString(org.w3c.dom.Node node) 
 	{
@@ -1108,4 +1106,4 @@ public class SearchQueueInputService
 		return sw.toString();
 	}
 }
->>>>>>> f6f6ad8d4512220df5e49575b1b97631d5fd2b23
+
