@@ -17,6 +17,8 @@
 	<classpathentry kind="src" path="grails-app/listeners"/>
 	<classpathentry kind="src" path="grails-app/resources"/>
 
+	<classpathentry kind="src" path="grails-app/providers"/>
+
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path=".link_to_grails_plugins/code-coverage-1.2/grails-app/i18n">
 		<attributes>
@@ -184,5 +186,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.grails.ide.eclipse.core.CLASSPATH_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jFriendOfAFriend"/>
 	<classpathentry kind="output" path="target-eclipse/classes"/>
 </classpath>

@@ -1,11 +1,10 @@
 package org.fogbeam.quoddy.transformer
 
-import java.net.URL
 import java.text.SimpleDateFormat
 
+import org.fogbeam.protocol.activitystreams.ActivityStreamEntry
 import org.fogbeam.quoddy.User
-import org.fogbeam.quoddy.integration.activitystream.ActivityStreamEntry
-import org.fogbeam.quoddy.stream.ActivityStreamItem;
+import org.fogbeam.quoddy.stream.ActivityStreamItem
 
 class ActivityStreamTransformerService
 {
@@ -47,21 +46,33 @@ class ActivityStreamTransformerService
 		/* should evaluate the objectClass or whatever of the incoming Actor instance */
 		if( entry.actor )
 		{
-			println "Looking for user ${entry.actor.id}";
 			
-			User userActor = userService.findUserByUserId(entry.actor.id); 
-			if( userActor )
+			String actorType = entry.actor.objectType;
+			
+			switch( actorType )
 			{
-				println "Found user: ${userActor}";
-				activity.owner = userActor; 
-				activity.actorUuid = userActor.uuid;
-				activity.actorObjectType = entry.actor.objectType;
-				activity.actorUrl = entry.actor.url;
-				activity.actorDisplayName = entry.actor.displayName;
-			}
-			else
-			{
-				println "failed to lookup Actor as a User in our system.";	
+				case "UserByUserId":
+					println "Looking for user ${entry.actor.id}";
+				
+					User userActor = userService.findUserByUserId(entry.actor.id); 
+					if( userActor )
+					{
+						println "Found user: ${userActor}";
+						activity.owner = userActor; 
+						activity.actorUuid = userActor.uuid;
+						activity.actorObjectType = entry.actor.objectType;
+						activity.actorUrl = entry.actor.url;
+						activity.actorDisplayName = entry.actor.displayName;
+					}
+					else
+					{
+						println "failed to lookup Actor as a User in our system.";	
+					}
+					break;
+				default:
+					// unknown ActorType, ignore for now
+					println "Remote sent us an unknown Actor type";
+				
 			}
 		}
 		else
@@ -72,9 +83,30 @@ class ActivityStreamTransformerService
 		if( entry.target )
 		{
 			// look up the target based on the target objectType and target id
-			activity.targetUuid = entry.target.id;
-			activity.targetObjectType = entry.target.objectType;
 			
+			String targetObjectType = entry.target.objectType;
+			switch( targetObjectType )
+			{
+				case "UserByUserId":
+
+					User targetUser = userService.findUserByUserId(entry.target.id);
+					if( targetUser )
+					{
+				
+						activity.targetUuid = targetUser.uuid;
+						activity.targetObjectType = "User";
+					}
+					else
+					{
+						println "failed to lookup Target as a User in our system.";
+					}
+					
+					break;
+				default:
+					println "Remote sent us an unknown Target type!";
+					break;
+				
+			}
 			
 		}
 		else
@@ -88,7 +120,9 @@ class ActivityStreamTransformerService
 			activity.objectClass = entry.object.objectType;
 			activity.objectObjectType = entry.object.objectType;
 			activity.objectUuid = entry.object.id;
-			
+			activity.objectSummary = entry.object.summary;
+			activity.objectContent = entry.object.content;
+			activity.objectUrl = entry.object.url;
 		}		
 		else
 		{

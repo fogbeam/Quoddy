@@ -3,6 +3,7 @@ package org.fogbeam.quoddy;
 import java.text.SimpleDateFormat
 
 import org.apache.commons.io.FilenameUtils
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.fogbeam.quoddy.profile.ContactAddress
 import org.fogbeam.quoddy.profile.EducationalExperience
 import org.fogbeam.quoddy.profile.HistoricalEmployer
@@ -10,16 +11,16 @@ import org.fogbeam.quoddy.profile.Interest
 import org.fogbeam.quoddy.profile.OrganizationAssociation
 import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.profile.Skill
-import org.fogbeam.quoddy.social.FriendRequest;
+import org.fogbeam.quoddy.search.SearchResult
+import org.fogbeam.quoddy.social.FriendRequest
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.commons.CommonsMultipartFile
-
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
 
 class UserController {
 
 	def userService;
 	def profileService;
+	def searchService;
 	def scaffold = false;
 
 	def sexOptions = [new SexOption( id:1, text:"Male" ), new SexOption( id:2, text:"Female" ) ];
@@ -89,6 +90,49 @@ class UserController {
 		[]	
 	}	
 				   
+
+	
+	def manageUsers =
+	{
+		List<User> users = new ArrayList<User>();
+		
+		String queryString = params.queryString;
+		
+		if( queryString )
+		{
+			// use search...
+			List<SearchResult> searchResults = searchService.doUserSearch( queryString );
+			for( SearchResult result : searchResults )
+			{
+				users.add( userService.findUserByUuid( result.uuid ));
+			}
+			
+			
+		}
+		else
+		{
+			// otherwise, just grab everybody, up to the limit...
+			String strPageNumber = params.pageNumber;
+			int pageNumber = 1;
+			if( strPageNumber )
+			{
+				pageNumber = Integer.parseInt( strPageNumber );
+			}
+			
+			List<User> temp = userService.findAllUsers(30, pageNumber )
+			if( temp )
+			{
+				users.addAll( temp );
+			}
+			
+		}
+		
+		
+		println "found ${users.size()} users";
+		
+		[users:users];
+	}
+	
 	def viewUser = 
 	{
 		
@@ -108,6 +152,129 @@ class UserController {
 		
 	}
 
+	def editUser = 
+	{
+		User user = userService.findUserByUuid(  params.id );
+		
+		[user:user];
+	}
+	
+	def adminAddUser =
+	{
+		
+		[];
+	}
+	
+	def adminSaveUser =
+	{ UserRegistrationCommand urc ->
+		
+		if( urc.hasErrors() )
+		{
+				urc.errors.allErrors.each {println it};
+				flash.user = urc;
+				flash.message = "Error creating user!";
+				redirect( controller:'user', action:"adminAddUser" );
+		}
+		else
+		{
+			def user = new User( urc.properties );
+			user.password = urc.password;
+			
+			user = userService.createUser( user );
+			
+			if( user )
+			{
+					flash.message = "Account Created, ${urc.displayName ?: urc.userId}";
+					redirect(controller:'user', action: 'manageUsers')
+			}
+			else
+			{
+				// maybe not unique userId?
+				flash.user = urc;
+				redirect( controlle:'user', action:"adminAddUser" );
+			}
+		}
+		
+		
+	}
+	
+	def adminEditUser =
+	{
+		User user = userService.findUserByUuid(  params.id );
+		
+		[user:user];
+	}
+	
+	
+	def adminUpdateUser =
+	{ UserRegistrationCommand urc ->
+	
+		println "saving account for uuid: ${urc.uuid}";
+		User user = userService.findUserByUuid( urc.uuid );
+		if( user )
+		{
+			Map theNewProperties = new HashMap();
+			theNewProperties.putAll( urc.properties );
+			theNewProperties.remove( "userId" );
+			user.properties = theNewProperties;
+			
+			println "updating user as: ${user.toString()}";
+			
+			user = userService.updateUser( user );
+			
+			if( user )
+			{
+					flash.message = "Account updated, ${urc.displayName ?: urc.userId}";
+					println "message: ${flash.message}";
+					redirect(controller:'user', action: 'manageUsers')
+			}
+			else
+			{
+				flash.message = "Error updating account, ${urc.displayName ?: urc.userId}";
+				println "message: ${flash.message}";
+				// redirect(controller:'user', action: 'editUser');
+				render(view:'adminEditUser', model:[user:user]);
+			}
+			
+		}
+		else
+		{
+			flash.message = "Error updating account, ${urc.displayName ?: urc.userId}";
+			println "message: ${flash.message}";
+			render(view:'adminEditUser', model:[user:user]);
+		}
+
+	}
+	
+	
+	def disableUser =
+	{
+		User user = userService.findUserByUuid(  params.id );
+		
+		userService.disableUser( user );
+		
+		redirect( controller:'user', action:'manageUsers');
+	}
+	
+	def enableUser = 
+	{
+		User user = userService.findUserByUuid(  params.id );
+		
+		userService.enableUser( user );
+		
+		redirect( controller:'user', action:'manageUsers');
+	}
+	
+	def deleteUser =
+	{
+		User user = userService.findUserByUuid(  params.id );
+		
+		userService.deleteUser( user );
+		
+		redirect( controller:'user', action:'manageUsers');
+	}
+	
+	
     def registerUser = 
 	{ UserRegistrationCommand urc ->
     
@@ -125,7 +292,6 @@ class UserController {
         else
         {
                 def user = new User( urc.properties );
-                // user.profile = new Profile( urc.properties );
                 
 				user = userService.createUser( user );
 				
@@ -760,24 +926,7 @@ class UserController {
 		[user:user];
 	}	
 
-	def saveAccount = 
-	{ UserRegistrationCommand urc ->
-	
-		User user = new User( urc.properties );
-		user = userService.updateUser( user );
-		
-		if( user )
-		{
-				flash.message = "Account updated, ${urc.displayName ?: urc.userId}";
-				redirect(controller:'home', action: 'index')
-		}
-		else
-		{
-			flash.message = "Error updating account, ${urc.displayName ?: urc.userId}";
-			render(view:'editAccount', model:[user:user]);
-		}
-	}
-		
+
 	def listOpenFriendRequests = {
 
 		def user = null;

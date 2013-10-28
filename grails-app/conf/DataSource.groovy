@@ -22,6 +22,7 @@ environments {
 						//create-drop to drop/rebuild all tables
 						//update to persist data
 			url = "jdbc:postgresql:quoddy2";
+
 			// dbCreate = "create-drop"
 			// url = "jdbc:hsqldb:mem:devDb
 		}
@@ -29,13 +30,13 @@ environments {
 	test {
 		dataSource {
 			dbCreate = "update"
-			url = "jdbc:hsqldb:mem:testDb"
+			url = "jdbc:hsqldb:mem:quoddy_test"
 		}
 	}
 	production {
 		dataSource {
 			dbCreate = "update" // one of 'create', 'create-drop','update'
-			url = "jdbc:postgresql:quoddy2"
+			url = "jdbc:postgresql:quoddy"
 		}
 	}
 }

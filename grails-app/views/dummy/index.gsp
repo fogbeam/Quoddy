@@ -5,13 +5,8 @@
     </head>
 	<body>
 		<div id="bodyContent">	
-			FOO
+			${value}
 			<p />
-			<ul>
-				<g:each in="${events}" var="event">
-					<li>${event.name} - ${event.class}</li>
-				</g:each>
-			</ul>
 		</div>
 	</body>
 </html>

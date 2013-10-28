@@ -17,7 +17,7 @@
 	</div>	
 	
 	
-	<div class="activityStreamEntry"> 
+	<div class="activityStreamEntry rssFeedItem"> 
 		<p>
 		    ${item.streamObject.name}
 		</p>

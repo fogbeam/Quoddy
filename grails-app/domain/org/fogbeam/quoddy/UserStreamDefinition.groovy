@@ -31,6 +31,8 @@ class UserStreamDefinition implements Serializable
 					   subscriptionUuidsIncluded:String,
 					   eventTypesIncluded:EventType];
 	
+	static belongsTo = [owner:User];			   
+				   
 	String 	name;
 	String 	uuid;
 	String 	definedBy;

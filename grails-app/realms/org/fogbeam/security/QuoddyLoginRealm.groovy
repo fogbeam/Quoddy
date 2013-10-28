@@ -55,27 +55,32 @@ class QuoddyLoginRealm
 
     def hasRole(principal, roleName) 
 	{
-		User user = userService.findUserByUserId( principal.userId );
-		
-		AccountRole role = user.roles.find { it.name.equals( roleName ) };
-		
-		if( role )
+		User.withTransaction
 		{
+			User user = userService.findUserByUserId( principal.userId );
+		
+			AccountRole role = user.roles.find { it.name.equals( roleName ) };
+		
+			if( role )
+			{
 			return true;
-		}
-		else 
-		{
-			return false;
+			}
+			else 
+			{
+				return false;
+			}
 		}
     }
 
     def hasAllRoles(principal, roles) 
 	{
+		User.withTransaction
+		{
 		
-		User user = userService.findUserByUserId( principal.userId );
+			User user = userService.findUserByUserId( principal.userId );
 
-        return user.roles.size() == roles.size()
-		
+			return user.roles.size() == roles.size()
+		}
     }
 
     def isPermitted(principal, requiredPermission) 
@@ -87,78 +92,81 @@ class QuoddyLoginRealm
         // First find all the permissions that the user has that match
         // the required permission's type and project code.
         
-		User user = userService.findUserByUserId( principal.userId );
-        boolean retval = false;
+		User.withTransaction
+		{
+			User user = userService.findUserByUserId( principal.userId );
+	        boolean retval = false;
+			
 		
+			Set<String> permissions = user.permissions;
 	
-		Set<String> permissions = user.permissions;
-
-        // Try each of the permissions found and see whether any of
-        // them confer the required permission.
-        
-		retval = permissions?.find { permString ->
-            // Create a real permission instance from the database
-            // permission.
-            def perm = shiroPermissionResolver.resolvePermission(permString)
-
-            // Now check whether this permission implies the required
-            // one.
-            if (perm.implies(requiredPermission)) 
+	        // Try each of the permissions found and see whether any of
+	        // them confer the required permission.
+	        
+			retval = permissions?.find { permString ->
+	            // Create a real permission instance from the database
+	            // permission.
+	            def perm = shiroPermissionResolver.resolvePermission(permString)
+	
+	            // Now check whether this permission implies the required
+	            // one.
+	            if (perm.implies(requiredPermission)) 
+				{
+	                // User has the permission!
+	                return true
+	            }
+	            else 
+				{
+	                return false
+	            }
+	        }
+	
+	        if (retval != null) 
 			{
-                // User has the permission!
-                return true
-            }
-            else 
+	            // Found a matching permission!
+	            return true
+	        }
+	
+	        // If not, does he gain it through a role?
+	        //
+	        // Get the permissions from the roles that the user does have.
+	        List<String> results = new ArrayList<String>();
+			Set<AccountRole> roles = user.roles;
+			for( AccountRole role : roles )
 			{
-                return false
-            }
-        }
-
-        if (retval != null) 
-		{
-            // Found a matching permission!
-            return true
-        }
-
-        // If not, does he gain it through a role?
-        //
-        // Get the permissions from the roles that the user does have.
-        List<String> results = new ArrayList<String>();
-		Set<AccountRole> roles = user.roles;
-		for( AccountRole role : roles )
-		{
-			results.addAll( role.permissions );
+				results.addAll( role.permissions );
+			}
+	
+	        // There may be some duplicate entries in the results, but
+	        // at this stage it is not worth trying to remove them. Now,
+	        // create a real permission from each result and check it
+	        // against the required one.
+	        retval = results.find { permString ->
+	            // Create a real permission instance from the database
+	            // permission.
+	            def perm = shiroPermissionResolver.resolvePermission(permString)
+	
+	            // Now check whether this permission implies the required
+	            // one.
+	            if (perm.implies(requiredPermission)) {
+	                // User has the permission!
+	                return true
+	            }
+	            else {
+					return false
+	            }
+	        }
+			
+	        if (retval != null) 
+			{
+	            // Found a matching permission!
+	            return true
+	        }
+	        else 
+			{
+	            return false
+	        }
 		}
-
-        // There may be some duplicate entries in the results, but
-        // at this stage it is not worth trying to remove them. Now,
-        // create a real permission from each result and check it
-        // against the required one.
-        retval = results.find { permString ->
-            // Create a real permission instance from the database
-            // permission.
-            def perm = shiroPermissionResolver.resolvePermission(permString)
-
-            // Now check whether this permission implies the required
-            // one.
-            if (perm.implies(requiredPermission)) {
-                // User has the permission!
-                return true
-            }
-            else {
-				return false
-            }
-        }
-		
-        if (retval != null) 
-		{
-            // Found a matching permission!
-            return true
-        }
-        else 
-		{
-            return false
-        }
 		
     }
 }

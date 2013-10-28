@@ -1,3 +1,4 @@
+import grails.util.Environment;
 
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts
@@ -11,25 +12,37 @@
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 
-// TODO: make this QUODDY_HOME or whatever
-def ENV_NAME = "APPNAME_CONFIG"
+String quoddyHome = System.getProperty( "quoddy.home");
+
 if(!grails.config.locations || !(grails.config.locations instanceof List)) 
 {
 	grails.config.locations = []
 }
-if(System.getenv(ENV_NAME)) 
+
+switch( Environment.current  )
 {
-	println "Including configuration file specified in environment: " + System.getenv(ENV_NAME);
-	grails.config.locations << "file:" + System.getenv(ENV_NAME)
-} 
-else if(System.getProperty(ENV_NAME)) 
-{
-	println "Including configuration file specified on command line: " + System.getProperty(ENV_NAME);
-	grails.config.locations << "file:" + System.getProperty(ENV_NAME)
-} 
-else 
-{
-	println "No external configuration file defined."
+	case Environment.DEVELOPMENT:
+		
+		String configLocation = quoddyHome + "/quoddy-dev.properties";
+		println "####################\n######################\nadding configLocation: ${configLocation}\n###################";
+		grails.config.locations << "file:" + configLocation;
+		break;
+		
+	case Environment.PRODUCTION:
+		
+		String configLocation = quoddyHome + "/quoddy-production.properties";
+		println "####################\n######################\nadding configLocation: ${configLocation}\n###################";
+		grails.config.locations << "file:" + configLocation;
+		break;
+		
+	case Environment.TEST:
+		String configLocation = quoddyHome + "/quoddy-test.properties";
+		println "####################\n######################\nadding configLocation: ${configLocation}\n###################";
+		grails.config.locations << "file:" + configLocation;
+		break;
+		
+	default:
+		break;
 }
 
 
@@ -83,7 +96,7 @@ grails.spring.bean.packages = []
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
-        grails.serverURL = "http://www.changeme.com"
+        grails.serverURL = "http://localhost:8080/${appName}"
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"

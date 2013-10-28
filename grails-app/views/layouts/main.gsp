@@ -1,4 +1,3 @@
-<html>
 <head>
 <title><g:layoutTitle default="Quoddy" /></title>
 <nav:resources />
@@ -12,6 +11,8 @@
 	href="${createLinkTo(dir:'css', file:'oagis.css')}" />
 <link rel="stylesheet" type="text/css"
 	href="${createLinkTo(dir:'css', file:'crappy_css_added_by_phil.css')}" />
+<link rel="stylesheet" type="text/css"
+	href="${createLinkTo(dir:'css', file:'hopscotch.css')}" />
 
 
 
@@ -28,8 +29,13 @@
 <g:javascript library="jquery-ui-1.10.3.custom/js/jquery-1.9.1" />
 
 <g:javascript>
-          var $j = jQuery.noConflict();	
+	var $j = jQuery.noConflict();	
 </g:javascript>
+
+<g:javascript library="hopscotch" />
+<g:javascript library="quoddy_intro_tour" />
+
+
 
 <g:javascript library="jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom" />
 
@@ -44,6 +50,8 @@
 <script type="text/javascript">
         	<g:render template="/javascript/application.js"/>
     	</script>
+
+<g:javascript library="application" />
 
 <g:layoutHead />
 
@@ -105,17 +113,8 @@
 									<li><a
 										href="${createLink(controller:'user', action:'listOpenFriendRequests')}">
 										Pending Friend Requests</a></li>
-									<li><a
-										href="${createLink(controller:'schedule', action:'index')}">
-										Manage Scheduled Jobs</a></li>
-									
-									<!-- remove this once we've merged management of calendar
-									feeds into the main subscriptions wizard
-									<li><a
-										href="${createLink(controller:'calendar', action:'index')}">
-										Manage Calendar Feeds</a></li>
-									
-									 -->									<li class="divider"></li>
+																
+									<li class="divider"></li>
 									
 									<li><a
 										href="${createLink(controller:'user', action:'editAccount')}">
@@ -142,6 +141,57 @@
 								</shiro:authenticated>
 							</ul>
 						</li>
+						
+						<!-- Help menu -->
+						<li class="dropdown"><a class="dropdown-toggle"
+							data-toggle="dropdown" href="#">Help<b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="docs/index.html">Help Contents</a></li>
+								<li><a href="#" onclick="hopscotch.startTour(tour);">Interactive Tour</a></li>
+								<li><a href="#">Quoddy Admin Guide</a></li>
+								<li><a href="#">Quoddy Integration Guide</a></li>
+								<li class="divider"></li>
+								<li><a href="#" onclick="testSelector();">About Quoddy</a></li>
+							</ul>
+						</li>
+						<!--  end Help menu -->
+
+
+						<!-- Admin menu -->
+						<shiro:authenticated>
+							<shiro:hasRole name="admin">
+								<li class="dropdown"><a class="dropdown-toggle"
+									data-toggle="dropdown" href="#">Admin<b class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<li><a
+											href="${createLink(controller:'admin', action:'index')}">
+											Admin Home</a>
+										</li>
+										<li class="divider"></li>
+										<li>
+										<a
+											href="${createLink(controller:'user', action:'manageUsers')}">
+											Manage Users</a>
+										</li>
+										<li><a href="#">Manage Site Config</a></li>
+										<li><a
+											href="${createLink(controller:'schedule', action:'index')}">
+											Manage Scheduled Jobs</a>
+										</li>
+										<li><a href="#">More goes here...</a></li>
+										<li class="divider"></li>
+										<li><a href="#">Whatever...</a></li>
+									</ul>
+								</li>
+							</shiro:hasRole>
+						</shiro:authenticated>
+						<!--  end Admin menu -->
+
+
+
+
+
+					
 					</ul>
 
 				</div>

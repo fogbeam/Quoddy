@@ -21,11 +21,19 @@ class LoginService
 		boolean trySecondAuthSource = true;
 		if( account )
 		{
+			println "local account FOUND for userId: ${userId}";
+			
 			trySecondAuthSource = false;  // this is a local user
 			// verify credentials, verify is existing User, load User	
 			String md5HashSubmitted = digestMd5( password );
-			println "md5HashSubmitted: ${md5HashSubmitted}";
-			if( md5HashSubmitted.equals( account.password ))
+			// println "md5HashSubmitted: ${md5HashSubmitted}";
+			md5HashSubmitted = "{MD5}" + md5HashSubmitted;
+			// println "md5HashSubmitted: ${md5HashSubmitted}";
+			
+			String userPassword = account.password;
+			// println "userPassword: ${userPassword}";
+			
+			if( md5HashSubmitted.equals( userPassword ))
 			{
 				println "login successful";
 				
@@ -42,13 +50,35 @@ class LoginService
 		
 		if( trySecondAuthSource )
 		{
+			println "NO local account found for userId: ${userId}";
+			println "trying LDAP for user ${userId}";
+			
 			LDAPPerson person = ldapPersonService.findPersonByUserId( userId );
 			if( person )
 			{
+				println "found matching user in LDAP, verifying password";
 				// verify credentials, verify is existing User, load User
 				String md5HashSubmitted = digestMd5( password );
+				
 				println "md5HashSubmitted: ${md5HashSubmitted}";
-				if( md5HashSubmitted.equals( person.userpassword ))
+				println "person.userpassword: ${person.userpassword}";
+				md5HashSubmitted = md5HashSubmitted.replace( "{md5}", "");
+				
+				println "md5HashSubmitted: ${md5HashSubmitted}";
+				
+				String personPassword = person.userpassword
+				if( personPassword.startsWith( "{md5}"))
+				{
+					personPassword = personPassword.replace( "{md5}", "" );
+				}
+				
+				// or if there's an uppercased version, nix that as well
+				if( personPassword.startsWith( "{MD5}"))
+				{
+					personPassword = personPassword.replace( "{MD5}", "" );
+				}
+				
+				if( md5HashSubmitted.equals( personPassword ))
 				{
 					println "login successful";
 					
@@ -83,6 +113,7 @@ class LoginService
 			throw new RuntimeException(e);
 		}
 	  
-		return "{MD5}" + base64;
+		// return "{MD5}" + base64;
+		return base64;
 	}
 }

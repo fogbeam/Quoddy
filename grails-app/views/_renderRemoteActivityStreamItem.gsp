@@ -18,7 +18,7 @@
 	</div>	
 	
 	
-	<div class="activityStreamEntry"> 
+	<div class="activityStreamEntry remoteActivityStreamEntry"> 
 		<p>
 		    ${item.name}
 		</p>

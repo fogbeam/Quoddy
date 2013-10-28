@@ -2,7 +2,7 @@ package org.fogbeam.quoddy
 
 import org.codehaus.jackson.map.ObjectMapper
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
-import org.fogbeam.quoddy.integration.activitystream.ActivityStreamEntry
+import org.fogbeam.protocol.activitystreams.ActivityStreamEntry
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ResharedActivityStreamItem
 import org.fogbeam.quoddy.stream.StreamItemBase

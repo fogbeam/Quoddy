@@ -23,7 +23,8 @@ class RemoteActivityStreamItem extends StreamItemBase
 	{
 		switch( remoteObjectType )
 		{
-			
+			case "NeddickLink":
+				return "/renderNeddickLink";
 			default:
 				return "/renderRemoteActivityStreamItem";
 		}
