@@ -96,13 +96,30 @@ grails.spring.bean.packages = []
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
-        grails.serverURL = "http://localhost:8080/${appName}"
+		def serverPort = System.getProperty( "server.port");
+		if( serverPort == null )
+		{
+			serverPort = "8080";
+		}
+        grails.serverURL = "http://localhost:${serverPort}/${appName}"
     }
     development {
-        grails.serverURL = "http://localhost:8080/${appName}"
+		def serverPort = System.getProperty( "server.port");
+		if( serverPort == null )
+		{
+			serverPort = "8080";
+		}
+
+		grails.serverURL = "http://localhost:${serverPort}/${appName}"
     }
     test {
-        grails.serverURL = "http://localhost:8080/${appName}"
+		def serverPort = System.getProperty( "server.port");
+		if( serverPort == null )
+		{
+			serverPort = "8080";
+		}
+
+        grails.serverURL = "http://localhost:${serverPort}/${appName}"
     }
 
 }
