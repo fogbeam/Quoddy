@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html>
 <head>
 <title><g:layoutTitle default="Quoddy" /></title>
 <nav:resources />
@@ -51,6 +53,8 @@
         	<g:render template="/javascript/application.js"/>
     	</script>
 
+<g:javascript library="enrich_content" />
+
 <g:javascript library="application" />
 
 <g:layoutHead />
@@ -71,9 +75,9 @@
 					
 					<shiro:authenticated>
 						<li><a href="#">Email</a></li>
-						<li><a href="#">Reports</a></li>
 						<li><a href="#">Calendar</a></li>
 						<li><a href="#">Apps</a></li>
+						<li><a href="#">Workflows</a></li>
 					</shiro:authenticated>
 				</ul>
 				<div id="gbg" class="settingsNav navbar">
@@ -82,7 +86,7 @@
 						<li>
 							<div class="searchBoxContainer">
 								<g:form controller="search" action="doSearch" method="GET">
-									<input name="queryString" type="text" class="searchbox" autocomplete="off" />
+									<input name="queryString" type="text" style="margin-left:-40px;" class="searchbox" autocomplete="off" />
 									<!-- <input type="submit" value="Search" id="searchBtn" /> -->
 									<div class="btn-group">
 										<button data-toggle="dropdown"

@@ -1,6 +1,13 @@
 <!--  begin aseWrapper area -->
+
 <div class="aseWrapper" id="aseWrapper.${item.uuid}">
 
+	<g:if test="${item.streamObject.enhancementJSON != null}">
+		<script class="enhancementJSON" id="enhancementJSON-${item.uuid}" type="text/javascript" language="javascript">
+			${item.streamObject.enhancementJSON}
+		</script>
+	</g:if>
+	
 	<!-- begin aseAvatarBlock -->
 	<div class="aseAvatarBlock">
 		<img

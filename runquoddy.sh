@@ -1,4 +1,4 @@
 #!/bin/sh
 
-grails clean; grails -Dquoddy.home=/opt/fogcutter/quoddy run-app
+grails clean; grails -Dserver.port=8180 -Dquoddy.home=/opt/fogcutter/quoddy run-app
 

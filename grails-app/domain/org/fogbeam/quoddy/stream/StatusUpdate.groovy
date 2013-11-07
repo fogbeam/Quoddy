@@ -10,6 +10,7 @@ class StatusUpdate extends StreamItemBase implements Serializable
 	String text;
 	User creator;
 	Date dateCreated;
+	String enhancementJSON;
 	
 	static belongsTo = [User];
 	static transients = ['templateName'];

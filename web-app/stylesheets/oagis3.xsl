@@ -16,8 +16,8 @@
 			</div>
 		</div>
 	</xsl:template>
+	
 	<xsl:template match="oagis:RFQHeader">
-
 		<ul>
 			<li>Customer: <xsl:value-of select="oagis:CustomerParty/oagis:CustomerAccountID"/></li>
 			<li>Document Date: <xsl:value-of select="oagis:DocumentDateTime"/></li>

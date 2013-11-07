@@ -159,6 +159,9 @@ class UserController {
 		[user:user];
 	}
 	
+	
+	/* TODO: Start a Webflow wizard here... */
+	
 	def adminAddUser =
 	{
 		
@@ -197,6 +200,10 @@ class UserController {
 		
 		
 	}
+	
+	
+	/* TODO: start a Webflow wizard here */
+	
 	
 	def adminEditUser =
 	{

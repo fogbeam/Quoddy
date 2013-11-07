@@ -9,7 +9,9 @@
 .commentBoxWrapper {
 	padding-top: 5px;
 	padding-left: 7px;
-	background-color:#F8F8F8;	
+	// background-color:#F8F8F8;
+	background-color: Gainsboro;
+	margin-top: -19px;
 }
 
 .commentsArea {
@@ -51,28 +53,29 @@
 	padding-bottom:2px;
 	padding-left:4px;
 	padding-right:4px;
-	height:35px;
+	height:40px;
 	font-size: 13px;
 	line-height: 1.4;
 	word-wrap: break-word;
 	background: none repeat scroll 0% 0% transparent;
-	position: relative;
-	/* min-height: 3.9em; */	
+	position: relative;	
 	vertical-align: baseline;
+	width: 450px;
+	margin-right: auto;
+	margin-left: auto;
 }
 
 /* for the event footer stuff. +1 link, share link, etc. */
 
 .plusOneButton {
-	
 }
 
 .shareButton {
-	
+	margin-left:14px;	
 }
 
 .showHideCommentsButton {
-	
+	margin-left:14px;
 }
 
 /* some stuff for events in the Activity Stream */

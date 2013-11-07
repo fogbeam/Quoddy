@@ -515,6 +515,5 @@ class UserService {
 		user.disabled = false;
 		user.save( flush:true);
 		
-	}
-	
+	}	
 }
