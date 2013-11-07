@@ -1,0 +1,5 @@
+/dbpedia.solrindex.ref
+/org.apache.stanbol.enhancer.engines.entitytagging.impl.NamedEntityTaggingEngine-dbpedia.config
+/org.apache.stanbol.entityhub.core.site.CacheImpl-dbpedia.config
+/org.apache.stanbol.entityhub.site.referencedSite-dbpedia.config
+/org.apache.stanbol.entityhub.yard.solr.impl.SolrYard-dbpedia.config

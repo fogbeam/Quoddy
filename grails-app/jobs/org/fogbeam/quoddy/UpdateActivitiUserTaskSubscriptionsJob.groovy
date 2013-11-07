@@ -47,6 +47,7 @@ class UpdateActivitiUserTaskSubscriptionsJob
 			println "Making REST request to server at: ${activitiServer}";
 			RESTClient restClient = new RESTClient( activitiServer )
 			
+			// adding server authentication, if required
 			restClient.client.addRequestInterceptor(new HttpRequestInterceptor() {
 					void process(HttpRequest httpRequest, HttpContext httpContext) {
 							httpRequest.addHeader('Authorization', 'Basic ' + 'kermit:kermit'.bytes.encodeBase64().toString())

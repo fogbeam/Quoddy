@@ -31,7 +31,7 @@ class StatusController {
 			println "constructing our new StatusUpdate object...";
 			// construct a status object
 			println "statusText: ${params.statusText}";
-			StatusUpdate newStatus = new StatusUpdate( text: params.statusText, creator: user );
+			StatusUpdate newStatus = new StatusUpdate( text:params.statusText,creator : user);
 			newStatus.effectiveDate = new Date(); // now
 			newStatus.targetUuid = "ABC123";
 			newStatus.name = "321CBA";
