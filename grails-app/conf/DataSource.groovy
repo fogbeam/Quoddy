@@ -19,7 +19,7 @@ environments {
 	development {
 		dataSource {
 			dbCreate = "update" // one of 'create', 'create-drop','update'
-			url = "jdbc:postgresql:quoddy_dev";
+			url = "jdbc:postgresql:quoddy2";
 			// dbCreate = "create-drop"
 			// url = "jdbc:hsqldb:mem:devDb
 		}
