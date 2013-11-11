@@ -3,15 +3,31 @@
 	<div class="aseAvatarBlock">
 		<img src="${createLinkTo(dir:'images', file:'flavour-icons/ical.png')}"/>
 	</div>
-	<div class="aseTitleBar"> <!-- http://localhost:8080/quoddy/user/viewUser?userId=testuser2 -->
-		<span class="aseTitleBarUserLink">	
-		<a href="${createLink(controller:'calendar', action:'display', params:[calendarFeedId:item.streamObject.owningSubscription.id])}">${item.streamObject.owningSubscription.name}</a>
-		</span>
-		<span classs="aseTitleBarPermalink">
-		<g:formatDate date="${item.streamObject.dateCreated}" type="datetime" style="LONG" timeStyle="SHORT"/>
-		</span>
-	
-	
+
+<!-- begin aseTitleBar -->
+>·<div class="aseTitleBar">
+>·>·<!-- http://localhost:8080/quoddy/user/viewUser?userId=testuser2 -->
+>·>·<span class="aseTitleBarUserLink"> <a href="${createLink(controller:'activityStream', action:'viewUserStream', params:[userId:item.owner.userId])}">
+>·>·>·>·${item.owner.fullName}
+>·>·</a>
+>·>·</span> <span class="aseTitleBarPermalink"> <a href="#" title="${formatDate(date:item.dateCreated)}"><g:formatDate date="${item.dateCreated}" type="datetime" style="SHORT" timeStyle="SHORT" /></a>
+  </span>
+    <div class="commentButtonBar">
+      <span class="plusOneButton" id="plusOneButton.${item.uuid}" name="plusOneButton.${item.uuid}" >
+        <a href="#" class="btn">+1</a>
+      </span>
+      <span class="shareButton" id="shareButton.${item.uuid}" name="shareButton.${item.uuid}" >
+        <a href="#" class="btn">Share</a>
+      </span>
+      <span class="showHideCommentsButton">
+        <a href="#" class="btn">Show Comments</a>
+      </span>
+    </div>
+  </div>
+<!--  end aseTitleBar -->
+
+
+
 	</div>
 	
 	
@@ -27,21 +43,6 @@
 		</ul>
 	</div>
 	<!-- end activityStreamEntry -->
-	
-	<div class="aseClear" >
-	</div>
-	
-	<div class="aseFooter" >
-			<span class="plusOneButton" id="plusOneButton.${item.uuid}" name="plusOneButton.${item.uuid}" >
-			<a href="#">+1</a>
-		</span> 
-		<span class="shareButton" id="shareButton.${item.uuid}" name="shareButton.${item.uuid}" >
-			<a href="#">Share</a>
-		</span>
-		<span class="showHideCommentsButton"> 
-			<a href="#">Show Comments</a>
-		</span>	
-	</div>
 	
 	<div class="aseClear" >
 	</div>
@@ -62,9 +63,10 @@
 			
 			<form name="addCommentForm" id="addCommentForm"
 				class="addCommentForm">
+        <label>Add a comment</label>
 				<input name="addCommentTextInput" id="addCommentTextInput"
 					class="addCommentTextInput" type="textbox" value="Add a Comment"></input>
-				<br /> <input name="eventId" type="hidden" value="${item.id}" /> <input
+				<input name="eventId" type="hidden" value="${item.id}" /> <input
 					name="submitCommentBtn" id="submitCommentBtn"
 					class="submitCommentBtn" style="display: none;" type="submit"
 					value="Submit" /> <input name="cancelCommentBtn"

@@ -37,13 +37,13 @@
 	<!-- begin aseFooter -->
 	<div class="aseFooter">
 		<span class="plusOneButton" id="plusOneButton.${item.uuid}" name="plusOneButton.${item.uuid}" >
-			<a href="#">+1</a>
+			<a href="#" class="btn">+1</a>
 		</span> 
 		<span class="shareButton" id="shareButton.${item.uuid}" name="shareButton.${item.uuid}" >
-			<a href="#">Share</a>
+			<a href="#" class="btn">Share</a>
 		</span>
 		<span class="showHideCommentsButton"> 
-			<a href="#">Show Comments</a>
+			<a href="#" class="btn">Show Comments</a>
 		</span>
 		
 	</div>

@@ -58,7 +58,7 @@
 	<div id="gbw" class="headerNavContainer navbar-top">
 		<div class="container">
 			<div class="headerNav row">
-				<ul class="customNav span6">
+				<ul class="customNav span5">
 					<li>
 						<h1>
 							<a href="${createLink(controller:'home', action:'index')}">Quoddy</a>
@@ -173,7 +173,7 @@
 
 		<!-- left sidenav, global -->
 		
-		<div class="leftContentNav span3">
+		<div class="leftContentNav">
 			<shiro:authenticated>
 				<g:render template="/leftSidebar" />
 			</shiro:authenticated>
