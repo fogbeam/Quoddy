@@ -17,9 +17,12 @@
 				<g:each in="${ldapPersons}">
 	     		<tr>
 	     			<td>
-	     				<g:checkBox name="importUser.${it.uuid}" value="${false}" />
+	     				<g:checkBox name="importUser.${it.uid}" value="${false}" />
 	     			</td>
+	     			<td>${it.fullName}</td>
 	     			<td>${it.displayName}</td>
+	     			<td>${it.email}</td>
+	     			
 				</tr>
 				</g:each>	
 			</table>

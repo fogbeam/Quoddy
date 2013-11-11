@@ -1,5 +1,7 @@
 package org.fogbeam.quoddy;
 
+import groovyx.net.http.RESTClient
+import static groovyx.net.http.ContentType.TEXT
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.StatusUpdate
@@ -29,10 +31,25 @@ class StatusController {
 			println "constructing our new StatusUpdate object...";
 			// construct a status object
 			println "statusText: ${params.statusText}";
-			StatusUpdate newStatus = new StatusUpdate( text: params.statusText, creator: user );
+			StatusUpdate newStatus = new StatusUpdate( text:params.statusText,creator : user);
 			newStatus.effectiveDate = new Date(); // now
 			newStatus.targetUuid = "ABC123";
 			newStatus.name = "321CBA";
+			
+			
+			// Hit Stanbol to get enrichmentData
+			// call Stanbol REST API to get enrichment data
+			RESTClient restClient = new RESTClient( "http://localhost:8080" )
+		
+			// println "content submitted: ${content}";
+			def restResponse = restClient.post(	path:'enhancer',
+											body: params.statusText,
+											requestContentType : TEXT );
+		
+			def restResponseText = restResponse.getData();
+			
+			
+			newStatus.enhancementJSON = restResponseText;
 			
 			// save the newStatus 
 			if( !newStatus.save() )

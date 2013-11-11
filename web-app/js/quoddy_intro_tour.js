@@ -10,22 +10,81 @@
           target: "activityStream",
           placement: "top",
           width: 350
+        },
+        {
+            title: "Status Update",
+            content: "This is a Status Update, shared by one of your Friends or someone you Follow.",
+            target: ".basicActivityStreamEntry",
+            placement: "top",
+            width: 350        	
+        	
+        },
+        {
+            title: "Calendar Entry",
+            content: "",
+            target: ".calendarEntry",
+            placement: "top",
+            width: 350        	
+        	
+        },
+        {
+            title: "Neddick Link",
+            content: "",
+            target: ".neddickLink",
+            placement: "top",
+            width: 350        	
+        	
+        },
+        {
+            title: "RSS Feed Item",
+            content: "",
+            target: ".rssFeedItem",
+            placement: "top",
+            width: 350        	
+        	
+        },
+        {
+            title: "Business Event",
+            content: "",
+            target: ".businessSubscriptionEvent",
+            placement: "top",
+            width: 350        	
+        	
+        },
+        {
+            title: "Reshared Item",
+            content: "",
+            target: ".resharedActivityStreamEntry",
+            placement: "top",
+            width: 350        	
+        	
+        },
+        {
+            title: "Remote ActivityStream Item",
+            content: "",
+            target: ".remoteActivityStreamEntry",
+            placement: "top",
+            width: 350        	
+        	
+        },
+        {
+            title: "Activiti User Task",
+            content: "",
+            target: ".activitiUserTask",
+            placement: "top",
+            width: 350        	
+        	
         }
       ]
-    };
-
-    // Start the tour!
-    // alert( "starting tour!");
-    // hopscotch.startTour(tour);
-        
     
-/*
     
-,
-        {
-          title: "Step Two",
-          content: "Step Two",
-          target: document.querySelector("#content p"),
-          placement: "bottom"
-        }
-    */
+      /* ,
+      onStart: function() {
+          alert( "onStart");
+        },
+       onError: function() {
+    	   alert( "onError" );
+       }
+      */
+    
+    }

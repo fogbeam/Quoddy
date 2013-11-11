@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <title><g:layoutTitle default="Quoddy" /></title>
@@ -29,12 +30,14 @@
 <!-- <g:javascript library="jquery-1.7.1.min" /> -->
 <g:javascript library="jquery-ui-1.10.3.custom/js/jquery-1.9.1" />
 
+<g:javascript>
+	var $j = jQuery.noConflict();	
+</g:javascript>
+
 <g:javascript library="hopscotch" />
 <g:javascript library="quoddy_intro_tour" />
 
-<g:javascript>
-          var $j = jQuery.noConflict();	
-</g:javascript>
+
 
 <g:javascript library="jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom" />
 
@@ -49,6 +52,10 @@
 <script type="text/javascript">
         	<g:render template="/javascript/application.js"/>
     	</script>
+
+<g:javascript library="enrich_content" />
+
+<g:javascript library="application" />
 
 <g:layoutHead />
 
@@ -68,9 +75,9 @@
 					
 					<shiro:authenticated>
 						<li><a href="#">Email</a></li>
-						<li><a href="#">Reports</a></li>
 						<li><a href="#">Calendar</a></li>
 						<li><a href="#">Apps</a></li>
+						<li><a href="#">Workflows</a></li>
 					</shiro:authenticated>
 				</ul>
 				<div id="gbg" class="settingsNav navbar">
@@ -79,7 +86,7 @@
 						<li>
 							<div class="searchBoxContainer">
 								<g:form controller="search" action="doSearch" method="GET">
-									<input name="queryString" type="text" class="searchbox" autocomplete="off" />
+									<input name="queryString" type="text" style="margin-left:-40px;" class="searchbox" autocomplete="off" />
 									<!-- <input type="submit" value="Search" id="searchBtn" /> -->
 									<div class="btn-group">
 										<button data-toggle="dropdown"
@@ -110,17 +117,8 @@
 									<li><a
 										href="${createLink(controller:'user', action:'listOpenFriendRequests')}">
 										Pending Friend Requests</a></li>
-									<li><a
-										href="${createLink(controller:'schedule', action:'index')}">
-										Manage Scheduled Jobs</a></li>
-									
-									<!-- remove this once we've merged management of calendar
-									feeds into the main subscriptions wizard
-									<li><a
-										href="${createLink(controller:'calendar', action:'index')}">
-										Manage Calendar Feeds</a></li>
-									
-									 -->									<li class="divider"></li>
+																
+									<li class="divider"></li>
 									
 									<li><a
 										href="${createLink(controller:'user', action:'editAccount')}">
@@ -157,10 +155,46 @@
 								<li><a href="#">Quoddy Admin Guide</a></li>
 								<li><a href="#">Quoddy Integration Guide</a></li>
 								<li class="divider"></li>
-								<li><a href="#">About Quoddy</a></li>
+								<li><a href="#" onclick="testSelector();">About Quoddy</a></li>
 							</ul>
 						</li>
 						<!--  end Help menu -->
+
+
+						<!-- Admin menu -->
+						<shiro:authenticated>
+							<shiro:hasRole name="admin">
+								<li class="dropdown"><a class="dropdown-toggle"
+									data-toggle="dropdown" href="#">Admin<b class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<li><a
+											href="${createLink(controller:'admin', action:'index')}">
+											Admin Home</a>
+										</li>
+										<li class="divider"></li>
+										<li>
+										<a
+											href="${createLink(controller:'user', action:'manageUsers')}">
+											Manage Users</a>
+										</li>
+										<li><a href="#">Manage Site Config</a></li>
+										<li><a
+											href="${createLink(controller:'schedule', action:'index')}">
+											Manage Scheduled Jobs</a>
+										</li>
+										<li><a href="#">More goes here...</a></li>
+										<li class="divider"></li>
+										<li><a href="#">Whatever...</a></li>
+									</ul>
+								</li>
+							</shiro:hasRole>
+						</shiro:authenticated>
+						<!--  end Admin menu -->
+
+
+
+
+
 					
 					</ul>
 

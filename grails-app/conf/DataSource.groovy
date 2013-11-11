@@ -5,9 +5,9 @@ dataSource {
 	driverClassName = "org.postgresql.Driver"
 	// username = "sa"
 	username = "postgres"
-	password = ""
+	password = "database"
 	// password = ""
-	logSql=false
+	logSql=true
 }
 hibernate {
     cache.use_second_level_cache=true
@@ -18,22 +18,28 @@ hibernate {
 environments {
 	development {
 		dataSource {
-			dbCreate = "update" // one of 'create', 'create-drop','update'
-			url = "jdbc:postgresql:quoddy2";
-			// dbCreate = "create-drop"
-			// url = "jdbc:hsqldb:mem:devDb
+
+			dbCreate = "create-drop" // one of 'create', 'create-drop','update'
+						//create-drop to drop/rebuild all tables
+						//update to persist data
+			// url = "jdbc:postgresql:quoddy2";
+			// url = "jdbc:postgresql:quoddy_prhodes";
+			url = "jdbc:postgresql:quoddy_dev";
 		}
 	}
 	test {
 		dataSource {
+
 			dbCreate = "update"
 			url = "jdbc:hsqldb:mem:quoddy_test"
 		}
 	}
 	production {
 		dataSource {
+
 			dbCreate = "update" // one of 'create', 'create-drop','update'
 			url = "jdbc:postgresql:quoddy"
+
 		}
 	}
 }

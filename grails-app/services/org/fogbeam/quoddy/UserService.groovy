@@ -1,7 +1,14 @@
 package org.fogbeam.quoddy;
 
 import org.fogbeam.quoddy.profile.Profile
+import org.fogbeam.quoddy.social.FriendCollection
 import org.fogbeam.quoddy.social.FriendRequest
+import org.fogbeam.quoddy.social.FriendRequestCollection
+import org.fogbeam.quoddy.social.IFollowCollection
+import org.fogbeam.quoddy.stream.ActivityStreamItem
+import org.fogbeam.quoddy.stream.StatusUpdate
+import org.fogbeam.quoddy.stream.StreamItemBase
+import org.fogbeam.quoddy.subscription.BaseSubscription
 
 class UserService {
 
@@ -10,7 +17,10 @@ class UserService {
 	def friendService;
 	
 	// same deal as the friendService...
-	def groupService;
+	def groupService; // TODO: figure out if we even use this anymore...
+	
+	def userGroupService;
+	def userListService;
 	
 	// and again...  when finished, this will either be LdapPersonService or LocalAccountService, but we don't care.
 	def accountService;
@@ -63,7 +73,7 @@ class UserService {
 	}
 	
 	
-	public void createUser( User user ) 
+	public User createUser( User user ) 
 	{
 		
 		
@@ -94,6 +104,17 @@ class UserService {
 				defaultStream.errors.allErrors.each { println it };
 				throw new RuntimeException( "couldn't create Default UserStream record for user: ${user.userId}" );
 			}
+			
+			FriendCollection friendCollection = new FriendCollection( ownerUuid: user.uuid );
+			friendCollection.save();
+			IFollowCollection iFollowCollection = new IFollowCollection( ownerUuid: user.uuid );
+			iFollowCollection.save();
+			FriendRequestCollection friendRequestCollection = new FriendRequestCollection( ownerUuid: user.uuid );
+			friendRequestCollection.save();
+			
+			
+			
+			
 		}
 		else
 		{
@@ -102,6 +123,7 @@ class UserService {
 			
 		}
 		
+		return user;
 	}
 
 	public void importUser( User user )
@@ -114,16 +136,48 @@ class UserService {
 			user.profile = new Profile();
 		}
 		
-		if( !user.save() )
+		if( user.save() )
 		{
-			user.errors.allErrors.each { println it };
+			// create system defined Stream entries for this newly created user
+			UserStreamDefinition defaultStream = new UserStreamDefinition();
+			defaultStream.name = UserStreamDefinition.DEFAULT_STREAM;
+			defaultStream.definedBy = UserStreamDefinition.DEFINED_SYSTEM;
+			defaultStream.owner = user;
+			defaultStream.includeAllEventTypes = true;
+			defaultStream.includeAllUsers = true;
+			
+			
+			if( !defaultStream.save())
+			{
+				defaultStream.errors.allErrors.each { println it };
+				throw new RuntimeException( "couldn't create Default UserStream record for user: ${user.userId}" );
+			}
+			
+			
+			FriendCollection friendCollection = new FriendCollection( ownerUuid: user.uuid );
+			friendCollection.save();
+			IFollowCollection iFollowCollection = new IFollowCollection( ownerUuid: user.uuid );
+			iFollowCollection.save();
+			FriendRequestCollection friendRequestCollection = new FriendRequestCollection( ownerUuid: user.uuid );
+			friendRequestCollection.save();
+			
+			
+		}
+		else
+		{
+			user.errors.allErrors.each { println it; }
 			throw new RuntimeException( "couldn't create User record for user: ${user.userId}" );
 		}	
 	}
 		
 	public User updateUser( User user )
 	{
-		throw new RuntimeException( "not implemented yet" );
+		if( ! user.save( flush: true ) )
+		{
+			user.errors.allErrors.each { println it; }
+		}
+		
+		return user;
 	}
 	
 	public void addToFollow( User destinationUser, User targetUser )
@@ -158,7 +212,24 @@ class UserService {
 	
 		return users;	
 	}
+
+	/* note: page is 1 indexed */
+	public List<User> findAllUsers(final int max, final int page )
+	{
+		List<User> users = new ArrayList<User>();
+		int offset = ( (page * max) -max);
+		println "calculated offset as $offset";
+		List<User> temp = User.executeQuery( "select user from User as user order by user.fullName", ['offset':offset, 'max':max]);
+		if( temp )
+		{
+			users.addAll( temp );
+		}
 	
+		return users;
+	}
+
+	
+		
 	/* NOTE: we really need a custom comparator here, since we want to
 	 * avoid duplicate members in the resulting list, based on entity id (database key)
 	 * and the default behavior is using object identity.  It probably won't matter
@@ -268,5 +339,181 @@ class UserService {
 		}
 		
 		return openRequests;
+	}
+	
+	public void deleteUser( final User user )
+	{
+
+		StatusUpdate oldStatus = user.currentStatus;
+		if( oldStatus != null )
+		{
+			println "found a current status with id: ${oldStatus.id}, deleting it...";
+
+			
+			
+			user.currentStatus = null;
+			
+			if( !user.save(flush:true) )
+			{
+				user.errors.allErrors.each { println it; }
+			}
+			else
+			{
+				println "save()'d User after nulling out currentStatus";
+			}
+			
+						
+			List<ActivityStreamItem> itemsToDelete = 
+							ActivityStreamItem.executeQuery( "select asi from ActivityStreamItem as asi where asi.streamObject = :update", [update:oldStatus] );
+			
+			for( ActivityStreamItem itemToDelete : itemsToDelete )
+			{
+				itemToDelete.delete( flush:true );	
+			}
+			
+			oldStatus.delete(flush:true);
+		}
+		else
+		{
+			println "no current status found to delete";	
+		}
+		
+
+		
+		friendService.removeFriendRelations( user );
+
+				
+		List<StatusUpdate> statusUpdates = new ArrayList<StatusUpdate>();
+		statusUpdates.addAll( user.oldStatusUpdates );
+		for( StatusUpdate update : statusUpdates )
+		{
+			println "removing old status with id: ${update.id}";
+			user.removeFromOldStatusUpdates( update );
+			
+			List<ActivityStreamItem> itemsToDelete = 
+							ActivityStreamItem.executeQuery( "select asi from ActivityStreamItem as asi where asi.streamObject = :update", [update:update] );
+	
+			for( ActivityStreamItem itemToDelete : itemsToDelete )
+			{
+				itemToDelete.delete(flush:true);
+			}				
+									
+			List<StatusUpdate> statusesToDelete = StatusUpdate.executeQuery( "select su from StatusUpdate as su where su = :statusupdate",[statusupdate:update]);
+			for( StatusUpdate statusToDelete : statusesToDelete )
+			{
+				statusToDelete.delete( flush: true );
+			}
+			
+			println "retCode: ${retCode}";
+		}
+	
+
+		List<ActivityStreamItem> items = ActivityStreamItem.executeQuery( "select asi from ActivityStreamItem as asi where asi.owner.id = :ownerid", [ownerid:user.id] );
+		for( ActivityStreamItem item : items )
+		{
+			item.delete(flush:true);
+		}
+		
+				
+		List<StreamItemBase> streamItems = StreamItemBase.executeQuery( "select sib from StreamItemBase as sib where sib.owner = :owner", [owner:user] );
+		for( StreamItemBase sib : streamItems )
+		{
+			sib.delete( flush: true );
+		}
+		
+			
+		if( !user.save(flush:true) )
+		{
+			user.errors.allErrors.each { println it; }
+		}
+		else
+		{
+			println "save()'d User after nixing old StatusUpdates";
+		}
+		
+		/* delete subscriptions */
+		List<BaseSubscription> subscriptions = 
+					BaseSubscription.executeQuery( "select sub from BaseSubscription as sub where sub.owner = :owner", [owner:user] );
+		
+		for( BaseSubscription sub : subscriptions )
+		{
+			sub.delete( flush: true );
+		}
+					
+					
+		List<AccountRole> roles = new ArrayList<AccountRole>();
+		roles.addAll( user.roles );
+		for( AccountRole role : roles )
+		{
+			println "removing role with id: ${role.id}";
+			user.removeFromRoles( role );
+		}
+
+		if( !user.save(flush:true) )
+		{
+			user.errors.allErrors.each { println it; }
+		}
+
+				
+		user.permissions.removeAll();
+		
+		List<UserStreamDefinition> streams = new ArrayList<UserStreamDefinition>();
+		println "adding all stream definitions to temporary collection";
+		streams.addAll( user.streams);
+		for( UserStreamDefinition streamDef : streams )
+		{
+			println "removing streamDef with id: ${streamDef.id}";
+			user.removeFromStreams( streamDef );
+		
+			println "deleting streamDef now";
+			streamDef.delete( flush:true);	
+		}
+		
+		if( !user.save(flush:true) )
+		{
+			user.errors.allErrors.each { println it; }
+		}
+		
+		
+		User sysGhostUser = this.findUserByUserId( "SYS_ghost_user" );
+		// find any groups this User owns, and change the ownership to the System "Ghost" User
+		List<UserGroup> usersOwnedGroups = userGroupService.getGroupsOwnedByUser( user );
+		for( UserGroup group : usersOwnedGroups )
+		{
+			group.owner = sysGhostUser;
+			group.save( flush:true );
+		}
+		
+		// remove this user from any groups that he/she is a (non-owning) member of
+		List<UserGroup> userMemberOfGroups = userGroupService.getGroupsWhereUserIsMember( user );
+		for ( UserGroup group : userMemberOfGroups )
+		{
+			// remove user from this group
+			group.removeFromGroupMembers( user );
+		}
+		
+		List<UserList> usersLists = userListService.getListsForUser( user );
+		for( UserList listToDelete : usersLists )
+		{
+			listToDelete.delete( flush: true );
+		} 
+		
+		
+	
+		user.delete( flush: true );
+	}
+	
+	public void disableUser( final User user )
+	{
+		user.disabled = true;
+		user.save( flush:true);
+		
+	}	
+	
+	public void enableUser( final User user )
+	{
+		user.disabled = false;
+		user.save( flush:true);
+		
 	}	
 }

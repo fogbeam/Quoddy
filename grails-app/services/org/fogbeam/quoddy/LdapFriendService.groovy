@@ -325,5 +325,11 @@ class LdapFriendService
 		return openFriendRequests;
 	}
 
-	
+
+	public void removeFriendRelations( final User user )
+	{
+		// NOP for right now...
+		
+	}
+		
 }

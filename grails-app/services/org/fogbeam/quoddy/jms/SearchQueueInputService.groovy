@@ -1,5 +1,7 @@
 package org.fogbeam.quoddy.jms
 
+import static groovyx.net.http.ContentType.URLENC
+
 import javax.jms.MapMessage
 import javax.xml.transform.OutputKeys
 import javax.xml.transform.Transformer
@@ -30,17 +32,13 @@ import org.apache.tika.metadata.Metadata
 import org.apache.tika.parser.AutoDetectParser
 import org.apache.tika.parser.Parser
 import org.apache.tika.sax.BodyContentHandler
+import org.fogbeam.quoddy.SemanticEnhancement
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
 import org.fogbeam.quoddy.stream.CalendarFeedItem
 import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.StatusUpdate
-
-
-
-
-
 
 public class SearchQueueInputService
 {
@@ -49,14 +47,14 @@ public class SearchQueueInputService
 	def eventStreamService;
 	def searchService;
 	def userService;
-	def existDBService;
 	
     static expose = ['jms']
     static destination = "quoddySearchQueue"                 
-    
+	
     def onMessage(msg)
     { 
-    	
+    	System.out.print("INONMESSSAGE:::")
+		System.out.println(msg)
     	/* note: what we would ordinarily do where is turn around and copy this message
     	 * to other queue's, topics, etc., or otherwise route it as needed.  But for
     	 * now we just assume we are the "indexer" job.
@@ -65,7 +63,8 @@ public class SearchQueueInputService
     	log.debug( "GOT MESSAGE: ${msg}" ); 
     
     	if( msg instanceof java.lang.String )
-    	{    		
+    	{
+			System.out.println(":::Message is a string")	
     	}
     	else
     	{
@@ -73,6 +72,52 @@ public class SearchQueueInputService
 			println "Received message: ${msg}";
 			MapMessage mapMessage = (MapMessage)msg;
     		String msgType = mapMessage.getString( "msgType" );
+			
+			//begin get the contents of the update
+			//var msgContents to store the update contents
+			def msgContents = null
+			String msgUUID = null
+			ActivityStreamItem statusUpdateActivity = null
+
+			try{
+				statusUpdateActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
+			}catch(Exception e){
+				log.error(':::Unable to get update contents1.1')
+				log.error(e.printStackTrace())
+				log.error('end stack trace:::')
+				msgContents = "This sentance is about New York City by default."
+			}
+
+			try{
+				msgContents = statusUpdateActivity.content
+				msgUUID = statusUpdateActivity.uuid
+				System.out.println("::: msgUUID -> ${msgUUID}")
+			}catch(Exception e){
+				log.error(':::Unable to get update contents2.2')
+				log.error(e.printStackTrace())
+				log.error('end stack trace:::')
+				msgContents = "This sentance is about New York City by default."
+			}
+			//end get the contents of the update
+
+			//Begin Submitting the message to Stanbol
+			try{
+				println ":::Submitting to Stanbol -> ${msgContents}"
+				println ":::UUID to Stanbol -> ${msgUUID}"
+				def sem = new SemanticEnhancement()
+				sem.submitData(msgContents,msgUUID)
+				//processStanbolOutput(submitToStanbol(msgContents, msg.getLong("activityId")))
+			}catch(Exception e){
+				//TODO:cache requests for later processing
+				println "::::>Unable to query Stanbol"
+				e.printStackTrace()
+				log.error(":::>Unable to query Stanbol")
+				log.error(e)
+				log.error("<r:::")
+			}
+			//End Submitting the message to Stanbol
+				
+			
     		if( msgType == null || msgType.isEmpty())
 			{
 				println( "No msgType received!" );
@@ -95,34 +140,35 @@ public class SearchQueueInputService
 			else if( msgType.equals( "NEW_STATUS_UPDATE" )) // TODO: rename all this to STREAM_POST or something.
     		{
 		    	// add document to index
-		    	log.info( "adding Status Update ActivityStreamItem to index: ${mapMessage.getString('activityUuid')}" );				
+				System.out.println("NEWSTATUSUPDATE:::")
+		    	log.info( "adding document to index: ${mapMessage.getString('activityUuid')}" );				
 				newStatusUpdate( msg );
 
     		}
 			else if( msgType.equals( "NEW_CALENDAR_FEED_ITEM" ))
     		{
-		    	log.info( "adding CalendarFeedItem to index" );
+		    	log.info( "adding document to index" );
 				newCalendarFeedItem( msg );
     		}
 			else if( msgType.equals( "NEW_BUSINESS_EVENT_SUBSCRIPTION_ITEM" ))
 			{
-				log.info( "adding BusinessEventSubscriptionItem to index" );
+				log.info( "adding document to index" );
 				newBusinessEventSubscriptionItem( msg );
 			}
 			else if( msgType.equals( "NEW_ACTIVITY_STREAM_ITEM" ))
 			{
-				log.info( "adding ActivityStreamItem to index" );
+				log.info( "adding document to index" );
 				newActivityStreamItem( msg );
 			}
 			else if( msgType.equals( "NEW_RSS_FEED_ITEM" ))
 			{
-				log.info( "adding RssFeedItem to index" );
+				log.info( "adding document to index" );
 				newRssFeedItem( msg );
 			}
 			else if( msgType.equals( "NEW_QUESTION" ))
     		{
 		    	// add document to index
-		    	log.debug( "adding Question to index" );
+		    	log.debug( "adding document to index" );
 				newQuestion( msg );
 				
     		}
@@ -130,6 +176,7 @@ public class SearchQueueInputService
     		{
     			
 		    	println( "adding StreamEntryComment to index" );
+
 				newStreamEntryComment( msg );
     		}
 			else if( msgType.equals( "NEW_USER" ) )
@@ -380,7 +427,6 @@ public class SearchQueueInputService
 			ActivityStreamItem besItemActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 			BusinessEventSubscriptionItem besItem = besItemActivity.streamObject;
 			besItem = existDBService.populateSubscriptionEventWithXmlDoc( besItem );
-			
 			// println( "Trying to add Document to index" );
 			
 			writer.setUseCompoundFile(true);
@@ -388,6 +434,7 @@ public class SearchQueueInputService
 			Document doc = new Document();
 		
 			doc.add( new Field( "docType", "docType.businessEventSubscriptionItem", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
+			doc.add( new Field( "summary", besItem.summary, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES ) );
 			
 			doc.add( new Field( "objectUuid", besItem.uuid, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 			doc.add( new Field( "objectId", Long.toString( besItem.id ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
@@ -1059,3 +1106,4 @@ public class SearchQueueInputService
 		return sw.toString();
 	}
 }
+

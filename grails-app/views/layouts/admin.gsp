@@ -98,6 +98,7 @@
 							</div>
 						</li>
 						</g:if>
+						
 						<li class="dropdown"><a class="dropdown-toggle"
 							data-toggle="dropdown" href="#">My Account<b class="caret"></b></a>
 							<ul class="dropdown-menu">
@@ -106,18 +107,7 @@
 									<li><a
 										href="${createLink(controller:'user', action:'listOpenFriendRequests')}">
 										Pending Friend Requests</a></li>
-									<li><a
-										href="${createLink(controller:'schedule', action:'index')}">
-										Manage Scheduled Jobs</a></li>
-									
-									<!-- remove this once we've merged management of calendar
-									feeds into the main subscriptions wizard
-									<li><a
-										href="${createLink(controller:'calendar', action:'index')}">
-										Manage Calendar Feeds</a></li>
-									
-									 -->									<li class="divider"></li>
-									
+									<li class="divider"></li>
 									<li><a
 										href="${createLink(controller:'user', action:'editAccount')}">
 										Edit Account Info</a></li>
@@ -141,9 +131,56 @@
 									<li><a
 										href="${createLink(controller:'login', action:'logout')}">Logout</a></li>
 								</g:if>
-							</ul></li>
+							</ul>
+						</li>
+						
+						
+						<!-- Help menu -->
+						<li class="dropdown"><a class="dropdown-toggle"
+							data-toggle="dropdown" href="#">Help<b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="docs/index.html">Help Contents</a></li>
+								<li><a href="#" onclick="hopscotch.startTour(tour);">Interactive Tour</a></li>
+								<li><a href="#">Quoddy Admin Guide</a></li>
+								<li><a href="#">Quoddy Integration Guide</a></li>
+								<li class="divider"></li>
+								<li><a href="#" onclick="testSelector();">About Quoddy</a></li>
+							</ul>
+						</li>
+						<!--  end Help menu -->						
+						
+						
+						<!-- Admin menu -->
+						<shiro:authenticated>
+							<shiro:hasRole name="admin">
+								<li class="dropdown"><a class="dropdown-toggle"
+									data-toggle="dropdown" href="#">Admin<b class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<li><a
+											href="${createLink(controller:'admin', action:'index')}">
+											Admin Home</a>
+										</li>
+										<li class="divider"></li>
+										<li>
+										<a
+											href="${createLink(controller:'user', action:'manageUsers')}">
+											Manage Users</a>
+										</li>
+										<li><a href="#">Manage Site Config</a></li>
+										<li><a
+											href="${createLink(controller:'schedule', action:'index')}">
+											Manage Scheduled Jobs</a>
+										</li>
+										<li><a href="#">More goes here...</a></li>
+										<li class="divider"></li>
+										<li><a href="#">Whatever...</a></li>
+									</ul>
+								</li>
+							</shiro:hasRole>
+						</shiro:authenticated>
+						<!--  end Admin menu -->
+						
 					</ul>
-
 				</div>
 			</div>
 		</div>

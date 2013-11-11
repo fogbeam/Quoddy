@@ -24,7 +24,7 @@ class UserStreamDefinitionService
 													 + "stream.owner = ? and stream.name = ?", [user, streamName ] );
 		
 		if( streams.size() != 1 ){
-			throw new RuntimeException( "Query returned the wrong number of results" );	
+			throw new RuntimeException( "Query returned the wrong number of results.  Expected \"1\", got \"${streams.size()}\"" );	
 		}						
 						 
 		return streams.get(0); 

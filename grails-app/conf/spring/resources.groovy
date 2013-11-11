@@ -88,6 +88,8 @@ beans = {
 		accountService = ref("accountService" )
 		friendService = ref( "friendService" )
 		groupService = ref( "groupService" )
+		userListService = ref( "userListService");
+		userGroupService = ref( "userGroupService" );
 	}
 	
 	jmsConnectionFactory(org.springframework.jndi.JndiObjectFactoryBean) {

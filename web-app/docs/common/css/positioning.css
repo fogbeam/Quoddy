@@ -341,7 +341,7 @@ div.note *, div.caution *, div.important *, div.tip *, div.warning * {
 
 #content table caption{font-weight: bold;}
 
-#content table td, #content table {border: 1px solid black;}
+/* #content table td, #content table {border: 1px solid black;} */
 
 #content table td, #content table th { padding: 5px;}
 

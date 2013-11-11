@@ -31,7 +31,7 @@
 	</div>
 	
 	
-	<div class="activityStreamEntry"> 
+	<div class="activityStreamEntry calendarEntry"> 
 		<font color="red">CALENDAR EVENT</font>
 		<p>
 			${item.streamObject.description}

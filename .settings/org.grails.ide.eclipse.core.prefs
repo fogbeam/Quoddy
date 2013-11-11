@@ -1,18 +1,16 @@
-#
-#Sat Jun 22 04:02:53 CDT 2013
-org.grails.ide.eclipse.core.use.default.install=true
-org.grails.ide.eclipse.core.source.attachment-grails-web-1.3.3.jar=/usr/java/grails-1.3.3/src/java
-org.grails.ide.eclipse.core.source.attachment-shindig-gadgets-3.0.0-SNAPSHOT.jar=/shindig-gadgets-3.0.0-SNAPSHOT
-org.grails.ide.eclipse.core.source.attachment-grails-gorm-1.3.3.jar=/usr/java/grails-1.3.3/src/java
-org.grails.ide.eclipse.core.org.grails.ide.eclipse.core.install.name=Grails 2.2.3
-org.grails.ide.eclipse.core.source.attachment-grails-scripts-1.3.3.jar=/usr/java/grails-1.3.3/src/java
-org.grails.ide.eclipse.core.source.attachment-grails-docs-1.3.3.jar=/usr/java/grails-1.3.3/src/java
-org.grails.ide.eclipse.core.source.attachment-grails-test-1.3.3.jar=/usr/java/grails-1.3.3/src/java
-org.grails.ide.eclipse.core.source.attachment-grails-bootstrap-1.3.3.jar=/usr/java/grails-1.3.3/src/java
-org.grails.ide.eclipse.core.source.attachment-grails-tomcat-plugin-1.0.jar=/usr/java/grails-1.3.3/src/java
 eclipse.preferences.version=1
-org.grails.ide.eclipse.core.source.attachment-grails-resources-1.3.3.jar=/usr/java/grails-1.3.3/src/java
+org.grails.ide.eclipse.core.org.grails.ide.eclipse.core.install.name=Grails 2.2.3
+org.grails.ide.eclipse.core.source.attachment-grails-bootstrap-1.3.3.jar=/usr/java/grails-1.3.3/src/java
 org.grails.ide.eclipse.core.source.attachment-grails-core-1.3.3.jar=/usr/java/grails-1.3.3/src/java
-org.grails.ide.eclipse.core.source.attachment-shindig-common-3.0.0-SNAPSHOT.jar=/shindig-common-3.0.0-SNAPSHOT
 org.grails.ide.eclipse.core.source.attachment-grails-crud-1.3.3.jar=/usr/java/grails-1.3.3/src/java
+org.grails.ide.eclipse.core.source.attachment-grails-docs-1.3.3.jar=/usr/java/grails-1.3.3/src/java
+org.grails.ide.eclipse.core.source.attachment-grails-gorm-1.3.3.jar=/usr/java/grails-1.3.3/src/java
+org.grails.ide.eclipse.core.source.attachment-grails-resources-1.3.3.jar=/usr/java/grails-1.3.3/src/java
+org.grails.ide.eclipse.core.source.attachment-grails-scripts-1.3.3.jar=/usr/java/grails-1.3.3/src/java
 org.grails.ide.eclipse.core.source.attachment-grails-spring-1.3.3.jar=/usr/java/grails-1.3.3/src/java
+org.grails.ide.eclipse.core.source.attachment-grails-test-1.3.3.jar=/usr/java/grails-1.3.3/src/java
+org.grails.ide.eclipse.core.source.attachment-grails-tomcat-plugin-1.0.jar=/usr/java/grails-1.3.3/src/java
+org.grails.ide.eclipse.core.source.attachment-grails-web-1.3.3.jar=/usr/java/grails-1.3.3/src/java
+org.grails.ide.eclipse.core.source.attachment-shindig-common-3.0.0-SNAPSHOT.jar=/shindig-common-3.0.0-SNAPSHOT
+org.grails.ide.eclipse.core.source.attachment-shindig-gadgets-3.0.0-SNAPSHOT.jar=/shindig-gadgets-3.0.0-SNAPSHOT
+org.grails.ide.eclipse.core.use.default.install=false

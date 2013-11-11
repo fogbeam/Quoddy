@@ -24,7 +24,7 @@
 	<!--  end aseTitleBar -->
 	
 	<!-- begin activityStreamEntry -->
-	<div class="activityStreamEntry">
+	<div class="activityStreamEntry resharedActivityStreamEntry">
 		This item was originally shared by: ${item.originalItem.owner.userId}
 		<p>
 			${item.originalItem.content}

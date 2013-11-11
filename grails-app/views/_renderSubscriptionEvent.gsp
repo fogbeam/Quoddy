@@ -11,7 +11,7 @@
 			<g:formatDate date="${item.streamObject.dateCreated}" type="datetime" style="LONG" timeStyle="SHORT"/>		
 		</span>
 	</div>
-	<div class="activityStreamEntry"> 
+	<div class="activityStreamEntry businessSubscriptionEvent"> 
 		<h2>Business Subscription Event</h2>
 		<p>
 			<g:if test="${item.streamObject.xmlDoc != null}">
@@ -70,10 +70,12 @@
 					id="cancelCommentBtn" class="cancelCommentBtn"
 					style="display: none;" type="submit" value="Cancel" />
 			</form>
+
 		</div>
 		<!--  end commentBoxWrapper -->
+
 	</div>
-	
 	<!--  end aseFooter -->		
-	</div>
+
 </div>
+<!--  end aseWrapper -->

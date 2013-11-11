@@ -120,8 +120,8 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 
 #updateStatusSubmit {
 	margin-left: 22px;
-	float:right;
-	margin-top: 6px;
+	float: right;
+	margin-top: 11px;
 }
 
 #gbw ul {
@@ -146,10 +146,9 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 }
 
 .searchBoxContainer {width:280px;}
-.searchBoxContainer input {padding:12px; height:24px !important;}
-.searchBoxContainer .btn-group {float: right; position: relative; left: -14px;}
-.searchBoxContainer .btn-group button { font-size: 11px; margin-top: -5px !important; left:-6px; padding: 4px 6px; }
-
+.searchBoxContainer input {padding:8px; height:14px !important;}
+.searchBoxContainer .btn-group {float: right; position: relative; left: 8px;}
+.searchBoxContainer .btn-group button { margin-right: 31px; font-size: 11px; margin-top: -3px !important; left:-6px; padding: 4px 6px; }
 
 .aseWrapper {
   padding-top:18px;
