@@ -101,20 +101,20 @@ public class SearchQueueInputService
 			//end get the contents of the update
 
 			//Begin Submitting the message to Stanbol
-			try{
-				println ":::Submitting to Stanbol -> ${msgContents}"
-				println ":::UUID to Stanbol -> ${msgUUID}"
-				def sem = new SemanticEnhancement()
-				sem.submitData(msgContents,msgUUID)
+			// try{
+			//	println ":::Submitting to Stanbol -> ${msgContents}"
+			//	println ":::UUID to Stanbol -> ${msgUUID}"
+			//	def sem = new SemanticEnhancement()
+			//	sem.submitData(msgContents,msgUUID)
 				//processStanbolOutput(submitToStanbol(msgContents, msg.getLong("activityId")))
-			}catch(Exception e){
+			// }catch(Exception e){
 				//TODO:cache requests for later processing
-				println "::::>Unable to query Stanbol"
-				e.printStackTrace()
-				log.error(":::>Unable to query Stanbol")
-				log.error(e)
-				log.error("<r:::")
-			}
+				// println "::::>Unable to query Stanbol"
+				// e.printStackTrace()
+				// log.error(":::>Unable to query Stanbol")
+				// log.error(e)
+				// log.error("<r:::")
+			// }
 			//End Submitting the message to Stanbol
 				
 			
