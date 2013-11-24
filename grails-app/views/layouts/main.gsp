@@ -86,7 +86,7 @@
 						<li>
 							<div class="searchBoxContainer">
 								<g:form controller="search" action="doSearch" method="GET">
-									<input name="queryString" type="text" style="margin-left:-40px;" class="searchbox" autocomplete="off" />
+									<input name="queryString" type="text" class="searchBox" autocomplete="off" style="margin-left:-50px;" />
 									<!-- <input type="submit" value="Search" id="searchBtn" /> -->
 									<div class="btn-group">
 										<button data-toggle="dropdown"

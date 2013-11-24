@@ -140,8 +140,8 @@
 				
 					// we really don't need to do any of this if the comment
 					// count isn't > 0
-					var intermediate = clicked.parent( '.aseFooter' );					
-					var wrapperDiv = intermediate.parent( '.aseWrapper' );
+					// var intermediate = clicked.parent( '.aseFooter' );					
+					var wrapperDiv = clicked.parents( '.aseWrapper' ).eq(0);
 					var individualCommentBoxes = wrapperDiv.find( '.individualCommentBox' );
 					if( individualCommentBoxes == null || individualCommentBoxes.length < 1 ) 
 					{

@@ -20,31 +20,34 @@
 		<!-- http://localhost:8080/quoddy/user/viewUser?userId=testuser2 -->
 		<span class="aseTitleBarUserLink"> <a
 			href="${createLink(controller:'activityStream', action:'viewUserStream', params:[userId:item.owner.userId])}">
-				${item.owner.fullName}
-		</a>
-		</span> <span class="aseTitleBarPermalink"> <a href="#"
+				${item.owner.fullName}</a>
+		</span> 
+		<span class="aseTitleBarPermalink"> 
+		   <a href="#"
 			title="${formatDate(date:item.dateCreated)}"><g:formatDate
 					date="${item.dateCreated}" type="datetime" style="SHORT"
-					timeStyle="SHORT" /></a>
+					timeStyle="SHORT" />
+			</a>
 		</span>
-    <div class="commentButtonBar">
-      <span class="plusOneButton" id="plusOneButton.${item.uuid}" name="plusOneButton.${item.uuid}" >
-        <a href="#" class="btn">+1</a>
-      </span>
-      <span class="shareButton" id="shareButton.${item.uuid}" name="shareButton.${item.uuid}" >
-        <a href="#" class="btn">Share</a>
-      </span>
-      <span class="showHideCommentsButton">
-        <a href="#" class="btn">Show Comments</a>
-      </span>
-    </div>
+    
+        <div class="commentButtonBar">
+      		<span class="plusOneButton" id="plusOneButton.${item.uuid}" name="plusOneButton.${item.uuid}" >
+        		<a href="#" class="btn">+1</a>
+      		</span>
+      		<span class="shareButton" id="shareButton.${item.uuid}" name="shareButton.${item.uuid}" >
+        		<a href="#" class="btn">Share</a>
+      		</span>
+      		<span class="showHideCommentsButton">
+        		<a href="#" class="btn">Hide Comments</a>
+      		</span>
+    	</div>
 	</div>
 	<!--  end aseTitleBar -->
 	
 	<!-- begin activityStreamEntry -->
 
 	<div class="activityStreamEntry basicActivityStreamEntry">
-		${item.content} ${item.uuid}
+		${item.content}
 	</div>
 
 	<!-- end activityStreamEntry -->
@@ -58,20 +61,23 @@
 	
 		<!-- begin commentboxWrapper -->
 		<div class="commentBoxWrapper">
-		
 			<!-- begin commentsArea -->
 			<div id="commentsArea" class="commentsArea">
+				
+				<hr />
+			
 				<!--  render comments on the Event here -->
 				<g:render template="/renderComments" var="comments"
 					bean="${item.streamObject.comments}" />
 			</div>
 			<!-- end commentsArea -->
 			
-			<form name="addCommentForm" id="addCommentForm"
-				class="addCommentForm">
-        <label>Add a comment</label>
+			<form name="addCommentForm" id="addCommentForm" class="addCommentForm">
+        		
+        		<!-- <label>Add a comment</label> -->
 				<input name="addCommentTextInput" id="addCommentTextInput"
 					class="addCommentTextInput" type="textbox" value="Add a Comment"></input>
+				<br />
 				<input name="eventId" type="hidden" value="${item.id}" /> <input
 					name="submitCommentBtn" id="submitCommentBtn"
 					class="btn submitCommentBtn" style="display: none;" type="submit"
@@ -79,6 +85,8 @@
 					id="cancelCommentBtn" class="btn cancelCommentBtn"
 					style="display: none;" type="submit" value="Cancel" />
 			</form>
+			<!--  end addCommentForm -->
+			
 		</div>
 		<!--  end commentBoxWrapper -->
 	</div>
