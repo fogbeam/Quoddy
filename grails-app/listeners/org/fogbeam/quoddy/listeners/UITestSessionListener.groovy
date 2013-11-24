@@ -22,7 +22,7 @@ class UITestSessionListener implements
 	@Override
 	public void sessionCreated(HttpSessionEvent event) 
 	{
-		println "sessionCreated";
+		// println "sessionCreated";
 	}
 
 	// HttpSessionListener
@@ -36,13 +36,13 @@ class UITestSessionListener implements
 	@Override
 	public void attributeAdded(HttpSessionBindingEvent event) 
 	{
-		println "attributeAdded";
+		// println "attributeAdded";
 		
 		// println "Name: ${event.getName()}";
 		// println "Value: ${event.getValue()}";
 		// println "Source: ${event.getSource()}";
 		
-		println "Note: When we add our logged in user...";
+		// println "Note: When we add our logged in user...";
 		String attName = event.getName();
 		if( attName.equalsIgnoreCase( "user" ))
 		{

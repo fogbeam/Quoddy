@@ -9,7 +9,7 @@ class QuoddySessionListener implements HttpSessionListener
 {
 	public void sessionCreated( HttpSessionEvent event )
 	{
-		println "sessionCreated, putting config options in session";
+		// println "sessionCreated, putting config options in session";
 		
 		HttpSession newSession = event.getSession();
 		def enableSelfReg = CH.config.enable.self.registration;
