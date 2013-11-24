@@ -270,12 +270,12 @@ class ActivityStreamItem implements Serializable
 	{
 		if( streamObject != null )
 		{
-			println "returning streamObject.getTemplateName() value";
+			// println "returning streamObject.getTemplateName() value";
 			return streamObject.getTemplateName();
 		}
 		else
 		{
-			println "returning renderActivity";
+			// println "returning renderActivity";
 			return "/renderActivity";	
 		}
 	}
