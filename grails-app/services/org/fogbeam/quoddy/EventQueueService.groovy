@@ -298,13 +298,13 @@ class EventQueueService
 	// it if the overall queue size has changed relative to last time we were called.
 	public long getQueueSizeForUser( final String userId, final UserStreamDefinition userStream )
 	{
-		println "getting queue size for user: ${userId}";
+		// println "getting queue size for user: ${userId}";
 		
 		long queueSize = 0;
 		Deque<ActivityStreamItem> userQueue = eventQueues.get( userId ); 
 		if( userQueue != null )
 		{
-			println "found a userQueue";
+			// println "found a userQueue";
 			// look at each message on the queue, without removing it
 			// and evaluate it against the UserStream object we were passed.
 			def filter = userStreamAwareQueueFilter.curry( userStream );
@@ -312,10 +312,10 @@ class EventQueueService
 		}
 		else
 		{
-			println "No userQueue found!";
-			println "eventQueues.size: ${eventQueues.size}";
+			// println "No userQueue found!";
+			// println "eventQueues.size: ${eventQueues.size}";
 		}
-		println "Queue size for user: ${userId} = ${queueSize}";
+		// println "Queue size for user: ${userId} = ${queueSize}";
 		
 		return queueSize;	
 	}
@@ -330,7 +330,7 @@ class EventQueueService
 		Deque<Map> userQueue = eventQueues.get( userId );
 		if( userQueue != null )
 		{
-			println "got userQueue for user ${userId}";
+			// println "got userQueue for user ${userId}";
 
 			// collect the messages that match
 			def filter = userStreamAwareQueueFilter.curry( userStream );
