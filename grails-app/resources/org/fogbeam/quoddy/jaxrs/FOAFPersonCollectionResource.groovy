@@ -24,7 +24,7 @@ class FOAFPersonCollectionResource
 	@GET
 	Response readAll() {
 		
-		println "readAll";
+		// println "readAll";
 		List<User> allUsers = User.findAll();
 		
 		println "found ${allUsers.size()} users";

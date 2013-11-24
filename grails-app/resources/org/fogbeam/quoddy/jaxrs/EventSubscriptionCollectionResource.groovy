@@ -20,7 +20,7 @@ class EventSubscriptionCollectionResource
 	@GET
 	Response readAll() {
 		
-		println "readAll";
+		// println "readAll";
 		List all = BusinessEventSubscription.findAll();
 	
 		EventSubscriptionCollection collection = new EventSubscriptionCollection();
