@@ -32,7 +32,7 @@
 	<!--  end aseTitleBar -->	
 	
 	<div class="activityStreamEntry calendarEntry"> 
-		<font color="red">CALENDAR EVENT</font>
+		<h5>Calendar Event</h5>
 		<p>
 			${item.streamObject.description}
 		</p>

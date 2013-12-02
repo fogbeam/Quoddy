@@ -32,7 +32,7 @@
 	<!-- end aseTitleBar -->
 	
 	<div class="activityStreamEntry activitiUserTask"> 
-		<font color="red">Activiti User Task</font>
+		<h5>Activiti User Task</h5>
 		<p>
 		    ${item.streamObject.name}
 			<br />

@@ -51,7 +51,8 @@
 				<h4>Related Updates</h4>
 				<ul>
 					<g:each in="${statusUpdates}" var="update">
-						<li><g:link controller="permalink" action="index" params="${[uuid:update.uuid]}">${update.uuid}</g:link></li>
+						<li><g:link controller="permalink" action="index" params="${[uuid:update.uuid]}">
+						${update.owner.userId} @ <g:formatDate date="${update.dateCreated}" type="datetime" style="SHORT" timeStyle="SHORT" /></g:link></li>
 					</g:each>
 				</ul>
 			</div>
