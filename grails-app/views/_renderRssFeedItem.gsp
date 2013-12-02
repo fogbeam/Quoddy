@@ -9,10 +9,10 @@
 		${item.streamObject.owningSubscription.name}
 		</span> 
 		
-		<span class="aseTitleBarPermalink"> <a href="#"
-			title="${formatDate(date:item.dateCreated)}"><g:formatDate
-					date="${item.dateCreated}" type="datetime" style="SHORT"
-					timeStyle="SHORT" /></a>
+		<span class="aseTitleBarPermalink">
+		<g:link controller="permalink" action="index" params="${[uuid:item.uuid]}" title="${formatDate(date:item.dateCreated)}">
+				<g:formatDate date="${item.dateCreated}" type="datetime" style="SHORT" timeStyle="SHORT" />
+		</g:link>
 		</span>
 		
         <div class="commentButtonBar">

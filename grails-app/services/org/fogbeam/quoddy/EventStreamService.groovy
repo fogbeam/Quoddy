@@ -440,11 +440,10 @@ class EventStreamService {
 		
 		ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 		
-		// TODO: write query to get activitystreamitem (status updates) for a User
 		List<ActivityStreamItem> results = 
 			ActivityStreamItem.executeQuery( 
 				"select actItem from ActivityStreamItem as actItem where actItem.owner = :owner " + 
-				" and actItem.verb = :verb and actItem.targetUuid = :targetUuid",
+				" and actItem.verb = :verb and actItem.targetUuid = :targetUuid order by actItem.dateCreated desc",
 				['owner':user, verb:'quoddy_status_update', targetUuid:streamPublic.uuid] );
 		
 		statusUpdatesForUser.addAll( results );
@@ -453,5 +452,28 @@ class EventStreamService {
 		return statusUpdatesForUser;
 	}
 	
-			
+
+	/*
+	public List<ActivityStreamItem> getUserTimeline( final User user, final int maxCount )
+	{
+		
+		List<ActivityStreamItem> userTimeline = new ArrayList<ActivityStreamItem>();
+		
+		
+		String query = "";
+		
+		List<ActivityStreamItem> queryResults =
+				ActivityStreamItem.executeQuery( query, [user:user], ['max': maxCount ]);
+		
+		if( queryResults != null )
+		{
+			userTimeline.addAll( queryResults );
+		}
+		
+		return userTimeline;
+		
+	}
+	*/
+	
+				
 }

@@ -17,11 +17,6 @@
 	href="${createLinkTo(dir:'css', file:'hopscotch.css')}" />
 
 
-<!--
-<link rel="stylesheet" type="text/css"
-	href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" />
--->
-
 <link rel="stylesheet" type="text/css"
  href="${createLinkTo(dir:'js/jquery-ui-1.10.3.custom/css/vader', file:'jquery-ui-1.10.3.custom.css') }" />
 
@@ -202,7 +197,7 @@
 		
 		<div class="leftContentNav">
 			<shiro:authenticated>
-				<g:render template="/leftSidebar" />
+				<g:render template="/leftSidebarUserProfile" />
 			</shiro:authenticated>
 		</div>
 

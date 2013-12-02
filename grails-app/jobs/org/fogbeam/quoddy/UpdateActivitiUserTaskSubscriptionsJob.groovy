@@ -69,7 +69,9 @@ class UpdateActivitiUserTaskSubscriptionsJob
 				List<ActivitiUserTask> tasks = ActivitiUserTask.executeQuery( "select task from ActivitiUserTask as task where task.taskId = :taskId", [taskId:taskId]  );
 				if( tasks == null || tasks.isEmpty())
 				{
-				
+										
+					
+					// and, later, comments and attachments for the User Task
 					ActivitiUserTask userTask = new ActivitiUserTask();
 					
 					userTask.createTime = it.createTime;
@@ -88,6 +90,24 @@ class UpdateActivitiUserTaskSubscriptionsJob
 					userTask.owningSubscription = owningSubscription;
 					userTask.targetUuid  = streamPublic.uuid;
 					userTask.effectiveDate = new Date(); // now
+					
+					
+					// make a call to retrieve "variables" for the process instance
+					// String path = "task/${taskId}/variables";
+					String path = "process-instance/${it.processInstanceId}";
+					println "getting variables for path: " + path;
+					def varsResponse = restClient.get(path:path);
+					
+					// println "****************\n\nvarsResponse\n${varsResponse.data}\n\n**************************";
+					
+					Map<String, String> vars = new HashMap<String, String>();
+					
+					varsResponse.data.variables.each {
+						vars.put( it.variableName, it.variableValue );
+					}
+					
+					userTask.variables = vars;
+					
 					
 					if( !userTask.save() )
 					{

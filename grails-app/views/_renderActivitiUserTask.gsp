@@ -10,10 +10,10 @@
 
 		</span> 
 		
-		<span class="aseTitleBarPermalink"> <a href="#"
-			title="${formatDate(date:item.dateCreated)}"><g:formatDate
-					date="${item.dateCreated}" type="datetime" style="SHORT"
-					timeStyle="SHORT" /></a>
+		<span class="aseTitleBarPermalink">
+		<g:link controller="permalink" action="index" params="${[uuid:item.uuid]}" title="${formatDate(date:item.dateCreated)}">
+				<g:formatDate date="${item.dateCreated}" type="datetime" style="SHORT" timeStyle="SHORT" />
+		</g:link>
 		</span>
 		
 		<div class="commentButtonBar">
@@ -32,7 +32,7 @@
 	<!-- end aseTitleBar -->
 	
 	<div class="activityStreamEntry activitiUserTask"> 
-		<font color="red">ACTIVITI USER TASK</font>
+		<font color="red">Activiti User Task</font>
 		<p>
 		    ${item.streamObject.name}
 			<br />
@@ -43,7 +43,17 @@
 			<li>Due Date: ${item.streamObject.dueDate}</li>
 			<li>Priority: ${item.streamObject.priority}</li>
 		</ul>
+		<div class="activitiBPMButtons">
+			<div class="btn-group">
+				<button id="activityClaimBtn.${item.streamObject.uuid}" type="button" class="btn btn-info btn-small">Claim</button>
+				<button id="activityCompleteBtn.${item.streamObject.uuid}" type="button" class="btn btn-info btn-small">Complete</button>
+				<button id="activityTransferBtn.${item.streamObject.uuid}" type="button" class="btn btn-info btn-small">Transfer</button>
+				<button id="activitySuspendBtn.${item.streamObject.uuid}" type="button" class="btn btn-info btn-small">Suspend</button>
+				<button id="activityRefreshBtn.${item.streamObject.uuid}" type="button" class="btn btn-info btn-small">Refresh</button>
+			</div>
+		</div>
 	</div>
+	
 	<!-- end activityStreamEntry -->
 	
 	<!-- begin aseClear -->

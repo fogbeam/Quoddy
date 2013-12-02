@@ -1,6 +1,8 @@
 package org.fogbeam.quoddy.jms
 
+import static groovyx.net.http.ContentType.TEXT
 import static groovyx.net.http.ContentType.URLENC
+import groovyx.net.http.RESTClient
 
 import javax.jms.MapMessage
 import javax.xml.transform.OutputKeys
@@ -10,12 +12,15 @@ import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 
+import jenajsonld.JenaJSONLD
+
 import org.apache.http.HttpEntity
 import org.apache.http.HttpException
 import org.apache.http.HttpResponse
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.DefaultHttpClient
+import org.apache.jena.riot.RDFDataMgr
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.DateTools
 import org.apache.lucene.document.Document
@@ -32,13 +37,24 @@ import org.apache.tika.metadata.Metadata
 import org.apache.tika.parser.AutoDetectParser
 import org.apache.tika.parser.Parser
 import org.apache.tika.sax.BodyContentHandler
-import org.fogbeam.quoddy.SemanticEnhancement
 import org.fogbeam.quoddy.User
+import org.fogbeam.quoddy.stream.ActivitiUserTask
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
 import org.fogbeam.quoddy.stream.CalendarFeedItem
 import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.StatusUpdate
+
+import com.hp.hpl.jena.query.Dataset
+import com.hp.hpl.jena.query.ReadWrite
+import com.hp.hpl.jena.rdf.model.Model
+import com.hp.hpl.jena.rdf.model.ModelFactory
+import com.hp.hpl.jena.rdf.model.ResIterator
+import com.hp.hpl.jena.rdf.model.Resource
+import com.hp.hpl.jena.tdb.TDBFactory
+import com.hp.hpl.jena.vocabulary.DCTerms
+import com.hp.hpl.jena.vocabulary.OWL
+import com.hp.hpl.jena.vocabulary.RDF
 
 public class SearchQueueInputService
 {
@@ -184,6 +200,10 @@ public class SearchQueueInputService
 				log.debug( "adding new User to Person index" );
 				newUser( msg );
 			}
+			else if( msgType.equals( "NEW_ACTIVITI_USER_TASK" ))
+			{
+					newActivitiUserTask( msg );
+			}
 			else 
     		{
     			println( "Bad message type: ${msgType}" );
@@ -192,6 +212,23 @@ public class SearchQueueInputService
     }
 
 	
+	private void newActivitiUserTask( def msg )
+	{	
+		// TODO: implement call to do content extraction and Lucene indexing...
+		// extractAndIndexContent( genericActivityStreamItem.streamObject );
+		
+		
+		ActivityStreamItem activityStreamItem = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
+		ActivitiUserTask userTask = ActivitiUserTask.findById( activityStreamItem.streamObject.id );
+		
+		
+		// make the call out to Stanbol for semantic enhancement(s)
+		if( null != userTask )
+		{
+			doSemanticEnhancement( userTask );
+		}
+			
+	}
 	
 	private void newStatusUpdate( def msg )
 	{
@@ -223,9 +260,10 @@ public class SearchQueueInputService
 		
 		println( "opened Writer" );
 		
+		ActivityStreamItem statusUpdateActivity = null;
 		try
 		{
-			ActivityStreamItem statusUpdateActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
+			statusUpdateActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 			StatusUpdate statusUpdate = statusUpdateActivity.streamObject;
 			
 			// println( "Trying to add Document to index" );
@@ -280,6 +318,73 @@ public class SearchQueueInputService
 			}
 		}
 
+		
+		/* TEMPORARY CODE, DELETE AFTER USE */
+		String enhancementJSON = statusUpdateActivity.streamObject.enhancementJSON;
+		// create an empty Model
+		Model tempModel = ModelFactory.createDefaultModel();
+		
+		StringReader reader = new StringReader( enhancementJSON );
+	
+		RDFDataMgr.read(tempModel, reader, "http://www.example.com", JenaJSONLD.JSONLD);
+		
+
+		// Make a TDB-backed dataset
+		String quoddyHome = System.getProperty( "quoddy.home" );
+		String directory = "${quoddyHome}/jenastore/triples" ;
+		println "Opening TDB triplestore at: ${directory}";
+		Dataset dataset = TDBFactory.createDataset(directory) ;
+		try
+		{
+			dataset.begin(ReadWrite.WRITE);
+			// Get model inside the transaction
+			Model model = dataset.getDefaultModel() ;
+		
+			// find all the "entity" entries in our graph and then associate each
+			// one with our "DocumentID"
+			ResIterator iter = tempModel.listSubjectsWithProperty( RDF.type, OWL.Thing );
+		
+			while( iter.hasNext() )
+			{
+				Resource anEntity = iter.nextResource();
+		
+				// do we have the "type" (rdf:type) triples that we need for "anEntity"
+			
+			
+				println "adding resource \"quoddy:${statusUpdateActivity.uuid}\" dcterm:references entity: ${anEntity.toString()}";
+			
+				Resource newResource = model.createResource( "quoddy:${statusUpdateActivity.uuid}" );
+				newResource.addProperty( DCTerms.references, anEntity);
+
+			}
+
+			// now add all the triples from the Stanbol response to our canonical Model
+			model.add( tempModel );
+				
+			dataset.commit();
+		}
+		catch( Exception e )
+		{
+			dataset.abort();	
+		}
+		finally
+		{
+			dataset.end();
+		}
+		
+		
+		
+		
+		// TODO: extract all of the above into a method call
+		// extractAndIndexContent( genericActivityStreamItem.streamObject );
+		
+		// make the call out to Stanbol for semantic enhancement(s)
+		// if( null != genericActivityStreamItem.streamObject )
+		// {
+		//	doSemanticEnhancement();
+		// }
+		
+		
 		println( "done with onMessage() call" );
 	}
 	
@@ -380,6 +485,16 @@ public class SearchQueueInputService
 			}
 		}
 
+		
+		// TODO: extract all of the above into a method call
+		// extractAndIndexContent( genericActivityStreamItem.streamObject );
+		
+		// make the call out to Stanbol for semantic enhancement(s)
+		// if( null != genericActivityStreamItem.streamObject )
+		// {
+		//	doSemanticEnhancement();
+		// }
+		
 		println( "done with onMessage() call" );
 	}
 	
@@ -422,9 +537,10 @@ public class SearchQueueInputService
 		
 		println( "opened Writer" );
 		
+		ActivityStreamItem besItemActivity = null;
 		try
 		{
-			ActivityStreamItem besItemActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
+			besItemActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 			BusinessEventSubscriptionItem besItem = besItemActivity.streamObject;
 			besItem = existDBService.populateSubscriptionEventWithXmlDoc( besItem );
 			// println( "Trying to add Document to index" );
@@ -490,6 +606,17 @@ public class SearchQueueInputService
 			}
 		}
 
+		
+		// TODO: extract all of the above into a method call
+		// extractAndIndexContent( besItem );
+		
+		// make the call out to Stanbol for semantic enhancement(s)
+		if( null != besItemActivity.streamObject )
+		{
+			doSemanticEnhancement( besItemActivity.streamObject );
+		}
+		
+		
 		println( "done with onMessage() call" );
 	}
 	
@@ -525,9 +652,11 @@ public class SearchQueueInputService
 		
 		println( "opened Writer" );
 		
+		ActivityStreamItem genericActivityStreamItem = null;
+		
 		try
 		{
-			ActivityStreamItem genericActivityStreamItem = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
+			genericActivityStreamItem = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 
 			// println( "Trying to add Document to index" );
 			
@@ -584,6 +713,17 @@ public class SearchQueueInputService
 			}
 		}
 
+		
+		// TODO: extract all of the above into a method call
+		// extractAndIndexContent( genericActivityStreamItem.streamObject );
+		
+		// make the call out to Stanbol for semantic enhancement(s)
+		// if( null != genericActivityStreamItem.streamObject )
+		// {
+		//	doSemanticEnhancement();
+		// }
+		
+				
 		println( "done with onMessage() call" );
 	}
 	
@@ -1071,6 +1211,120 @@ public class SearchQueueInputService
     	}
     }
     
+	
+	private void extractAndIndexContent( BusinessEventSubscriptionItem item )
+	{
+		
+	}
+
+	private void extractAndIndexContent( ActivitiUserTask item )
+	{
+		
+	}
+
+	private void doSemanticEnhancement( BusinessEventSubscriptionItem item )
+	{
+		// tokenize the XML content and send it to Stanbol for enhancement
+	
+		// Hit Stanbol to get enrichmentData
+		// call Stanbol REST API to get enrichment data
+		RESTClient restClient = new RESTClient( "http://localhost:8080" )
+	
+		// println "content submitted: ${content}";
+		def restResponse = restClient.post(	path:'enhancer',
+										body: "",
+										requestContentType : TEXT );
+	
+		def restResponseText = restResponse.getData();
+		
+			
+	}
+
+	private void doSemanticEnhancement( ActivitiUserTask userTask )
+	{
+		// extract variables and content and send it to Stanbol for enhancement
+		StringBuilder content = new StringBuilder();
+		
+		Map<String, String> variables = userTask.variables;
+		
+		variables.each {
+			content.append( it.value );
+			content.append( " " );
+		}
+		
+		
+		// Hit Stanbol to get enrichmentData
+		// call Stanbol REST API to get enrichment data
+		RESTClient restClient = new RESTClient( "http://localhost:8080" )
+	
+		// println "content submitted: ${content}";
+		def restResponse = restClient.post(	path:'enhancer',
+										body: content,
+										requestContentType : TEXT );
+	
+		def restResponseText = restResponse.getData();
+		
+		// println "\n************************************\n\n${restResponseText}\n\n****************************************\n";
+		
+		if( restResponseText != null && !restResponseText.isEmpty())
+		{
+		
+			// create an empty Model
+			Model tempModel = ModelFactory.createDefaultModel();
+			
+			StringReader reader = new StringReader( restResponseText.toString() );
+		
+			RDFDataMgr.read(tempModel, reader, "http://www.example.com", JenaJSONLD.JSONLD);
+			
+	
+			// Make a TDB-backed dataset
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			String directory = "${quoddyHome}/jenastore/triples" ;
+			println "Opening TDB triplestore at: ${directory}";
+			Dataset dataset = TDBFactory.createDataset(directory) ;
+			
+			dataset.begin(ReadWrite.WRITE);
+			// Get model inside the transaction
+			Model model = dataset.getDefaultModel() ;
+			
+			// find all the "entity" entries in our graph and then associate each
+			// one with our "DocumentID"
+			ResIterator iter = tempModel.listSubjectsWithProperty( RDF.type, OWL.Thing );
+			
+			while( iter.hasNext() )
+			{
+				Resource anEntity = iter.nextResource();
+			
+				// do we have the "type" (rdf:type) triples that we need for "anEntity"
+				
+				
+				println "adding resource \"quoddy:${userTask.uuid}\" dc:references entity: ${anEntity.toString()}";
+				
+				Resource newResource = model.createResource( "quoddy:${userTask.uuid}" );
+				newResource.addProperty( DCTerms.references, anEntity);
+	
+			}
+	
+			// now add all the triples from the Stanbol response to our canonical Model
+			model.add( tempModel );
+					
+			dataset.commit();
+			
+			dataset.end();
+		
+		}
+		else
+		{
+			println "Can't process JSON -> TDB operation!";
+		}
+				
+	}
+
+			
+	/* *****************************/
+	/* Index rebuilding methods ****/
+	/*******************************/
+	
     private void rebuildAllIndexes()
     {
 		log.warn( "doing rebuildIndex" );

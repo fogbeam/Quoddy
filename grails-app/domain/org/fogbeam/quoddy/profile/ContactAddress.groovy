@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 class ContactAddress implements Serializable
 {
+	
+	public static Map typeMapping = [1:"Jabber", 2:"Yahoo", 3:"MSN", 4:"AOL", 5:"Email", 6:"Twitter"];
+	
 	public static final int JABBER_IM = 1;
 	public static final int YAHOO_IM = 2;
 	public static final int MSN_IM = 3;

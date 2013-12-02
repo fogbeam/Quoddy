@@ -4,11 +4,10 @@
 		<title>Quoddy: View User</title>
         <meta name="layout" content="user_profile"/>
         <nav:resources />
-
+        
         <g:javascript library="typeahead" />        
         <g:javascript library="user_profile" />
-
-        
+    	    
 	</head>
 	
 	<body>
@@ -39,18 +38,51 @@
 			</div>
 			
 			<hr />
-			
-			<g:if test="${activities != null}">
-
-				<div id="activityStream">
-
-					<g:render template="/activityStream" />
-
+			<div class="row">
+				<div class="span3 well" style="min-height:400px;" >
+					<h4 style="margin-top:0px;margin-bottom:8px;">About</h4>
+					<ul id="profileAbout" name="profileAbout">
+						<li class="profileFullname">${user.fullName}</li>
+						<li><label>User ID: </label> ${user.userId}</li>
+						<li><label>Nickname: </label>${user.displayName}</li>
+						<li><label>Bio: </label>${user.profile.summary}</li>
+						<li>
+							<label>Homepage:</label>
+					  		<a href="${user.homepage}">${user.homepage}</a>
+						</li>
+						<li><label>Location:</label>${user.profile.location}</li>
+						<li><label>Hometown:</label>${user.profile.hometown}</li>
+					</ul>
 				</div>
-			</g:if>			
+				
+				<div class="span4 well" style="min-height:400px;">
+					<h4 style="margin-top:0px;margin-bottom:8px;">Connect</h4>
+					<!-- TODO: iterate over the user's list of contact addresses -->
+					
+					<ul  style="list-style-type:none;">
+						<li>
+							<label>Internal Email:</label>
+								<span>${user.email}</span> 
+						</li>
+						<g:each in="${user.profile.contactAddresses}" var="contactAddress">
+							<li style="margin-top:4px; list-style-type:none;">
+								<label>${contactAddress.typeMapping[contactAddress.serviceType]}:</label>
+								   <span>${contactAddress.address}</span>
+							</li>
+						</g:each>
+					</ul>
+					
+				</div>
+			</div>
+			
+			<div class="row well" style="min-height:100px;">
+				<h4>More...</h4>
+			</div>
+									
 		</div>
 		
-		<!-- hidden dialog for adding annotations -->
+		
+<!-- hidden dialog for adding annotations -->
 		<div id="annotationDialog" name="annotationDialog" style="display:none;" title="Add Annotation">
 			<script id="predicatesJSON" name="predicatesJSON" >
 				${predicatesJSON}

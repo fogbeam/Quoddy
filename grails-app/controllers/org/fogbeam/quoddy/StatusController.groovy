@@ -48,7 +48,7 @@ class StatusController {
 		
 			def restResponseText = restResponse.getData();
 			
-			
+			println "restResponseText: ${restResponseText}";
 			newStatus.enhancementJSON = restResponseText;
 			
 			// save the newStatus 

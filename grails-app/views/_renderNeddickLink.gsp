@@ -7,14 +7,14 @@
 	<div class="aseTitleBar">
 	
 		<span class="aseTitleBarUserLink"> <a
-			href="${createLink(controller:'activityStream', action:'viewUserStream', params:[userId:item.owner.userId])}">
+			href="${createLink(controller:'user', action:'viewUser', params:[userId:item.owner.userId])}">
 				${item.owner.fullName}
 		</a> 
 		</span>
-		<span class="aseTitleBarPermalink"> <a href="#"
-			title="${formatDate(date:item.dateCreated)}"><g:formatDate
-					date="${item.dateCreated}" type="datetime" style="SHORT"
-					timeStyle="SHORT" /></a>
+		<span class="aseTitleBarPermalink">
+		<g:link controller="permalink" action="index" params="${[uuid:item.uuid]}" title="${formatDate(date:item.dateCreated)}">
+				<g:formatDate date="${item.dateCreated}" type="datetime" style="SHORT" timeStyle="SHORT" />
+		</g:link>
 		</span>
 
         <div class="commentButtonBar">

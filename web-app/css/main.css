@@ -394,3 +394,33 @@ div#gbg {
 	margin-right:0px;
 	height:50px;
 }
+
+.activitiBPMButtons {
+	margin-top:20px;
+	margin-bottom:0px;
+}
+
+.viewUserButtons .btn-group .btn {
+	clear: none;
+}
+
+.activitiBPMButtons .btn-group .btn {
+	clear: none;
+}
+
+.aseFooter {
+	margin-top:-35px;
+}
+
+#profileAbout {
+	list-style-type:none;
+}
+
+#profileAbout li {
+	margin-bottom:7px;
+}
+
+#profileAbout .profileFullname {
+	font-size:13pt;
+	font-weight:bold;
+}

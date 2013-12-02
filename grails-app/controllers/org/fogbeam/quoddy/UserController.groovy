@@ -1,9 +1,12 @@
 package org.fogbeam.quoddy;
 
+import groovy.json.JsonBuilder
+
 import java.text.SimpleDateFormat
 
 import org.apache.commons.io.FilenameUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import org.fogbeam.quoddy.annotation.AnnotationResource
 import org.fogbeam.quoddy.profile.ContactAddress
 import org.fogbeam.quoddy.profile.EducationalExperience
 import org.fogbeam.quoddy.profile.HistoricalEmployer
@@ -13,8 +16,17 @@ import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.profile.Skill
 import org.fogbeam.quoddy.search.SearchResult
 import org.fogbeam.quoddy.social.FriendRequest
+import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.commons.CommonsMultipartFile
+
+import com.hp.hpl.jena.query.Dataset
+import com.hp.hpl.jena.query.ReadWrite
+import com.hp.hpl.jena.rdf.model.Model
+import com.hp.hpl.jena.rdf.model.Property
+import com.hp.hpl.jena.rdf.model.Resource
+import com.hp.hpl.jena.rdf.model.ResourceFactory
+import com.hp.hpl.jena.tdb.TDBFactory
 
 class UserController {
 
@@ -23,6 +35,9 @@ class UserController {
 	def searchService;
 	def scaffold = false;
 
+	def eventStreamService;
+	
+	
 	def sexOptions = [new SexOption( id:1, text:"Male" ), new SexOption( id:2, text:"Female" ) ];
 	def years =	 {
 					def alist = [];
@@ -106,8 +121,6 @@ class UserController {
 			{
 				users.add( userService.findUserByUuid( result.uuid ));
 			}
-			
-			
 		}
 		else
 		{
@@ -148,8 +161,63 @@ class UserController {
 			flash.message = "invalid userId";
 		}
 		
-		[user:user];
 		
+		List<ActivityStreamItem> activities = new ArrayList<ActivityStreamItem>();
+		
+		Map model = [user:user];
+		if( user )
+		{		
+			activities = eventStreamService.getStatusUpdatesForUser( user );
+			model.putAll( [user:user, activities:activities] );
+			
+			// Map sidebarCollections = populateSidebarCollections( this, user );
+			// model.putAll( sidebarCollections );
+			
+		}
+		
+		
+		/* load list of potential predicates for annotations */
+		List<AnnotationResource> predicates = new ArrayList<AnnotationResource>();
+		AnnotationResource hasSkill = new AnnotationResource( label: "Has Skill", shortName: "hasSkill", qualifiedName: "http://rdfs.org/resume-rdf/cv.rdfs#hasSkill" );
+		predicates.add( hasSkill );
+		AnnotationResource hasExpertise = new AnnotationResource(  label: "Has Expertise", shortName: "hasExpertise", qualifiedName: "http://schema.fogbeam.com/people#hasExpertise" );
+		predicates.add( hasExpertise );
+		model << [predicates:predicates];
+		
+		List<AnnotationResource> possibleObjects = new ArrayList<AnnotationResource>();
+		AnnotationResource javaLanguage = new AnnotationResource(  label: "Java (Programming Language)", shortName: "Java", qualifiedName: "http://schema.fogbeam.com/skill#Java" );
+		possibleObjects.add( javaLanguage );
+		AnnotationResource marketing = new AnnotationResource(  label: "Marketing", shortName: "Marketing", qualifiedName: "http://schema.fogbeam.com/skill#Marketing" );
+		possibleObjects.add( marketing);
+		AnnotationResource finance = new AnnotationResource(  label: "Finance", shortName: "Finance", qualifiedName: "http://schema.fogbeam.com/skill#Finance" );
+		possibleObjects.add( finance );
+		AnnotationResource acmeWidgets = new AnnotationResource(  label: "Acme Widgets (Manufacturer)", shortName: "Acme Widgets", qualifiedName: "http://customers.fogbeam.com/Acme_Widgets" );
+		possibleObjects.add( acmeWidgets);
+		AnnotationResource boxerSteel = new AnnotationResource(  label: "Boxer Steel (Manufacturer)", shortName: "Boxer Steel", qualifiedName: "http://customers.fogbeam.com/Boxer_Steel" );
+		possibleObjects.add( boxerSteel);
+		AnnotationResource culletBoxes = new AnnotationResource(  label: "Cullet Boxes (Manufacturer)", shortName: "Cullet Boxes", qualifiedName: "http://customers.fogbeam.com/Cullet_Boxes" );
+		possibleObjects.add( culletBoxes );
+		
+		model << [possibleObjects:possibleObjects];
+		
+		def forJSON = [ [qualifiedName: javaLanguage.qualifiedName, value:javaLanguage.label, tokens: [javaLanguage.shortName]],
+						[qualifiedName: marketing.qualifiedName, value:marketing.label, tokens: [marketing.shortName]],
+						[qualifiedName: finance.qualifiedName, value:finance.label, tokens: [finance.shortName]],
+						[qualifiedName: acmeWidgets.qualifiedName,value:acmeWidgets.label, tokens: [acmeWidgets.shortName]],
+						[qualifiedName: boxerSteel.qualifiedName,value:boxerSteel.label, tokens: [boxerSteel.shortName]],
+						[qualifiedName: culletBoxes.qualifiedName, value:culletBoxes.label, tokens: [culletBoxes.shortName]]
+						];
+		
+		
+		JsonBuilder builder = new JsonBuilder();			
+					
+		builder( forJSON );
+		
+		println "JSON Output: ${builder.toString()}";
+		
+		model.putAt( "predicatesJSON", builder.toString());
+		
+		return model;
 	}
 
 	def editUser = 
@@ -337,8 +405,8 @@ class UserController {
 			
 		}
 		
-		render(view:'viewUser', model:[user:currentUser]);
-			
+		// render(view:'viewUser', model:[user:currentUser]);
+		render( "OK" );	
 	}
 	
 	def addToFriends = 
@@ -361,7 +429,8 @@ class UserController {
 			
 		}
 		
-		render(view:'viewUser', model:[user:currentUser]);
+		// render(view:'viewUser', model:[user:currentUser]);
+		render( "OK" );
 	}
 
 	def confirmFriend = 
@@ -465,6 +534,73 @@ class UserController {
 	}
 		
 	
+	def viewUserProfile =
+	{
+		def userId = params.userId;
+		def user = null;
+		
+		if( null != userId )
+		{
+			// lookup this specific user by params and put in the model for display
+			user = userService.findUserByUserId( userId );
+		}
+		else
+		{
+			flash.message = "invalid userId";
+		}
+		
+		
+		def model = [user:user];
+		
+		
+		
+		/* load list of potential predicates for annotations */
+		List<AnnotationResource> predicates = new ArrayList<AnnotationResource>();
+		AnnotationResource hasSkill = new AnnotationResource( label: "Has Skill", shortName: "hasSkill", qualifiedName: "http://rdfs.org/resume-rdf/cv.rdfs#hasSkill" );
+		predicates.add( hasSkill );
+		AnnotationResource hasExpertise = new AnnotationResource(  label: "Has Expertise", shortName: "hasExpertise", qualifiedName: "http://schema.fogbeam.com/people#hasExpertise" );
+		predicates.add( hasExpertise );
+		model << [predicates:predicates];
+		
+		List<AnnotationResource> possibleObjects = new ArrayList<AnnotationResource>();
+		AnnotationResource javaLanguage = new AnnotationResource(  label: "Java (Programming Language)", shortName: "Java", qualifiedName: "http://schema.fogbeam.com/skill#Java" );
+		possibleObjects.add( javaLanguage );
+		AnnotationResource marketing = new AnnotationResource(  label: "Marketing", shortName: "Marketing", qualifiedName: "http://schema.fogbeam.com/skill#Marketing" );
+		possibleObjects.add( marketing);
+		AnnotationResource finance = new AnnotationResource(  label: "Finance", shortName: "Finance", qualifiedName: "http://schema.fogbeam.com/skill#Finance" );
+		possibleObjects.add( finance );
+		AnnotationResource acmeWidgets = new AnnotationResource(  label: "Acme Widgets (Manufacturer)", shortName: "Acme Widgets", qualifiedName: "http://customers.fogbeam.com/Acme_Widgets" );
+		possibleObjects.add( acmeWidgets);
+		AnnotationResource boxerSteel = new AnnotationResource(  label: "Boxer Steel (Manufacturer)", shortName: "Boxer Steel", qualifiedName: "http://customers.fogbeam.com/Boxer_Steel" );
+		possibleObjects.add( boxerSteel);
+		AnnotationResource culletBoxes = new AnnotationResource(  label: "Cullet Boxes (Manufacturer)", shortName: "Cullet Boxes", qualifiedName: "http://customers.fogbeam.com/Cullet_Boxes" );
+		possibleObjects.add( culletBoxes );
+		
+		model << [possibleObjects:possibleObjects];
+		
+		model << [possibleObjects:possibleObjects];
+		
+		def forJSON = [ [qualifiedName: javaLanguage.qualifiedName, value:javaLanguage.label, tokens: [javaLanguage.shortName]],
+						[qualifiedName: marketing.qualifiedName, value:marketing.label, tokens: [marketing.shortName]],
+						[qualifiedName: finance.qualifiedName, value:finance.label, tokens: [finance.shortName]],
+						[qualifiedName: acmeWidgets.qualifiedName,value:acmeWidgets.label, tokens: [acmeWidgets.shortName]],
+						[qualifiedName: boxerSteel.qualifiedName,value:boxerSteel.label, tokens: [boxerSteel.shortName]],
+						[qualifiedName: culletBoxes.qualifiedName, value:culletBoxes.label, tokens: [culletBoxes.shortName]]
+						];
+		
+		
+		JsonBuilder builder = new JsonBuilder();			
+					
+		builder( forJSON );
+		
+		println "JSON Output: ${builder.toString()}";
+		
+		model.putAt( "predicatesJSON", builder.toString());
+		
+		
+		return model;
+	}
+	
 	def editProfile = 
 	{
 		String userId;
@@ -502,13 +638,15 @@ class UserController {
 			MultipartHttpServletRequest mpr = (MultipartHttpServletRequest)request;
 		  	CommonsMultipartFile f = (CommonsMultipartFile) mpr.getFile("your_photo");
 		  	/* def f = request.getFile('myFile')*/
-		  	if(!f.empty) {
+		  	if( f != null && !f.empty) {
 				  
 				  // f.transferTo( new File("/tmp/myfile.png") );
 		  	
 				  /* copy image to a known location for user profile pictures, and
 				   * resize to thumbnails, etc. as appropriate
 				   */
+				  
+				  // TODO: use quoddy.home variable here
 				  
 				  File profilePicFile = new File("./profilepics/${user.userId}/${user.userId}_profile.jpg");
 				  if( !profilePicFile.exists() )
@@ -567,6 +705,7 @@ class UserController {
 		
 		Set paramsNames = params.keySet();
 		paramsNames.each { 
+			
 			if( it.startsWith( "employment[" ) && it.endsWith( "]" ))
 			{
 				def emp1v = params.get( it );
@@ -675,7 +814,7 @@ class UserController {
 			{
 				def contactAddress = params.get( it );
 				
-				// println contactAddress;
+				println "contactAddress: ${contactAddress}";
 				
 				// is there an ID? Is it valid?  If so, update existing record for profile
 				String contactAddressIdStr = contactAddress.contactAddressId;
@@ -700,10 +839,10 @@ class UserController {
 				// else, create new record and attach to profile
 				else
 				{
-					if( contactAddress.type && contactAddress.address )
+					if( contactAddress.serviceType && contactAddress.address )
 					{
 					
-						ContactAddress newContactAddress = new ContactAddress( serviceType: Integer.parseInt( contactAddress.type ),
+						ContactAddress newContactAddress = new ContactAddress( serviceType: Integer.parseInt( contactAddress.serviceType ),
 																			address: contactAddress.address );
 
 						if( !newContactAddress.save() )
@@ -953,7 +1092,82 @@ class UserController {
 			
 		[openFriendRequests:openFriendRequests];		
 	}	
+
 	
+	def addAnnotation =
+	{
+		println "addAnnotation";
+		
+		// add an annotation, possibly about a skill, or maybe a reference to
+		// a Customer or Account or Product or other entity, to the targeted
+		// user...
+		
+		String userId = params.userId;
+		println "adding annotation for User: ${userId}";
+		User user = userService.findUserByUserId( userId );
+		
+		String annotationPredicate = params.annotationPredicate;
+		println "annotationPredicate: ${annotationPredicate}";
+		
+		String annotationObject = params.annotationObject;
+		println "annotationObject: ${annotationObject}";
+		
+		String annotationObjectQN = params.annotationObjectQN;
+		println "annotationObjectQN: ${annotationObjectQN}";
+		
+		// Make a TDB-backed dataset
+		String quoddyHome = System.getProperty( "quoddy.home" );
+		String directory = "${quoddyHome}/jenastore/triples" ;
+		println "Opening TDB triplestore at: ${directory}";
+		Dataset dataset = TDBFactory.createDataset(directory) ;
+		
+		println "1";
+		dataset.begin(ReadWrite.WRITE);
+		
+		try
+		{
+			// Get model inside the transaction
+			println "2";
+			Model model = dataset.getDefaultModel() ;
+		
+			println "3";
+			Resource newResource = model.createResource( "quoddy:${user.uuid}" );
+		
+			println "4";
+			Resource object = model.createResource( annotationObjectQN );
+			// model.add( object );
+		
+			println "5";
+			Property property = model.createProperty( annotationPredicate );
+		
+			println "6";
+			// model.add( property );
+			
+			newResource.addProperty( property, object );
+		
+			// model.add( newResource );
+
+			println "7";
+			dataset.commit();
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+			println "9";
+			dataset.abort();
+		}
+		finally
+		{
+			println "8";
+			dataset.end();
+	
+		}
+			
+		println "done adding annotation";
+		
+		render( "OK" );
+	}
+		
 	
 }
 

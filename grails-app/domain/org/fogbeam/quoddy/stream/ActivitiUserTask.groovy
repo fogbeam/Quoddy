@@ -55,5 +55,8 @@ class ActivitiUserTask extends StreamItemBase
 	String remoteName;
 	String remoteOwner;
 	String dueDate;
+	Map<String, String> variables;
+	
+	
 
 }
