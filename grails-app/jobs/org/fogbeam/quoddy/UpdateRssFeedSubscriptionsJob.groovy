@@ -130,8 +130,14 @@ class UpdateRssFeedSubscriptionsJob
 							Parser parser = new AutoDetectParser();
 							parser.parse(httpStream, textHandler, metadata);
 						
-							rssFeedItem.name = metadata.get(Metadata.TITLE );
-							rssFeedItem.title = metadata.get(Metadata.TITLE );
+							String title = metadata.get(Metadata.TITLE );
+							if( title == null )
+							{
+								title = linkTitle
+							}
+							
+							rssFeedItem.name = title; 
+							rssFeedItem.title = title;
 							rssFeedItem.description = metadata.get( Metadata.DESCRIPTION );
 							rssFeedItem.linkUrl = linkUrl;
 							rssFeedItem.leadingSnippet = textHandler.toString()?.replaceAll('\\s+', ' ').substring(0, 255);
