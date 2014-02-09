@@ -18,10 +18,10 @@ grails.project.dependency.resolution = {
         // from public Maven repositories
         mavenLocal()
         mavenCentral()
-        //mavenRepo "http://snapshots.repository.codehaus.org"
-        //mavenRepo "http://repository.codehaus.org"
-        //mavenRepo "http://download.java.net/maven/2/"
-        //mavenRepo "http://repository.jboss.com/maven2/"
+        mavenRepo "http://snapshots.repository.codehaus.org"
+        mavenRepo "http://repository.codehaus.org"
+        mavenRepo "http://download.java.net/maven/2/"
+        mavenRepo "http://repository.jboss.com/maven2/"
     }
     
     dependencies {
@@ -29,6 +29,8 @@ grails.project.dependency.resolution = {
 
         // runtime 'mysql:mysql-connector-java:5.1.5'
 		compile "org.grails:grails-webflow:$grailsVersion"
+		compile "antlr:antlr:2.7.7"
+		compile "commons-logging:commons-logging:1.1.1"
 	}    
    plugins {
 	   compile ':webflow:2.0.0', {
