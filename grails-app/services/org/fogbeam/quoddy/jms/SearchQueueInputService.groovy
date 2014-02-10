@@ -234,6 +234,13 @@ public class SearchQueueInputService
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		println( "got indexDirLocation as: ${indexDirLocation}");
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		

@@ -60,6 +60,12 @@ class SearchService
 	public List<SearchResult> doEverythingSearch( final String queryString )
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		// println( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
@@ -98,6 +104,12 @@ class SearchService
 		println "in doStatusUpdateSearch";
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		// println( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
@@ -149,6 +161,13 @@ class SearchService
 		println "in doCalendarFeedItemSearch";
 				
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		// println( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
@@ -193,6 +212,14 @@ class SearchService
 		println "in doActivitiUserTaskSearch";
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		// println( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
@@ -238,6 +265,13 @@ class SearchService
 		println "in doBusinessSubscriptionItemSearch";
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		// println( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
@@ -289,6 +323,13 @@ class SearchService
 		println "in doRssFeedItemSearch";
 
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		// println( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
@@ -331,6 +372,13 @@ class SearchService
 		println "in doActivityStreamItemSearch";
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		// println( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
@@ -375,6 +423,14 @@ class SearchService
 		println "in doUserSearch";
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
+		
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
 		
 		IndexSearcher searcher = new IndexSearcher( indexDir );
@@ -405,6 +461,14 @@ class SearchService
 		println "in doPeopleSearch";
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
 		IndexSearcher searcher = new IndexSearcher( indexDir );
 
@@ -444,6 +508,14 @@ class SearchService
 		// specify that the id field must be a match.
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
 		IndexSearcher searcher = new IndexSearcher( indexDir );
 		
@@ -496,6 +568,13 @@ class SearchService
 		// specify that the id field must be a match.
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
 		IndexSearcher searcher = new IndexSearcher( indexDir );
 		
@@ -547,6 +626,11 @@ class SearchService
 		try
 		{
 			indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+			if( indexDirLocation == null )
+			{
+				String quoddyHome = System.getProperty( "quoddy.home" );
+				indexDirLocation = quoddyHome + "/index";
+			}
 			
 			
 			println "rebuildGeneralIndex";
@@ -898,6 +982,13 @@ class SearchService
 		println "reindexing ${users.size()} users";
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		println "rebuildPersonIndex";
 		println "indexDirLocation: ${indexDirLocation}";
 		
@@ -948,6 +1039,13 @@ class SearchService
 	{
 	
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		println( "initializeGeneralIndex" );
 		println( "indexDirLocation: ${indexDirLocation}" );
 		if( indexDirLocation )
@@ -981,6 +1079,13 @@ class SearchService
 	public void initializePersonIndex()
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		println( "initializePersonIndex" );
 		println( "indexDirLocation: ${indexDirLocation}" );
 		if( indexDirLocation )
