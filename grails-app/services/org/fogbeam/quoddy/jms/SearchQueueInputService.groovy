@@ -517,6 +517,13 @@ public class SearchQueueInputService
 	private void newBusinessEventSubscriptionItem( def msg )
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		println( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
