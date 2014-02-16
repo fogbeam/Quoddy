@@ -191,11 +191,11 @@ class UserController {
 		possibleObjects.add( marketing);
 		AnnotationResource finance = new AnnotationResource(  label: "Finance", shortName: "Finance", qualifiedName: "http://schema.fogbeam.com/skill#Finance" );
 		possibleObjects.add( finance );
-		AnnotationResource acmeWidgets = new AnnotationResource(  label: "Acme Widgets (Manufacturer)", shortName: "Acme Widgets", qualifiedName: "http://customers.fogbeam.com/Acme_Widgets" );
+		AnnotationResource acmeWidgets = new AnnotationResource(  label: "Acme Widgets (Manufacturer)", shortName: "Acme Widgets", qualifiedName: "http://customers.fogbeam.com#Acme_Widgets" );
 		possibleObjects.add( acmeWidgets);
-		AnnotationResource boxerSteel = new AnnotationResource(  label: "Boxer Steel (Manufacturer)", shortName: "Boxer Steel", qualifiedName: "http://customers.fogbeam.com/Boxer_Steel" );
+		AnnotationResource boxerSteel = new AnnotationResource(  label: "Boxer Steel (Manufacturer)", shortName: "Boxer Steel", qualifiedName: "http://customers.fogbeam.com#Boxer_Steel" );
 		possibleObjects.add( boxerSteel);
-		AnnotationResource culletBoxes = new AnnotationResource(  label: "Cullet Boxes (Manufacturer)", shortName: "Cullet Boxes", qualifiedName: "http://customers.fogbeam.com/Cullet_Boxes" );
+		AnnotationResource culletBoxes = new AnnotationResource(  label: "Cullet Boxes (Manufacturer)", shortName: "Cullet Boxes", qualifiedName: "http://customers.fogbeam.com#Cullet_Boxes" );
 		possibleObjects.add( culletBoxes );
 		
 		model << [possibleObjects:possibleObjects];

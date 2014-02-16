@@ -140,6 +140,8 @@ class ActivitiBPMController
 		List<ActivityStreamItem> statusUpdates = new ArrayList<ActivityStreamItem>();
 		List<ResourceLink> links = new ArrayList<ResourceLink>();
 										 
+		println "Looking for people for customerNumber: ${customerNumber}";
+		
 		// query for people that "haveExpertise" regarding our customer number
 		// [quoddy:a7274c07-c904-4a70-bc98-6d8c21a962ce, http://schema.fogbeam.com/people#hasExpertise, http://customers.fogbeam.com/Boxer_Steel]
 		String queryString = """select distinct ?entity ?y where {?entity fogpeople:hasExpertise ?y . ?y rdfs:label "${customerNumber}"^^<http://www.w3.org/2001/XMLSchema#string> .}""";
@@ -158,6 +160,7 @@ class ActivitiBPMController
 				results = qexec.execSelect() ;
 				for ( ; results.hasNext() ; )
 				{
+					println( "People search: found one solution..." );
 					QuerySolution soln = results.nextSolution() ;
 					RDFNode x = soln.get("entity" );
 					RDFNode y = soln.get( "y" );

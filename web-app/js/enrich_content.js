@@ -55,7 +55,7 @@ $j( function()
 					
 					var typeAtt = graphElem[key];
 		
-					// alert( typeAtt );
+					// alert( "working with an @type attribute: " + typeAtt );
 					
 					var isEntity = false;
 					var isText = false;
@@ -72,34 +72,36 @@ $j( function()
 							
 							// alert( "@type: " + typeVal );
 							
-							if( typeVal == "enhancer:EntityAnnotation")
+							if( typeVal == "enhancer:EntityAnnotation" || typeVal == "EntityAnnotation")
 							{	
 								isEntity = true;
 								break;
 							}
-							else if( typeVal == "enhancer:TextAnnotation" )
+							else if( typeVal == "enhancer:TextAnnotation" || typeVal == "TextAnnotation" )
 							{
 								isText = true;
 								break;
 							}
-							else if( typeVal == "owl:Thing" )
+							else if( typeVal == "owl:Thing" || typeVal == "Thing" )
 							{
+								// alert( "isOwlThing = true" );
 								isOwlThing = true;
 								break;
 							}
 						}
 					}
-					else if( typeAtt == "enhancer:EntityAnnotation")
+					else if( typeAtt == "enhancer:EntityAnnotation" || typeAtt == "EntityAnnotation")
 					{	
 						// alert( "not an Array, but typeAtt is Entity");
 						isEntity = true;
 					}
-					else if( typeAtt == "enhancer:TextAnnotation" )
+					else if( typeAtt == "enhancer:TextAnnotation" || typeAtt == "TextAnnotation" )
 					{
 						isText = true;
 					}
 					else if( typeAtt == "" )
 					{
+						// alert( "typeAtt: " + typeAtt );
 						isOwlThing = true;
 					}
 					else
@@ -137,6 +139,7 @@ $j( function()
 						// save this object in the things array using it's ID as the
 						// key
 						var id = graphElem['@id'];
+					// alert( "saving into owlThings array using id: " + id );
 						// id = id.replace( /\:/ig, "" );
 						owlThings[id] = graphElem;
 					}
@@ -165,23 +168,56 @@ $j( function()
 		// assign them an index that will be used to key them to the corresponding anchor
 		// element.
 		var appliedAnnotations = {};
-		
 		for( var ei = 0; ei < entityAnnotations.length; ei++ )
 		{
 			var entityAnnotation = entityAnnotations[ei];
+			
+			// alert( JSON.stringify( entityAnnotation ));
+			
 			var id = entityAnnotation['dc:relation'];
-		
+			
+			if( !id )
+			{
+				id = entityAnnotation['relation'];
+			}
+			
+			
 			id = id.replace( /\:/ig, "" );
 			
 			// find the associated TextAnnotation
 			var textAnnotation = textAnnotations[id];
 						
 			// find the text value that we are going to annotate
-			var textToReplace = textAnnotation['enhancer:selected-text']['@value'];
+			var textToReplace = null;
+			try
+			{
+				textToReplace = textAnnotation['enhancer:selected-text']['@value'];
+			}
+			catch( e )
+			{}
+			
+			if( !textToReplace)
+			{
+				textToReplace = textAnnotation['selected-text']['@value'];
+			}
 			// alert( "working on annotation for " + textToReplace );
 			
-			var dbPediaLink = entityAnnotation['enhancer:entity-reference'];
-		
+			var dbPediaLink = null;
+			try
+			{
+				dbPediaLink = entityAnnotation['enhancer:entity-reference'];
+			}
+			catch( e )
+			{
+				
+			}
+			
+			if( !dbPediaLink )
+			{
+				dbPediaLink = entityAnnotation['entity-reference'];
+			}
+			
+			// alert( "looking for: " + dbPediaLink );
 		
 			// alert( "found potential EntityAnnotation for TextAnnotation'" + id + "'");
 		
@@ -197,18 +233,46 @@ $j( function()
 				var enrichedContentDiv = jsonNode.siblings(".basicActivityStreamEntry");
 				// alert( enrichedContentDiv );
 				
+
+				var owlThing = owlThings[dbPediaLink];
+				
+				var comment = null;
+				try
+				{
+					comment = owlThing['rdfs:comment']['@value'];
+				}
+				catch(e)
+				{
+					
+				}
+				
+				if( !comment )
+				{
+					comment = "No comment";
+				}
+				// alert( "for initial tooltip: comment: " + comment );
+				
 				
 				var re = new RegExp(textToReplace,"ig");
-				enrichedContentDiv.html( enrichedContentDiv.html().replace( re, '<a id="' + id + '" title="empty" href="' + dbPediaLink + '">' + textToReplace + '</a>' ));
-		
+				if( !dbPediaLink.startsWith( "http://customers.fogbeam" ))
+				{
+					enrichedContentDiv.html( enrichedContentDiv.html().replace( re, '<a id="' + id + '" title="empty" href="' + dbPediaLink + '">' + textToReplace + '</a>' ));
+				}
+				else
+				{
+					// alert( "fogcust found" );
+					// alert( JSON.stringify( owlThing ));
+					var internalLink = owlThing['http://schema.fogbeam.com#internalLink'];
+					enrichedContentDiv.html( enrichedContentDiv.html().replace( re, '<a id="' + id + '" title="empty" href="' + internalLink + '">' + textToReplace + '</a>' ));
+					
+					comment = owlThing['description'];
+					
+				}
+			
 				// alert( toolTipped[id] );
-			
-			
 				// let's attach a tooltip as well, so we can add some additional context information
-				var owlThing = owlThings[dbPediaLink];
 				// alert( "adding initial tooltip: owlThing: " + owlThing );
-				var comment = owlThing['rdfs:comment']['@value'];
-				// alert( "for initial tooltip: comment: " + comment );
+
 				
 				
 				// $j('#' + id ).tooltip({ content: comment });

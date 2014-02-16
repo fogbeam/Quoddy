@@ -11,7 +11,7 @@
   <h2>Create Event Subscription</h2>
 		<p />
 		<g:form controller="subscription" action="createWizard" method="POST">
-			<label for="xQueryExpression">Name:</label> <g:textField name="xQueryExpression" value=""/>
+			<label for="xQueryExpression">Query:</label> <g:textField name="xQueryExpression" value=""/>
 			<br />
 			<g:submitButton name="finishWizard" value="Finish" />
 		</g:form>
