@@ -39,11 +39,7 @@
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/shiro-1.1.4/grails-app/taglib"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/shiro-1.1.4/src/groovy"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/shiro-1.1.4/src/java"/>
-
-        <wb-resource deploy-path="/" source-path="/grails-app/providers"/>
-
         <wb-resource deploy-path="/" source-path="/grails-app/ldap"/>
-        <wb-resource deploy-path="/" source-path="/grails-app/jobs"/>
 
     </wb-module>
 </project-modules>
