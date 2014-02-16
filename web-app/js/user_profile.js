@@ -72,7 +72,7 @@ $j( function()
 function addToFriends()
 {
 	var id = $j(this).attr('id').substring( 16 );
-	alert("clicked for id: " + id )
+	// alert("clicked for id: " + id )
 	
 	// note: on the backend we assume the initiator of this operation is the
 	// currently logged in user from the httpsession, so we only need to pass
