@@ -88,6 +88,8 @@ class UserService {
 		
 		if( user.save() )
 		{
+			println "Saving User object.";
+			
 			accountService.createUser( user );
 			// ldapPersonService.createUser( user );
 			// create system defined Stream entries for this newly created user

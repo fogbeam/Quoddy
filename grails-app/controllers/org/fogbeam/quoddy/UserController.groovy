@@ -241,6 +241,7 @@ class UserController {
 		
 		if( urc.hasErrors() )
 		{
+				println "UserRegistrationCommand object has errors";
 				urc.errors.allErrors.each {println it};
 				flash.user = urc;
 				flash.message = "Error creating user!";
@@ -248,6 +249,8 @@ class UserController {
 		}
 		else
 		{
+			println "in adminSaveUser: about to call createUser()";
+			
 			def user = new User( urc.properties );
 			user.password = urc.password;
 			
@@ -262,7 +265,8 @@ class UserController {
 			{
 				// maybe not unique userId?
 				flash.user = urc;
-				redirect( controlle:'user', action:"adminAddUser" );
+				flash.message "Failed to create user account!";
+				redirect( controller:'user', action:"adminAddUser" );
 			}
 		}
 		

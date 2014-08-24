@@ -10,6 +10,10 @@
               <!-- start body content -->
               <h1>Register New User</h1>
 
+	  <g:if test="${flash.message}">
+    		<div class="message">${flash.message}</div>
+	  </g:if>
+
              <g:hasErrors>
                  <div class="errors">
                     <g:renderErrors bean="${flash.user}" as="list" />
