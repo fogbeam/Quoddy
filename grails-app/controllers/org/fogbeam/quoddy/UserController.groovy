@@ -650,9 +650,10 @@ class UserController {
 				   * resize to thumbnails, etc. as appropriate
 				   */
 				  
-				  // TODO: use quoddy.home variable here
+				  // use quoddy.home variable here
+				  String quoddyHome = System.getProperty( "quoddy.home" );
 				  
-				  File profilePicFile = new File("./profilepics/${user.userId}/${user.userId}_profile.jpg");
+				  File profilePicFile = new File("${quoddyHome}/profilepics/${user.userId}/${user.userId}_profile.jpg");
 				  if( !profilePicFile.exists() )
 				  {
 					  	File parentDir = profilePicFile.getParentFile();
