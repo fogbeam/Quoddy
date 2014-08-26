@@ -48,9 +48,21 @@ class StatusController {
 											body: params.statusText,
 											requestContentType : TEXT );
 		
-			String restResponseText = restResponse.getData();
+			println "restResponse.class: ${restResponse.class}";
+			println "restResponse.status: ${restResponse.status}";
+			println "restResponse.statusCode: ${restResponse.statusCode}";
+			println "restResponse.success: ${restResponse.success}";
+										
+			Object restResponseText = restResponse.getData();
+			
+			println "restResponseText.class: ${restResponseText.class}";
+			
+			java.util.Scanner s = new java.util.Scanner(restResponseText).useDelimiter("\\A");
+	
+			println "using Scanner: ${s.next()}";		
 			
 			println "restResponseText: ${restResponseText}";
+			
 			newStatus.enhancementJSON = restResponseText;
 			
 			// save the newStatus 
