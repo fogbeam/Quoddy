@@ -642,8 +642,10 @@ class UserController {
 			MultipartHttpServletRequest mpr = (MultipartHttpServletRequest)request;
 		  	CommonsMultipartFile f = (CommonsMultipartFile) mpr.getFile("your_photo");
 		  	/* def f = request.getFile('myFile')*/
-		  	if( f != null && !f.empty) {
-				  
+		  	if( f != null && !f.empty) 
+			{
+				println "uploading photo file...";
+				
 				  // f.transferTo( new File("/tmp/myfile.png") );
 		  	
 				  /* copy image to a known location for user profile pictures, and
@@ -676,6 +678,11 @@ class UserController {
 				  if( result != 0 ){
 					throw new RuntimeException("thumbnail generation failured, return code:" + result);
 				  }
+			  }
+			  else
+			  {
+				println "ERROR: did not find file in upload!";
+				
 			  }
 		}
 		else 
