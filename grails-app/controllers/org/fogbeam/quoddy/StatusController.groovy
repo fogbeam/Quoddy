@@ -53,15 +53,17 @@ class StatusController {
 			// println "restResponse.statusCode: ${restResponse.statusCode}";
 			println "restResponse.success: ${restResponse.isSuccess()}";
 
-			Object restResponseText = restResponse.getData();
+			Object restResponseData = restResponse.getData();
 			
-			println "restResponseText.class: ${restResponseText.class}";
+			println "restResponseData.class: ${restResponseData.class}";
 			
-			java.util.Scanner s = new java.util.Scanner(restResponseText).useDelimiter("\\A");
+			java.util.Scanner s = new java.util.Scanner(restResponseData).useDelimiter("\\A");
 	
-			println "using Scanner: ${s.next()}";		
+			String restResponseText = s.next();
 			
-			println "restResponseText: ${restResponseText}";
+			println "using Scanner: ${restResponseText}";		
+			
+			// println "restResponseText: ${restResponseText}";
 			
 			newStatus.enhancementJSON = restResponseText;
 			
