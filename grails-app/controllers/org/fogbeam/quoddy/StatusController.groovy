@@ -46,7 +46,7 @@ class StatusController {
 											body: params.statusText,
 											requestContentType : TEXT );
 		
-			def restResponseText = restResponse.getData();
+			String restResponseText = restResponse.getData();
 			
 			println "restResponseText: ${restResponseText}";
 			newStatus.enhancementJSON = restResponseText;
