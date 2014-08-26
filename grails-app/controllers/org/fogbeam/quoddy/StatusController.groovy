@@ -1,7 +1,9 @@
 package org.fogbeam.quoddy;
 
-import groovyx.net.http.RESTClient
 import static groovyx.net.http.ContentType.TEXT
+import groovyx.net.http.HttpResponseDecorator
+import groovyx.net.http.RESTClient
+
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.StatusUpdate
@@ -42,7 +44,7 @@ class StatusController {
 			RESTClient restClient = new RESTClient( "http://localhost:8080" )
 		
 			// println "content submitted: ${content}";
-			def restResponse = restClient.post(	path:'enhancer',
+			HttpResponseDecorator restResponse = restClient.post(	path:'enhancer',
 											body: params.statusText,
 											requestContentType : TEXT );
 		
