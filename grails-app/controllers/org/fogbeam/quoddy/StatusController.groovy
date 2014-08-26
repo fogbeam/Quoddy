@@ -47,12 +47,12 @@ class StatusController {
 			HttpResponseDecorator restResponse = restClient.post(	path:'enhancer',
 											body: params.statusText,
 											requestContentType : TEXT );
-		
+										
 			println "restResponse.class: ${restResponse.class}";
 			println "restResponse.status: ${restResponse.status}";
-			println "restResponse.statusCode: ${restResponse.statusCode}";
-			println "restResponse.success: ${restResponse.success}";
-										
+			// println "restResponse.statusCode: ${restResponse.statusCode}";
+			println "restResponse.success: ${restResponse.isSuccess()}";
+
 			Object restResponseText = restResponse.getData();
 			
 			println "restResponseText.class: ${restResponseText.class}";
