@@ -240,17 +240,21 @@
 		};
     	</script>
     </head>
-    <body>
-							<div class="hero-unit span6">
-              <!-- start body content -->
-									<h2>Edit Profile</h2>
-                  <div class="currentPhoto">
-										<div style="background:#333; border: 10px solid #FEFEFE; height: 150px; margin-bottom: 6px; width: 180px;"></div>
-										<label for="your_photo">Edit profile photo</label>
-										<input type="file" name="your_photo" id="your_photo" value="" />
-									</div>
+    	<body>
+			<!-- start body content -->
+			<div class="hero-unit span6">
+              
+				<h2>Edit Profile</h2>
+				
+				<g:form action="saveProfile" id="profileForm" name="profileForm" enctype="multipart/form-data" >					
+                  
+                  	<div class="currentPhoto">
+						<div style="background:#333; border: 10px solid #FEFEFE; height: 150px; margin-bottom: 6px; width: 180px;">
+						</div>
+						<label for="your_photo">Edit profile photo</label>
+						<input type="file" name="your_photo" id="your_photo" value="" />
+					</div>
 
-             <g:form action="saveProfile" id="profileForm" name="profileForm" enctype="multipart/form-data" >
              		<g:hiddenField name="userUuid" value="${profileToEdit?.userUuid}" />
                  
 								<div class="left">
