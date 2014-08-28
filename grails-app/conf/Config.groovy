@@ -45,11 +45,19 @@ switch( Environment.current  )
 		break;
 }
 
+String fogbeamDevMode = System.getProperty( "fogbeam.devmode" );
+if( fogbeamDevMode != null )
+{
+	fogbeam.devmode=true;
+}
+else
+{
+	fogbeam.devmode=false;
+}
 
 // backingStore options: "ldap" or "localdb"
 // for now, assume they have to change in tandem: all "ldap" or all "localdb"
 // we're not yet - if ever - interested in any really bizarre hybrid scenarios on this
-
 friends.backingStore="localdb";
 groups.backingStore="localdb";
 enable.self.registration=true;
@@ -133,7 +141,7 @@ log4j = {
     //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
     //}
 
-	debug  'org.hibernate'
+	// debug  'org.hibernate'
 		
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
 	       'org.codehaus.groovy.grails.web.pages', //  GSP
@@ -146,7 +154,8 @@ log4j = {
 		   'org.springframework',
            'net.sf.ehcache.hibernate'
 
-    warn   'org.mortbay.log'
+    warn   'org.mortbay.log',
+		   'org.hibernate'
 }
 
 jms {
