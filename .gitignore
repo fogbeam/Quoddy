@@ -17,4 +17,6 @@ web-app/js/prototype/
 stacktrace.log
 help/docs
 help/docs/*
+.link_to_grails_plugins
+*.not_jar
 
