@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>Quoddy: Edit Profile</title>
-        <meta name="layout" content="main"/>
+        <meta name="layout" content="basic"/>
         <nav:resources />
     	<script type="text/javascript">
 
