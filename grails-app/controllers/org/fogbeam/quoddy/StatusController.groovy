@@ -160,4 +160,24 @@ class StatusController {
 		[updates:updates]
 	}
 	
+	def deleteStatus =
+	{
+		String delItemUuid = params.item;
+		ActivityStreamItem item = ActivityStreamItem.findByUuid( delItemUuid );
+		
+		if( item != null )
+		{
+			println( "found it!" );
+			item.delete();
+			
+		}
+		else
+		{
+			println( "nope" );
+		}
+		
+		render( status: 200 );
+	}
+	
+	
 }
