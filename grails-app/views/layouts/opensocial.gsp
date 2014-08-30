@@ -11,31 +11,29 @@
             
 
 		<!-- default container look and feel -->
-		<link rel="stylesheet" href="/css/gadgets.css">
-		<script type="text/javascript" src="../gadgets/js/shindig-container:rpc.js?c=1&debug=1&nocache=1"></script>
+		<!-- 
+		<link rel="stylesheet" href="/shindig/css/gadgets.css">
+		<script type="text/javascript" src="/shindig/gadgets/js/shindig-container:rpc.js?c=1&debug=1&nocache=1"></script>
+		-->
+		<!--  		
+			<script type="text/javascript" src="/shindig/gadgets/js/container:open-views:opensearch:rpc:xmlutil:pubsub-2.js?c=1&debug=1&container=default"></script>
+		-->
+		
+		<script type="text/javascript" src="/shindig/gadgets/js/container.js?c=1"></script>
+		
 		<script type="text/javascript">
-			var specUrl0 = 'http://www.google.com/ig/modules/horoscope.xml';
-			var specUrl1 = 'http://www.labpixies.com/campaigns/todo/todo.xml';
-
-			// This container lays out and renders gadgets itself.
 
 			function renderGadgets() {
-  			var gadget0 = shindig.container.createGadget({specUrl: specUrl0});
-  			var gadget1 = shindig.container.createGadget({specUrl: specUrl1});
 
-			shindig.container.addGadget(gadget0);
-  			shindig.container.addGadget(gadget1);
-  			shindig.container.layoutManager.setGadgetChromeIds(
-      		['gadget-chrome-x', 'gadget-chrome-y']);
-			shindig.container.renderGadget(gadget0);
-  			shindig.container.renderGadget(gadget1);
+
+				var elem = document.getElementById("gadget-chrome-x");    
+				var gadget = "http://www.labpixies.com/campaigns/todo/todo.xml";
+				var container = new shindig.container.Container(); 
+				var site = container.newGadgetSite(elem);
+				container.navigateGadget(site, gadget, {}, {});
 			};
 		</script>
-
-        <g:javascript>
-               
-        </g:javascript>         
-        
+                
         <g:layoutHead />
                 				
     </head>
