@@ -1,7 +1,7 @@
 <html>
 <head>
 <title>Welcome to Quoddy</title>
-<meta name="layout" content="main" />
+<meta name="layout" content="main_new" />
 </head>
 <body>
 
@@ -133,6 +133,7 @@
 			<div id="messageCount">
 				<a href="#" id="refreshMessagesLink">0 messages pending</a>
 			</div>
+			
 			<g:if test="${activities != null}">
 
 				<div id="activityStream">

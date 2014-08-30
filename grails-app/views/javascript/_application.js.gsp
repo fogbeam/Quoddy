@@ -43,8 +43,18 @@
 					$j( "#dialog" ).data('shareItemUuid', shareItemUuid).dialog( "open" );
 				});
 
-
-
+				$j( ".xButton").click( function() {
+					// alert( "deleting this one...");
+					
+					// $.post( "test.php", { name: "John", time: "2pm" } );
+					var name = $j(this).attr('name');
+					var deleteItemUuid = name.split( "." )[1];
+					
+					$j.post( 
+						"${ createLink(controller:'status', action:'deleteStatus')}", 
+						{item:deleteItemUuid }, 
+						  function() { location.reload(true); } );
+				});
 
 				$j('#loadMoreLink').data("page", 1 );
 				// setup an onclick handler for the status submit button
@@ -129,6 +139,11 @@
 					var submitBtn = clicked.parent().find( '#submitCommentBtn' );
 					submitBtn.css('display', 'none');
 					clicked.css('display', 'none');
+					
+					// reset the default value of the input box as well
+					var inputBox = clicked.parent().find( '#addCommentTextInput' );
+					inputBox.val( "Add a Comment" );
+					
 					return false;
 				} );
 				
@@ -167,7 +182,10 @@
 							clicked.find('a').text("Show Comments");
 							wrapperDiv.find( '.commentsArea' ).slideUp();
 						}
-					}		
+					}
+					
+					return false;
+							
 				} );
 				
 				$j( '.submitCommentBtn' ).bind( 'click', function( event ) {
@@ -196,7 +214,19 @@
 										var commentBoxWrapper = theButton.parents(".commentBoxWrapper");
 										var commentsDiv = commentBoxWrapper.find(".commentsArea");
 										commentsDiv.html( data );
-										return true;
+										
+										// make sure the show/hide comments button now says "Hide Comments"
+										// since we definitely have at least one comment 
+										var aseWrapper = theButton.parents( ".aseWrapper" );
+										var showHideBtn = aseWrapper.find( '.showHideCommentsButton a');
+										var currentVal = showHideBtn.html();
+										
+										if( currentVal == "No Comments" )
+										{
+											showHideBtn.html( "Hide Comments" );
+										}
+										
+										return false;
 									}, 
 
 									"html" );

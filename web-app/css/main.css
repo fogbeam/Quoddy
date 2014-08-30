@@ -73,7 +73,7 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
     border-radius: 6px 6px 6px 6px;
     margin-bottom: 30px;
     padding: 12px;
-    width: 200px;
+    width: 120px;
     float:left;
 }
 	
@@ -83,7 +83,7 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 }
 
 .leftContentNav .hero-unit img {
-	border: solid 10px #fefefe; margin-bottom: 6px; width: 180px; height: 150px;
+	border: solid 10px #fefefe; margin-bottom: 6px; width: 90px; height: 80px;
 }
 
 .leftContentNav .hero-unit ul {
@@ -91,7 +91,7 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 }
 
 .leftContentNav .hero-unit p a.btn {
-	width: auto;
+	width: 80px;
 	display:inline-block;
   font-size:12px;
 }
@@ -161,30 +161,39 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 }
 
 .activityStreamEntry {
-	// margin-left:100px;
+	margin-left:10px;
 	margin-top:15px;
 	text-align:left;
 	font-size:14pt;	
 }
 
+
+/*
+.activityStreamEntry {
+  margin-left:5px;
+}
+*/
+
+
 .aseTitleBar {
 	margin-bottom:10px;
-  height: 36px;
+  height: 48px;
   margin: -18px 0 10px 0;
-  background-color: #dcdcdc;
+  // background-color: #dcdcdc;
+  background-color: #AEAEAE;
   border-radius: 6px 6px 0 0;
 }
 
-.aseTitleBar:after {
+ .aseTitleBar:after {
   width: 0; 
   height: 0; 
   content:" ";
   display:block;
   position:relative;
-  top:36px;
+  top:48px;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-top: 8px solid #DCDCDC;
+  border-top: 8px solid #AEAEAE;
   margin:0 auto;
 }
 
@@ -192,7 +201,7 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
   float:left;
   // display:block;
   font-size:12px;
-  margin-top: -8px;
+  margin-top: 12px;
   margin-bottom: 0px;
   margin-left: 25px;
   margin-right: 0px;
@@ -201,34 +210,34 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 .aseAvatarBlock {
 	float:left; 
 	width: 38px;
-  margin-left: 2px;
-  margin-top: -20px;
-  margin-right:15px;
+  	margin-left: 10px;
+  	margin-top: 6px;
+  	margin-right:15px;
 }
 
 .aseTitleBarUserLink {
   font-size: 14px;
   display:block;
   float:left;
-  margin: -9px 8px 0px 0;
+  margin: 12px 8px 0px 0;
 }
 
 .commentButtonBar {
   float:right;
   position:relative;
-  top: -10px;
+  margin-top: 12px;
   margin-right: 12px;
 }
 
-.plusOneButton a, .shareButton a, .showHideCommentsButton a {
+.xButton a, .plusOneButton a, .shareButton a, .showHideCommentsButton a {
   display:inline;
   font-size: 11px;
 }
 
 #addCommentForm {
 border-top: 1px solid #ccc;
-margin-top: 42px;
-padding-top: 12px;
+margin-top: 20px;
+padding-top: 8px;
 }
 
 #addCommentForm label {
@@ -238,11 +247,18 @@ margin:8px 8px 8px 18px;
 .addCommentTextInput {
 height:26px;
 margin-top:6px;
-width:80%;
+width:90%;
+margin-left:30px;
 }
 
-#submitCommentBtn, #cancelCommentBtn {
-font-size:11px;
+#submitCommentBtn 
+{
+	font-size:11px;
+	margin-left:31px;
+}
+
+#cancelCommentBtn {
+	font-size:11px;
 }
 
 #messageCount {
@@ -252,11 +268,6 @@ font-size:11px;
 #activityStream {
   border-left: medium none;
   border-top: 1px solid #CCCCCC;
-}
-
-.activityStreamEntry {
-  margin-left:5px;
-  
 }
 
 #shareItemForm {
@@ -382,8 +393,9 @@ label#employmentHistoryLabel {
 }
 
 .commentsArea {
-	// display:none;
-	margin-left: 5px;
+	margin-left: 0px;
+	padding-left: 10px;
+	background-color: #ECF6F6;
 }
 
 #bodyContent {
@@ -409,7 +421,7 @@ div#gbg {
 }
 
 .aseFooter {
-	margin-top:-35px;
+	margin-top:20px;
 }
 
 #profileAbout {

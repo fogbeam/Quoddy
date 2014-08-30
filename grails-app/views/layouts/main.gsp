@@ -4,7 +4,7 @@
 <title><g:layoutTitle default="Quoddy" /></title>
 <nav:resources />
 <link rel="stylesheet" type="text/css"
-	href="${createLinkTo(dir:'css', file:'main.css')}" />
+	href="${createLinkTo(dir:'css', file:'main_new.css')}" />
 <link rel="stylesheet" type="text/css"
 	href="${createLinkTo(dir:'css', file:'bootstrap.min.css')}" />
 <link rel="stylesheet" type="text/css"
@@ -73,10 +73,14 @@
 					
 					
 					<shiro:authenticated>
+					<!-- 
 						<li><a href="#">Email</a></li>
 						<li><a href="#">Calendar</a></li>
+					 -->
 						<li><a href="#">Apps</a></li>
-						<li><a href="#">Workflows</a></li>
+						<li><a href="#">Spaces</a></li>
+						<li><a href="#">BPM</a></li>
+						<li><a href="#">Answers</a></li>
 					</shiro:authenticated>
 				</ul>
 				<div id="gbg" class="settingsNav navbar">
@@ -196,18 +200,19 @@
 		</div>
 	</div>
 
-	<div id="body" class="container">
+	<div id="body" class="container-fluid">
 
 		<!-- left sidenav, global -->
-		
-		<div class="leftContentNav">
-			<shiro:authenticated>
-				<g:render template="/leftSidebar" />
-			</shiro:authenticated>
-		</div>
+		<div class="row-fluid">
+			<div class="leftContentNav">
+				<shiro:authenticated>
+					<g:render template="/leftSidebar" />
+				</shiro:authenticated>
+			</div>
 
-		<!-- layout main content area -->
-		<g:layoutBody />
+			<!-- layout main content area -->
+			<g:layoutBody />
+		</div>
 	</div>
 	
 	<div id="footer">

@@ -1,3 +1,5 @@
+<%@ page import="org.codehaus.groovy.grails.commons.ConfigurationHolder as CH" %>
+
 <!--  begin aseWrapper area -->
 
 <div class="aseWrapper" id="aseWrapper.${item.uuid}">
@@ -8,15 +10,17 @@
 		</script>
 	</g:if>
 	
-	<!-- begin aseAvatarBlock -->
-	<div class="aseAvatarBlock">
-		<img
-			src="${createLink(controller:'profilePic',action:'thumbnail',id:item.owner.userId)}" />
-	</div>
-	<!-- end aseAvatarBlock -->
+
 	
 	<!-- begin aseTitleBar -->
 	<div class="aseTitleBar">
+		<!-- begin aseAvatarBlock -->
+		<div class="aseAvatarBlock">
+			<img
+				src="${createLink(controller:'profilePic',action:'thumbnail',id:item.owner.userId)}" />
+		</div>
+		<!-- end aseAvatarBlock -->
+
 		<!-- http://localhost:8080/quoddy/user/viewUser?userId=testuser2 -->
 		<span class="aseTitleBarUserLink"> <a
 			href="${createLink(controller:'user', action:'viewUser', params:[userId:item.owner.userId])}">
@@ -29,6 +33,14 @@
 		</span>
     
         <div class="commentButtonBar">
+        	
+        	<!-- if super-secret fogbeam-dev mode is on, render the "delete" button -->
+        	<g:if test="CH.config.fogbeam.devmode">
+        		<span class="xButton" id="xButton.${item.uuid}" name="xButton.${item.uuid}" >
+        			<a href="#" class="btn">X</a>
+      			</span>	
+        	</g:if>
+        	
       		<span class="plusOneButton" id="plusOneButton.${item.uuid}" name="plusOneButton.${item.uuid}" >
         		<a href="#" class="btn">+1</a>
       		</span>
@@ -36,7 +48,20 @@
         		<a href="#" class="btn">Share</a>
       		</span>
       		<span class="showHideCommentsButton">
-        		<a href="#" class="btn">Hide Comments</a>
+      		
+      			<!-- TODO: change the initial state of this button
+      			depending on whether or not there are any comments yet. 
+      			If there are no comments, maybe render it with text "no comments"
+      			and make the button inactive? 
+      			-->
+      			
+      			<g:if test="${item.streamObject.comments.size() > 0}">
+        			<a href="#" class="btn">Hide Comments</a>
+      			</g:if>
+      			<g:else>
+      				<a href="#" class="btn">No Comments</a>
+      			</g:else>
+      		
       		</span>
     	</div>
 	</div>
@@ -62,7 +87,7 @@
 			<!-- begin commentsArea -->
 			<div id="commentsArea" class="commentsArea">
 				
-				<hr />
+				<!-- <hr /> -->
 			
 				<!--  render comments on the Event here -->
 				<g:render template="/renderComments" var="comments"
