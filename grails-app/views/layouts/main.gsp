@@ -4,7 +4,7 @@
 <title><g:layoutTitle default="Quoddy" /></title>
 <nav:resources />
 <link rel="stylesheet" type="text/css"
-	href="${createLinkTo(dir:'css', file:'main_new.css')}" />
+	href="${createLinkTo(dir:'css', file:'main.css')}" />
 <link rel="stylesheet" type="text/css"
 	href="${createLinkTo(dir:'css', file:'bootstrap.min.css')}" />
 <link rel="stylesheet" type="text/css"

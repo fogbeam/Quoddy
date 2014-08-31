@@ -1,7 +1,7 @@
 <html>
 <head>
 <title>Welcome to Quoddy</title>
-<meta name="layout" content="main_new" />
+<meta name="layout" content="main" />
 </head>
 <body>
 
