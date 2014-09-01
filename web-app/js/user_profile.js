@@ -1,4 +1,4 @@
-$j( function() 
+$j(document).ready( function() 
 {
 	// alert( "Manage user profile stuff here...");
 	
