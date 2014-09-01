@@ -49,10 +49,10 @@
       		</span>
       		<span class="showHideCommentsButton">
       		
-      			<!-- TODO: change the initial state of this button
+      			<!-- change the initial state of this button
       			depending on whether or not there are any comments yet. 
-      			If there are no comments, maybe render it with text "no comments"
-      			and make the button inactive? 
+      			If there are no comments, render it with text "no comments"
+      			(and maybe make the button inactive)?
       			-->
       			
       			<g:if test="${item.streamObject.comments.size() > 0}">

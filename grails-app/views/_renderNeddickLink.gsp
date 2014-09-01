@@ -1,10 +1,11 @@
 <div class="aseWrapper">
 	
-	<div class="aseAvatarBlock">
-		<img
-			src="${createLink(controller:'profilePic',action:'thumbnail',id:item.owner.userId)}" />
-	</div>
+
 	<div class="aseTitleBar">
+
+		<div class="aseAvatarBlock">
+			<img src="${createLink(controller:'profilePic',action:'thumbnail',id:item.owner.userId)}" />
+		</div>
 	
 		<span class="aseTitleBarUserLink"> <a
 			href="${createLink(controller:'user', action:'viewUser', params:[userId:item.owner.userId])}">
@@ -18,6 +19,14 @@
 		</span>
 
         <div class="commentButtonBar">
+        
+            <!-- if super-secret fogbeam-dev mode is on, render the "delete" button -->
+        	<g:if test="CH.config.fogbeam.devmode">
+        		<span class="xButton" id="xButton.${item.uuid}" name="xButton.${item.uuid}" >
+        			<a href="#" class="btn">X</a>
+      			</span>	
+        	</g:if>
+        
       		<span class="plusOneButton" id="plusOneButton.${item.uuid}" name="plusOneButton.${item.uuid}" >
         		<a href="#" class="btn">+1</a>
       		</span>
@@ -25,7 +34,20 @@
         		<a href="#" class="btn">Share</a>
       		</span>
       		<span class="showHideCommentsButton">
-        		<a href="#" class="btn">Hide Comments</a>
+        		
+      			<!-- change the initial state of this button
+      			depending on whether or not there are any comments yet. 
+      			If there are no comments, render it with text "no comments"
+      			(and maybe make the button inactive)?
+      			-->
+      			
+      			<g:if test="${item.streamObject.comments.size() > 0}">
+        			<a href="#" class="btn">Hide Comments</a>
+      			</g:if>
+      			<g:else>
+      				<a href="#" class="btn">No Comments</a>
+      			</g:else>        		
+        		
       		</span>
     	</div>		
 		

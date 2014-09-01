@@ -5,7 +5,7 @@
 		<img style="float: left;"
 			src="${createLink(controller:'profilePic',action:'thumbnail',id:SecurityUtils.subject.principal.userId)}" />
 		<h3>
-			<a href="${createLink(controller:'status', action:'listUpdates')}">
+			<a href="${createLink(controller:'user', action:'viewUser', params:[userId:SecurityUtils.subject.principal.userId])}">
 				<shiro:principal property="fullName"/>
 			</a>
 		</h3>
