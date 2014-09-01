@@ -88,11 +88,13 @@ class ActivityStreamTransformerService
 			switch( targetObjectType )
 			{
 				case "UserByUserId":
-
+					
+					println "Looking up user by id: ${entry.target.id}";
+					
 					User targetUser = userService.findUserByUserId(entry.target.id);
 					if( targetUser )
 					{
-				
+						println "setting targetUuid to user uuid: ${targetUser.uuid}";
 						activity.targetUuid = targetUser.uuid;
 						activity.targetObjectType = "User";
 					}
