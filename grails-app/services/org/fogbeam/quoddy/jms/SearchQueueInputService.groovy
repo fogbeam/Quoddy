@@ -56,6 +56,8 @@ import com.hp.hpl.jena.vocabulary.DCTerms
 import com.hp.hpl.jena.vocabulary.OWL
 import com.hp.hpl.jena.vocabulary.RDF
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
+
 public class SearchQueueInputService
 {
 	
@@ -1242,7 +1244,9 @@ public class SearchQueueInputService
 	
 		// Hit Stanbol to get enrichmentData
 		// call Stanbol REST API to get enrichment data
-		RESTClient restClient = new RESTClient( "http://localhost:8080" )
+		String stanbolServerUrl = CH.config.urls.stanbol.endpoint;
+		println "using stanbolServerUrl: ${stanbolServerUrl}";
+		RESTClient restClient = new RESTClient( stanbolServerUrl );
 	
 		// println "content submitted: ${content}";
 		def restResponse = restClient.post(	path:'enhancer',
@@ -1269,7 +1273,9 @@ public class SearchQueueInputService
 		
 		// Hit Stanbol to get enrichmentData
 		// call Stanbol REST API to get enrichment data
-		RESTClient restClient = new RESTClient( "http://localhost:8080" )
+		String stanbolServerUrl = CH.config.urls.stanbol.endpoint;
+		println "using stanbolServerUrl: ${stanbolServerUrl}";
+		RESTClient restClient = new RESTClient( stanbolServerUrl );
 	
 		// println "content submitted: ${content}";
 		def restResponse = restClient.post(	path:'enhancer',

@@ -3,6 +3,7 @@ package org.fogbeam.quoddy
 import static groovyx.net.http.ContentType.TEXT
 import groovy.json.JsonSlurper
 import groovyx.net.http.RESTClient
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
 
 class ExploreController
 {
@@ -23,22 +24,32 @@ class ExploreController
 		if( params.enrichButton.equals( "Enrich" ))
 		{
 			// call Stanbol REST API to get enrichment data
-			RESTClient restClient = new RESTClient( "http://localhost:8080" )
+			String stanbolServerUrl = CH.config.urls.stanbol.endpoint;
+			println "using stanbolServerUrl: ${stanbolServerUrl}";
+			RESTClient restClient = new RESTClient( stanbolServerUrl );
 		
 			println "content submitted: ${content}";
 			def restResponse = restClient.post(	path:'enhancer', 
 											body: content,
 											requestContentType : TEXT );
 		
-			def restResponseText = restResponse.getData();
-												
+			Object restResponseData = restResponse.getData();
+			
+			println "restResponseData.class: ${restResponseData.class}";
+			
+			java.util.Scanner s = new java.util.Scanner(restResponseData).useDelimiter("\\A");
+	
+			String restResponseText = s.next();
+			
+			println "using Scanner: ${restResponseText}";
+															
 			println "\n\n*************************************************";
-			println restResponseText.toString(5);
+			println restResponseText.toString();
 			println "*************************************************\n\n";
 		
 		
-			def ks= restResponseText.keySet();
-			ks.each { println it };
+			// def ks= restResponseText.keySet();
+			// ks.each { println it };
 		
 		
 			[content: content, value:restResponseText];

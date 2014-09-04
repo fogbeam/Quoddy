@@ -8,6 +8,7 @@ import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.StatusUpdate
 import org.fogbeam.quoddy.stream.constants.EventTypeNames
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
 
 class StatusController {
 
@@ -41,7 +42,9 @@ class StatusController {
 			
 			// Hit Stanbol to get enrichmentData
 			// call Stanbol REST API to get enrichment data
-			RESTClient restClient = new RESTClient( "http://localhost:8080" )
+			String stanbolServerUrl = CH.config.urls.stanbol.endpoint;
+			println "using stanbolServerUrl: ${stanbolServerUrl}";
+			RESTClient restClient = new RESTClient( stanbolServerUrl )
 		
 			// println "content submitted: ${content}";
 			HttpResponseDecorator restResponse = restClient.post(	path:'enhancer',

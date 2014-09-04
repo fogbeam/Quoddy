@@ -1,6 +1,7 @@
 package org.fogbeam.quoddy.demo.jms
 
 import groovyx.net.http.RESTClient
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
 
 class DemoContentEnrichmentListenerService
 {
@@ -13,7 +14,9 @@ class DemoContentEnrichmentListenerService
 		// we have a new piece of content that needs enriching... 
 		
 		// call Stanbol REST API to get enrichment data
-		RESTClient restClient = new RESTClient( "http://localhost:8080" )
+		String stanbolServerUrl = CH.config.urls.stanbol.endpoint;
+		println "using stanbolServerUrl: ${stanbolServerUrl}";
+		RESTClient restClient = new RESTClient( stanbolServerUrl );
 		
 		
 		def restResponse = restClient.post(path:'enhancer', body:"Stanbol recognizes people and places like Paris and Bob Marley");

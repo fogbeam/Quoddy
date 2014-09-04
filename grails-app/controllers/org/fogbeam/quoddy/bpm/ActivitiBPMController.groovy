@@ -174,7 +174,10 @@ class ActivitiBPMController
 					
 					// lookup User by UUID
 					User user = User.findByUuid( uuid );
-					people.add( user );
+					if( user != null )
+					{
+						people.add( user );
+					}
 								
 				}
 			}
