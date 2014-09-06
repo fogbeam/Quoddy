@@ -34,7 +34,7 @@
 
 
 <g:javascript library="jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom" />
-
+<g:javascript library="bootstrap" />
 
 <g:javascript library="dropdown" />
 <g:javascript>
@@ -191,18 +191,21 @@
 		</div>
 	</div>
 
-	<div id="body" class="container">
+	<div id="body" class="container-fluid">
 
 		<!-- left sidenav, global -->
-		
+		<!--
 		<div class="leftContentNav">
-			<shiro:authenticated>
-				<g:render template="/leftSidebarUserProfile" />
-			</shiro:authenticated>
+			<s hiro:authenticated>
+				<g : r ender template="/leftSidebarUserProfile" />
+			</s hiro:authenticated>
 		</div>
+		-->
+
 
 		<!-- layout main content area -->
 		<g:layoutBody />
+		
 	</div>
 	
 	<div id="footer">

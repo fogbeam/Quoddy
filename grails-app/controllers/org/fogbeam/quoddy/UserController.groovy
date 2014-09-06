@@ -623,19 +623,18 @@ class UserController {
 			contactTypes:contactTypes];
 	}
 	
-	def saveProfile =
-	{ 
-		UserProfileCommand upc ->
+	
+	def saveProfileAvatarPic =
+	{
 		
-		// println "params: $params";
-		// println "\n";
-		// println "upc: $upc";
-		// println "\n";
+		println "Saving Avatar Image!";
 		
-		String uuid = upc.userUuid;
-		// println "Looking for user by uuid: $uuid";
+		String uuid = params.userUuid;
+		println "Looking for user by uuid: $uuid";
+		
 		User user = userService.findUserByUuid( uuid );
 		Profile profile = user.profile;
+		
 		if(request instanceof MultipartHttpServletRequest)
 		{
 			println "is multipart";
@@ -684,11 +683,30 @@ class UserController {
 				println "ERROR: did not find file in upload!";
 				
 			  }
+			  
+			  
+			  render( "OK" );
+			  
 		}
-		else 
+		else
 		{
-			println "not multipart";	
+			println "not multipart";
 		}
+	}
+	
+	def saveProfile =
+	{ 
+		UserProfileCommand upc ->
+		
+		// println "params: $params";
+		// println "\n";
+		// println "upc: $upc";
+		// println "\n";
+		
+		String uuid = upc.userUuid;
+		// println "Looking for user by uuid: $uuid";
+		User user = userService.findUserByUuid( uuid );
+		Profile profile = user.profile;
 		
 		profile.summary = upc.summary;
 		if( upc.birthMonth )
@@ -1200,6 +1218,7 @@ class UserProfileCommand
 	public UserProfileCommand( Profile profile, List months )
 	{
 		
+		this.userId = profile.owner.userId;
 		this.userUuid = profile.owner.uuid;		
 		this.sex = profile.sex;
 		this.birthDayOfMonth = profile.birthDayOfMonth;
@@ -1530,6 +1549,7 @@ class UserProfileCommand
 		}
 	}
 	
+	String userId;
 	String userUuid;
 	String sex;
 	String birthYear;
