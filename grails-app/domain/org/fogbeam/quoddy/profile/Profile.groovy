@@ -11,6 +11,7 @@ class Profile implements Serializable
 	
 	static constraints = {
 		summary(nullable:true)
+		title( nullable:true)
 		photo(nullable:true)
 		location(nullable:true)
 		hometown(nullable:true)
@@ -24,6 +25,7 @@ class Profile implements Serializable
 		contactAddresses(nullable:true)
 		favorites(nullable:true)
 		projects(nullable:true)
+		dotPlan(nullable:true)
 		dateCreated()
 	}
 	
@@ -31,7 +33,10 @@ class Profile implements Serializable
 	// User owner;
 	Date dateCreated;
 	
+	// other
 	String summary;
+	String title;
+	String dotPlan;
 	
 	// Photo
 	Photograph photo;
@@ -94,5 +99,92 @@ class Profile implements Serializable
 		return owner?.uuid;	
 	}
 	
-	public void setUserUuid( String userUuid ) {}					
+	public void setUserUuid( String userUuid ) {}
+	
+	public ContactAddress getPrimaryEmailAddress()
+	{
+		ContactAddress primaryEmail = null;
+		List<ContactAddress> primaryEmails = ContactAddress.executeQuery( "select ca from ContactAddress as ca where ca.serviceType = ${ContactAddress.EMAIL} and " +
+																		  " ca.profile = :profile and ca.primaryInType = true", [profile:this]  );
+																	  
+		if( primaryEmails != null && !primaryEmails.isEmpty() )
+		{
+			primaryEmail = primaryEmails.get(0);
+		}
+		
+		return primaryEmail;
+	}
+	
+	public ContactAddress getPrimaryPhoneNumber()
+	{
+		ContactAddress primaryPhoneNumber = null;
+		
+		List<ContactAddress> primaryPhoneNumbers = ContactAddress.executeQuery(  "select ca from ContactAddress as ca where ca.serviceType = ${ContactAddress.EMAIL} and " +
+																		  " ca.profile = :profile and ca.primaryInType = true", [profile:this] );
+																	  
+		if( primaryPhoneNumbers != null && !primaryPhoneNumbers.isEmpty() )
+		{
+			primaryPhoneNumber = primaryPhoneNumbers.get(0);
+		}
+																	  
+		return primaryPhoneNumber;
+	}
+	
+	public ContactAddress getPrimaryInstantMessenger()
+	{
+		ContactAddress primaryInstantMessenger = null;
+
+		List<ContactAddress> primaryInstantMessengers = ContactAddress.executeQuery(  "select ca from ContactAddress as ca where " +
+																					    "( ca.serviceType = ${ContactAddress.JABBER_IM} " + 
+																						"  or ca.serviceType = ${ContactAddress.AOL_IM} " + 
+																						"  or ca.serviceType = ${ContactAddress.MSN_IM} " +
+																						"  or ca.serviceType = ${ContactAddress.YAHOO_IM} " +
+																						") and ca.profile = :profile and ca.primaryInType = true", [profile:this] );
+		
+		if( primaryInstantMessengers != null && !primaryInstantMessengers.isEmpty() )
+		{
+			primaryInstantMessenger = primaryInstantMessengers.get(0);
+		}
+		
+		return primaryInstantMessenger;
+	}
+	
+	public List<ContactAddress> getPhoneNumbers()
+	{
+		List<ContactAddress> phoneNumbers = new ArrayList<ContactAddress>();
+		
+		List<ContactAddress> queryResults = ContactAddress.executeQuery( "" );
+		if( queryResults != null )
+		{
+			phoneNumbers.addAll( queryResults );
+		}
+		
+		return phoneNumbers;
+	}
+	
+	public List<ContactAddress> getInstantMessengerAddresses()
+	{
+		List<ContactAddress> instantMessengerAddresses = new ArrayList<ContactAddress>();
+		
+		List<ContactAddress> queryResults = ContactAddress.executeQuery( "" );
+		if( queryResults != null )
+		{
+			instantMessengerAddresses.addAll( queryResults );
+		}
+		
+		return instantMessengerAddresses;
+	}
+	
+	public List<ContactAddress> getEmailAddresses()
+	{
+		List<ContactAddress> emailAddresses = new ArrayList<ContactAddress>();
+		
+		List<ContactAddress> queryResults = ContactAddress.executeQuery( "" );
+		if( queryResults != null )
+		{
+			emailAddresses.addAll( queryResults );
+		}
+		
+		return emailAddresses;
+	}					
 }

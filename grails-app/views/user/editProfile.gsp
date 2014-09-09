@@ -5,308 +5,12 @@
         <title>Quoddy: Edit Profile</title>
         <meta name="layout" content="user_profile" />
         <nav:resources />
-    	<script type="text/javascript">
-
-    	$j(document).ready(function(){
-    		   // do jQuery
-
-			$j('#profilePicImg').mouseover( function() {
-				$j( '#your_photo' ).attr("style", "display:block;width:90px;color:transparent;" );
-	    		$j( '#cancel_photo' ).attr( "style", "display:inline;");
-				} );
-
-		    $j( document ).on('change','#your_photo' , function(){
-		    		$j( '#your_photo' ).attr("style", "display:block;color:black;");
-		    		$j( '#save_photo' ).attr( "style", "display:inline;");
-			     });
-
-			$j( '#cancel_photo').click( function(){
-				$j('#your_photo').parent('form').trigger('reset')
-				
-				// and hide the controls...
-				$j( '#your_photo').attr( 'style', 'display:none');
-	    		$j( '#cancel_photo' ).attr("style", "display:none;");
-	    		$j( '#save_photo' ).attr( "style", "display:none;");
-				
-			});
-
-			$j( '#save_photo').click( function() {
-
-			    var formData = new FormData($j('#profileFormAvatarPic')[0]);
-
-			    $j.ajax({
-			        url: "${ createLink(controller:'user', action:'saveProfileAvatarPic')}",
-			        type: 'POST',
-			        data: formData,
-			        async: false,
-			        cache: false,
-			        contentType: false,
-			        processData: false,
-			        success: function (returndata) {
-
-			            // alert('done saving' );
-						var srcUrl = "${createLink(controller:'profilePic',action:'full',id:profileToEdit.userId)}";
-						var date = new Date();
-						srcUrl = srcUrl + "?date=" + date.getTime();
-			        	$j('#profilePicImg').attr('src', srcUrl );
-
-						$j('#your_photo').parent('form').trigger('reset')
-						
-						// and hide the controls...
-						$j( '#your_photo').attr( 'style', 'display:none');
-			    		$j( '#cancel_photo' ).attr("style", "display:none;");
-			    		$j( '#save_photo' ).attr( "style", "display:none;");
-				         
-			        },
-			        error: function(){
-			            alert("error in ajax form submission");
-			            }
-			    });
-				
-				return false;		
-			});
-
-    	});
-
-        	
-			var educationHistoryBlocks = 0;
-			function addEducationHistoryBlock()
-			{
-				// alert( 'hi' );
-
-				if( educationHistoryBlocks == 0 )
-				{
-					// get the beginning count
-					var tempVal = $("input#educationHistoryCount").attr('value');
-					var intVal = parseInt(tempVal);
-					// there will always be at least one existing block, even if it's the initial empty block when there
-					// are no entries.  So if this is zero, increment it to one now
-					if( intVal == 0 )
-					{
-						intVal++;
-					}
-					
-					educationHistoryBlocks = intVal;
-				}
-				else
-				{
-					// we've been called a second or subsequent time, so just increment
-					educationHistoryBlocks = educationHistoryBlocks + 1;
-				}
-
-				var edFieldset = $('fieldset#educationHistoryTemplate').clone();
-				edFieldset.removeAttr('style').attr("style", "border:none;"); 
-				edFieldset.attr( 'id', "education" + educationHistoryBlocks );
-
-				// iterate over the <input> fields in the fieldset and change the ids to reflect the
-				// item count
-				var $inputKids = edFieldset.find('input');	
-				$.each( $inputKids, function(index) 
-				{
-				
-					if( $(this).attr('name').indexOf( ".institutionName" ) != -1 )
-					{
-						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].institutionName" );
-						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].institutionName" );	
-					}
-					else if( $(this).attr('name').indexOf( ".yearFrom" ) != -1 )
-					{
-						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].yearFrom" );
-						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].yearFrom" );	
-					}
-					else if( $(this).attr('name').indexOf( ".yearTo" ) != -1 )
-					{
-						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].yearTo" );
-						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].yearTo" );	
-					}
-					else if( $(this).attr('name').indexOf( ".major" ) != -1 )
-					{
-						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].major" );
-						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].major" );	
-					}					
-					else if( $(this).attr('name').indexOf( ".educationalExperienceId" ) != -1 )
-					{
-						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].educationalExperienceId" );
-						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].educationalExperienceId" );	
-					}					
-				});
-
-				// do the same thing for the <select> fields
-				var $selectKids = edFieldset.find('select');
-				$.each( $selectKids, function(index) 
-				{						
-					if( $(this).attr('name').indexOf( ".monthFrom" ) != -1 )
-					{
-						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].monthFrom" );
-						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].monthFrom" );
-					}
-					else if( $(this).attr('name').indexOf( ".monthTo" ) != -1 )
-					{
-						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].monthTo" );
-						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].monthTo" );
-					}	
-				});
-
-
-				edFieldset.appendTo( "div#educationHistory" );				
-				return false;
-			}
-
-    	
-			var contactAddressBlocks = 0;
-			function addContactAddressBlock()
-			{
-			
-				if( contactAddressBlocks == 0 )
-				{
-					// get the beginning count
-					var tempVal = $("input#contactAddressCount").attr('value');
-					var intVal = parseInt(tempVal);
-					// there will always be at least one existing block, even if it's the initial empty block when there
-					// are no entries.  So if this is zero, increment it to one now
-					if( intVal == 0 )
-					{
-						intVal++;
-					}
-					
-					contactAddressBlocks = intVal;					
-				}
-				else
-				{
-					// we've been called a second or subsequent time, so just increment
-					contactAddressBlocks = contactAddressBlocks + 1;
-				}
-				
-				var caFieldset = $('fieldset#contactAddressTemplate').clone();
-				caFieldset.removeAttr('style').attr("style", "border:none;"); 
-				caFieldset.attr( 'id', "contactAddress" + contactAddressBlocks );
-
-				// iterate over the <input> fields in the fieldset and change the ids to reflect the
-				// item count
-				var $inputKids = caFieldset.find('input');	
-				$.each( $inputKids, function(index) 
-				{
-				
-					if( $(this).attr('name').indexOf( ".address" ) != -1 )
-					{
-						$(this).attr( 'name', "contactAddress[" + contactAddressBlocks + "].address" );
-						$(this).attr( 'id', "contactAddress[" + contactAddressBlocks + "].address" );	
-					}
-					else if( $(this).attr('name').indexOf( ".contactAddressId" ) != -1 )
-					{
-						$(this).attr( 'name', "contactAddress[" + contactAddressBlocks + "].contactAddressId" );
-						$(this).attr( 'id', "contactAddress[" + contactAddressBlocks + "].contactAddressId" );
-					}
-				});
-
-				
-				// do the same thing for the <select> fields
-				var $selectKids = caFieldset.find('select');
-				$.each( $selectKids, function(index) 
-				{						
-					if( $(this).attr('name').indexOf( ".serviceType" ) != -1 )
-					{
-						$(this).attr( 'name', "contactAddress[" + contactAddressBlocks + "].serviceType" );
-						$(this).attr( 'id', "contactAddress[" + contactAddressBlocks + "].serviceType" );
-					}	
-				});
-				
-				caFieldset.appendTo( "div#contactAddresses" );
-				
-				return false;
-			};
-		
-			var employerBlocks = 0;
-			function addEmploymentBlock() 
-			{
-				if( employerBlocks == 0 )
-				{
-					// get the beginning count
-					var tempVal = $("input#employerCount").attr('value');
-					var intVal = parseInt(tempVal);
-					employerBlocks = intVal;
-				}
-				else
-				{
-					// we've been called a second or subsequent time, so just increment
-					employerBlocks = employerBlocks + 1;
-				}
-				
-				
-    			var fieldset = $('fieldset#employmentHistoryTemplate').clone();
-    			fieldset.removeAttr('style').attr("style", "border:none;"); 
-				fieldset.attr( 'id', "employer" + employerBlocks );
-				
-				// iterate over the <input> fields in the fieldset and change the ids to reflect the
-				// item count
-				var $kids = fieldset.find('input');
-				$.each( $kids, function(index) 
-				{
-						if( $(this).attr('name').indexOf( ".companyName" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].companyName" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].companyName" );	
-						} 
-						else if( $(this).attr('name').indexOf( ".title" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].title" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].title" );
-						}
-						else if( $(this).attr('name').indexOf( ".yearFrom" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].yearFrom" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].yearFrom" );
-						}
-						else if( $(this).attr('name').indexOf( ".yearTo" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].yearTo" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].yearTo" );
-						}									
-						else if( $(this).attr('name').indexOf( ".historicalEmploymentId" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].historicalEmploymentId" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].historicalEmploymentId" );
-						}							
-								
-					});
-
-					// do the same thing for the <select> fields
-					var $kids = fieldset.find('select');
-					$.each( $kids, function(index) 
-					{						
-						if( $(this).attr('name').indexOf( ".monthTo" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].monthTo" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].monthTo" );
-						}	
-						else if( $(this).attr('name').indexOf( ".monthFrom" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].monthFrom" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].monthFrom" );
-						}				
-					});				
-					
-					// and the <textarea> fields 
-					var $kids = fieldset.find('textarea');
-					$.each( $kids, function(index) 
-					{
-						if( $(this).attr('name').indexOf( ".description" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].description" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].description" );
-						}
-						
-					});
-
-				fieldset.appendTo( "div#employmentHistory" );
- 	
-				return false;
-		};
-    	</script>
+		<g:render template="/userProfileJS"></g:render>
     </head>
     	<body>
 			<!-- start body content -->
 			<div class="row-fluid">
+				
 				<div class="span12" style="background-color:#F6F7F8;min-height:85px;">
 					
 					<div style="float:left;">				
@@ -323,14 +27,142 @@
 					</g:form>
 					</div>
 					
-					<div style="display:inline-block;margin-left:20px;margin-top:15px;">
+					<div style="display:inline-block;margin-left:20px;margin-top:15px;height:110px;width:200px;vertical-align:top;">
+						<label>Title:</label>
+						
+						<g:if test="${profileToEdit?.title == null || profileToEdit.title.isEmpty() }">
+							<span name="title" id="title" >...</span>
+						</g:if>
+						<g:else>
+							<span name="title" id="title" >${profileToEdit.title}</span>
+						</g:else>
+						
+						<g:form id="saveProfileTitle" name="saveProfileTitle" controller="user" action="saveProfileTitle">
+							<g:textField name="titleInput" id="titleInput" value="" style="display:none;" />
+						</g:form>
+						<a style="display:none;" id="save_title" name="save_title" href="#">save</a> 
+						<a style="display:none;" id="cancel_title" name="cancel_title" href="#">cancel</a>			
+						
+					</div>
+				
+				
+					<div style="display:inline-block;margin-left:20px;margin-top:15px;height:110px;width:200px;vertical-align:top;">
+						
 						<label for="summary">Description:</label>
-						<span id="summary">${profileToEdit?.summary} ... </span>
-						<!-- <g : textField name="summary" id="summary" value="" / > -->
+						
+							<g:if test="${profileToEdit?.summary == null || profileToEdit.summary.isEmpty() }">
+								<span name="summary" id="summary">
+								...
+								</span>
+							</g:if>
+							<g:else>
+								<span name="summary" id="summary">
+									${profileToEdit?.summary}
+								</span>
+							</g:else>
+						
+						<g:form id="saveProfileSummary" name="saveProfileSummary" controller="user" action="saveProfileSummary">
+							<g:textField name="summaryInput" id="summaryInput" value="" style="display:none;" />
+						</g:form>
+						<a style="display:none;" id="save_summary" name="save_summary" href="#">save</a> <a style="display:none;" id="cancel_summary" name="cancel_summary" href="#">cancel</a>			
 					</div>
 					
+								
+					<div style="display:inline-block;margin-left:20px;margin-top:15px;height:110px;width:200px;vertical-align:top;">
+						<label>Phone:</label>
+						
+						<g:if test="${profileToEdit?.primaryPhone == null || profileToEdit.primaryPhone.isEmpty() }">
+							<span name="primaryPhone" id="primaryPhone" style="display:inline;">...</span>
+						</g:if>
+						<g:else>
+							<span name="primaryPhone" id="primaryPhone" style="display:inline;">${profileToEdit.primaryPhone}</span>
+						</g:else>						
+
+						<g:form id="saveProfilePrimaryPhone" name="saveProfilePrimaryPhone" controller="user" action="saveProfilePrimaryPhone">
+							<g:textField name="primaryPhoneInput" id="primaryPhoneInput" value="" style="display:none;" />
+						</g:form>
+						<a style="display:none;" id="save_primary_phone" name="save_primary_phone" href="#">save</a> 
+						<a style="display:none;" id="cancel_primary_phone" name="cancel_primary_phone" href="#">cancel</a>	
+
+						
+					</div>
+
+
+					<div style="display:inline-block;margin-left:20px;margin-top:15px;height:110px;width:200px;vertical-align:top;">
+						<label>Instant Messenger:</label>
+						
+						<g:if test="${profileToEdit?.primaryInstantMessenger == null || profileToEdit.primaryInstantMessenger.isEmpty() }">
+							<span name="primaryInstantMessenger" id="primaryInstantMessenger" style="display:inline;">...</span>
+						</g:if>
+						<g:else>
+							<span name="primaryInstantMessenger" id="primaryInstantMessenger" style="display:inline;">${profileToEdit.primaryInstantMessenger}</span>
+						</g:else>						
+
+						<g:form id="saveProfilePrimaryInstantMessenger" name="saveProfilePrimaryInstantMessenger" controller="user" action="saveProfilePrimaryInstantMessenger">
+							<g:textField name="primaryInstantMessengerInput" id="primaryInstantMessengerInput" value="" style="display:none;" />
+						</g:form>
+						<a style="display:none;" id="save_primary_instant_messenger" name="save_primary_instant_messenger" href="#">save</a> 
+						<a style="display:none;" id="cancel_primary_instant_messenger" name="cancel_primary_instant_messenger" href="#">cancel</a>	
+						
+					</div>
+
 					
+					<p />
 					
+					<div style="display:inline-block;margin-left:20px;margin-top:15px;height:110px;width:200px;vertical-align:top;">
+						<label>Email:</label>
+						<g:if test="${profileToEdit?.primaryEmail == null || profileToEdit.primaryEmail.isEmpty() }">
+							<span name="primaryEmail" id="primaryEmail" style="display:inline;">...</span>
+						</g:if>
+						<g:else>
+							<span name="primaryEmail" id="primaryEmail" style="display:inline;">${profileToEdit.primaryEmail}</span>
+						</g:else>
+						
+						<g:form id="saveProfilePrimaryEmail" name="saveProfilePrimaryEmail" controller="user" action="saveProfilePrimaryEmail">
+							<g:textField name="primaryEmailInput" id="primaryEmailInput" value="" style="display:none;" />
+						</g:form>
+						<a style="display:none;" id="save_primary_email" name="save_primary_email" href="#">save</a> 
+						<a style="display:none;" id="cancel_primary_email" name="cancel_primary_email" href="#">cancel</a>	
+					
+							
+					</div>
+					
+					<div style="display:inline-block;margin-left:20px;margin-top:15px;height:110px;width:200px;vertical-align:top;">
+						<label>Location:</label>
+						
+						<g:if test="${profileToEdit?.location == null || profileToEdit.location.isEmpty() }">
+							<span name="location" id="location" style="display:inline;">...</span>
+						</g:if>
+						<g:else>
+							<span name="location" id="location" style="display:inline;">${profileToEdit.location}</span>
+						</g:else>
+						
+						<g:form id="saveProfileLocation" name="saveProfileLocation" controller="user" action="saveProfileLocation">
+							<g:textField name="locationInput" id="locationInput" value="" style="display:none;" />
+						</g:form>
+						<a style="display:none;" id="save_location" name="save_location" href="#">save</a> 
+						<a style="display:none;" id="cancel_location" name="cancel_location" href="#">cancel</a>	
+					
+					</div>
+					
+					<div style="display:inline-block;margin-left:20px;margin-top:15px;height:110px;width:200px;vertical-align:top;">
+						<label>.plan</label>
+	
+						<g:if test="${profileToEdit?.dotPlan == null || profileToEdit.dotPlan.isEmpty() }">
+							<span name="dotPlan" id="dotPlan" style="display:inline;">...</span>
+						</g:if>
+						<g:else>
+							<span name="dotPlan" id="dotPlan" style="display:inline;">${profileToEdit.dotPlan}</span>
+						</g:else>
+	
+						<g:form id="saveProfileDotPlan" name="saveProfileDotPlan" controller="user" action="saveProfileDotPlan">
+							<g:textField name="dotPlanInput" id="dotPlanInput" value="" style="display:none;" />
+						</g:form>
+						<a style="display:none;" id="save_dot_plan" name="save_dot_plan" href="#">save</a> 
+						<a style="display:none;" id="cancel_dot_plan" name="cancel_dot_plan" href="#">cancel</a>	
+						
+					</div>
+							
 				</div>
 			</div>
 			
