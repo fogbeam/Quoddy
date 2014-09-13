@@ -21,12 +21,6 @@
 	        	</div>
 	   		</g:if>
 
-			<!-- 
-				<span><g:link controller="user" action="addToFollow" params="[userId:user.userId]">follow</g:link></span>
-				<span><g:link controller="user" action="addToFriends" params="[userId:user.userId]">add to friends</g:link></span>
-							
-			 -->
-
 			<div class="viewUserButtons">
 				<div class="btn-group">
 					<g:link controller="user" action="viewUser" params="[userId:user.userId]" elementid="btn1" name="btn1" type="button" class="btn btn-info btn-small">Timeline</g:link>

@@ -119,7 +119,7 @@ class Profile implements Serializable
 	{
 		ContactAddress primaryPhoneNumber = null;
 		
-		List<ContactAddress> primaryPhoneNumbers = ContactAddress.executeQuery(  "select ca from ContactAddress as ca where ca.serviceType = ${ContactAddress.EMAIL} and " +
+		List<ContactAddress> primaryPhoneNumbers = ContactAddress.executeQuery(  "select ca from ContactAddress as ca where ca.serviceType = ${ContactAddress.PHONE} and " +
 																		  " ca.profile = :profile and ca.primaryInType = true", [profile:this] );
 																	  
 		if( primaryPhoneNumbers != null && !primaryPhoneNumbers.isEmpty() )
@@ -153,7 +153,9 @@ class Profile implements Serializable
 	{
 		List<ContactAddress> phoneNumbers = new ArrayList<ContactAddress>();
 		
-		List<ContactAddress> queryResults = ContactAddress.executeQuery( "" );
+		List<ContactAddress> queryResults = ContactAddress.executeQuery( "select ca from ContactAddress as ca where " +
+																		 " ca.serviceType = ${ContactAddress.PHONE} and " +
+																		 " ca.profile = :profile", [profile: this] );
 		if( queryResults != null )
 		{
 			phoneNumbers.addAll( queryResults );
@@ -166,7 +168,12 @@ class Profile implements Serializable
 	{
 		List<ContactAddress> instantMessengerAddresses = new ArrayList<ContactAddress>();
 		
-		List<ContactAddress> queryResults = ContactAddress.executeQuery( "" );
+		List<ContactAddress> queryResults = ContactAddress.executeQuery( "select ca from ContactAddress as ca where " +
+																		 "( ca.serviceType = ${ContactAddress.JABBER_IM} " + 
+																		 "  or ca.serviceType = ${ContactAddress.AOL_IM} " + 
+																		 "  or ca.serviceType = ${ContactAddress.MSN_IM} " +
+																		 "  or ca.serviceType = ${ContactAddress.YAHOO_IM} " +
+																		 ") and ca.profile = :profile", [profile: this] );
 		if( queryResults != null )
 		{
 			instantMessengerAddresses.addAll( queryResults );
@@ -179,7 +186,9 @@ class Profile implements Serializable
 	{
 		List<ContactAddress> emailAddresses = new ArrayList<ContactAddress>();
 		
-		List<ContactAddress> queryResults = ContactAddress.executeQuery( "" );
+		List<ContactAddress> queryResults = ContactAddress.executeQuery( "select ca from ContactAddress as ca where " +
+																		 " ca.serviceType = ${ContactAddress.EMAIL} and " +
+																		 " ca.profile = :profile", [profile: this] );
 		if( queryResults != null )
 		{
 			emailAddresses.addAll( queryResults );

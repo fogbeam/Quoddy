@@ -1,4 +1,4 @@
-$j( function() 
+$j(document).ready( function() 
 {
 				
 	// alert( "Starting content enhancement...");
@@ -23,6 +23,11 @@ $j( function()
 		// alert( obj['@graph']);
 		
 		var graph = obj['@graph'];
+		
+		if( graph == null )
+		{
+			return;
+		}
 		
 		// first, we have to loop over all our @graph elements and extract the
 		// EntityAnnotations and store the TextAnnotations in an associative

@@ -43,6 +43,11 @@ class UserProfileCommand
 		this.primaryPhone = profile.primaryPhoneNumber?.address;
 		this.primaryEmail = profile.primaryEmailAddress?.address;
 		this.primaryInstantMessenger = profile.primaryInstantMessenger?.address;		
+		this.dotPlan = profile.dotPlan;
+		
+		this.phoneNumbers.addAll( profile.phoneNumbers );
+		this.emailAddresses.addAll( profile.emailAddresses );
+		this.instantMessengers.addAll( profile.instantMessengerAddresses );
 		
 		// deal with contact addresses...
 		Set<ContactAddress> contactAddressSet = profile.contactAddresses;
@@ -391,6 +396,9 @@ class UserProfileCommand
 	String primaryEmail;
 	String primaryInstantMessenger;
 	String dotPlan;
+	List<ContactAddress> phoneNumbers = new ArrayList<ContactAddress>();
+	List<ContactAddress> emailAddresses = new ArrayList<ContactAddress>();
+	List<ContactAddress> instantMessengers = new ArrayList<ContactAddress>();
 	
 	
 	SimpleDateFormat dateFormat = new SimpleDateFormat( "MMM yyyy" );

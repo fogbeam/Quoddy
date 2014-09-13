@@ -40,7 +40,8 @@ class UserController {
 	def sexOptions = [new SexOption( id:1, text:"Male" ), new SexOption( id:2, text:"Female" ) ];
 	def years =	 {
 					def alist = [];
-					(1900 .. 2011).each { num ->
+					Date now = new Date();
+					(1900 .. (now.year + 1900)).each { num ->
 						alist.add( new Year( id: num, text: "${num}" ) ); 
 						}
 					return alist;
@@ -627,14 +628,118 @@ class UserController {
 	def saveProfilePrimaryPhone = {
 		println "Params: \n ${params}";
 		
-		render( "fuck me hard" );
+		String userId = params.id;
+		println "Looking for user by userId: $userId";
+		
+		User user = userService.findUserByUserId( userId );
+		Profile profile = null;
+		if( user != null )
+		{
+			println "found user";
+			profile = user.profile;
+			String newPrimaryPhone = params.primaryPhoneInput;
+			if( newPrimaryPhone != null )
+			{
+				ContactAddress currentPrimaryPhone = profile.primaryPhoneNumber;
+				if( currentPrimaryPhone != null )
+				{
+					currentPrimaryPhone.setPrimaryInType( false );
+					currentPrimaryPhone.save();
+				}
+				
+				ContactAddress newPrimaryPhoneCA = new ContactAddress();
+				newPrimaryPhoneCA.primaryInType = true;
+				newPrimaryPhoneCA.address = newPrimaryPhone.trim();
+				newPrimaryPhoneCA.profile = profile;
+				newPrimaryPhoneCA.serviceType = ContactAddress.PHONE;
+				
+				
+				if( !newPrimaryPhoneCA.save(flush:true) )
+				{
+					println "Error saving newPrimaryPhoneCA!";
+					newPrimaryPhoneCA.error.allErrors.each { println it;}
+				}
+				else
+				{
+					println "newPrimaryPhoneCA saved OK";
+				}
+				
+				
+				profile.addToContactAddresses( newPrimaryPhoneCA );
+				
+				if( !profile.save(flush:true) )
+				{
+					println "Error saving profile...";
+					profile.errors.allErrors.each { println it; }
+				}
+				else
+				{
+					println "profile saved OK";
+				}
+			}
+			
+		}
+				
+		render( profile.primaryPhoneNumber.address );
 	}
 	
 	
 	def saveProfilePrimaryEmail = {
 		println "Params: \n ${params}";
+
+		String userId = params.id;
+		println "Looking for user by userId: $userId";
 		
-		render( "fuck me hard" );
+		User user = userService.findUserByUserId( userId );
+		Profile profile = null;
+		if( user != null )
+		{
+			println "found user";
+			profile = user.profile;
+			String newPrimaryEmail = params.primaryEmailInput;
+			if( newPrimaryEmail != null )
+			{
+				ContactAddress currentPrimaryEmail = profile.primaryEmailAddress;
+				if( currentPrimaryEmail != null )
+				{
+					currentPrimaryEmail.setPrimaryInType( false );
+					currentPrimaryEmail.save();
+				}
+				
+				ContactAddress newPrimaryEmailCA = new ContactAddress();
+				newPrimaryEmailCA.primaryInType = true;
+				newPrimaryEmailCA.address = newPrimaryEmail.trim();
+				newPrimaryEmailCA.profile = profile;
+				newPrimaryEmailCA.serviceType = ContactAddress.EMAIL;
+				
+				
+				if( !newPrimaryEmailCA.save(flush:true) )
+				{
+					println "Error saving newPrimaryEmailCA!";
+					newPrimaryEmailCA.error.allErrors.each { println it;}
+				}
+				else
+				{
+					println "newPrimaryEmailCA saved OK";
+				}
+				
+				
+				profile.addToContactAddresses( newPrimaryEmailCA );
+				
+				if( !profile.save(flush:true) )
+				{
+					println "Error saving profile...";
+					profile.errors.allErrors.each { println it; } 
+				}
+				else
+				{
+					println "profile saved OK";
+				}
+			}
+			
+		}
+				
+		render( profile.primaryEmailAddress.address );
 	}
 	
 	
@@ -699,6 +804,93 @@ class UserController {
 		}
 	}
 	
+	def saveEmploymentHistoryEntry =
+	{
+		
+		String userId = params.id;
+		println "Looking for user by userId: $userId";
+		
+		User user = userService.findUserByUserId( userId );
+		Profile profile = null;
+		if( user != null )
+		{
+			println "found user";
+			profile = user.profile;
+		
+			HistoricalEmployer emp1 = new HistoricalEmployer( companyName: params.companyName,
+				monthTo: params.monthTo,
+				monthFrom: params.monthFrom,
+				yearTo: params.yearTo,
+				yearFrom: params.yearFrom,
+				title: params.title,
+				description: "description" );
+			
+			if( !emp1.save(flush:true) )
+			{
+				println "Saving new HistoricalEmployer Record failed";
+				emp1.errors.allErrors.each { println it };
+			}
+
+			profile.addToEmploymentHistory( emp1 );
+			profile.save(flush:true);
+			
+			render( "OK" );
+		}
+		else
+		{
+			// TODO: return failure code and put message in flash scope
+		}
+			
+	}
+	
+	def saveEducationHistoryEntry =
+	{
+		println "Params:\n${params}";
+				
+		String userId = params.id;
+		println "Looking for user by userId: $userId";
+		
+		User user = userService.findUserByUserId( userId );
+		Profile profile = null;
+		if( user != null )
+		{
+			println "found user";
+			profile = user.profile;
+		
+		
+			EducationalExperience newEducationalExperience =
+			new EducationalExperience( institutionName: params.institutionName,
+									monthFrom: params.monthFrom,
+									yearFrom: params.yearFrom,
+									monthTo: params.monthTo,
+									yearTo: params.yearTo,
+									courseOfStudy: params.major,
+									description: "description" );
+
+			if( !newEducationalExperience.save(flush:true) )
+			{
+				println "Saving new EducationalExperience Record failed";
+				newEducationalExperience.errors.allErrors.each { println it };
+			}
+			else
+			{
+				println "newEducationalExperience saved";
+			}
+
+			// println "newEducationalExperience: ${newEducationalExperience}";
+
+			profile.addToEducationHistory( newEducationalExperience );
+			println "added newEducationalExperience to profile";
+			profile.save(flush:true);
+		
+			render( "OK" );
+		}
+		else
+		{
+			// TODO: return failure code and put message in flash scope
+		}	
+	}
+	
 	
 	def saveProfileLocation = {
 		println "Params: \n ${params}";
@@ -716,7 +908,7 @@ class UserController {
 			if( newLocation != null )
 			{
 				profile.location = newLocation.trim();
-				profile.save();
+				profile.save(flush:true);
 			}
 			
 			render( profile.location );
@@ -745,7 +937,7 @@ class UserController {
 			if( newDotPlan != null )
 			{
 				profile.dotPlan = newDotPlan.trim();
-				profile.save();
+				profile.save(flush:true);
 			}
 			
 			render( profile.dotPlan );
@@ -892,6 +1084,7 @@ class UserController {
 			println "not multipart";
 		}
 	}
+	
 	
 	def saveProfile =
 	{ 

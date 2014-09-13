@@ -47,6 +47,7 @@
         	<g:render template="/javascript/application.js"/>
     	</script>
 
+
 <g:javascript library="enrich_content" />
 
 <g:javascript library="application" />

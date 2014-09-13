@@ -1,7 +1,6 @@
 $j(document).ready( function() 
 {
 	// alert( "Manage user profile stuff here...");
-	
 	/* setup typeahead completion for annotation objects */
 	/*
 		{
@@ -64,13 +63,14 @@ $j(document).ready( function()
 	// attach handler for annotate button
 	$j( "button[id^='btnAddAnnotation']" ).click( displayAnnotationDialog );
 	
-	
+		
 	
 });
 
 
 function addToFriends()
 {
+	// alert( "addToFriends called");
 	var id = $j(this).attr('id').substring( 16 );
 	// alert("clicked for id: " + id )
 	
@@ -86,7 +86,7 @@ function addToFriends()
 	});
 
 	jqXhr.done(function(data, textStatus, jqXHR) {
-		// alert( "success: " + JSON.stringify(data) );
+		alert( "success" );
 	})
 	.fail(function( jqXHR, textStatus, errorThrown) {
 		alert( "error: " + errorThrown );

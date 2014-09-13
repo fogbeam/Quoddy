@@ -6,11 +6,21 @@
     		/*******************************************************************************
     		*************************** FOR AVATAR PIC *************************************
     		********************************************************************************/
-			$j('#profilePicImg').mouseover( function() {
-				$j( '#your_photo' ).attr("style", "display:block;width:90px;color:transparent;" );
-	    		$j( '#cancel_photo' ).attr( "style", "display:inline;");
-				} );
 
+    		var profPicTimer;
+    		var profPicDelay = 1000;
+
+			$j('#profilePicImg').hover( function() {
+
+					profPicTimer = setTimeout( function() {
+						$j( '#your_photo' ).attr("style", "display:block;width:90px;color:transparent;" );
+	    				$j( '#cancel_photo' ).attr( "style", "display:inline;");
+					}, profPicDelay );
+			 	}, function() {
+				  clearTimeout( profPicTimer );
+			});
+
+	
 		    $j( document ).on('change','#your_photo' , function(){
 		    		$j( '#your_photo' ).attr("style", "display:block;color:black;");
 		    		$j( '#save_photo' ).attr( "style", "display:inline;");
@@ -66,20 +76,29 @@
 			/*******************************************************************************
     		*************************** FOR SUMMARY *************************************
     		********************************************************************************/
-			$j( '#summary').on( 'mouseover', function() {
 
-				// capture the current summary
+    		var summaryTimer;
+    		var summaryDelay = 1000;
+			$j( '#summary').hover( function() {
+
 				var currentSummary = $j(this).text().trim();
-				// alert( "ok: " + currentSummary );
-				// hide the <span> control
-				$j(this).attr( "style", "display:none;");
-				// and reveal an editable form
-				$j("#summaryInput").val( currentSummary );
-				$j("#summaryInput").removeAttr( "style");
-				$j("#cancel_summary").removeAttr( "style");
-				$j("#save_summary").removeAttr( "style");
+				var selected = $j(this);
 				
-				} );
+				summaryTimer = setTimeout( function() {
+					// capture the current summary
+					
+					// alert( "ok: " + currentSummary );
+					// hide the <span> control
+					selected.attr( "style", "display:none;");
+					// and reveal an editable form
+					$j("#summaryInput").val( currentSummary );
+					$j("#summaryInput").removeAttr( "style");
+					$j("#cancel_summary").removeAttr( "style");
+					$j("#save_summary").removeAttr( "style");
+				}, summaryDelay );
+			}, function() {
+				clearTimeout( summaryTimer );
+			});
 
 			$j("#cancel_summary").click( function() { 
 				$j("#summaryInput").val("");
@@ -137,20 +156,30 @@
 			/*******************************************************************************
     		*************************** FOR TITLE *************************************
     		********************************************************************************/
-    		$j( '#title').on( 'mouseover', function() {
+    		var titleTimer;
+    		var titleDelay = 1000;
+    		$j( '#title').hover( function() {
 
-				// capture the current summary
+    			// capture the current title
 				var currentTitle = $j(this).text().trim();
-				// alert( "ok: " + currentSummary );
-				// hide the <span> control
-				$j(this).attr( "style", "display:none;");
-				// and reveal an editable form
-				$j("#titleInput").val( currentTitle );
-				$j("#titleInput").removeAttr( "style");
-				$j("#cancel_title").removeAttr( "style");
-				$j("#save_title").removeAttr( "style");
+    			var selected = $j(this);
+    			
+    			titleTimer = setTimeout( function () {
+        			
+					// alert( "ok: " + currentSummary );
+					// hide the <span> control
+					selected.attr( "style", "display:none;");
+					// and reveal an editable form
+					$j("#titleInput").val( currentTitle );
+					$j("#titleInput").removeAttr( "style");
+					$j("#cancel_title").removeAttr( "style");
+					$j("#save_title").removeAttr( "style");
+    				}, titleDelay );
 				
-				} );
+				}, function() {
+
+					clearTimeout( titleTimer )
+			});
 
 			$j("#cancel_title").click( function() { 
 				$j("#titleInput").val("");
@@ -172,7 +201,7 @@
 
 
 			$j( "#saveProfileTitle").on( "submit", function(e) {
-				alert( "submitting...");
+				// alert( "submitting...");
 				e.preventDefault();
 
 				var url = "${createLink(controller:'user',action:'saveProfileTitle',id:profileToEdit.userId)}";
@@ -209,21 +238,28 @@
     		   *************************** FOR PHONE *************************************
     		   *******************************************************************************
     		*/
+    		var phoneTimer;
+    		var phoneDelay = 1000;
+    		$j( '#primaryPhone').hover( function() {
 
-    		$j( '#primaryPhone').on( 'mouseover', function() {
-
-				// capture the current summary
+				// capture the current phone val
 				var currentPrimaryPhone = $j(this).text().trim();
-				// alert( "ok" );
-				// hide the <span> control
-				$j(this).attr( "style", "display:none;");
-				// and reveal an editable form
-				$j("#primaryPhoneInput").val( currentPrimaryPhone );
-				$j("#primaryPhoneInput").removeAttr( "style");
-				$j("#cancel_primary_phone").removeAttr( "style");
-				$j("#save_primary_phone").removeAttr( "style");
+
+				phoneTimer = setTimeout( function() {
+					// alert( "ok" );
+					// hide the <span> control
+					$j(this).attr( "style", "display:none;");
+					// and reveal an editable form
+					$j("#primaryPhoneInput").val( currentPrimaryPhone );
+					$j("#primaryPhoneInput").removeAttr( "style");
+					$j("#cancel_primary_phone").removeAttr( "style");
+					$j("#save_primary_phone").removeAttr( "style");
+				}, phoneDelay );
 				
-			 });
+			 }, function() {
+				clearTimeout( phoneTimer );
+			});
+
 			 
 			$j("#cancel_primary_phone").click( function() { 
 				$j("#primaryPhoneInput").val("");
@@ -245,7 +281,7 @@
 
 
 			$j( "#saveProfilePrimaryPhone").on( "submit", function(e) {
-				alert( "submitting...");
+				// alert( "submitting...");
 				e.preventDefault();
 
 				var url = "${createLink(controller:'user',action:'saveProfilePrimaryPhone',id:profileToEdit.userId)}";
@@ -283,20 +319,27 @@
     		   *************************** FOR EMAIL *************************************
     		   *******************************************************************************
     		*/
-    		$j( '#primaryEmail').on( 'mouseover', function() {
+    		var emailTimer;
+    		var emailDelay = 1000;    		
+    		$j( '#primaryEmail').hover( function() {
 
 				// capture the current primary email
 				var currentPrimaryEmail = $j(this).text().trim();
-				// alert( "ok: " + currentPrimaryEmail );
-				// hide the <span> control
-				$j(this).attr( "style", "display:none;");
-				// and reveal an editable form
-				$j("#primaryEmailInput").val( currentPrimaryEmail );
-				$j("#primaryEmailInput").removeAttr( "style");
-				$j("#cancel_primary_email").removeAttr( "style");
-				$j("#save_primary_email").removeAttr( "style");
-
+				var selected = $j(this);
 				
+				emailTimer = setTimeout( function() {
+					// alert( "ok: " + currentPrimaryEmail );
+					// hide the <span> control
+					selected.attr( "style", "display:none;");
+					// and reveal an editable form
+					$j("#primaryEmailInput").val( currentPrimaryEmail );
+					$j("#primaryEmailInput").removeAttr( "style");
+					$j("#cancel_primary_email").removeAttr( "style");
+					$j("#save_primary_email").removeAttr( "style");
+				}, emailDelay );
+				
+			}, function() {
+				clearTimeout( emailTimer );
 			});
 
 			$j("#cancel_primary_email").click( function() { 
@@ -319,7 +362,7 @@
 
 
 			$j( "#saveProfilePrimaryEmail").on( "submit", function(e) {
-				alert( "submitting...");
+				// alert( "submitting...");
 				e.preventDefault();
 
 				var url = "${createLink(controller:'user',action:'saveProfilePrimaryEmail',id:profileToEdit.userId)}";
@@ -357,19 +400,28 @@
     		   ************************ FOR INSTANT MESSENGER ******************************
     		   ********************************************************************************
     		*/
-    		$j( '#primaryInstantMessenger').on( 'mouseover', function() {
+    		var imTimer;
+    		var imDelay = 1000;
+    		$j( '#primaryInstantMessenger').hover( function() {
 
 				// capture the current primary email
 				var currentPrimaryInstantMessenger = $j(this).text().trim();
-				// alert( "ok: " + currentPrimaryEmail );
-				// hide the <span> control
-				$j(this).attr( "style", "display:none;");
-				// and reveal an editable form
-				$j("#primaryInstantMessengerInput").val( currentPrimaryInstantMessenger );
-				$j("#primaryInstantMessengerInput").removeAttr( "style");
-				$j("#cancel_primary_instant_messenger").removeAttr( "style");
-				$j("#save_primary_instant_messenger").removeAttr( "style");
+				var selected = $j(this);
 
+					imTimer = setTimeout( function() {
+					// alert( "ok: " + currentPrimaryEmail );
+					// hide the <span> control
+					selected.attr( "style", "display:none;");
+					// and reveal an editable form
+					$j("#primaryInstantMessengerInput").val( currentPrimaryInstantMessenger );
+					$j("#primaryInstantMessengerInput").removeAttr( "style");
+					$j("#cancel_primary_instant_messenger").removeAttr( "style");
+					$j("#save_primary_instant_messenger").removeAttr( "style");
+				}, imDelay );
+				
+			}, function() {
+
+				clearTimeout( imTimer );
 			});
 
 			$j("#cancel_primary_instant_messenger").click( function() { 
@@ -392,7 +444,7 @@
 
 
 			$j( "#saveProfilePrimaryInstantMessenger").on( "submit", function(e) {
-				alert( "submitting...");
+				// alert( "submitting...");
 				e.preventDefault();
 
 				var url = "${createLink(controller:'user',action:'saveProfilePrimaryInstantMessenger',id:profileToEdit.userId)}";
@@ -430,19 +482,28 @@
     		   ************************* FOR LOCATION *************************************
     		   *****************************************************************************
     		*/
-    		$j( '#location').on( 'mouseover', function() {
+    		var locationTimer;
+    		var locationDelay = 1000;
+    		$j( '#location').hover( function() {
         		
 				// capture the current primary email
 				var currentLocation = $j(this).text().trim();
-				// alert( "ok: " + currentPrimaryEmail );
-				// hide the <span> control
-				$j(this).attr( "style", "display:none;");
-				// and reveal an editable form
-				$j("#locationInput").val( currentLocation);
-				$j("#locationInput").removeAttr( "style");
-				$j("#cancel_location").removeAttr( "style");
-				$j("#save_location").removeAttr( "style");
+				var selected = $j(this);
 
+				locationTimer = setTimeout( function() {
+					// alert( "ok: " + currentPrimaryEmail );
+					// hide the <span> control
+					selected.attr( "style", "display:none;");
+					// and reveal an editable form
+					$j("#locationInput").val( currentLocation);
+					$j("#locationInput").removeAttr( "style");
+					$j("#cancel_location").removeAttr( "style");
+					$j("#save_location").removeAttr( "style");
+				}, locationDelay);
+				
+			}, function() {
+				
+				clearTimeout( locationTimer );
 			});
 
 			$j("#cancel_location").click( function() { 
@@ -465,7 +526,7 @@
 
 
 			$j( "#saveProfileLocation").on( "submit", function(e) {
-				alert( "submitting...");
+				// alert( "submitting...");
 				e.preventDefault();
 
 				var url = "${createLink(controller:'user',action:'saveProfileLocation',id:profileToEdit.userId)}";
@@ -504,19 +565,28 @@
     		*************************** FOR .PLAN *************************************
     		********************************************************************************
     		*/
-    		$j( '#dotPlan').on( 'mouseover', function() {
+    		var dotPlanTimer;
+    		var dotPlanDelay = 1000;    		
+    		$j( '#dotPlan').hover( function() {
         		
 				// capture the current primary email
 				var currentDotPlan = $j(this).text().trim();
-				// alert( "ok: " + currentDotPlan );
-				// hide the <span> control
-				$j(this).attr( "style", "display:none;");
-				// and reveal an editable form
-				$j("#dotPlanInput").val( currentDotPlan);
-				$j("#dotPlanInput").removeAttr( "style");
-				$j("#cancel_dot_plan").removeAttr( "style");
-				$j("#save_dot_plan").removeAttr( "style");
+				var selected = $j(this);
+				
+				dotPlanTimer = setTimeout( function() { 
+					// alert( "ok: " + currentDotPlan );
+					// hide the <span> control
+					selected.attr( "style", "display:none;");
+					// and reveal an editable form
+					$j("#dotPlanInput").val( currentDotPlan);
+					$j("#dotPlanInput").removeAttr( "style");
+					$j("#cancel_dot_plan").removeAttr( "style");
+					$j("#save_dot_plan").removeAttr( "style");
 
+				}, dotPlanDelay );
+
+			}, function() {
+				clearTimeout( dotPlanTimer );
 			});
 
 			$j("#cancel_dot_plan").click( function() { 
@@ -539,7 +609,7 @@
 
 
 			$j( "#saveProfileDotPlan").on( "submit", function(e) {
-				alert( "submitting...");
+				// alert( "submitting...");
 				e.preventDefault();
 
 				var url = "${createLink(controller:'user',action:'saveProfileDotPlan',id:profileToEdit.userId)}";
@@ -573,252 +643,79 @@
 			});
     		
     		
+			/****
+			  for Education History
+			*/
+			$j('#addEducationBtn').click( function() {
+				
+				// cause our form to submit
+				$j('#addEducationHistoryForm').submit();
+				return false;
+			});
+			
+			$j( "#addEducationHistoryForm").on( "submit", function(e) {
+				// alert( "submitting...");
+				e.preventDefault();
+
+				var url = "${createLink(controller:'user',action:'saveEducationHistoryEntry',id:profileToEdit.userId)}";
+
+				$j.post(  url, 
+
+						  $j(this).serialize(), 
+
+						  function(data) {
+			      			// alert( "success");
+
+							// hide the dialog
+							$j('#addEducationHistoryModal').modal('hide');
+	
+			       		  },
+
+			       		  'text'
+			    	    );			
+			
+			});
+
+
+			/****
+			  for Education History
+			*/
+			$j('#addEmploymentBtn').click( function() {
+				
+				// cause our form to submit
+				$j('#addEmploymentHistoryForm').submit();
+				return false;
+			});
+			
+			$j( "#addEmploymentHistoryForm").on( "submit", function(e) {
+				// alert( "submitting...");
+				e.preventDefault();
+
+				var url = "${createLink(controller:'user',action:'saveEmploymentHistoryEntry',id:profileToEdit.userId)}";
+
+				$j.post(  url, 
+
+						  $j(this).serialize(), 
+
+						  function(data) {
+			      			alert( "success");
+
+							// hide the dialog
+							$j('#addEmploymentHistoryModal').modal('hide');
+	
+			       		  },
+
+			       		  'text'
+			    	    );			
+			
+			});
+			
+			
 			
 			/* next whatever goes here... */
+	
 			
 		// end of jquery init block	
     	});
 
-
-
-/***********************************************************************************************************
- **** Old javascript for managing the dynamic insertion of entries for things like education, employment, skills, etc. ****
- **************************************************************************************************************************
- */
-
-
-    	
-			var educationHistoryBlocks = 0;
-			function addEducationHistoryBlock()
-			{
-				// alert( 'hi' );
-
-				if( educationHistoryBlocks == 0 )
-				{
-					// get the beginning count
-					var tempVal = $("input#educationHistoryCount").attr('value');
-					var intVal = parseInt(tempVal);
-					// there will always be at least one existing block, even if it's the initial empty block when there
-					// are no entries.  So if this is zero, increment it to one now
-					if( intVal == 0 )
-					{
-						intVal++;
-					}
-					
-					educationHistoryBlocks = intVal;
-				}
-				else
-				{
-					// we've been called a second or subsequent time, so just increment
-					educationHistoryBlocks = educationHistoryBlocks + 1;
-				}
-
-				var edFieldset = $('fieldset#educationHistoryTemplate').clone();
-				edFieldset.removeAttr('style').attr("style", "border:none;"); 
-				edFieldset.attr( 'id', "education" + educationHistoryBlocks );
-
-				// iterate over the <input> fields in the fieldset and change the ids to reflect the
-				// item count
-				var $inputKids = edFieldset.find('input');	
-				$.each( $inputKids, function(index) 
-				{
-				
-					if( $(this).attr('name').indexOf( ".institutionName" ) != -1 )
-					{
-						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].institutionName" );
-						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].institutionName" );	
-					}
-					else if( $(this).attr('name').indexOf( ".yearFrom" ) != -1 )
-					{
-						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].yearFrom" );
-						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].yearFrom" );	
-					}
-					else if( $(this).attr('name').indexOf( ".yearTo" ) != -1 )
-					{
-						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].yearTo" );
-						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].yearTo" );	
-					}
-					else if( $(this).attr('name').indexOf( ".major" ) != -1 )
-					{
-						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].major" );
-						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].major" );	
-					}					
-					else if( $(this).attr('name').indexOf( ".educationalExperienceId" ) != -1 )
-					{
-						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].educationalExperienceId" );
-						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].educationalExperienceId" );	
-					}					
-				});
-
-				// do the same thing for the <select> fields
-				var $selectKids = edFieldset.find('select');
-				$.each( $selectKids, function(index) 
-				{						
-					if( $(this).attr('name').indexOf( ".monthFrom" ) != -1 )
-					{
-						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].monthFrom" );
-						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].monthFrom" );
-					}
-					else if( $(this).attr('name').indexOf( ".monthTo" ) != -1 )
-					{
-						$(this).attr( 'name', "education[" + educationHistoryBlocks + "].monthTo" );
-						$(this).attr( 'id', "education[" + educationHistoryBlocks + "].monthTo" );
-					}	
-				});
-
-
-				edFieldset.appendTo( "div#educationHistory" );				
-				return false;
-			}
-
-    	
-			var contactAddressBlocks = 0;
-			function addContactAddressBlock()
-			{
-			
-				if( contactAddressBlocks == 0 )
-				{
-					// get the beginning count
-					var tempVal = $("input#contactAddressCount").attr('value');
-					var intVal = parseInt(tempVal);
-					// there will always be at least one existing block, even if it's the initial empty block when there
-					// are no entries.  So if this is zero, increment it to one now
-					if( intVal == 0 )
-					{
-						intVal++;
-					}
-					
-					contactAddressBlocks = intVal;					
-				}
-				else
-				{
-					// we've been called a second or subsequent time, so just increment
-					contactAddressBlocks = contactAddressBlocks + 1;
-				}
-				
-				var caFieldset = $('fieldset#contactAddressTemplate').clone();
-				caFieldset.removeAttr('style').attr("style", "border:none;"); 
-				caFieldset.attr( 'id', "contactAddress" + contactAddressBlocks );
-
-				// iterate over the <input> fields in the fieldset and change the ids to reflect the
-				// item count
-				var $inputKids = caFieldset.find('input');	
-				$.each( $inputKids, function(index) 
-				{
-				
-					if( $(this).attr('name').indexOf( ".address" ) != -1 )
-					{
-						$(this).attr( 'name', "contactAddress[" + contactAddressBlocks + "].address" );
-						$(this).attr( 'id', "contactAddress[" + contactAddressBlocks + "].address" );	
-					}
-					else if( $(this).attr('name').indexOf( ".contactAddressId" ) != -1 )
-					{
-						$(this).attr( 'name', "contactAddress[" + contactAddressBlocks + "].contactAddressId" );
-						$(this).attr( 'id', "contactAddress[" + contactAddressBlocks + "].contactAddressId" );
-					}
-				});
-
-				
-				// do the same thing for the <select> fields
-				var $selectKids = caFieldset.find('select');
-				$.each( $selectKids, function(index) 
-				{						
-					if( $(this).attr('name').indexOf( ".serviceType" ) != -1 )
-					{
-						$(this).attr( 'name', "contactAddress[" + contactAddressBlocks + "].serviceType" );
-						$(this).attr( 'id', "contactAddress[" + contactAddressBlocks + "].serviceType" );
-					}	
-				});
-				
-				caFieldset.appendTo( "div#contactAddresses" );
-				
-				return false;
-			};
-		
-			var employerBlocks = 0;
-			function addEmploymentBlock() 
-			{
-				if( employerBlocks == 0 )
-				{
-					// get the beginning count
-					var tempVal = $("input#employerCount").attr('value');
-					var intVal = parseInt(tempVal);
-					employerBlocks = intVal;
-				}
-				else
-				{
-					// we've been called a second or subsequent time, so just increment
-					employerBlocks = employerBlocks + 1;
-				}
-				
-				
-    			var fieldset = $('fieldset#employmentHistoryTemplate').clone();
-    			fieldset.removeAttr('style').attr("style", "border:none;"); 
-				fieldset.attr( 'id', "employer" + employerBlocks );
-				
-				// iterate over the <input> fields in the fieldset and change the ids to reflect the
-				// item count
-				var $kids = fieldset.find('input');
-				$.each( $kids, function(index) 
-				{
-						if( $(this).attr('name').indexOf( ".companyName" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].companyName" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].companyName" );	
-						} 
-						else if( $(this).attr('name').indexOf( ".title" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].title" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].title" );
-						}
-						else if( $(this).attr('name').indexOf( ".yearFrom" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].yearFrom" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].yearFrom" );
-						}
-						else if( $(this).attr('name').indexOf( ".yearTo" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].yearTo" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].yearTo" );
-						}									
-						else if( $(this).attr('name').indexOf( ".historicalEmploymentId" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].historicalEmploymentId" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].historicalEmploymentId" );
-						}							
-								
-					});
-
-					// do the same thing for the <select> fields
-					var $kids = fieldset.find('select');
-					$.each( $kids, function(index) 
-					{						
-						if( $(this).attr('name').indexOf( ".monthTo" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].monthTo" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].monthTo" );
-						}	
-						else if( $(this).attr('name').indexOf( ".monthFrom" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].monthFrom" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].monthFrom" );
-						}				
-					});				
-					
-					// and the <textarea> fields 
-					var $kids = fieldset.find('textarea');
-					$.each( $kids, function(index) 
-					{
-						if( $(this).attr('name').indexOf( ".description" ) != -1 )
-						{
-							$(this).attr( 'name', "employment[" + employerBlocks + "].description" );
-							$(this).attr( 'id', "employment[" + employerBlocks + "].description" );
-						}
-						
-					});
-
-				fieldset.appendTo( "div#employmentHistory" );
- 	
-				return false;
-		};
-    	</script>
+</script>
