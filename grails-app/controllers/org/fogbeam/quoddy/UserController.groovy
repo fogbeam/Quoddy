@@ -554,8 +554,8 @@ class UserController {
 		}
 		
 		
-		def model = [user:user];
-		
+		def model = [user:user,sexOptions:sexOptions, years:years, months:months, days:days,
+			contactTypes:contactTypes];
 		
 		
 		/* load list of potential predicates for annotations */

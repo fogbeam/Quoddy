@@ -330,7 +330,17 @@
 								<div>
 									<ul list-style-type: none;>
 										<g:each in="${profileToEdit.employmentHistory}" var="employmentHistoryInstance">
-											<li>Foo</li>
+											<li>
+												<span> ${employmentHistoryInstance.companyName}</span> 
+												- 
+												<span> ${employmentHistoryInstance.title}</span> 
+												- 
+												<span> ${months.find{ m -> m.id == Integer.parseInt( employmentHistoryInstance.monthFrom ) }?.text}</span> 
+												<span> ${employmentHistoryInstance.yearFrom}</span> 
+												to 
+												<span> ${months.find{ m -> m.id == Integer.parseInt( employmentHistoryInstance.monthTo ) }?.text}</span> 
+												<span> ${employmentHistoryInstance.yearTo}</span>
+											</li>
 										</g:each>
 									</ul>
 									<a href="#addEmploymentHistoryModal" role="button" class="btn" data-toggle="modal" style="width:80px;">add</a>

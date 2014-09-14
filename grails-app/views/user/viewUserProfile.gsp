@@ -222,7 +222,7 @@
 							<div
 								style="margin-left: 35px; display: inline-block; vertical-align: top; height: 80px; width: 220px; margin-top: 7px; padding-top: 5px; padding-left: 5px;">
 								<label>Phone</label>
-								<ul style="list-style-type: none;">
+								<ul style="list-style-type: none;padding-left:0px;margin-left:0px;">
 									<g:each in="${user.profile.phoneNumbers}" var="phoneNumber">
 										<li>
 											${phoneNumber.address}
@@ -233,7 +233,7 @@
 							<div
 								style="display: inline-block; vertical-align: top; height: 80px; width: 220px; margin-top: 7px; padding-top: 5px; padding-left: 5px;">
 								<label>Email</label>
-								<ul style="list-style-type: none;">
+								<ul style="list-style-type: none;padding-left:0;margin-left:0px;">
 									<g:each in="${user.profile.emailAddresses}" var="email">
 										<li>
 											${email.address}
@@ -244,7 +244,7 @@
 							<div
 								style="display: inline-block; vertical-align: top; height: 80px; width: 220px; margin-top: 7px; padding-top: 5px; padding-left: 5px;">
 								<label>Instant Messenger</label>
-								<ul style="list-style-type: none;">
+								<ul style="list-style-type: none;padding-left:0;margin-left:0px;">
 									<g:each in="${user.profile.instantMessengerAddresses}" var="imAddress">
 										<li>
 											${imAddress.address}
@@ -259,7 +259,7 @@
 							<div
 								style="margin-left: 35px; display: inline-block; vertical-align: top; margin-top: 7px; padding-top: 5px; padding-left: 5px;">
 								<label>Education</label>
-								<ul style="list-style-type: none;">
+								<ul style="list-style-type: none;padding-left:0;margin-left:0px;">
 									<g:each in="${user.profile.educationHistory}"
 										var="educationInstance">
 										<li><span> ${educationInstance.institutionName}
@@ -271,8 +271,6 @@
 										</span></li>
 									</g:each>
 								</ul>
-								<a href="#addEducationHistoryModal" role="button" class="btn"
-									data-toggle="modal" style="width: 80px;">add</a>
 							</div>
 						</div>
 						<div class="tab-pane" id="tab4">
@@ -284,14 +282,22 @@
 									style="display: inline-block; width: 300px; vertical-align: top;">
 									<label>Employment</label>
 									<div>
-										<ul style="list-style-type: none;">
+										<ul style="list-style-type: none;padding-left:0;margin-left:0px;">
 											<g:each in="${user.profile.employmentHistory}"
 												var="employmentHistoryInstance">
-												<li>Foo</li>
+												<li>
+													<span> ${employmentHistoryInstance.companyName}</span> 
+													- 
+													<span> ${employmentHistoryInstance.title}</span> 
+													- 
+													<span> ${months.find{ m -> m.id == Integer.parseInt( employmentHistoryInstance.monthFrom ) }?.text}</span> 
+													<span> ${employmentHistoryInstance.yearFrom}</span> 
+													to 
+													<span> ${months.find{ m -> m.id == Integer.parseInt( employmentHistoryInstance.monthTo ) }?.text}</span> 
+													<span> ${employmentHistoryInstance.yearTo}</span>
+												</li>
 											</g:each>
 										</ul>
-										<a href="#addEmploymentHistoryModal" role="button" class="btn"
-											data-toggle="modal" style="width: 80px;">add</a>
 									</div>
 								</div>
 								<div
