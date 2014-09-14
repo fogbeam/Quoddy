@@ -1,25 +1,6 @@
 package org.fogbeam.quoddy
 
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer
-import org.apache.lucene.document.Document
-import org.apache.lucene.document.Field
-import org.apache.lucene.index.IndexWriter
-import org.apache.lucene.index.Term
-import org.apache.lucene.index.IndexWriter.MaxFieldLength
-import org.apache.lucene.queryParser.MultiFieldQueryParser
-import org.apache.lucene.queryParser.QueryParser
-import org.apache.lucene.search.BooleanQuery
-import org.apache.lucene.search.IndexSearcher
-import org.apache.lucene.search.Query
-import org.apache.lucene.search.ScoreDoc
-import org.apache.lucene.search.TermQuery
-import org.apache.lucene.search.TopDocs
-import org.apache.lucene.search.BooleanClause.Occur
-import org.apache.lucene.store.Directory
-import org.apache.lucene.store.FSDirectory
-import org.apache.lucene.store.NIOFSDirectory
-import org.apache.lucene.util.Version
 import org.fogbeam.quoddy.search.SearchResult
 
 
@@ -34,6 +15,104 @@ class SearchController
 	def index = 
 	{	
 		[]		
+	}
+	
+	def doSearch =
+	{
+		println "Searching using queryString: ${params.queryString}";
+		String queryString = params.queryString;
+
+		boolean bSearchStatusUpdates = true;
+		boolean bSearchCalendarFeedItems = true;
+		boolean bSearchBusSubItems = true;
+		boolean bSearchActivitiUserTasks = true;
+		boolean bSearchRssFeedItems = true;
+		boolean bSearchActivityStreamItems = true;
+		boolean bSearchUsers = true;
+		boolean bSearchFriends = true;
+				
+		List<SearchResult> searchResults = new ArrayList<SearchResult>();
+		
+		
+		if( bSearchStatusUpdates )
+		{
+			println "searching status updates";
+			List<SearchResult> tempResults = searchService.doStatusUpdateSearch( queryString );
+			println "SearchStatusUpdates returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchCalendarFeedItems )
+		{
+			println "searching calendar feed items";
+			List<SearchResult> tempResults = searchService.doCalendarFeedItemSearch( queryString );
+			println "SearchCalendarFeedItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchBusSubItems )
+		{
+			println "searching business event subscription items";
+			List<SearchResult> tempResults = searchService.doBusinessSubscriptionItemSearch( queryString );
+			println "SearchBusSubItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchActivitiUserTasks )
+		{
+			println "searching Activiti User Tasks";
+			List<SearchResult> tempResults = searchService.doActivitiUserTaskSearch( queryString );
+			println "SearchBusSubItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+			
+		}
+		
+		if( bSearchRssFeedItems )
+		{
+			println "searching rss feed items";
+			List<SearchResult> tempResults = searchService.doRssFeedItemSearch( queryString );
+			println "SearchRssFeedItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchActivityStreamItems )
+		{
+			println "searching activity stream items";
+			List<SearchResult> tempResults = searchService.doActivityStreamItemSearch( queryString );
+			println "SearchActivityStreamItems returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchUsers )
+		{
+			println "searching users";
+			List<SearchResult> tempResults = searchService.doUserSearch( queryString );
+			println "SearchUsers returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		if( bSearchFriends )
+		{
+			println "searching friends";
+			List<SearchResult> tempResults = searchService.doFriendSearch( queryString, session.user );
+			println "SearchFriends returned " + tempResults.size() + " results";
+			searchResults.addAll( tempResults );
+			println "searchResults.size() = " + searchResults.size();
+		}
+		
+		
+		
+		
+		
+		
+		render( view:'basicSearchResults', model:[searchResults:searchResults]);
 	}
 	
 	
@@ -191,11 +270,9 @@ class SearchController
 			List<SearchResult> tempResults = searchService.doFriendSearch( queryString, session.user );
 			println "SearchFriends returned " + tempResults.size() + " results";
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();		}
-
-		
-		// }
-		
+			println "searchResults.size() = " + searchResults.size();		
+		}
+	
 		
 		println "found some results: ${searchResults.size()}";
 		

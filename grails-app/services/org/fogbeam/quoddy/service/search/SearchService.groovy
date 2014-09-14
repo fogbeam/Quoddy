@@ -44,6 +44,7 @@ import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
 import org.fogbeam.quoddy.stream.CalendarFeedItem
 import org.fogbeam.quoddy.stream.Question
+import org.fogbeam.quoddy.stream.RemoteActivityStreamItem
 import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.StatusUpdate
 import org.fogbeam.quoddy.stream.StreamItemBase
@@ -702,6 +703,8 @@ class SearchService
 		
 	}
 	
+	
+	
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final ActivitiUserTask item )
 	{
 		
@@ -950,6 +953,12 @@ class SearchService
 		addCommentsToIndex( writer, asi, item );
 	}
 		
+	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final RemoteActivityStreamItem item )
+	{
+		// TODO: figure out what needs to happen when adding one of these remote items to the index,and implement
+		// this.  
+	}
+	
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final StreamItemComment item )
 	{
 		Document doc = new Document();

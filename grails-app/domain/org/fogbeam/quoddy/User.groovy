@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.fogbeam.quoddy.profile.Profile;
+import org.fogbeam.quoddy.stream.ActivityStreamItem;
 import org.fogbeam.quoddy.stream.StatusUpdate;
 
 @XmlRootElement
@@ -99,6 +100,19 @@ class User implements Serializable
 
 	public void setFullName( String fullName )
 	{}	
+	
+	public ActivityStreamItem getMostRecentUpdate()
+	{
+		List<ActivityStreamItem> currentUpdates = ActivityStreamItem.executeQuery("select asi from ActivityStreamItem as asi where asi.streamObject = :streamObject", [streamObject:currentStatus]);
+		ActivityStreamItem mostRecent = null;
+		if( currentUpdates != null )
+		{
+			mostRecent = currentUpdates.get(0);
+		}
+		
+		
+		return mostRecent;
+	}
 	
 	public String getTemplateName()
 	{

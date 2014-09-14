@@ -41,5 +41,5 @@ public class StreamItemBase implements Serializable
 						// be used any differently?
 	
 	BaseSubscription owningSubscription; 
-	
+		
 }

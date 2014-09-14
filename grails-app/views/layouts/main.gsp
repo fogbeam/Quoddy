@@ -50,20 +50,93 @@
 
 <script type="text/javascript">
         	<g:render template="/javascript/application.js"/>
-    	</script>
+</script>
 
-<g:javascript library="enrich_content" />
+<script type="text/javascript">
+$j(document).ready( function() {
+
+	$j('#queryString').bind("keyup keypress", function(e) {
+		  var code = e.keyCode || e.which; 
+		  if (code  == 13) {               
+
+			var queryString = $j('#queryString').val();
+			// alert( queryString );
+		    if( queryString.startsWith('@'))
+			{
+				// alert( 'stop propagation' );
+				e.stopPropagation();
+				e.preventDefault();
+				$j('#searchForm').attr('action', '<g:createLink controller="omniCommand" action="submitCommand" />').submit();
+			}
+		    else
+			{
+				
+			}
+			
+		  }
+	});
+
+	
+	$j("#searchForm").submit(function(e) {
+		
+		// alert( 'ordinarily the form would submit here' );
+		// e.preventDefault();
+		// return false;
+	});
+
+
+	$j( '#searchPplIFollowBtn').click( function(e) {
+		e.stopPropagation();
+		$j('.btn-group.open .dropdown-toggle').dropdown('toggle');
+		// alert( "Search people I follow!");
+		
+		$j( '#searchForm').attr('action', '<g:createLink controller="search" action="doIFollowSearch" />').submit();
+		return false;
+	});
+
+	$j( '#searchFriendsBtn').click( function(e){
+		e.stopPropagation();
+		$j('.btn-group.open .dropdown-toggle').dropdown('toggle');
+		// alert( "Search friends!");
+		
+		$j( '#searchForm').attr('action', '<g:createLink controller="search" action="doFriendSearch" />').submit();
+		return false;
+	});
+
+	
+	$j( '#searchPplBtn').click( function(e) {
+		e.stopPropagation();
+		$j('.btn-group.open .dropdown-toggle').dropdown('toggle');
+		// alert( "Search people!");
+		
+		$j( '#searchForm').attr('action', '<g:createLink controller="search" action="doPeopleSearch" />').submit();
+		return false;
+	});
+	
+
+	$j( '#searchEverythingBtn').click( function(e) {
+		e.stopPropagation();
+		$j('.btn-group.open .dropdown-toggle').dropdown('toggle');
+		// alert( "Search everything!");
+		$j( '#searchForm').attr('action', '<g:createLink controller="search" action="doSearch" />').submit();
+		return false;
+	});
+});
+</script>
+
 
 <g:javascript library="application" />
 
 <g:layoutHead />
 
+<g:javascript library="enrich_content" />
+
 </head>
 <body>
 	<!-- begin customizable header -->
 	<div id="gbw" class="headerNavContainer navbar-top">
-		<div class="container">
-			<div class="headerNav row">
+		<div class="container-fluid">
+			<div class="headerNav row-fluid">
 				<ul class="customNav span5">
 					<li>
 						<h1>
@@ -88,26 +161,34 @@
 						<g:if test="${session.user != null}">
 						<li>
 							<div class="searchBoxContainer">
-								<g:form controller="search" action="doSearch" method="GET">
-									<input name="queryString" type="text" class="searchBox" autocomplete="off" style="margin-left:-50px;" />
+								<g:form name="searchForm" controller="search" action="doSearch" method="GET">
+									<input id="queryString" name="queryString" type="text" class="searchBox" 
+									   autocomplete="off" style="margin-left:-200px;width:365px" />
 									<!-- <input type="submit" value="Search" id="searchBtn" /> -->
+									
+									
 									<div class="btn-group">
-										<button data-toggle="dropdown"
+										<!-- " -->
+										<button id="foo" name="foo" data-toggle="dropdown"
 											class="btn dropdown-toggle btn-small">
 											Search <span class="caret"></span>
 										</button>
-										<ul class="dropdown-menu">
-											<li><a
+										<ul class="dropdown-menu" role="menu">
+											<li><a id="searchPplBtn" name="searchPplBtn"
 												href="#">People</a></li>
-											<li><a
+											<li><a id="searchFriendsBtn" name="searchFriendsBtn"
 												href="#">Friends</a></li>
-											<li><a
+											<li><a id="searchPplIFollowBtn" name="searchPplIFollowBtn"
 												href="#">People
 													I Follow</a></li>
 											<li class="divider"></li>
-											<li><a href="#">Everything</a></li>
+											<li><a id="searchEverythingBtn" name="searchEverythingBtn" 
+											href="#">Everything</a></li>
 										</ul>
 									</div>
+									
+									
+									
 								</g:form>
 							</div>
 						</li>
