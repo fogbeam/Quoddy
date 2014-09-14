@@ -62,7 +62,7 @@ class SparqlController
 								 "PREFIX owl: <http://www.w3.org/2002/07/owl#> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
 								 "PREFIX dbpo: <http://dbpedia.org/ontology/> PREFIX dbp: <http://dbpedia.org/resource/> PREFIX scorg: <http://schema.org/> ";
 		
-		String userQueryString = params.sparqlQuery;
+		String userQueryString = params.queryString;
 		
 		String queryString = baseQueryString + userQueryString;
 		
@@ -105,8 +105,7 @@ class SparqlController
 				
 				println "subject: " + subject;
 				
-				List<ActivityStreamItem> asiResults = ActivityStreamItem.executeQuery( "select asi from ActivityStreamItem as asi where asi.streamObject.uuid = ?", [subject] );
-				
+				List<ActivityStreamItem> asiResults = ActivityStreamItem.executeQuery( "select asi from ActivityStreamItem as asi where asi.uuid = ?", [subject] );
 				
 				
 				if( asiResults != null && !asiResults.isEmpty() )

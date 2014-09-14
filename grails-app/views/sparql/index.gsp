@@ -14,7 +14,7 @@
           <div class="well" style="width:95%;min-height:300px;">
           
           	<g:form action="doSearch" controller="sparql" method="POST">
-          		<g:textArea name="sparqlQuery" style="width:95%;margin:auto;min-height:250px;">
+          		<g:textArea name="queryString" style="width:95%;margin:auto;min-height:250px;">
           		</g:textArea>
           		<br />
           		<g:submitButton name="search" value="Search" style="margin-top:25px;" />

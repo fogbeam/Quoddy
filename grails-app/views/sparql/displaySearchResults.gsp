@@ -1,17 +1,15 @@
 <html>
     <head>
         <title>Welcome to Quoddy - SPARQL Search Results</title>
-          <meta name="layout" content="basic" />
+          <meta name="layout" content="main" />
           <nav:resources />
     </head>
     <body>
     
-    	<p />
-    
-    	<div class="well searchResults" id="searchResults" style="margin-left:35px;padding-top:20px;">  
+    	<div class="span10" id="searchResults">  
 			<p />
 			
-			<ul style="margin-left:315px;">
+			<ul>
 				<g:each in="${searchResults}" var="searchResult">
 					<g:if test="${searchResult.object.streamObject != null}"> 
 						<g:render template="${searchResult.object.streamObject.templateName}" var="item" bean="${searchResult.object}" /> 

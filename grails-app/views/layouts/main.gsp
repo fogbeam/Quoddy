@@ -121,6 +121,17 @@ $j(document).ready( function() {
 		$j( '#searchForm').attr('action', '<g:createLink controller="search" action="doSearch" />').submit();
 		return false;
 	});
+
+	
+	$j( '#sparqlSearchBtn').click( function(e) {
+		e.stopPropagation();
+		$j('.btn-group.open .dropdown-toggle').dropdown('toggle');
+		// alert( "Search everything!");
+		$j( '#searchForm').attr('action', '<g:createLink controller="sparql" action="doSearch" />').submit();
+		return false;
+	});
+
+	
 });
 </script>
 
@@ -184,6 +195,7 @@ $j(document).ready( function() {
 											<li class="divider"></li>
 											<li><a id="searchEverythingBtn" name="searchEverythingBtn" 
 											href="#">Everything</a></li>
+											<li><a id="sparqlSearchBtn" name="sparqlSearchBtn" href="#">SPARQL</a></li>
 										</ul>
 									</div>
 									

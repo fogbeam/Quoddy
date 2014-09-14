@@ -98,4 +98,9 @@ beans = {
 						 "java.naming.provider.url":"localhost:1099"]
 		}
 	
+	jenaTemplate( org.fogbeam.quoddy.spring.factorybean.JenaTemplateFactoryBean)
+	{
+		tdbDirectory = System.getProperty("quoddy.home") + "/jenastore/triples";
+	}
+	
 }
