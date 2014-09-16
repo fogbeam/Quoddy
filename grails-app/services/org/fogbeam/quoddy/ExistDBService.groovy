@@ -10,12 +10,16 @@ import org.xmldb.api.base.Collection
 import org.xmldb.api.base.Database
 import org.xmldb.api.modules.XMLResource
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
+
 class ExistDBService
 {
 	
 	protected static String driver = "org.exist.xmldb.DatabaseImpl";
-	protected static String URI = "xmldb:exist://localhost:8090/exist/xmlrpc";
+	// protected static String URI = "xmldb:exist://localhost:8090/exist/xmlrpc";
 
+	
+	
 	public populateSubscriptionEventWithXmlDoc( Object event )
 	{
 		// unless we're passed a BusinessEventSubscriptionItem instance, this is a NOP
@@ -46,7 +50,9 @@ class ExistDBService
 		DatabaseManager.registerDatabase(database);
 
 		// get the collection
-		Collection col = DatabaseManager.getCollection(URI + collection);
+		String existDbUri = CH.config.existDbUri;
+		Collection col = DatabaseManager.getCollection(existDbUri + collection);
+		
 		if( col == null ) 
 		{
 			println "ERROR: could not locate collection: ${URI + collection}";

@@ -65,6 +65,7 @@ public class SearchQueueInputService
 	def eventStreamService;
 	def searchService;
 	def userService;
+	def existDBService;
 	
     static expose = ['jms']
     static destination = "quoddySearchQueue"                 
