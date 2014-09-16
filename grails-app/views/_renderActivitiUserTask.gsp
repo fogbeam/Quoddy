@@ -64,8 +64,8 @@
 		</p>
 		<ul>
 			<li>Assignee: <g:if test="${item.streamObject.assignee != null && !item.streamObject.assignee.equals("null")}">${item.streamObject.assignee}</g:if></li>
-			<li>Due Date: <g:if test="${item.streamObject.dueDate != null && !item.streamObject.assignee.equals("null")}">${item.streamObject.dueDate}</g:if></li>
-			<li>Priority: <g:if test="${item.streamObject.priority != null && !item.streamObject.assignee.equals("null") }">${item.streamObject.priority}</g:if></li>
+			<li>Due Date: <g:if test="${item.streamObject.dueDate != null && !item.streamObject.dueDate.equals("null")}">${item.streamObject.dueDate}</g:if></li>
+			<li>Priority: <g:if test="${item.streamObject.priority != null && !item.streamObject.priority.equals("null") }">${item.streamObject.priority}</g:if></li>
 		</ul>
 		<div class="activitiBPMButtons">
 			<div class="btn-group">
