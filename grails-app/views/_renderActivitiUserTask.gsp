@@ -63,9 +63,9 @@
 			${item.streamObject.description}
 		</p>
 		<ul>
-			<li>Assignee: ${item.streamObject.assignee?}</li>
-			<li>Due Date: ${item.streamObject.dueDate?}</li>
-			<li>Priority: ${item.streamObject.priority?}</li>
+			<li>Assignee: <g:if test="${item.streamObject.assignee != null }">${item.streamObject.assignee}</g:if></li>
+			<li>Due Date: <g:if test="${item.streamObject.dueDate != null }">${item.streamObject.dueDate}</li>
+			<li>Priority: <g:if test="${item.streamObject.priority != null }">${item.streamObject.priority}</li>
 		</ul>
 		<div class="activitiBPMButtons">
 			<div class="btn-group">
