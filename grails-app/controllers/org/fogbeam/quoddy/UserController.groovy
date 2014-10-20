@@ -24,6 +24,7 @@ import com.hp.hpl.jena.query.ReadWrite
 import com.hp.hpl.jena.rdf.model.Model
 import com.hp.hpl.jena.rdf.model.Property
 import com.hp.hpl.jena.rdf.model.Resource
+import com.hp.hpl.jena.rdf.model.Statement
 import com.hp.hpl.jena.tdb.TDBFactory
 
 
@@ -1565,10 +1566,13 @@ class UserController {
 			println "6";
 			// model.add( property );
 			
-			newResource.addProperty( property, object );
-		
+			// newResource.addProperty( property, object );
+			
 			// model.add( newResource );
 
+			Statement s = model.createStatement(newResource, property, object);
+			model.add( s );
+			
 			println "7";
 			dataset.commit();
 		}
