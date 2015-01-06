@@ -12,6 +12,11 @@ class StatusUpdate extends StreamItemBase implements Serializable
 	Date dateCreated;
 	String enhancementJSON;
 	
+	static constraints =
+	{
+		enhancementJSON(empty:true);
+	}
+	
 	static mapping =
 	{
 		enhancementJSON type: 'text'

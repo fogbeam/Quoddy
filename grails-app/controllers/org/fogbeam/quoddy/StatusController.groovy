@@ -91,6 +91,10 @@ class StatusController {
 					newStatus.enhancementJSON = restResponseData.toString();
 				}
 			}
+			else
+			{
+				newStatus.enhancementJSON = "";
+			}
 			
 			// save the newStatus 
 			if( !newStatus.save() )
