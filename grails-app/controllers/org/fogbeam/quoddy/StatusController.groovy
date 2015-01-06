@@ -46,45 +46,50 @@ class StatusController {
 			println "using stanbolServerUrl: ${stanbolServerUrl}";
 			RESTClient restClient = new RESTClient( stanbolServerUrl )
 		
-			// println "content submitted: ${content}";
-			HttpResponseDecorator restResponse = restClient.post(	path:'enhancer',
+			boolean enhancementEnabled = Boolean.parseBoolean( CH.config.features.enhancement.enabled ? CH.config.features.enhancement.enabled : "false" );
+			
+			if( enhancementEnabled )
+			{
+				// println "content submitted: ${content}";
+				HttpResponseDecorator restResponse = restClient.post(	path:'enhancer',
 											body: params.statusText,
 											requestContentType : TEXT );
 										
-			println "restResponse.class: ${restResponse.class}";
-			println "restResponse.status: ${restResponse.status}";
-			// println "restResponse.statusCode: ${restResponse.statusCode}";
-			println "restResponse.success: ${restResponse.isSuccess()}";
+				println "restResponse.class: ${restResponse.class}";
+				println "restResponse.status: ${restResponse.status}";
+				// println "restResponse.statusCode: ${restResponse.statusCode}";
+				println "restResponse.success: ${restResponse.isSuccess()}";
 
-			Object restResponseData = restResponse.getData();
+				Object restResponseData = restResponse.getData();
 			
-			if( restResponseData instanceof InputStream )
-			{
+				if( restResponseData instanceof InputStream )
+				{
 			
-				println "restResponseData.class: ${restResponseData.class}";
+					println "restResponseData.class: ${restResponseData.class}";
 			
-				java.util.Scanner s = new java.util.Scanner((InputStream)restResponseData).useDelimiter("\\A");
+					java.util.Scanner s = new java.util.Scanner((InputStream)restResponseData).useDelimiter("\\A");
 	
-				String restResponseText = s.next();
+					String restResponseText = s.next();
 			
-				println "using Scanner: ${restResponseText}";		
+					println "using Scanner: ${restResponseText}";		
 			
-				// println "restResponseText: ${restResponseText}";
+					// println "restResponseText: ${restResponseText}";
 			
-				newStatus.enhancementJSON = restResponseText;
+					newStatus.enhancementJSON = restResponseText;
 			
-			}
-			else if( restResponseData instanceof net.sf.json.JSONObject )
-			{
-				newStatus.enhancementJSON = restResponseData.toString();
-			}
-			else if( restResponseData instanceof java.lang.String )
-			{
-				newStatus.enhancementJSON = new String( restResponseData );
-			}
-			else
-			{
-				newStatus.enhancementJSON = restResponseData.toString();
+				}
+				else if( restResponseData instanceof net.sf.json.JSONObject )
+				{
+					newStatus.enhancementJSON = restResponseData.toString();
+				}
+				else if( restResponseData instanceof java.lang.String )
+				{
+					newStatus.enhancementJSON = new String( restResponseData );
+				}
+				else
+				{
+					newStatus.enhancementJSON = restResponseData.toString();
+				}
 			}
 			
 			// save the newStatus 
