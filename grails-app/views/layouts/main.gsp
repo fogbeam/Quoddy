@@ -297,7 +297,7 @@ $j(document).ready( function() {
 
 		<!-- left sidenav, global -->
 		<div class="row-fluid">
-			<div class="leftContentNav">
+			<div class="span3 leftContentNav">
 				<shiro:authenticated>
 					<g:render template="/leftSidebar" />
 				</shiro:authenticated>

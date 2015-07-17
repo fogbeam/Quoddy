@@ -18,7 +18,11 @@ body, #header {
 	height:50px;
 }
 
-.leftContentNav {margin-left:12px !important; float:left;margin-top:0px;}
+.leftContentNav {
+/*	margin-left:12px !important; */
+	float:left;
+	margin-top:0px;
+}
 
 .headerNav ul.customNav {
 	list-style-type: none;

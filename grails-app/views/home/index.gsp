@@ -5,7 +5,7 @@
 </head>
 <body>
 
-	<div id="bodyContent" class="span8">
+	<div id="bodyContent" class="span9">
 		<div class="subnav">
 			<ul class="nav nav-pills">
 
