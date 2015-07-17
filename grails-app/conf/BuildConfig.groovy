@@ -10,8 +10,9 @@ grails.project.dependency.resolution = {
     }
     log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     repositories {        
-				grailsCentral()
-        grailsPlugins()
+	
+	grailsCentral()
+//         grailsPlugins()
         grailsHome()
 
         // uncomment the below to enable remote dependency resolution
@@ -22,7 +23,8 @@ grails.project.dependency.resolution = {
         mavenRepo "http://repository.codehaus.org"
         mavenRepo "http://download.java.net/maven/2/"
         mavenRepo "http://repository.jboss.com/maven2/"
-		mavenRepo "http://maven.restlet.org/"
+	mavenRepo "http://maven.restlet.org/"
+	mavenRepo "https://repo.grails.org/grails/plugins"
     }
     
     dependencies {
@@ -32,11 +34,15 @@ grails.project.dependency.resolution = {
 		compile "org.grails:grails-webflow:$grailsVersion"
 		compile "antlr:antlr:2.7.7"
 		compile "commons-logging:commons-logging:1.1.1"
+
+		compile "org.grails:grails-webflow:$grailsVersion"
+
 	}    
    plugins {
-	   compile ':webflow:2.0.0', {
-		   exclude 'grails-webflow'
-	   }
+
+	  compile ':webflow:2.0.0', {
+     	  	  exclude 'grails-webflow'
+   		  }
 	   
 	   runtime( ":shiro:1.1.4" ){
 		exclude 'quartz';   
