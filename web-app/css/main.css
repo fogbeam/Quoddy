@@ -233,7 +233,7 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
   margin-right: 12px;
 }
 
-.xButton a, .plusOneButton a, .shareButton a, .showHideCommentsButton a {
+.xButton a, .plusOneButton a, .shareButton a, .showHideCommentsButton a, .discussButton a{
   display:inline;
   font-size: 11px;
 }

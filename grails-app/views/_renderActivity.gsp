@@ -44,6 +44,9 @@
       		<span class="plusOneButton" id="plusOneButton.${item.uuid}" name="plusOneButton.${item.uuid}" >
         		<a href="#" class="btn">+1</a>
       		</span>
+      		<span class="discussButton" id="discussButton.${item.uuid}" name="discussButton.${item.uuid}" >
+        		<a href="#" class="btn">Discuss</a>
+      		</span>
       		<span class="shareButton" id="shareButton.${item.uuid}" name="shareButton.${item.uuid}" >
         		<a href="#" class="btn">Share</a>
       		</span>

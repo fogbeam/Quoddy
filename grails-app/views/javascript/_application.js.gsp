@@ -36,6 +36,15 @@
 				});
 
 
+
+				$j( ".discussButton" ).click(function() {
+				
+					var name = $j(this).attr('name');
+					var discussItemUuid = name.split( "." )[1];
+					alert( "Launch the Discuss dialog here!  Yeeeeeaaaah, boy!" );
+					// $j( "#dialog" ).data('shareItemUuid', shareItemUuid).dialog( "open" );
+				});
+				
 				$j( ".shareButton" ).click(function() {
 				
 					var name = $j(this).attr('name');
