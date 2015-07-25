@@ -162,7 +162,7 @@ $j(document).ready( function() {
 						<li><a href="#">Calendar</a></li>
 					 -->
 						<li><a href="#">Apps</a></li>
-						<li><a href="#">Spaces</a></li>
+						<li><a href="${createLink(controller:'spaces', action:'index')}">Spaces</a></li>
 						<li><a href="#">BPM</a></li>
 						<li><a href="#">Answers</a></li>
 					</shiro:authenticated>
