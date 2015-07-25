@@ -6,8 +6,38 @@
 	$j(document).ready( 
 			function()
 		 	{
+		 	
+				$j( "#discussDialog" ).dialog(
+					{
+						autoOpen: false,
+						show: {
+						effect: "blind",
+						duration: 200
+						},
+						hide: {
+						effect: "explode",
+						duration: 1500
+						},
+						buttons: [ { text: "Cancel", click: function() { $j( this ).dialog( "close" ); } },
+							   { text: "Submit", click: function() 
+				   					{ 			
+				   						var discussItemUuid = $j(this).data('discussItemUuid');
+				   							
+				   						// find our form object and submit it...
+				   						$j('#discussItemUuid').val( discussItemUuid );
+				   						$j('#discussItemForm').submit();
+				   						// alert("submitting...");
+				   						$j( this ).dialog( "close" );
+				   					
+				   					} 
+							 	} 
+							 ]
+						});
+		 	
+		 	
+		 	
 				// alert( "JQuery ready for action!" );
-				$j( "#dialog" ).dialog(
+				$j( "#shareDialog" ).dialog(
 				{
 					autoOpen: false,
 					show: {
@@ -36,20 +66,19 @@
 				});
 
 
-
 				$j( ".discussButton" ).click(function() {
 				
 					var name = $j(this).attr('name');
 					var discussItemUuid = name.split( "." )[1];
-					alert( "Launch the Discuss dialog here!  Yeeeeeaaaah, boy!" );
-					// $j( "#dialog" ).data('shareItemUuid', shareItemUuid).dialog( "open" );
+					// alert( "Launch the Discuss dialog here!  Yeeeeeaaaah, boy!" );
+					$j( "#discussDialog" ).data('discussItemUuid', discussItemUuid).dialog( "open" );
 				});
 				
 				$j( ".shareButton" ).click(function() {
 				
 					var name = $j(this).attr('name');
 					var shareItemUuid = name.split( "." )[1];
-					$j( "#dialog" ).data('shareItemUuid', shareItemUuid).dialog( "open" );
+					$j( "#shareDialog" ).data('shareItemUuid', shareItemUuid).dialog( "open" );
 				});
 
 				$j( ".xButton").click( function() {

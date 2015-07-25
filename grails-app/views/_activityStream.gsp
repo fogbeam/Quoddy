@@ -2,7 +2,29 @@
 	<g:render template="${activity.templateName}" var="item" bean="${activity}" />
 </g:each>
 
-<div id="dialog" title="Share this Item">
+
+<div id="discussDialog" title="">
+	
+		<g:formRemote name="discussItemForm" url="[controller: 'activityStream', action:'discussItem']">
+	
+			<!--  what data do we need to pass here? -->
+			
+			<!--  text of an (optional) comment -->
+			<input name="discussItemComment" type="text" value="Add A Comment" />
+	
+			<!--  the uuid of the thing being shared -->
+			<input id="discussItemUuid" name="discussItemUuid" type="hidden" value="" />
+	
+			<!--  a target userId  -->
+			<!--  TODO: need a picker of some sort to select users to invite to the conference -->
+			<input name="discussTargetUserId" type="text" value="" />
+			<br />
+			
+		</g:formRemote>
+</div>
+
+
+<div id="shareDialog" title="Share this Item">
 	
 	<g:formRemote name="shareItemForm" url="[controller: 'activityStream', action:'shareItem']">
 	

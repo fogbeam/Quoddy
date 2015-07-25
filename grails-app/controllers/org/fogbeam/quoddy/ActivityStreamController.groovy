@@ -157,6 +157,34 @@ class ActivityStreamController
 	}
 	
 	
+	def discussItem = 
+	{
+		println "ActivityStreamController.discussItem invoked:";
+		println "params: ${params}";
+		
+		/*  So, what data should we be receiving?  At a minimum, the id (or uuid) of the thing being
+		 *  discussed, the id (or uuid) of the person starting the discussion, and one or more discussTarget id's.  
+		 *  Optionally there could be a comment associated with the discussion.
+		 *
+		 *  For an initial version, let's make some simplifying assumptions.  You can only open discussion with
+		 *  USERS (no groups or other 'things' )
+		 */
+		
+		String discussItemUuid = params.discussItemUuid;
+		String discussItemComment = params.discussItemComment;
+		String discussTargetUserId = params.discussTargetUserId;
+		
+		// look up the existing ActivityStreamItem representing this item
+		ActivityStreamItem discussItem = eventStreamService.getActivityStreamItemByUuid( discussItemUuid );
+		
+		/* Use our OpenMeetings integration to start a temporary conference room, generate
+		 * invitation hashes for all requested users, send the invite hashes, and return the
+		 * room ID to the caller so we can put our current user into the conference 
+		 */
+		
+		println "Invoking OpenMeetings integration here...";
+	}
+	
 	def shareItem =
 	{
 		
