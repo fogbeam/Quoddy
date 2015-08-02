@@ -1,8 +1,125 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <title>Quoddy</title>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Quoddy by fogbeam</title>
   </head>
+
   <body>
-    <h3>Quoddy</h3>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Quoddy</h1>
+          <h2>Quoddy: Open Source Enterprise Social Networking</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/fogbeam/Quoddy/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/fogbeam/Quoddy/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/fogbeam/Quoddy" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a id="quoddy" class="anchor" href="#quoddy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quoddy</h1>
+
+<p>Quoddy - an Open Source Enterprise Social Network - is part of the Fogcutter suite of tools for building intelligent applications.</p>
+
+<h2>
+<a id="why-quoddy" class="anchor" href="#why-quoddy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why "Quoddy?"</h2>
+
+<p>We like lighthouses, so Quoddy is named after the famous West Quoddy Head Lighthouse.</p>
+
+<h2>
+<a id="ok-but-what-does-it-do" class="anchor" href="#ok-but-what-does-it-do" aria-hidden="true"><span class="octicon octicon-link"></span></a>Ok, but what does it do?</h2>
+
+<p>Quoddy is an Open Source Enterprise Social Network, based on Groovy &amp; Grails, and making up one component of 
+the <a href="http://code.google.com/p/fogcutter">Fogcutter Suite</a>.   Quoddy shares a common "look and feel", and 
+substantial functionality, with consumer facing Social Networks like <a href="http://www.facebook.com">Facebook</a> or 
+<a href="http://plus.google.com">Google+</a> as well as proprietary Enterprise Social Network products like the products 
+from <a href="http://www.jivesoftware.com">Jive Software</a> and <a href="http://www.yammer.com">Yammer</a> among others.<br>
+You could call Quoddy "Facebook for the Enterprise" but that would be oversimplifying a bit.  Quoddy is intended 
+mainly for organizational use and therefore has capabilities which make it uniquely suited to provide the social 
+fabric to support organizational knowledge sharing, knowledge transfer, collaboration and decision support.</p>
+
+<p>Relative to consumer Social Networks and other Enterprise Social Networking products, Quoddy adds features like:</p>
+
+<ul>
+<li>Calendar Feed Subscriptions - Quoddy supports subscriptions to any calendaring server which provides an iCal feed, so you can see your  upcoming events rendered in your feed alongside other important events.  Future releases will support CalDAV and interactive editing of Calendar Events from right in the stream.</li>
+<li>RSS/Atom Feed Subscriptions - Quoddy supports subscriptions to any arbitrary RSS feed, so you can find crucial information in your feed.  Subscribe to internal blog servers, document management systems, wikis, and any other repository which provides RSS, or subscribe to your favorite blogs, Google Alerts, and other external information sources.</li>
+<li>Business Events Subscriptions - using the <a href="https://github.com/fogbeam/Hatteras">Hatteras</a> Business Events Subscription engine, Quoddy allows users to define subscriptions to business events right off of the enterprise SOA/ESB backbone.  Find out exactly what is going on in your enterprise, in real-time with Quoddy and Hatteras.</li>
+<li>BPM Integration - Quoddy supports subscribing to User Tasks from BPM / Workflow engines.  We currently only support Activiti, the leading Open Source BPM offering, but support for other workflow products will be coming in future releases.</li>
+<li>Fine-grained User Stream definitions.  Quoddy provides robust support for creating different "user stream" definitions, which filter content by type, source, group, or other criteria, and makes it trivially easy to quickly change the current Stream.  For example, you may tke a quick peek at an enterprise-wide view of all the activity from every user, and then quickly switch back to a personalized view which includes only your BPM User Tasks.  Quoddy emphasizes putting <em>you</em> in control of the content which is rendered in your stream, helping avoid information overload.</li>
+<li>
+<a href="http://activitystrea.ms">ActivityStrea.ms protocol</a> support using REST.  Quoddy exposes a HTTP interface for external systems to post ActivityStrea.ms messages.  This allows our integration with <a href="http://code.google.com/p/neddick/">Neddick</a> as well as other 3rd party products.</li>
+</ul>
+
+<h2>
+<a id="how-does-it-work" class="anchor" href="#how-does-it-work" aria-hidden="true"><span class="octicon octicon-link"></span></a>How does it work?</h2>
+
+<p>Quoddy stores information about users, relationships between those users (eg, "friend", "follower," etc), groups,
+relationships between users and "things" that are of interest to the user, and provides for management of those
+relationships, as well as using those relationships to show a user updates regarding activity within their
+network (of friends, followers and other "things).</p>
+
+<p>Quoddy can also be combined with <a href="https://github.com/fogbeam/Neddick">Neddick</a> and <a href="https://github.com/fogbeam/Heceta">Heceta</a>
+to provide a rich, tightly integrated platform for knowledge discovery, navigation and management.</p>
+
+<h2>
+<a id="what-about-opensocial" class="anchor" href="#what-about-opensocial" aria-hidden="true"><span class="octicon octicon-link"></span></a>What about OpenSocial?</h2>
+
+<p>Work is currently underway to add OpenSocial container support, using Apache Shindig.  When finished, this work
+will allow a Quoddy instance to host any valid OpenSocial application.</p>
+
+<h2>
+<a id="how-to-build--run-quoddy" class="anchor" href="#how-to-build--run-quoddy" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to build &amp; run Quoddy?</h2>
+
+<p>Instructions for deploying the latest release can be found at</p>
+
+<p><a href="https://github.com/fogbeam/Quoddy/releases/edit/v0.0.0-tpr1">https://github.com/fogbeam/Quoddy/releases/edit/v0.0.0-tpr1</a></p>
+
+<p>Once Quoddy is installed and running, browse to http://localhost:8080 and you should get the Quoddy homepage.  </p>
+
+<p>You can login as testuser1 with a password of 'secret', or you can modify Bootstrap.groovy to create
+different default users.</p>
+
+<p>For help, see the fogcutter-dev Google Group, or check #fogcutter on Freenode.net IRC.  </p>
+
+<h2>
+<a id="commercial-support" class="anchor" href="#commercial-support" aria-hidden="true"><span class="octicon octicon-link"></span></a>Commercial Support</h2>
+
+<p>Commercial support is available from <a href="http://www.fogbeam.com">Fogbeam Labs</a>.  For more information on
+Quoddy Enterprise, please visit <a href="http://www.fogbeam.com/quoddy_enterprise.html">http://www.fogbeam.com/quoddy_enterprise.html</a>.</p>
+        </section>
+
+        <footer>
+          Quoddy is maintained by <a href="https://github.com/fogbeam">fogbeam</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+                  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-2911364-8");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+      </div>
+    </div>
   </body>
 </html>
