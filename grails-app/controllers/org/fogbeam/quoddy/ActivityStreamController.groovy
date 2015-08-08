@@ -1,12 +1,16 @@
 package org.fogbeam.quoddy
 
-import org.codehaus.jackson.map.ObjectMapper
+import static groovyx.net.http.ContentType.JSON
+import static groovyx.net.http.ContentType.TEXT
+import static groovyx.net.http.ContentType.XML
+import groovyx.net.http.RESTClient
+
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
-import org.fogbeam.protocol.activitystreams.ActivityStreamEntry
+import org.fogbeam.quoddy.profile.ContactAddress
+import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ResharedActivityStreamItem
 import org.fogbeam.quoddy.stream.StreamItemBase
-
 
 @Mixin(SidebarPopulatorMixin)
 class ActivityStreamController 
@@ -15,6 +19,7 @@ class ActivityStreamController
 	def activityStreamTransformerService;
 	def userService;
 	def jmsService;
+	def emailService;
 	def eventQueueService;
 	def userStreamDefinitionService;
 	def userListService;
@@ -183,6 +188,109 @@ class ActivityStreamController
 		 */
 		
 		println "Invoking OpenMeetings integration here...";
+		
+		// prereq... instantiate a RESTClient and generate OM session ID and login
+		// TODO: make this URL a configurable item
+		def client = new RESTClient( 'http://demo2.fogbeam.org:5080/' )
+		
+		// call getSession
+		def resp = client.get( path : 'openmeetings/services/UserService/getSession', contentType:XML );
+		String sid = resp.data.return.session_id;
+		println "sessionId: $sid";
+
+		// TODO: deal with this username/password properly...
+		// call login using the SID from getSession
+		resp = client.get( path : 'openmeetings/services/UserService/loginUser', contentType:XML, query: [ SID:sid, username:'prhodes',
+																												userpass:'3nothing' ] );
+		
+		/**
+		 
+		    NOTE: We need to decide how to deal with the user creating the discussion.  Do we create the room using that
+		    user's credentials? Or do we create the room using a single "system" OM account?  If the latter, how
+		    do we make sure we set the creating user as the room moderator? Or does the room in question even
+		    need moderation?  And how does the room get deleted after we're done with it?   And should we give
+		    the user the option to either pick an existing room OR create a temporary room?  
+		 */
+																											
+		/****	first step:  Create a new demo room */
+																											
+		resp = client.get( path : 'openmeetings/services/RoomService/addRoomWithModeration', contentType: XML,
+			query:[ SID:sid, name: "Test Room", roomtypes_id: 1, comment: "", numberOfPartizipants:25, ispublic:true, appointment:false, isDemoRoom:false, demoTime:0, isModeratedRoom:false ] );
+		
+		int newRoomID = -1;
+		String roomURL = "http://demo2.fogbeam.org:5080/openmeetings/#room/";
+		
+		if( !( resp.status == 200 )) // HTTP response code; 404 means not found, etc.
+		{
+			throw new Exception( "Not 200 HTTP Response!   ${resp.status}" );
+		}
+		else
+		{
+			String strNewRoomID = resp.data.return;
+			println "newRoomID: $strNewRoomID";
+			newRoomID = Integer.parseInt( strNewRoomID );
+			roomURL = roomURL + newRoomID;
+			 
+			// then generate invitation hashes for all of the invited users
+			
+			resp = client.get( path : 'openmeetings/services/RoomService/getInvitationHash', contentType: XML,
+				query:[ SID:sid, username:discussTargetUserId, room_id:newRoomID, isPasswordProtected:false, invitationpass:"", valid:1, validFromDate:"", validFromTime:"",
+												validToDate:"", validToTime:"" ] );
+			
+			// println "response from getInvitationHash: ${resp.data}";
+			
+			if( !( resp.status == 200 )) // HTTP response code; 404 means not found, etc.
+			{
+				throw new Exception( "Not 200 HTTP Response!   ${resp.status}" );
+			}
+			else
+			{
+				
+				def hash = resp.data.return;
+				println "Invitation Hash: $hash";
+				
+				def inviteUrl = "http://demo2.fogbeam.org:5080/openmeetings/?invitationHash=$hash";
+				
+				// println "URL: $inviteUrl";
+				
+				// After creating has, and then what... ???  email the hashes to the usesr?  IM them?  Post to their Quoddy
+				// stream? What??  Should the incoming request tell us which contact mechanism to use?  
+				
+				// for now we're just going to hardcode this to use email, based on the user's primary email address.
+				User targetUser = userService.findUserByUserId( discussTargetUserId );
+				Profile targetProfile = targetUser.profile;
+				Set<ContactAddress> targetContactAddresses = targetProfile.contactAddresses;
+				ContactAddress toEmail = targetContactAddresses.find { it.serviceType == ContactAddress.EMAIL && it.primaryInType == true };
+				
+				User creatingUser = userService.findUserByUserId( session.user.userId );
+				Profile creatingUserProfile = creatingUser.profile;
+				Set<ContactAddress> creatingUserContactAddresses = creatingUserProfile.contactAddresses;
+				ContactAddress senderEmail = creatingUserContactAddresses.find { it.serviceType == ContactAddress.EMAIL && it.primaryInType == true };
+
+				
+				// email this invitation to the user.
+				StringBuffer emailBodyBuffer = new StringBuffer();
+				
+				
+				emailBodyBuffer.append( "${creatingUser.displayName} is inviting you to join a video conference.\n\n" );
+				emailBodyBuffer.append( "Invitation comment: ${discussItemComment}\n\n");
+				emailBodyBuffer.append( "This conference pertains to the following item: ${discussItemUuid}\n\n");
+				emailBodyBuffer.append( "To join the conference open this link:   ${inviteUrl}\n\n\n" );
+				emailBodyBuffer.append( "---------------------------------------------------------------------------" );
+				String emailBody = emailBodyBuffer.toString();
+				
+				emailService.deliverEmail( toEmail, senderEmail, "Video conference invitation from ${creatingUser.displayName}", emailBody );
+				
+			}			
+		}
+				
+		// return the generated room number to the user who created the room so the client-side
+		// code can put the user in the conference
+		// render( );	
+		render(contentType: 'text/json') {[
+			newRoomID: newRoomID, 
+			roomURL:roomURL
+		]}
 	}
 	
 	def shareItem =

@@ -5,7 +5,7 @@
 
 <div id="discussDialog" title="">
 	
-		<g:formRemote name="discussItemForm" url="[controller: 'activityStream', action:'discussItem']">
+		<g:formRemote name="discussItemForm" url="[controller: 'activityStream', action:'discussItem']" onSuccess="openDiscussion(data)" >
 	
 			<!--  what data do we need to pass here? -->
 			
@@ -19,6 +19,8 @@
 			<!--  TODO: need a picker of some sort to select users to invite to the conference -->
 			<input name="discussTargetUserId" type="text" value="" />
 			<br />
+			
+			<!-- TODO: deal with the return from the server with our URL  -->
 			
 		</g:formRemote>
 </div>

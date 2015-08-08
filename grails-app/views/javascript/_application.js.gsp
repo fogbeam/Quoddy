@@ -3,9 +3,21 @@
             "status = 1, height = 300, width = 300, resizable = 0"  )
     }
     
+	function openDiscussion( data ) {
+		// alert( "openDiscussion: " + data );
+		// alert( "roomURL: " + data.roomURL );
+		var win = window.open(data.roomURL, '_blank');
+	 	win.focus();
+		
+	}    
+    
+    
 	$j(document).ready( 
+		 		
 			function()
 		 	{
+		 	
+		 		
 		 	
 				$j( "#discussDialog" ).dialog(
 					{
@@ -25,7 +37,9 @@
 				   							
 				   						// find our form object and submit it...
 				   						$j('#discussItemUuid').val( discussItemUuid );
+				   						
 				   						$j('#discussItemForm').submit();
+				   						
 				   						// alert("submitting...");
 				   						$j( this ).dialog( "close" );
 				   					
