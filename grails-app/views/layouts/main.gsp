@@ -140,7 +140,11 @@ $j(document).ready( function() {
 
 <g:layoutHead />
 
+<script type="text/javascript">
+        	<g:render template="/javascript/hashtag.js"/>
+</script>
 <g:javascript library="enrich_content" />
+
 
 </head>
 <body>
