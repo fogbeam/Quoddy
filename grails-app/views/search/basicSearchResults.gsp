@@ -10,7 +10,7 @@
 	<div id="bodyContent" class="span8">
 		<p />
 		<g:each in="${searchResults}" var="searchResult">
-			<g:if test="${searchResult.object.streamObject != null}">
+			<g:if test="${searchResult.object.hasProperty('streamObject') && searchResult.object.streamObject != null}">
 				<g:render
 					template="${searchResult.object.streamObject.templateName}"
 					var="item" bean="${searchResult.object}" />
