@@ -42,6 +42,7 @@ Quoddy can also be combined with [Neddick](https://github.com/fogbeam/Neddick) a
 to provide a rich, tightly integrated platform for knowledge discovery, navigation and management.
 
 Where's the issue tracker?
+--------------------
 
 Right here:  http://dev.fogbeam.org/bugzilla/describecomponents.cgi?product=Quoddy
 
