@@ -94,6 +94,7 @@ public class SearchQueueInputService
 			
 			//begin get the contents of the update
 			//var msgContents to store the update contents
+			/* 
 			def msgContents = null
 			String msgUUID = null
 			ActivityStreamItem statusUpdateActivity = null
@@ -117,6 +118,7 @@ public class SearchQueueInputService
 				log.error('end stack trace:::')
 				msgContents = "This sentance is about New York City by default."
 			}
+			*/
 			//end get the contents of the update
 
 			//Begin Submitting the message to Stanbol
@@ -146,20 +148,23 @@ public class SearchQueueInputService
 			
 			if( msgType.equals( "REINDEX_ALL" ))
 			{
+				println "received message: REINDEX_ALL";
 				rebuildAllIndexes();
 			}
 			else if( msgType.equals( "REINDEX_PERSON" ))
 			{
+				println "received message: REINDEX_PERSON";
 				rebuildPersonIndex();
 			}
 			else if( msgType.equals( "REINDEX_GENERAL" ))
 			{
+				println "received message: REINDEX_GENERAL";
 				rebuildGeneralIndex();
 			}
-			else if( msgType.equals( "NEW_STATUS_UPDATE" )) // TODO: rename all this to STREAM_POST or something.
+			else if( msgType.equals( "NEW_STATUS_UPDATE" )) // TODO: rename this to STREAM_POST or something?
     		{
 		    	// add document to index
-				System.out.println("NEWSTATUSUPDATE:::")
+				System.out.println("NEWSTATUSUPDATE")
 		    	log.info( "adding document to index: ${mapMessage.getString('activityUuid')}" );				
 				newStatusUpdate( msg );
 
@@ -328,8 +333,6 @@ public class SearchQueueInputService
 			}
 		}
 
-		
-		/* TEMPORARY CODE, DELETE AFTER USE */
 		String enhancementJSON = statusUpdateActivity.streamObject.enhancementJSON;
 		// create an empty Model
 		Model tempModel = ModelFactory.createDefaultModel();
@@ -358,9 +361,7 @@ public class SearchQueueInputService
 			{
 				Resource anEntity = iter.nextResource();
 		
-				// do we have the "type" (rdf:type) triples that we need for "anEntity"
-			
-			
+				// do we have the "type" (rdf:type) triples that we need for "anEntity"			
 				println "adding resource \"quoddy:${statusUpdateActivity.uuid}\" dcterm:references entity: ${anEntity.toString()}";
 			
 				Resource newResource = model.createResource( "quoddy:${statusUpdateActivity.uuid}" );
