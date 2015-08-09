@@ -14,7 +14,7 @@ class StatusUpdate extends StreamItemBase implements Serializable
 	
 	static constraints =
 	{
-		enhancementJSON(empty:true);
+		enhancementJSON(empty:true, nullable:true);
 	}
 	
 	static mapping =

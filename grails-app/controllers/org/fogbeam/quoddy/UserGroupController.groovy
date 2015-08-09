@@ -231,6 +231,10 @@ class UserGroupController
 			newStatus.targetUuid = group.uuid; // NOTE: can we take 'targetUuid' out of StatusUpdate??
 			newStatus.name = "321BCA";
 			
+			
+			/* TODO: add call to Stanbol to get our enhancement JSON */
+			newStatus.enhancementJSON = "";
+			
 			if( !newStatus.save() )
 			{
 				println "Save StatusUpdate FAILED!";
