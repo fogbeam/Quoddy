@@ -223,63 +223,86 @@ class UserGroupController
 			// get our UserGroup
 			UserGroup group = userGroupService.findByGroupId( Integer.parseInt( groupId ) ); 
 			
-			println "constructing our new StatusUpdate object...";
-			// construct a status object
-			println "statusText: ${params.statusText}";
-			StatusUpdate newStatus = new StatusUpdate( text: params.statusText, creator: user );
-			newStatus.effectiveDate = new Date();
-			newStatus.targetUuid = group.uuid; // NOTE: can we take 'targetUuid' out of StatusUpdate??
-			newStatus.name = "321BCA";
 			
+			/* test to see if the user is a member of the group before allowing them to post */
+			// check that this group is not one of the ones that the user either
+			// owns or is a member of
 			
-			/* TODO: add call to Stanbol to get our enhancement JSON */
-			newStatus.enhancementJSON = "";
+			// TODO: move this blurb of code into UserGroupService or somewhere, with a signature
+			// like boolean isUserInGroup( User user, UserGroup group )
+			List<UserGroup> userGroups = userGroupService.getAllGroupsForUser( user );
 			
-			if( !newStatus.save() )
-			{
-				println "Save StatusUpdate FAILED!";
-				newStatus.errors.allErrors.each { println it };	
+			boolean userIsGroupMember = false;
+			userGroups.each {
+				if( it.id == group.id ){
+					userIsGroupMember = true;
+					return;
+				}
 			}
 			
-			ActivityStreamItem activity = new ActivityStreamItem(content:newStatus.text);
-			activity.title = "Internal Activity";
-			activity.url = new URL( "http://www.example.com" );
-			activity.verb = "quoddy_group_ytstatus_update";
-			activity.actorObjectType = "User";
-			activity.actorUuid = user.uuid;
-			activity.targetObjectType = "UserGroup";
-			
-			activity.owner = user;
-			activity.published = new Date(); // set published to "now"
-			activity.targetUuid = group.uuid;
-			activity.streamObject = newStatus;
-			activity.objectClass = EventTypeNames.STATUS_UPDATE.name;
-						
-			// NOTE: we added "name" to EventBase, but how is it really going
-			// to be used?  Do we *really* need this??
-			activity.name = activity.title;
-			activity.published = activity.published;
-			
-			eventStreamService.saveActivity( activity );
-			
-			
-			// Map msg = new HashMap();
-			// msg.creator = activity.owner.userId;
-			// msg.text = newStatus.text;
-			// msg.published = activity.published;
-			// msg.originTime = activity.dateCreated.time;
-			// msg.targetUuid = activity.targetUuid;
-			
-			// println "sending message to JMS";
-			// jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );
+			if( !userIsGroupMember )
+			{
+				flash.message = "You can only post to a group if you are a member of the group";
+			}
+			else
+			{
+				println "constructing our new StatusUpdate object...";
+				// construct a status object
+				println "statusText: ${params.statusText}";
+				StatusUpdate newStatus = new StatusUpdate( text: params.statusText, creator: user );
+				newStatus.effectiveDate = new Date();
+				newStatus.targetUuid = group.uuid; // NOTE: can we take 'targetUuid' out of StatusUpdate??
+				newStatus.name = "321BCA";
 				
+				
+				/* TODO: add call to Stanbol to get our enhancement JSON */
+				newStatus.enhancementJSON = "";
+				
+				if( !newStatus.save() )
+				{
+					println "Save StatusUpdate FAILED!";
+					newStatus.errors.allErrors.each { println it };	
+				}
+				
+				ActivityStreamItem activity = new ActivityStreamItem(content:newStatus.text);
+				activity.title = "Internal Activity";
+				activity.url = new URL( "http://www.example.com" );
+				activity.verb = "quoddy_group_ytstatus_update";
+				activity.actorObjectType = "User";
+				activity.actorUuid = user.uuid;
+				activity.targetObjectType = "UserGroup";
+				
+				activity.owner = user;
+				activity.published = new Date(); // set published to "now"
+				activity.targetUuid = group.uuid;
+				activity.streamObject = newStatus;
+				activity.objectClass = EventTypeNames.STATUS_UPDATE.name;
+							
+				// NOTE: we added "name" to EventBase, but how is it really going
+				// to be used?  Do we *really* need this??
+				activity.name = activity.title;
+				activity.published = activity.published;
+				
+				eventStreamService.saveActivity( activity );
+				
+				
+				// Map msg = new HashMap();
+				// msg.creator = activity.owner.userId;
+				// msg.text = newStatus.text;
+				// msg.published = activity.published;
+				// msg.originTime = activity.dateCreated.time;
+				// msg.targetUuid = activity.targetUuid;
+				
+				// println "sending message to JMS";
+				// jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );
+			}
 		
 		}
 		else
 		{
 				
 		}
+		
 		redirect( controller:"userGroup", action:"display", params:['groupId':groupId]);
-	}
-				
+	}		
 }
