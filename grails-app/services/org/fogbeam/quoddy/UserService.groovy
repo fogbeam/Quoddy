@@ -98,7 +98,7 @@ class UserService {
 			defaultStream.definedBy = UserStreamDefinition.DEFINED_SYSTEM;
 			defaultStream.owner = user;
 			defaultStream.includeAllEventTypes = true;
-			defaultStream.includeAllUsers = true;
+			// defaultStream.includeAllUsers = true;
 			
 			
 			if( !defaultStream.save())
@@ -146,7 +146,7 @@ class UserService {
 			defaultStream.definedBy = UserStreamDefinition.DEFINED_SYSTEM;
 			defaultStream.owner = user;
 			defaultStream.includeAllEventTypes = true;
-			defaultStream.includeAllUsers = true;
+			// defaultStream.includeAllUsers = true;
 			
 			
 			if( !defaultStream.save())

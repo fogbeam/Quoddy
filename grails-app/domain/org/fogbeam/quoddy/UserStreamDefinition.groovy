@@ -81,7 +81,6 @@ class UserStreamDefinition implements Serializable
 		return this.eventTypesIncluded
 	}
 	
-	
 	public String toString()
 	{
 		return "id: ${id}, uuid: ${uuid}, name: ${name}, owner: ${owner}, dateCreated: ${dateCreated}";

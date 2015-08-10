@@ -37,8 +37,7 @@ class User implements Serializable
 	
 	public String toString()
 	{
-		return "id: ${id} uuid: ${uuid}, userId: ${userId}, password: ${password}, firstName: ${firstName}, lastName: ${lastName}, homepage: ${homepage}, disabled: ${disabled}";
-		
+		return "id: ${id}, uuid: ${uuid}, userId: ${userId}, password: ${password}, firstName: ${firstName}, lastName: ${lastName}, homepage: ${homepage}, disabled: ${disabled}";
 	}
 	
 	@XmlElement
