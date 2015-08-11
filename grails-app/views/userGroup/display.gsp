@@ -51,7 +51,7 @@
 
 				<div id="activityStream">
 				
-					<g:render template="/ugroupStream" />
+					<g:render template="/activityStream" />
 				
 				</div>
 			</g:if>
