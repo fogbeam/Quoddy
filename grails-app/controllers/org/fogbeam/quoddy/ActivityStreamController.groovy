@@ -50,13 +50,12 @@ class ActivityStreamController
 				userStream = userStreamDefinitionService.getStreamForUser( session.user, UserStreamDefinition.DEFAULT_STREAM  );	
 			}
 			
-			// println "checking queueSize for user: ${session.user.userId}";
+			log.debug( "checking queueSize for user: ${session.user.userId}" );
 			queueSize = eventQueueService.getQueueSizeForUser( session.user.userId, userStream );
 		}
 		
-		// println "got queueSize as ${queueSize}"; 
+		log.trace( "got queueSize as ${queueSize}" ); 
 		
-		// render( "<h1>${messages.size()} messages pending on the queue!</h1>");
 		render( queueSize );
 	}
 	
@@ -84,7 +83,8 @@ class ActivityStreamController
 		{
 			page = "1";
 		}
-		println "getContentHtml requested page: ${page}";
+		
+		log.trace( "getContentHtml requested page: ${page}" );
 		def items = new ArrayList<StreamItemBase>();
 		if( user != null )
 		{
@@ -118,12 +118,12 @@ class ActivityStreamController
 	
 	def viewUserStream = {
 		
-		println "viewUserStream: ";
+		log.trace( "viewUserStream: " );
 		User user = session.user;
 		
 		
 		String userId = params.userId;
-		println "userId: ${userId}";
+		log.trace( "userId: ${userId}" );
 		def page = params.page;
 		if( !page )
 		{
@@ -142,13 +142,13 @@ class ActivityStreamController
 		List<StreamItemBase> statusUpdatesForUser = null;
 		if( requestedUser != null )
 		{
-			println "getting status updates for user ${requestedUser.userId}";
+			log.debug( "getting status updates for user ${requestedUser.userId}" );
 			statusUpdatesForUser = eventStreamService.getStatusUpdatesForUser( requestedUser );
 				
 		}
 		else 
 		{
-			println "NO user";
+			log.debug( "NO user" );
 		}
 		
 		Map model = [:];
@@ -164,8 +164,8 @@ class ActivityStreamController
 	
 	def discussItem = 
 	{
-		println "ActivityStreamController.discussItem invoked:";
-		println "params: ${params}";
+		log.trace( "ActivityStreamController.discussItem invoked:" );
+		log.trace( "params: ${params}" );
 		
 		/*  So, what data should we be receiving?  At a minimum, the id (or uuid) of the thing being
 		 *  discussed, the id (or uuid) of the person starting the discussion, and one or more discussTarget id's.  
