@@ -187,7 +187,7 @@ class ActivityStreamController
 		 * room ID to the caller so we can put our current user into the conference 
 		 */
 		
-		println "Invoking OpenMeetings integration here...";
+		log.debug( "Invoking OpenMeetings integration here...");
 		
 		// prereq... instantiate a RESTClient and generate OM session ID and login
 		// TODO: make this URL a configurable item
@@ -196,7 +196,7 @@ class ActivityStreamController
 		// call getSession
 		def resp = client.get( path : 'openmeetings/services/UserService/getSession', contentType:XML );
 		String sid = resp.data.return.session_id;
-		println "sessionId: $sid";
+		log.debug( "sessionId: $sid");
 
 		// TODO: deal with this username/password properly...
 		// call login using the SID from getSession
@@ -227,7 +227,7 @@ class ActivityStreamController
 		else
 		{
 			String strNewRoomID = resp.data.return;
-			println "newRoomID: $strNewRoomID";
+			log.debug( "newRoomID: $strNewRoomID");
 			newRoomID = Integer.parseInt( strNewRoomID );
 			roomURL = roomURL + newRoomID;
 			 
@@ -237,7 +237,7 @@ class ActivityStreamController
 				query:[ SID:sid, username:discussTargetUserId, room_id:newRoomID, isPasswordProtected:false, invitationpass:"", valid:1, validFromDate:"", validFromTime:"",
 												validToDate:"", validToTime:"" ] );
 			
-			// println "response from getInvitationHash: ${resp.data}";
+			log.trace( "response from getInvitationHash: ${resp.data}");
 			
 			if( !( resp.status == 200 )) // HTTP response code; 404 means not found, etc.
 			{
@@ -247,11 +247,11 @@ class ActivityStreamController
 			{
 				
 				def hash = resp.data.return;
-				println "Invitation Hash: $hash";
+				log.debug( "Invitation Hash: $hash" );
 				
 				def inviteUrl = "http://demo2.fogbeam.org:5080/openmeetings/?invitationHash=$hash";
 				
-				// println "URL: $inviteUrl";
+				log.debug( "URL: $inviteUrl");
 				
 				// After creating has, and then what... ???  email the hashes to the usesr?  IM them?  Post to their Quoddy
 				// stream? What??  Should the incoming request tell us which contact mechanism to use?  
@@ -296,8 +296,8 @@ class ActivityStreamController
 	def shareItem =
 	{
 		
-		println "ActivityStreamController.shareItem invoked:";
-		println "params: ${params}";
+		log.debug(  "ActivityStreamController.shareItem invoked:");
+		log.trace( "params: ${params}" );
 		
 		/*  So, what data should we be receiving?  At a minimum, the id (or uuid) of the thing being
 		 *  shared, the id (or uuid) of the person sharing it, and one or more shareTarget id's.  Optionally
