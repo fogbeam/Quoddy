@@ -23,7 +23,7 @@ class CalendarController
 		}
 		else
 		{
-			println "No user in Session";
+			log.info( "No user in Session");
 		}
 		
 		[calFeeds:calFeeds];
