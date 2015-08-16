@@ -17,7 +17,7 @@ public class AdminController
 	
 	def importUsers = 
 	{
-		println "importUsers";
+		log.debug( "importUsers" );
 		
 		[];
 	}
