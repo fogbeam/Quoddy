@@ -14,7 +14,7 @@ class CommentController {
 	
 	def addComment = {
 			
-		println "addComment params: ${params}";
+		log.debug("addComment params: ${params}");
 		
 		// lookup the Event by id
 		log.debug( "eventId: ${params.eventId}" );
@@ -47,7 +47,7 @@ class CommentController {
 	    	// send a JMS message to our testQueue
 			sendJMSMessage("quoddySearchQueue", newCommentMessage );			
 			
-			println( "saved StreamItemComment for user ${user.userId}, item ${item.id}" );
+			log.debug( "saved StreamItemComment for user ${user.userId}, item ${item.id}" );
 		}
 		else
 		{
