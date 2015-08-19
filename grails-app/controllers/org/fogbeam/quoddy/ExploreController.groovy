@@ -17,7 +17,7 @@ class ExploreController
 	def enrich =
 	{
 		
-		println "params:\n " + params;
+		log.debug( "params:\n " + params);
 		
 		def content = params.content;
 		
@@ -25,27 +25,27 @@ class ExploreController
 		{
 			// call Stanbol REST API to get enrichment data
 			String stanbolServerUrl = CH.config.urls.stanbol.endpoint;
-			println "using stanbolServerUrl: ${stanbolServerUrl}";
+			log.debug( "using stanbolServerUrl: ${stanbolServerUrl}");
 			RESTClient restClient = new RESTClient( stanbolServerUrl );
 		
-			println "content submitted: ${content}";
+			log.debug(  "content submitted: ${content}");
 			def restResponse = restClient.post(	path:'enhancer', 
 											body: content,
 											requestContentType : TEXT );
 		
 			Object restResponseData = restResponse.getData();
 			
-			println "restResponseData.class: ${restResponseData.class}";
+			log.debug(  "restResponseData.class: ${restResponseData.class}");
 			
 			java.util.Scanner s = new java.util.Scanner(restResponseData).useDelimiter("\\A");
 	
 			String restResponseText = s.next();
 			
-			println "using Scanner: ${restResponseText}";
+			log.debug( "using Scanner: ${restResponseText}");
 															
-			println "\n\n*************************************************";
-			println restResponseText.toString();
-			println "*************************************************\n\n";
+			log.debug( "\n\n*************************************************");
+			log.debug( restResponseText.toString());
+			log.debug("*************************************************\n\n");
 		
 		
 			// def ks= restResponseText.keySet();
