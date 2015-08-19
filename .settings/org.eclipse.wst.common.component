@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="quoddy2">
+    <wb-module deploy-name="quoddy">
         <wb-resource deploy-path="/" source-path="/test/unit"/>
         <wb-resource deploy-path="/" source-path="/test/integration"/>
         <wb-resource deploy-path="/" source-path="/src/groovy"/>

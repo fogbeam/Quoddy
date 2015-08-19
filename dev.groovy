@@ -13,4 +13,4 @@ dataSource.password=""
 dataSource.logSql=false
 
 dataSource.dbCreate="update"
-dataSource.url="jdbc:postgresql:quoddy2"
+dataSource.url="jdbc:postgresql:quoddy_dev"
