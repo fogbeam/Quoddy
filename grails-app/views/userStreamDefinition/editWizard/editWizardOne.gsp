@@ -16,6 +16,8 @@
 			<br />
 			<label for="streamDescription">Description:</label> <g:textField name="streamDescription" value="${streamToEdit.description}"/>
 			<br />
+			<label for="includeEverything">Include Everything: </label> <g:checkBox name="includeEverything" value="${streamToEdit.includeEverything}" />
+			<br />
 			<g:submitButton name="stage2" value="Next" />
 		</g:form>
 	</body>

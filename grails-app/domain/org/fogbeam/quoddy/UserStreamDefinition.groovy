@@ -40,8 +40,11 @@ class UserStreamDefinition implements Serializable
 	Date 	dateCreated;
 	String 	description;
 	
-
 	// include:
+	
+	// everything
+	Boolean includeEverything = true;
+	
 	// users
 	Boolean includeSelfOnly = false;
 	Boolean includeAllUsers = false;
