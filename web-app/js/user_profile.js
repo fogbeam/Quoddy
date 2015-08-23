@@ -86,7 +86,7 @@ function addToFriends()
 	});
 
 	jqXhr.done(function(data, textStatus, jqXHR) {
-		alert( "success" );
+		alert( "Friend request sent." );
 	})
 	.fail(function( jqXHR, textStatus, errorThrown) {
 		alert( "error: " + errorThrown );
@@ -94,7 +94,6 @@ function addToFriends()
 	.always(function() {
 		// alert( "complete" );
 	});
-	
 	
 }
 

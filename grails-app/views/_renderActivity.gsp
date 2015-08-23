@@ -4,7 +4,7 @@
 
 <div class="aseWrapper" id="aseWrapper.${item.uuid}">
 
-	<g:if test="${item.streamObject.enhancementJSON != null}">
+	<g:if test="${item.streamObject.enhancementJSON != null  && !item.streamObject.enhancementJSON.isEmpty() }">
 		<script class="enhancementJSON" id="enhancementJSON-${item.uuid}" type="text/javascript" language="javascript">
 			${item.streamObject.enhancementJSON}
 		</script>
