@@ -44,7 +44,12 @@ to provide a rich, tightly integrated platform for knowledge discovery, navigati
 Where's the issue tracker?
 --------------------
 
-Right here:  http://dev.fogbeam.org/bugzilla/describecomponents.cgi?product=Quoddy
+Fogbeam projects use Bugzilla for tracking issues.  You can find the Bugzilla instance at http://dev.fogbeam.org/bugzilla
+
+To browse Quoddy issues by component, click here:  http://dev.fogbeam.org/bugzilla/describecomponents.cgi?product=Quoddy
+
+For a list of all open Quoddy bugs, click here:  http://dev.fogbeam.org/bugzilla/buglist.cgi?cmdtype=dorem&remaction=run&namedcmd=quoddy_all&sharer_id=2&list_id=27
+
 
 What about OpenSocial?
 --------------------------
@@ -65,16 +70,6 @@ You can login as testuser1 with a password of 'secret', or you can modify Bootst
 different default users.
 
 For help, see the fogcutter-dev Google Group, or check #fogcutter on Freenode.net IRC.	
-
-Issue Tracker
--------------
-
-Fogbeam projects use Bugzilla for tracking issues.  You can find the Bugzilla instance at http://dev.fogbeam.org/bugzilla
-
-To browse Quoddy issues by component, click here:  http://dev.fogbeam.org/bugzilla/describecomponents.cgi?product=Quoddy
-
-For a list of all open Quoddy bugs, click here:  http://dev.fogbeam.org/bugzilla/buglist.cgi?cmdtype=dorem&remaction=run&namedcmd=quoddy_all&sharer_id=2&list_id=27
-
 
 Commercial Support
 ------------------
