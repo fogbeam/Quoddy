@@ -279,8 +279,10 @@ class EventStreamService {
 									// user, or posted to a group 
 									query = query +
 							
-												"( 		 item.targetUuid = :targetUuid " + 
-													" or item.targetUuid = :userUuid " + 
+												"(" + 
+													// "item.targetUuid = :targetUuid " + 
+													// " or item.targetUuid = :userUuid " +
+													" item.targetUuid = :userUuid " +
 													" or item.targetUuid in elements( stream.userGroupUuidsIncluded ) "; 
 									
 			
