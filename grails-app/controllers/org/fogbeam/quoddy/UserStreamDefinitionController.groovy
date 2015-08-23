@@ -298,6 +298,15 @@ class UserStreamDefinitionController
 				streamToEdit.name = params.streamName;
 				streamToEdit.description = params.streamDescription;
 
+				if( params.includeEverything != null && params.includeEverything.equals( "on") )
+				{
+					streamToEdit.includeEverything = true;
+				}
+				else
+				{
+					streamToEdit.includeEverything = false;
+				}
+				
 				
 				Set<EventType> eventTypes = eventTypeService.findAllEventTypes();
 				[eventTypes:eventTypes, selectedEventTypes:streamToEdit.eventTypesIncluded];
@@ -493,6 +502,9 @@ class UserStreamDefinitionController
 		[streamToEdit:streamToEdit];	
 	}
 	
+	/* TODO: This method is never called now that we use the wizard approach, right? This
+	 * should be dead code that we can delete.  Verify and delete this if so.
+	 */
 	def update = 
 	{
 		
