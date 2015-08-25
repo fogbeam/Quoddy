@@ -228,12 +228,12 @@ class EventStreamService {
 				validOwners.add( user );
 			}
 			
-			println "validOwners.size() = ${validOwners.size()}";
+			/* println "validOwners.size() = ${validOwners.size()}";
 			for( User validOwner : validOwners )
 			{
 				println "valid owner: ${validOwner}";
 			}
-			
+			*/
 			
 			// NOTE: could we drop the idea of having both a "friends" list AND a "validOwners"
 			// list, and collapse those into one thing, to make this query simpler?  The fundamental
@@ -275,11 +275,16 @@ class EventStreamService {
 						") or ";
 						    
 				// include any posts to groups this user is a member of, or owns
+				// TODO: this should always only include StatusUpdates, but we should add that to the
+				// query here to make it explicit, in case something changes in the future.
 				query = query +
 					"( item.owner in :validOwners )";
 								
-				// no need to deal with userlists here, since you can only add
-				// a user to a UserList if you are friends with them anyway?  
+				// NOTE: no need to deal with userlists here, since you can only add
+				// a user to a UserList if you are friends with them anyway? (For now).
+				// if you could create userlists without friending first, that would effectively
+				// just be adding "follow" support in a multi-user fashion, when we don't
+				// even officially have a "follow" implemented anyway. 
 														
 				query = query +") ";
 					
