@@ -12,6 +12,7 @@ class EventStreamService {
 	def jmsService;
 	def eventQueueService;
 	def existDBService;
+	def userGroupService;
 	
 	public void saveActivity( ActivityStreamItem activity )
 	{
@@ -27,9 +28,6 @@ class EventStreamService {
 		}
 		
 	}
-	
-	
-	
 	
 	
 	/* NOTE: note to self, we got rid of the overload of this method that does not take a UserStream
@@ -103,6 +101,8 @@ class EventStreamService {
 		
 		int msgsOnQueue = eventQueueService.getQueueSizeForUser( user.userId, userStream );
 		println "Messages available on queue: ${msgsOnQueue}";
+		println "MaxCount requested: ${maxCount}";
+		
 		int msgsToRead = 0;
 		if( msgsOnQueue > 0 )
 		{
@@ -112,13 +112,13 @@ class EventStreamService {
 			}
 			else
 			{
-				msgsToRead = maxCount - msgsOnQueue;
+				// msgsToRead = maxCount - msgsOnQueue;
+				msgsToRead = maxCount;
 			}
 		}
 		
 		println "Messages to read from queue: ${msgsToRead}";
 		
-		// long oldestOriginTime = Long.MAX_VALUE;
 		long oldestOriginTime = new Date().getTime();
 		
 		// NOTE: we could avoid iterating over this list again by returning the "oldest message time"
@@ -152,7 +152,7 @@ class EventStreamService {
 		{
 			ActivityStreamItem activityStreamItem = messages.get(i);
 			// println "got message: ${msg} off of queue";
-			
+	
 			activityStreamItem.streamObject = existDBService.populateSubscriptionEventWithXmlDoc( activityStreamItem.streamObject );
 			
 			recentActivityStreamItems.add( activityStreamItem );
@@ -164,9 +164,7 @@ class EventStreamService {
 		 * message we may have in hand - that we received from the queue.  Otherwise, we risk
 		 * showing the same event twice.
 		 */
-		
-		
-		
+				
 		// now, do we need to go to the DB to get some more activities?
 		if( maxCount > msgsToRead )
 		{
@@ -202,165 +200,309 @@ class EventStreamService {
 			 *  anything special, as we're going to add the user to it manually anyway. 
 			 */
 								
+
+			/* TODO: do a separate query to find any UserGroups for this User.  That means
+			 * any group the user owns, OR is a member of.  Then compile the list of
+			 * group members from all of those groups, into a collection that we
+			 * can check for membership in.
+			 */
+			List<UserGroup> groupsForUser = userGroupService.getAllGroupsForUser(user);
+			Set<User> validOwners = new HashSet<User>();
+			
+			println "found: ${groupsForUser?.size()} groups for user ${user}";
+			
+			if( groupsForUser != null && groupsForUser.size() > 0 )
+			{
+				println "found some groups to add to validOwners!";
+				for( UserGroup groupForUser : groupsForUser )
+				{
+					println "adding group members for group ${groupForUser}";
+					validOwners.addAll( groupForUser.groupMembers );
+				}	
+			}			
+			else
+			{
+				println "no groups, so adding only current user to validOwners collection";
+				// adding the user to this collection, because anything that returns is something
+				// we'd get anyway, and the query breaks if you use an empty collection here.
+				validOwners.add( user );
+			}
+			
+			println "validOwners.size() = ${validOwners.size()}";
+			for( User validOwner : validOwners )
+			{
+				println "valid owner: ${validOwner}";
+			}
+			
+			
+			// NOTE: could we drop the idea of having both a "friends" list AND a "validOwners"
+			// list, and collapse those into one thing, to make this query simpler?  The fundamental
+			// idea is the same:  generate a list of people who's posts we are willng to accept,
+			// regardless of the reason *why* we're willing to accept them.  
+			
+			
+			def parameters = [];
 			String query = "select item from ActivityStreamItem as item, UserStreamDefinition as stream ";
 			println "base query: ${query}";
+	
+			// There are two major divisions in how this works.  
 			
-			if( userStream.userListUuidsIncluded != null && !userStream.userListUuidsIncluded.isEmpty() )
-			{
-				query = query + "inner join fetch stream.userListUuidsIncluded as userList";
-			}
-
-			query = query + " where item.published >= :cutoffDate " +
-							" and item.published < :oldestOriginTime " + 
-							" and ( ";   
-							
-									/* deal with user filter */
-									if( userStream.includeAllUsers )
-									{
-										println "includeAllUsers == true case";
+			// IF userStream.includeEverything
+			// is turned on, then we include: all items owned by the current user, regardless of
+			// their type or source (eg, subscription); all posts by all friends and followed users;
+			// all posts to all groups the user is in; all posts by all users in any userlists
+			// owned by this user.  
+			if( userStream.includeEverything )
+			{	
+				query = query + " where item.published >= :cutoffDate " +
+								" and item.published < :oldestOriginTime " +
+								" and ( ";
+																			
+				query = query +
+							" ( item.owner.id in :friendIds " +
+								" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name}' ) " +
+								" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.CALENDAR_FEED_ITEM.name}' ) " +
+								" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.RSS_FEED_ITEM.name}' ) " +
+								" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.ACTIVITI_USER_TASK.name}' ) " +
+								" and item.targetUuid = :targetUuid " +
+							") or ";
+	
 										
-										/* NOTE: We may never turn this on, as it may not be a desirable use
-										 * case.  Basically, this is saying "show me posts from every user
-										 * in the system.  If we turn that on, we have to deal with the possiblity
-										 * that some users may not wnat me to see their posts.  That adds another
-										 * level of complexity to deal with.  As it is now, you have to 
-										 * accept somebody's friend request before they can see your posts (although
-										 * the idea of "follow" support changes that dynamic as well!)  Basically
-										 * it's going to get complicated deciding how to control who can see
-										 * what.
-										 */
-										
-										// nothing to do, default query will return hits from all eligible users
-										// query = query + "("
-									}
-									else if( userStream.includeSelfOnly )
-									{
-										println "includeSelfOnly == true case";
-										
-										// left alone, the existing default query would return posts from any
-										// user in the friends list.  We should rework the entire base query
-										// but - for now - we can cheat and just add an extra and clause to
-										// filter down to the user id of our user
-										query = query + " ( item.owner.id = :ownerId ) or ";
-									}
-									else if( userStream.userUuidsIncluded == null || userStream.userUuidsIncluded.isEmpty() )
-									{ 
-										
-										println "NO userUuidsIncluded case";
-										
-										// this is the default case - include posts from Friends only. Note that
-										// this covers showing us our own posts, as we force a user to look like
-										// their own friend by adding their uuid to the friends list before
-										// running the query.
-										
-										println "adding userUuidsIncluded and streamid filters to query";
-										query = query +
-														" ( item.owner.id in :friendIds " +
-															" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name}' ) " +
-															" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.CALENDAR_FEED_ITEM.name}' ) " +
-															" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.RSS_FEED_ITEM.name}' ) " +
-															" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.ACTIVITI_USER_TASK.name}' ) " +
-															" and item.targetUuid = :targetUuid " +
-														") or ";
-
-									}
-									else
-									{
-										println "YES userUuidsIncluded case";
-										
-										// this means that neither "include all" nor "include self only" was turned on
-										// AND that we have a specific list of users selected to include.  Set up the
-										// query here to work off the userUuidsIncluded list 
-										query = query + " (item.owner.id in elements( stream.userUuidsIncluded ) ) or ";
-									}
-							
-									// this find things that we should pick up based on the targetUuuid
-									// so, anything shared to the specific stream, or shared to the current
-									// user, or posted to a group 
-									query = query +
-							
-												"(" + 
-													// "item.targetUuid = :targetUuid " + 
-													// " or item.targetUuid = :userUuid " +
-													" item.targetUuid = :userUuid " +
-													" or item.targetUuid in elements( stream.userGroupUuidsIncluded ) "; 
-									
-			
-													if( userStream.userListUuidsIncluded != null && !userStream.userListUuidsIncluded.isEmpty() )
-													{
-														query = query + " or (item.owner in elements( userList.members ) ) ";
-													}
-																							
-												// or the item is from a subscription we have
-											    // added to this stream.  	
-																										
-													
-									query = query +") ) ";
-				
-			println "query now: ${query}";
-			
-			
-			/* deal with event type filter */
-			if( userStream.includeAllEventTypes )
-			{
-				// don't do anything, the default query returns all event types
-				println "selecting ALL event types";
-			}				
-			else 
-			{
-				
-				println "filtering by event type";
-				query = query + "and (item.objectClass in elements( stream.eventTypesIncluded ) )"	
-				
-			}								 		
-									
-			query = query + " and stream.id = :streamId order by item.published desc";
-			
-			println "executing query: $query";
-			
-			println "Found ${friends.size()} friends";
-			List<Integer> friendIds = new ArrayList<Integer>();
-			for( User friend: friends )
-			{
-				def friendId = friend.id;
-				println( "Adding friend id: ${friendId}, userId: ${friend.userId} to list" );
-				friendIds.add( friendId );
-			}
-
-							
-			// for the purpose of this query, treat a user as their own friend... that is, we
-			// will want to read Activities created by this user (we see our own updates in our
-			// own feed)
-			friendIds.add( user.id );
-			println "friendIds has ${friendIds.size()} entries!";
-			
-			ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
-			
-			def parameters = 
-					['cutoffDate':cutoffDate,
-					 'oldestOriginTime':new Date(oldestOriginTime),
-					 'targetUuid':streamPublic.uuid, 
-					 'streamId':userStream.id,
-					 'userUuid': user.uuid]
-		
-					println "Using parameters map: ${parameters}";
-			if( !userStream.includeSelfOnly )
-			{
-				parameters << ['friendIds':friendIds];
-			}
-			
-			println "Using parameters map: ${parameters}";
-			
-			if( userStream.includeSelfOnly || ( userStream.userUuidsIncluded == null || userStream.userUuidsIncluded.isEmpty() ) )
-			{
-				parameters << ['ownerId':user.id];
-			}
+				query = query +
+								
+						"(" +
+							" item.targetUuid = :userUuid " + 
+						") or ";
+						    
+				// include any posts to groups this user is a member of, or owns
+				query = query +
+					"( item.owner in :validOwners )";
+								
+				// no need to deal with userlists here, since you can only add
+				// a user to a UserList if you are friends with them anyway?  
+														
+				query = query +") ";
 					
-			println "Using parameters map: ${parameters}";
+				println "query now: ${query}";
+				query = query + " and stream.id = :streamId "; 
+				query = query + " order by item.published desc";
+				
+				println "Final query before execution: $query";
+				
+				println "Found ${friends.size()} friends";
+				List<Integer> friendIds = new ArrayList<Integer>();
+				for( User friend: friends )
+				{
+					def friendId = friend.id;
+					println( "Adding friend id: ${friendId}, userId: ${friend.userId} to list" );
+					friendIds.add( friendId );
+				}
+	
+								
+				// for the purpose of this query, treat a user as their own friend... that is, we
+				// will want to read Activities created by this user (we see our own updates in our
+				// own feed)
+				friendIds.add( user.id );
+				println "friendIds has ${friendIds.size()} entries!";
+				
+				ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
+				
+				parameters =
+						['cutoffDate':cutoffDate,
+						 'oldestOriginTime':new Date(oldestOriginTime),
+						 'targetUuid':streamPublic.uuid,
+						 'streamId':userStream.id,
+						 'userUuid': user.uuid,
+						 'validOwners':validOwners]
+			
+						println "Using parameters map: ${parameters}";
+				if( !userStream.includeSelfOnly )
+				{
+					parameters << ['friendIds':friendIds];
+				}
+				
+				println "Using parameters map: ${parameters}";
+				
+				if( userStream.includeSelfOnly || ( userStream.userUuidsIncluded == null || userStream.userUuidsIncluded.isEmpty() ) )
+				{
+					parameters << ['ownerId':user.id];
+				}
+						
+				println "Using parameters map: ${parameters}";
+				
+				
+				println "Executing query NOW:";
+	
+			}
 			
 			
-			println "Executing query NOW:";
+			// ELSE
+			// we ONLY include things that are specifically selected in the stream
+			// definition.  This means a non "include everything" selection here
+			// won't even include the user's own activity unless they explicitly
+			// chose to include it.  
+			else
+			{
+				if( userStream.userListUuidsIncluded != null && !userStream.userListUuidsIncluded.isEmpty() )
+				{
+					query = query + "inner join fetch stream.userListUuidsIncluded as userList";
+				}
+	
+				query = query + " where item.published >= :cutoffDate " +
+								" and item.published < :oldestOriginTime " +
+								" and ( ";
+								
+										/* deal with user filter */
+										if( userStream.includeAllUsers )
+										{
+											println "includeAllUsers == true case";
+											
+											/* NOTE: We may never turn this on, as it may not be a desirable use
+											 * case.  Basically, this is saying "show me posts from every user
+											 * in the system.  If we turn that on, we have to deal with the possiblity
+											 * that some users may not wnat me to see their posts.  That adds another
+											 * level of complexity to deal with.  As it is now, you have to
+											 * accept somebody's friend request before they can see your posts (although
+											 * the idea of "follow" support changes that dynamic as well!)  Basically
+											 * it's going to get complicated deciding how to control who can see
+											 * what.
+											 */
+											
+											// nothing to do, default query will return hits from all eligible users
+											// query = query + "("
+										}
+										else if( userStream.includeSelfOnly )
+										{
+											println "includeSelfOnly == true case";
+											
+											// left alone, the existing default query would return posts from any
+											// user in the friends list.  We should rework the entire base query
+											// but - for now - we can cheat and just add an extra and clause to
+											// filter down to the user id of our user
+											query = query + " ( item.owner.id = :ownerId ) or ";
+										}
+										else if( userStream.userUuidsIncluded == null || userStream.userUuidsIncluded.isEmpty() )
+										{
+											
+											println "NO userUuidsIncluded case";
+											
+											// this is the default case - include posts from Friends only. Note that
+											// this covers showing us our own posts, as we force a user to look like
+											// their own friend by adding their uuid to the friends list before
+											// running the query.
+											
+											println "adding userUuidsIncluded and streamid filters to query";
+											query = query +
+															" ( item.owner.id in :friendIds " +
+																" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name}' ) " +
+																" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.CALENDAR_FEED_ITEM.name}' ) " +
+																" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.RSS_FEED_ITEM.name}' ) " +
+																" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.ACTIVITI_USER_TASK.name}' ) " +
+																" and item.targetUuid = :targetUuid " +
+															") or ";
+	
+										}
+										else
+										{
+											println "YES userUuidsIncluded case";
+											
+											// this means that neither "include all" nor "include self only" was turned on
+											// AND that we have a specific list of users selected to include.  Set up the
+											// query here to work off the userUuidsIncluded list
+											query = query + " (item.owner.id in elements( stream.userUuidsIncluded ) ) or ";
+										}
+								
+										// this find things that we should pick up based on the targetUuuid
+										// so, anything shared to the specific stream, or shared to the current
+										// user, or posted to a group
+										query = query +
+								
+													"(" +
+														// "item.targetUuid = :targetUuid " +
+														// " or item.targetUuid = :userUuid " +
+														" item.targetUuid = :userUuid " +
+														" or item.targetUuid in elements( stream.userGroupUuidsIncluded ) ";
+										
+				
+														if( userStream.userListUuidsIncluded != null && !userStream.userListUuidsIncluded.isEmpty() )
+														{
+															query = query + " or (item.owner in elements( userList.members ) ) ";
+														}
+																								
+													// or the item is from a subscription we have
+													// added to this stream.
+																											
+														
+										query = query +") ) ";
+					
+				println "query now: ${query}";
+				
+				
+				/* deal with event type filter */
+				if( userStream.includeAllEventTypes )
+				{
+					// don't do anything, the default query returns all event types
+					println "selecting ALL event types";
+				}
+				else
+				{
+					
+					println "filtering by event type";
+					query = query + "and (item.objectClass in elements( stream.eventTypesIncluded ) )"
+					
+				}
+										
+				query = query + " and stream.id = :streamId order by item.published desc";
+				
+				println "executing query: $query";
+				
+				println "Found ${friends.size()} friends";
+				List<Integer> friendIds = new ArrayList<Integer>();
+				for( User friend: friends )
+				{
+					def friendId = friend.id;
+					println( "Adding friend id: ${friendId}, userId: ${friend.userId} to list" );
+					friendIds.add( friendId );
+				}
+	
+								
+				// for the purpose of this query, treat a user as their own friend... that is, we
+				// will want to read Activities created by this user (we see our own updates in our
+				// own feed)
+				friendIds.add( user.id );
+				println "friendIds has ${friendIds.size()} entries!";
+				
+				ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
+				
+				parameters =
+						['cutoffDate':cutoffDate,
+						 'oldestOriginTime':new Date(oldestOriginTime),
+						 'targetUuid':streamPublic.uuid,
+						 'streamId':userStream.id,
+						 'userUuid': user.uuid]
 			
+						println "Using parameters map: ${parameters}";
+				if( !userStream.includeSelfOnly )
+				{
+					parameters << ['friendIds':friendIds];
+				}
+				
+				println "Using parameters map: ${parameters}";
+				
+				if( userStream.includeSelfOnly || ( userStream.userUuidsIncluded == null || userStream.userUuidsIncluded.isEmpty() ) )
+				{
+					parameters << ['ownerId':user.id];
+				}
+						
+				println "Using parameters map: ${parameters}";
+				
+				
+				println "Executing query NOW:";
+	
+			}
+			
+			
+						
 			List<ActivityStreamItem> queryResults =
 				ActivityStreamItem.executeQuery( query, parameters, ['max': maxCount ]);
 		
