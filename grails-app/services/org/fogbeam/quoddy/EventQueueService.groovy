@@ -323,14 +323,12 @@ class EventQueueService
 	public List<ActivityStreamItem> getMessagesForUser( final String userId, final int msgCount, final UserStreamDefinition userStream )
 	{
 		
-		// TODO: this should return ActivityStreamItem instances!
-		
-		println "getting messages for user: ${userId}, msgCount: ${msgCount}";
+		println "EventQueueService: getting messages for user: ${userId}, msgCount: ${msgCount}";
 		List<ActivityStreamItem> messages = new ArrayList<Map>();
 		Deque<Map> userQueue = eventQueues.get( userId );
 		if( userQueue != null )
 		{
-			// println "got userQueue for user ${userId}";
+			println "got userQueue for user ${userId}";
 
 			// collect the messages that match
 			def filter = userStreamAwareQueueFilter.curry( userStream );
@@ -349,6 +347,7 @@ class EventQueueService
 			}
 		}
 		
+		println "EventQueueService: returning ${messages.size()} messages from userQueue for user ${userId}";
 		return messages;
 	}
 	
