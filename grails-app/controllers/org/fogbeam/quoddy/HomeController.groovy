@@ -25,21 +25,21 @@ class HomeController {
 		
 		if( userId != null )
     	{
-			println "getting User by userId: ${userId}";
+			log.debug( "getting User by userId: ${userId}");
     		user = userService.findUserByUserId( userId );
     	}
     	else
     	{
-			println "Looking up User in session";
+			log.debug( "Looking up User in session");
 			user = SecurityUtils.subject.principal;
     		if( user != null )
     		{
-				println "Found User in Session";
+				log.debug( "Found User in Session");
     			user = userService.findUserByUserId( user.userId );
     		}
 			else
 			{
-				println "No user in Session";
+				log.debug( "No user in Session");
 			}
     	}
 		
