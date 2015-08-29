@@ -36,7 +36,7 @@ class ScheduleController {
 
 	def editSchedule =
 	{
-		println( "editSchedule received id: ${params.id}" );
+		log.debug( "editSchedule received id: ${params.id}" );
 	
 		List<String> jobGroups = jobManagerService.quartzScheduler.getJobGroupNames();
 		def triggers = null;
@@ -50,11 +50,11 @@ class ScheduleController {
 			{
 				JobDetail detail = jobManagerService.quartzScheduler.getJobDetail(aJobKey);
 				
-				println "detail: ${detail}";
+				log.debug( "detail: ${detail}");
 				
 				if( detail.key.name.contains( params.id ))
 				{
-					println "found a match for ${detail.fullName}";			
+					log.debug( "found a match for ${detail.fullName}");			
 					triggers = jobManagerService.quartzScheduler.getTriggersOfJob(aJobKey);
 					jobName = aJobKey.name
 					jobGroup = aJobKey.group
@@ -69,8 +69,8 @@ class ScheduleController {
 	
 	def createTrigger =
 	{
-		println( "createTrigger:" );
-		println "params: ${params}";
+		log.debug( "createTrigger:" );
+		log.debug( "params: ${params}");
 		
 		List<String> jobGroups = jobManagerService.quartzScheduler.getJobGroupNames();
 		def triggers = null;
@@ -84,12 +84,12 @@ class ScheduleController {
 			for(JobKey aJobKey : jobManagerService.quartzScheduler.getJobKeys(groupMatcher))
 			{
 
-				println "aJobKey: ${aJobKey}";
+				log.debug( "aJobKey: ${aJobKey}");
 				
 				JobDetail detail = jobManagerService.quartzScheduler.getJobDetail(aJobKey);
 					
-				println "jobDetail: ${detail}";
-				println "params.id = ${params.id}";
+				log.debug( "jobDetail: ${detail}");
+				log.debug( "params.id = ${params.id}");
 				
 				if( detail?.key?.name?.contains( params.id ))
 				{						
@@ -99,7 +99,7 @@ class ScheduleController {
 					jobFullName = detail.description;
 				}
 				else {
-					println( "no job detail or no fullname found!" );
+					log.debug( "no job detail or no fullname found!" );
 				}
 			}
 		}
