@@ -19,7 +19,7 @@ class SearchController
 	
 	def doSearch =
 	{
-		println "Searching using queryString: ${params.queryString}";
+		log.info( "Searching using queryString: ${params.queryString}");
 		String queryString = params.queryString;
 
 		boolean bSearchStatusUpdates = true;
@@ -36,20 +36,20 @@ class SearchController
 		
 		if( bSearchStatusUpdates )
 		{
-			println "searching status updates";
+			log.debug( "searching status updates");
 			List<SearchResult> tempResults = searchService.doStatusUpdateSearch( queryString );
-			println "SearchStatusUpdates returned " + tempResults.size() + " results";
+			log.debug( "SearchStatusUpdates returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size());
 		}
 		
 		if( bSearchCalendarFeedItems )
 		{
-			println "searching calendar feed items";
+			log.debug( "searching calendar feed items");
 			List<SearchResult> tempResults = searchService.doCalendarFeedItemSearch( queryString );
-			println "SearchCalendarFeedItems returned " + tempResults.size() + " results";
+			log.debug( "SearchCalendarFeedItems returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size());
 		}
 		
 		if( bSearchBusSubItems )
