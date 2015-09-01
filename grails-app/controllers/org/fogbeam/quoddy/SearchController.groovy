@@ -54,57 +54,57 @@ class SearchController
 		
 		if( bSearchBusSubItems )
 		{
-			println "searching business event subscription items";
+			log.debug( "searching business event subscription items");
 			List<SearchResult> tempResults = searchService.doBusinessSubscriptionItemSearch( queryString );
-			println "SearchBusSubItems returned " + tempResults.size() + " results";
+			log.debug( "SearchBusSubItems returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size());
 		}
 		
 		if( bSearchActivitiUserTasks )
 		{
-			println "searching Activiti User Tasks";
+			log.debug( "searching Activiti User Tasks");
 			List<SearchResult> tempResults = searchService.doActivitiUserTaskSearch( queryString );
-			println "SearchBusSubItems returned " + tempResults.size() + " results";
+			log.debug("SearchBusSubItems returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size());
 			
 		}
 		
 		if( bSearchRssFeedItems )
 		{
-			println "searching rss feed items";
+			log.debug( "searching rss feed items");
 			List<SearchResult> tempResults = searchService.doRssFeedItemSearch( queryString );
-			println "SearchRssFeedItems returned " + tempResults.size() + " results";
+			log.debug( "SearchRssFeedItems returned " + tempResults.size() + " results" );
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size());
 		}
 		
 		if( bSearchActivityStreamItems )
 		{
-			println "searching activity stream items";
+			log.debug( "searching activity stream items");
 			List<SearchResult> tempResults = searchService.doActivityStreamItemSearch( queryString );
-			println "SearchActivityStreamItems returned " + tempResults.size() + " results";
+			log.debug( "SearchActivityStreamItems returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size() );
 		}
 		
 		if( bSearchUsers )
 		{
-			println "searching users";
+			log.debug( "searching users");
 			List<SearchResult> tempResults = searchService.doUserSearch( queryString );
-			println "SearchUsers returned " + tempResults.size() + " results";
+			log.debug( "SearchUsers returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size());
 		}
 		
 		if( bSearchFriends )
 		{
-			println "searching friends";
+			log.debug( "searching friends");
 			List<SearchResult> tempResults = searchService.doFriendSearch( queryString, session.user );
-			println "SearchFriends returned " + tempResults.size() + " results";
+			log.debug( "SearchFriends returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size());
 		}
 		
 		
