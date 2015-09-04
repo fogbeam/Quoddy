@@ -74,7 +74,7 @@ class SparqlController
 		// Make a TDB-backed dataset
 		String quoddyHome = System.getProperty( "quoddy.home" );
 		String directory = "${quoddyHome}/jenastore/triples" ;
-		println "Opening TDB triplestore at: ${directory}";
+		log.debug( "Opening TDB triplestore at: ${directory}");
 		Dataset dataset = TDBFactory.createDataset(directory) ;
 		
 		dataset.begin(ReadWrite.READ) ;
@@ -83,7 +83,7 @@ class SparqlController
 		Model tdbModel = dataset.getDefaultModel() ;
 
 		/* Now create and execute the query using a Query object */
-		println "Our Query: ${queryString}";
+		log.debug( "Our Query: ${queryString}");
 		Query query = QueryFactory.create(queryString) ;
 		QueryExecution qexec = QueryExecutionFactory.create(query, tdbModel);
 				
@@ -103,14 +103,14 @@ class SparqlController
 				String subject = x.toString();
 				subject = subject.replace( "quoddy:", "" );
 				
-				println "subject: " + subject;
+				log.debug( "subject: " + subject);
 				
 				List<ActivityStreamItem> asiResults = ActivityStreamItem.executeQuery( "select asi from ActivityStreamItem as asi where asi.uuid = ?", [subject] );
 				
 				
 				if( asiResults != null && !asiResults.isEmpty() )
 				{
-					println "found valid ActivityStreamItem for SPARQL query";
+					log.debug( "found valid ActivityStreamItem for SPARQL query");
 					
 					SearchResult result = new SearchResult();
 					result.object = asiResults[0];
@@ -119,7 +119,7 @@ class SparqlController
 				}
 				else
 				{
-					println "could not locate ActivityStreamItem for uuid: " + subject;
+					log.debug( "could not locate ActivityStreamItem for uuid: " + subject);
 				}				
 			}
 		}
