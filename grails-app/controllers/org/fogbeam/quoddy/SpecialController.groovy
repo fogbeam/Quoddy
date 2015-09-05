@@ -9,12 +9,12 @@ class SpecialController
 		switch( request.method )
 		{
 			case "POST":
-				println "POST: ${params}";
-				println "text:\n\n ${request.reader.text}\n\n";
+				log.debug( "POST: ${params}");
+				log.debug( println "text:\n\n ${request.reader.text}\n\n");
 				break;
 			default:
-				println "OTHER: ${params}";
-				println "text:\n\n ${request.reader.text}\n\n";
+				log.debug( "OTHER: ${params}");
+				log.debug( "text:\n\n ${request.reader.text}\n\n");
 				break;
 		}
 		
