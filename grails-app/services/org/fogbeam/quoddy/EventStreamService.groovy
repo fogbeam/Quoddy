@@ -254,6 +254,9 @@ class EventStreamService {
 			// owned by this user.  
 			if( userStream.includeEverything )
 			{	
+				println "userStream.includeEverything = TRUE";
+				log.info( "userStream.includeEverything = TRUE" );
+				
 				query = query + " where item.published >= :cutoffDate " +
 								" and item.published < :oldestOriginTime " +
 								" and ( ";
@@ -348,6 +351,12 @@ class EventStreamService {
 			// chose to include it.  
 			else
 			{
+				println "userStream.includeEverything = FALSE";
+				log.info( "userStream.includeEverything = FALSE" );
+
+				println "Query begins as: \n${query}";
+				
+				
 				if( userStream.userListUuidsIncluded != null && !userStream.userListUuidsIncluded.isEmpty() )
 				{
 					query = query + "inner join fetch stream.userListUuidsIncluded as userList";
@@ -386,79 +395,31 @@ class EventStreamService {
 											// filter down to the user id of our user
 											query = query + " ( item.owner.id = :ownerId ) or ";
 										}
-										else if( userStream.userUuidsIncluded == null || userStream.userUuidsIncluded.isEmpty() )
-										{
-											
-											println "NO userUuidsIncluded case";
-											
-											// this is the default case - include posts from Friends only. Note that
-											// this covers showing us our own posts, as we force a user to look like
-											// their own friend by adding their uuid to the friends list before
-											// running the query.
-											
-											println "adding userUuidsIncluded and streamid filters to query";
-											query = query +
-															" ( item.owner.id in :friendIds " +
-																" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name}' ) " +
-																" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.CALENDAR_FEED_ITEM.name}' ) " +
-																" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.RSS_FEED_ITEM.name}' ) " +
-																" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.ACTIVITI_USER_TASK.name}' ) " +
-																" and item.targetUuid = :targetUuid " +
-															") or ";
-	
-										}
 										else
 										{
-											println "YES userUuidsIncluded case";
+											println "userUuidsIncluded case";
 											
 											// this means that neither "include all" nor "include self only" was turned on
-											// AND that we have a specific list of users selected to include.  Set up the
-											// query here to work off the userUuidsIncluded list
-											query = query + " (item.owner.id in elements( stream.userUuidsIncluded ) ) or ";
+											// so here work off the specific list of included users (which might be empty)  
+											// Set up the query here to work off the userUuidsIncluded list
+											
+											// NOTE: this should only return "user stuff", so exclude, for example
+											// subscription items here.  
+											
+											query = query + " (item.owner.uuid in elements( stream.userUuidsIncluded )" + 
+											" and not item.objectClass = '${EventTypeNames.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name}'" +
+											" and not item.objectClass = '${EventTypeNames.CALENDAR_FEED_ITEM.name}'" +
+											" and not item.objectClass = '${EventTypeNames.RSS_FEED_ITEM.name}'" +
+											" and not item.objectClass = '${EventTypeNames.ACTIVITI_USER_TASK.name}'" +
+											" and item.targetUuid = :targetUuid " +
+						 					")  and ";
 										}
 								
-										// this find things that we should pick up based on the targetUuuid
-										// so, anything shared to the specific stream, or shared to the current
-										// user, or posted to a group
-										query = query +
-								
-													"(" +
-														// "item.targetUuid = :targetUuid " +
-														// " or item.targetUuid = :userUuid " +
-														" item.targetUuid = :userUuid " +
-														" or item.targetUuid in elements( stream.userGroupUuidsIncluded ) ";
-										
-				
-														if( userStream.userListUuidsIncluded != null && !userStream.userListUuidsIncluded.isEmpty() )
-														{
-															query = query + " or (item.owner in elements( userList.members ) ) ";
-														}
-																								
-													// or the item is from a subscription we have
-													// added to this stream.
-																											
-														
-										query = query +") ) ";
-					
+																																
 				println "query now: ${query}";
-				
-				
-				/* deal with event type filter */
-				if( userStream.includeAllEventTypes )
-				{
-					// don't do anything, the default query returns all event types
-					println "selecting ALL event types";
-				}
-				else
-				{
-					
-					println "filtering by event type";
-					query = query + "and (item.objectClass in elements( stream.eventTypesIncluded ) )"
-					
-				}
-										
-				query = query + " and stream.id = :streamId order by item.published desc";
-				
+												
+				query = query + " stream.id = :streamId ) order by item.published desc";
+							
 				println "executing query: $query";
 				
 				println "Found ${friends.size()} friends";
@@ -470,12 +431,11 @@ class EventStreamService {
 					friendIds.add( friendId );
 				}
 	
-								
-				// for the purpose of this query, treat a user as their own friend... that is, we
-				// will want to read Activities created by this user (we see our own updates in our
-				// own feed)
-				friendIds.add( user.id );
-				println "friendIds has ${friendIds.size()} entries!";
+				// for this version, we do NOT add ourself to the friends list by default, since that
+				// would mean picking up all sorts of things we might not want, where "we" are the owner
+				// (eg, subscription items, etc.)				
+				// friendIds.add( user.id );
+				// println "friendIds has ${friendIds.size()} entries!";
 				
 				ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 				
@@ -484,19 +444,20 @@ class EventStreamService {
 						 'oldestOriginTime':new Date(oldestOriginTime),
 						 'targetUuid':streamPublic.uuid,
 						 'streamId':userStream.id,
-						 'userUuid': user.uuid]
+						 // 'userUuid': user.uuid
+						 ]
 			
-						println "Using parameters map: ${parameters}";
+				println "Using parameters map: ${parameters}";
 				if( !userStream.includeSelfOnly )
 				{
-					parameters << ['friendIds':friendIds];
+					// parameters << ['friendIds':friendIds];
 				}
 				
 				println "Using parameters map: ${parameters}";
 				
 				if( userStream.includeSelfOnly || ( userStream.userUuidsIncluded == null || userStream.userUuidsIncluded.isEmpty() ) )
 				{
-					parameters << ['ownerId':user.id];
+					// parameters << ['ownerId':user.id];
 				}
 						
 				println "Using parameters map: ${parameters}";
@@ -504,8 +465,8 @@ class EventStreamService {
 				
 				println "Executing query NOW:";
 	
-			}
-			
+			} // END handling the "not include everything" case.
+
 			
 						
 			List<ActivityStreamItem> queryResults =
