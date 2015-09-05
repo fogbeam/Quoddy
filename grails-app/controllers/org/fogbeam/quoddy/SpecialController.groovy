@@ -10,7 +10,7 @@ class SpecialController
 		{
 			case "POST":
 				log.debug( "POST: ${params}");
-				log.debug( println "text:\n\n ${request.reader.text}\n\n");
+				log.debug( "text:\n\n ${request.reader.text}\n\n");
 				break;
 			default:
 				log.debug( "OTHER: ${params}");
