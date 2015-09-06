@@ -11,6 +11,10 @@
 	<classpathentry kind="src" path="test/integration"/>
 	<classpathentry kind="src" path="test/unit"/>
 	<classpathentry kind="src" path="grails-app/ldap"/>
+	<classpathentry kind="src" path="grails-app/jobs"/>
+	<classpathentry kind="src" path="grails-app/resources"/>
+	<classpathentry kind="src" path="grails-app/providers"/>
+	<classpathentry kind="src" path="grails-app/listeners"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>

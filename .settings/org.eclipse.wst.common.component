@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project-modules id="moduleCoreId" project-version="1.5.0">
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="quoddy">
         <wb-resource deploy-path="/" source-path="/test/unit"/>
         <wb-resource deploy-path="/" source-path="/test/integration"/>
@@ -44,6 +43,10 @@
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/shiro-1.1.4/grails-app/taglib"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/shiro-1.1.4/src/groovy"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/shiro-1.1.4/src/java"/>
+        <wb-resource deploy-path="/" source-path="/grails-app/jobs"/>
+        <wb-resource deploy-path="/" source-path="/grails-app/resources"/>
+        <wb-resource deploy-path="/" source-path="/grails-app/providers"/>
+        <wb-resource deploy-path="/" source-path="/grails-app/listeners"/>
 
     </wb-module>
 </project-modules>
