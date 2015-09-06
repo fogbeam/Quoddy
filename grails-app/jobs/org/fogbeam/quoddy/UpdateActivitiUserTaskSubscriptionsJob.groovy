@@ -11,7 +11,7 @@ import org.apache.http.protocol.HttpContext
 import org.fogbeam.quoddy.stream.ActivitiUserTask
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ShareTarget
-import org.fogbeam.quoddy.stream.constants.EventTypeNames
+import org.fogbeam.quoddy.stream.constants.EventTypes
 import org.fogbeam.quoddy.subscription.ActivitiUserTaskSubscription
 
 
@@ -133,7 +133,7 @@ class UpdateActivitiUserTaskSubscriptionsJob
 						activity.targetUuid = streamPublic.uuid;
 						activity.owner = owner;
 						activity.streamObject = userTask;
-						activity.objectClass = EventTypeNames.ACTIVITI_USER_TASK.name;
+						activity.objectClass = EventTypes.ACTIVITI_USER_TASK.name;
 						
 								
 						// NOTE: we added "name" to StreamItemBase, but how is it really going

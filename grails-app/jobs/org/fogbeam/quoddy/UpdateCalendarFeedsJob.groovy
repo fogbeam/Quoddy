@@ -13,7 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.CalendarFeedItem
 import org.fogbeam.quoddy.stream.ShareTarget
-import org.fogbeam.quoddy.stream.constants.EventTypeNames
+import org.fogbeam.quoddy.stream.constants.EventTypes
 import org.fogbeam.quoddy.subscription.CalendarFeedSubscription
 
 
@@ -164,7 +164,7 @@ class UpdateCalendarFeedsJob
 							activity.targetUuid = streamPublic.uuid;
 							activity.owner = feed.owner;
 							activity.streamObject = event;
-							activity.objectClass = EventTypeNames.CALENDAR_FEED_ITEM.name;
+							activity.objectClass = EventTypes.CALENDAR_FEED_ITEM.name;
 							
 														
 							// NOTE: we added "name" to StreamItemBase, but how is it really going

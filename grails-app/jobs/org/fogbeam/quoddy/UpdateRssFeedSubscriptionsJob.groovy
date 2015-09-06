@@ -17,7 +17,7 @@ import org.apache.tika.sax.BodyContentHandler
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.ShareTarget
-import org.fogbeam.quoddy.stream.constants.EventTypeNames
+import org.fogbeam.quoddy.stream.constants.EventTypes
 import org.fogbeam.quoddy.subscription.RssFeedSubscription
 
 import com.sun.syndication.feed.synd.SyndEntry
@@ -178,7 +178,7 @@ class UpdateRssFeedSubscriptionsJob
 							activity.targetUuid = streamPublic.uuid;
 							activity.owner = sub.owner;
 							activity.streamObject = rssFeedItem;
-							activity.objectClass = EventTypeNames.RSS_FEED_ITEM.name;
+							activity.objectClass = EventTypes.RSS_FEED_ITEM.name;
 														
 							
 							// NOTE: we added "name" to StreamItemBase, but how is it really going

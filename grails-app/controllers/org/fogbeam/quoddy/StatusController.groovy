@@ -7,7 +7,7 @@ import groovyx.net.http.RESTClient
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.StatusUpdate
-import org.fogbeam.quoddy.stream.constants.EventTypeNames
+import org.fogbeam.quoddy.stream.constants.EventTypes
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
 
 class StatusController {
@@ -142,7 +142,7 @@ class StatusController {
 			activity.targetUuid = streamPublic.uuid;
 			activity.owner = user;
 			activity.streamObject = newStatus;
-			activity.objectClass = EventTypeNames.STATUS_UPDATE.name;    
+			activity.objectClass = EventTypes.STATUS_UPDATE.name;    
 			
 
 			// NOTE: we added "name" to StreamItemBase, but how is it really going

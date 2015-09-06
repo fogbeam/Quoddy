@@ -7,7 +7,7 @@ import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.EventType
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.StreamItemBase
-import org.fogbeam.quoddy.stream.constants.EventTypeNames
+import org.fogbeam.quoddy.stream.constants.EventTypes
 
 class EventQueueService 
 {	
@@ -84,7 +84,7 @@ class EventQueueService
 			User targetUser = userService.findUserByUserId( key );
 			if( friends.contains( targetUser.uuid ) || 
 				( msgCreator.uuid.equals( targetUser.uuid ) && 
-						!event.objectClass.equals(EventTypeNames.STATUS_UPDATE.name ) ) )
+						!event.objectClass.equals(EventTypes.STATUS_UPDATE.name ) ) )
 			{
 				println "match found, offering message";
 				Deque<Map> userQueue = entry.getValue();

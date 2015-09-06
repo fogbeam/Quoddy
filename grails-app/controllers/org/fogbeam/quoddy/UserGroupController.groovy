@@ -3,7 +3,7 @@ package org.fogbeam.quoddy
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.StatusUpdate
-import org.fogbeam.quoddy.stream.constants.EventTypeNames
+import org.fogbeam.quoddy.stream.constants.EventTypes
 
 
 @Mixin(SidebarPopulatorMixin)
@@ -276,7 +276,7 @@ class UserGroupController
 				activity.published = new Date(); // set published to "now"
 				activity.targetUuid = group.uuid;
 				activity.streamObject = newStatus;
-				activity.objectClass = EventTypeNames.STATUS_UPDATE.name;
+				activity.objectClass = EventTypes.STATUS_UPDATE.name;
 							
 				// NOTE: we added "name" to EventBase, but how is it really going
 				// to be used?  Do we *really* need this??

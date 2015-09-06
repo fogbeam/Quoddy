@@ -28,5 +28,13 @@ class EventTypeService
 		return eventType;
 	}
 	
+	public Set<EventType> findEventTypesByScope( final String scope )
+	{
+		println "findEventTypeByScope() called, scope = ${scope}";
+		
+		Set<EventType> eventTypes = EventType.executeQuery( "select et from EventType as et where et.scope = :scope", [scope:scope] );
+		
+		return eventTypes;
+	}
 	
 }

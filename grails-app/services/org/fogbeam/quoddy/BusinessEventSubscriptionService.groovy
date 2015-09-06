@@ -4,7 +4,7 @@ import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.StreamItemBase
-import org.fogbeam.quoddy.stream.constants.EventTypeNames
+import org.fogbeam.quoddy.stream.constants.EventTypes
 import org.fogbeam.quoddy.subscription.BusinessEventSubscription
 
 class BusinessEventSubscriptionService
@@ -91,7 +91,7 @@ class BusinessEventSubscriptionService
 				activity.targetUuid = streamPublic.uuid;
 				activity.owner = owner;
 				activity.streamObject = subEvent;
-				activity.objectClass = EventTypeNames.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name;				
+				activity.objectClass = EventTypes.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name;				
 				
 				
 				// NOTE: we added "name" to StreamItemBase, but how is it really going

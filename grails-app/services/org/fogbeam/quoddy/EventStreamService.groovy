@@ -4,7 +4,7 @@ import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.EventType
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.StreamItemBase
-import org.fogbeam.quoddy.stream.constants.EventTypeNames
+import org.fogbeam.quoddy.stream.constants.EventTypes
 
 class EventStreamService {
 
@@ -263,10 +263,10 @@ class EventStreamService {
 																			
 				query = query +
 							" ( item.owner.id in :friendIds " +
-								" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name}' ) " +
-								" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.CALENDAR_FEED_ITEM.name}' ) " +
-								" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.RSS_FEED_ITEM.name}' ) " +
-								" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypeNames.ACTIVITI_USER_TASK.name}' ) " +
+								" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypes.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name}' ) " +
+								" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypes.CALENDAR_FEED_ITEM.name}' ) " +
+								" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypes.RSS_FEED_ITEM.name}' ) " +
+								" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypes.ACTIVITI_USER_TASK.name}' ) " +
 								" and item.targetUuid = :targetUuid " +
 							") or ";
 	
@@ -407,10 +407,10 @@ class EventStreamService {
 											// subscription items here.  
 											
 											query = query + " (item.owner.uuid in elements( stream.userUuidsIncluded )" + 
-											" and not item.objectClass = '${EventTypeNames.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name}'" +
-											" and not item.objectClass = '${EventTypeNames.CALENDAR_FEED_ITEM.name}'" +
-											" and not item.objectClass = '${EventTypeNames.RSS_FEED_ITEM.name}'" +
-											" and not item.objectClass = '${EventTypeNames.ACTIVITI_USER_TASK.name}'" +
+											" and not item.objectClass = '${EventTypes.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name}'" +
+											" and not item.objectClass = '${EventTypes.CALENDAR_FEED_ITEM.name}'" +
+											" and not item.objectClass = '${EventTypes.RSS_FEED_ITEM.name}'" +
+											" and not item.objectClass = '${EventTypes.ACTIVITI_USER_TASK.name}'" +
 											" and item.targetUuid = :targetUuid " +
 						 					")  and ";
 										}

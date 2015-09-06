@@ -5,7 +5,7 @@ import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.stream.EventType
 import org.fogbeam.quoddy.stream.ShareTarget
-import org.fogbeam.quoddy.stream.constants.EventTypeNames
+import org.fogbeam.quoddy.stream.constants.EventTypes
 
 class BootStrap {
 
@@ -53,16 +53,20 @@ class BootStrap {
 	 	
 		 // create these in a loop off the EventTypes enum
 		 
-		 for( EventTypeNames eventTypeName : EventTypeNames.values() )
+		 for( EventTypes eventTypeEnum : EventTypes.values() )
 		 {
-		 	EventType et = EventType.findByName( eventTypeName.name );
+		 	EventType et = EventType.findByName( eventTypeEnum.name );
 			if( et == null )
 			{
-				et = new EventType( name: eventTypeName.name );
+				println "Creating DB entry for EventType: ${eventTypeEnum.name}";
+				et = new EventType( name: eventTypeEnum.name, scope: eventTypeEnum.scope );
 				et.save();
 			}
+			else
+			{
+				println "EventType: ${eventTypeEnum.name} already exists in DB, skipping";
+			}
 		 }
-		
 	 }
 	 
 	 void createShareTargets()

@@ -1,8 +1,9 @@
 package org.fogbeam.quoddy
 
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
-import org.fogbeam.quoddy.stream.EventType;
-import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
+import org.fogbeam.quoddy.stream.EventType
+import org.fogbeam.quoddy.stream.constants.EventTypeScopes
+import org.fogbeam.quoddy.subscription.BusinessEventSubscription
 
 @Mixin(SidebarPopulatorMixin)
 class UserStreamDefinitionController
@@ -280,9 +281,13 @@ class UserStreamDefinitionController
 				println "Editing UserStream with id: ${streamId}";
 				UserStreamDefinition streamToEdit = null;
 				streamToEdit = UserStreamDefinition.findById( streamId );
-		
-				Set<EventType> eventTypes = eventTypeService.findAllEventTypes();
 				
+				// TODO: select only the event types that are "user" scoped
+				// as opposed to "subscription" types
+				// Set<EventType> eventTypes = eventTypeService.findAllEventTypes();
+				Set<EventType> eventTypes = eventTypeService.findEventTypesByScope( EventTypeScopes.EVENT_TYPE_USER.name );
+				
+				println  "found eventTypes with size = ${eventTypes?.size()}";
 				[streamToEdit:streamToEdit, eventTypes:eventTypes];
 			}
 			on("success").to("editWizardOne")
@@ -308,8 +313,8 @@ class UserStreamDefinitionController
 				}
 				
 				
-				Set<EventType> eventTypes = eventTypeService.findAllEventTypes();
-				[eventTypes:eventTypes, selectedEventTypes:streamToEdit.eventTypesIncluded];
+				// Set<EventType> eventTypes = eventTypeService.findAllEventTypes();
+				[eventTypes:flow.eventTypes, selectedEventTypes:streamToEdit.eventTypesIncluded];
 				
 				
 			}.to("editWizardTwo")
