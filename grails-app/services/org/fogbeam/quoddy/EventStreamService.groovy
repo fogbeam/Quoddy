@@ -13,6 +13,7 @@ class EventStreamService {
 	def eventQueueService;
 	def existDBService;
 	def userGroupService;
+	def userListService;
 	
 	public void saveActivity( ActivityStreamItem activity )
 	{
@@ -365,11 +366,6 @@ class EventStreamService {
 
 				println "Query begins as: \n${query}";
 				
-				
-				if( userStream.userListUuidsIncluded != null && !userStream.userListUuidsIncluded.isEmpty() )
-				{
-					query = query + "inner join fetch stream.userListUuidsIncluded as userList";
-				}
 	
 				query = query + " where item.published >= :cutoffDate " +
 								" and item.published < :oldestOriginTime " +
@@ -442,7 +438,15 @@ class EventStreamService {
 				{
 					//  deal with including subscription items
 					query = query + 
-						" or( item.streamObject.owningSubscription.uuid in :includedSubscriptions )"; 
+						" or ( item.streamObject.owningSubscription.uuid in :includedSubscriptions )"; 
+				}
+				
+				
+				if( userStream.userListUuidsIncluded != null && !userStream.userListUuidsIncluded.isEmpty() )
+				{
+					//  deal with including items based on user lists
+					query = query + 
+						" or ( item.owner.uuid in (:bar) ) "; 
 				}
 					
 				query = query + " and stream.id = :streamId ) order by item.published desc";
@@ -496,7 +500,27 @@ class EventStreamService {
 				{
 					parameters << ['includedSubscriptions':userStream.subscriptionUuidsIncluded];
 				}
-				
+
+				if( userStream.userListUuidsIncluded != null && !userStream.userListUuidsIncluded.isEmpty() )
+				{
+					List<String> includedUserListUsers = new ArrayList<String>();
+					
+					for( String userListUuid : userStream.userListUuidsIncluded )
+					{
+						// look up user list by UUID
+						UserList list = userListService.findUserListByUuid( userListUuid );
+						
+						list.members.each {
+							includedUserListUsers.add( it.uuid );
+						}
+						
+					}
+					
+					println "foo: " + includedUserListUsers;
+					
+					parameters << ['bar': includedUserListUsers ];
+				}
+												
 				println "Using parameters map: ${parameters}";
 				
 				
