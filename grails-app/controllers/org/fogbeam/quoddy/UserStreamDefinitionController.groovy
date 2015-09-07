@@ -3,6 +3,7 @@ package org.fogbeam.quoddy
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.stream.EventType
 import org.fogbeam.quoddy.stream.constants.EventTypeScopes
+import org.fogbeam.quoddy.subscription.BaseSubscription
 import org.fogbeam.quoddy.subscription.BusinessEventSubscription
 
 @Mixin(SidebarPopulatorMixin)
@@ -18,7 +19,7 @@ class UserStreamDefinitionController
 	def calendarFeedSubscriptionService;
 	def activitiUserTaskSubscriptionService;
 	def rssFeedSubscriptionService;
-	
+	def eventSubscriptionService;
 	
 	def index =
 	{
@@ -445,9 +446,11 @@ class UserStreamDefinitionController
 				}
 										
 				/* load subscription list */
-				List<BusinessEventSubscription> eventSubscriptions =
-					businessEventSubscriptionService.getAllSubscriptionsForUser( session.user );
+				List<BaseSubscription> eventSubscriptions =
+					eventSubscriptionService.getAllSubscriptionsForUser( session.user );
 				
+				println  "Found eventSubscriptions with size: ${eventSubscriptions?.size()}";	
+					
 				[eventSubscriptions:eventSubscriptions, selectedEventSubscriptions:streamToEdit.subscriptionUuidsIncluded];
 			
 			}.to( "editWizardSix")
@@ -467,7 +470,8 @@ class UserStreamDefinitionController
 				
 				for( String eventSubscriptionUuid : eventSubscriptionUuids )
 				{
-					BusinessEventSubscription eventSubscriptionToInclude = businessEventSubscriptionService.findByUuid( eventSubscriptionUuid );
+					println "looking for subscription with uuid: ${eventSubscriptionUuid}";
+					BaseSubscription eventSubscriptionToInclude = eventSubscriptionService.findByUuid( eventSubscriptionUuid );
 					if( eventSubscriptionToInclude == null ) {
 						println "Failed to locate EventSubscription for uuid ${eventSubscriptionUuid}";
 						continue;

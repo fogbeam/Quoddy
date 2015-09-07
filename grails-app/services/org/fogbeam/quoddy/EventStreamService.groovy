@@ -426,16 +426,25 @@ class EventStreamService {
 								
 																																
 				println "query now: ${query}";
-												
-				// deal with including group posts here
-				// include any posts to groups this user is a member of, or owns
-				// TODO: sort out how eventtypes factor in here. For now we assume that groups
-				// only receive StatusUpdates and just include any item for a selected group 
-				query = query +
-					"or ( item.targetUuid in :includedGroups )";
-
+				
+				if( userStream.userGroupUuidsIncluded != null && !userStream.userGroupUuidsIncluded.isEmpty())
+				{
+					// deal with including group posts here
+					// include any posts to groups this user is a member of, or owns
+					// TODO: sort out how eventtypes factor in here. For now we assume that groups
+					// only receive StatusUpdates and just include any item for a selected group 
+					query = query +
+						" or ( item.targetUuid in :includedGroups )";
+				}
 				
 				
+				if( userStream.subscriptionUuidsIncluded != null && !userStream.subscriptionUuidsIncluded.isEmpty())
+				{
+					//  deal with including subscription items
+					query = query + 
+						" or( item.streamObject.owningSubscription.uuid in :includedSubscriptions )"; 
+				}
+					
 				query = query + " and stream.id = :streamId ) order by item.published desc";
 							
 				println "executing query: $query";
@@ -481,6 +490,11 @@ class EventStreamService {
 				if( userStream.userGroupUuidsIncluded != null && !userStream.userGroupUuidsIncluded.isEmpty())
 				{
 					parameters <<['includedGroups':userStream.userGroupUuidsIncluded];
+				}
+				
+				if( userStream.subscriptionUuidsIncluded != null && !userStream.subscriptionUuidsIncluded.isEmpty())
+				{
+					parameters << ['includedSubscriptions':userStream.subscriptionUuidsIncluded];
 				}
 				
 				println "Using parameters map: ${parameters}";

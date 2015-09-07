@@ -141,12 +141,14 @@ class BusinessEventSubscriptionService
 	
 	public List<BusinessEventSubscription> getAllSubscriptionsForUser( final User user )
 	{
+		println "getAllSubscriptionsForUser() called for user ${user.toString()}";
+		
 		List<BusinessEventSubscription> subscriptions = new ArrayList<BusinessEventSubscription>();
 		
 		List<BusinessEventSubscription> tempSubscriptions = BusinessEventSubscription.executeQuery( "select subscription from BusinessEventSubscription as subscription where subscription.owner = :owner",
 			['owner':user] );
 		
-		if( tempSubscriptions )
+		if( tempSubscriptions != null )
 		{
 			subscriptions.addAll( tempSubscriptions );
 		}
