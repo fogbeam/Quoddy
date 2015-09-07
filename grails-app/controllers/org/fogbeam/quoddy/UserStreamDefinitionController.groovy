@@ -273,6 +273,13 @@ class UserStreamDefinitionController
 	
 	
 	
+	/* NOTE:  this has a problem as implemented, if the user moves back and forth in the wizard using the
+	 * back button.  Because we "touch" our actual domain object (using calls like addToUserUuidsIncluded)
+	 * in intermediate stages, we can get errors like "Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect): [org.fogbeam.quoddy.UserStreamDefinition#6]"
+	 * To prevent this, we probably need to do all of the intermediate stage operations on a detached object which is a clone
+	 * of the real object, and then merge it only in the final state.  This also ensures we don't persist a change
+	 * that the user intended to abandon (by not finshing the wizard). See Bugzilla bug #125. 
+	 */
 	def editWizardFlow =
 	{
 		start {
@@ -282,7 +289,7 @@ class UserStreamDefinitionController
 				UserStreamDefinition streamToEdit = null;
 				streamToEdit = UserStreamDefinition.findById( streamId );
 				
-				// TODO: select only the event types that are "user" scoped
+				// select only the event types that are "user" scoped
 				// as opposed to "subscription" types
 				// Set<EventType> eventTypes = eventTypeService.findAllEventTypes();
 				Set<EventType> eventTypes = eventTypeService.findEventTypesByScope( EventTypeScopes.EVENT_TYPE_USER.name );
@@ -349,8 +356,8 @@ class UserStreamDefinitionController
 				List<User> eligibleUsers = userService.findEligibleUsersForUser( session.user );
 				
 				println "Found ${eligibleUsers.size()} eligible users\n";
-				
-				[users:eligibleUsers, eligibleUsers:streamToEdit.userUuidsIncluded];
+								
+				[users:eligibleUsers, selectedUsers:streamToEdit.userUuidsIncluded];
 			
 			}.to("editWizardThree")
 		}

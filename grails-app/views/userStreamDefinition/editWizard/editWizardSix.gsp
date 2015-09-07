@@ -9,7 +9,7 @@
 	<body>
 		<div id="bodyContent" class="span9">
 			<h3>Select subscriptions to include in this stream.</h3>
-	        <g:form controller="userStreamDefinition" action="createWizard" method="POST">
+	        <g:form controller="userStreamDefinition" action="editWizard" method="POST">
 				<g:select optionKey="uuid" optionValue="name" 
 	        		name="eventSubscriptions" 
 	        		from="${eventSubscriptions}"
