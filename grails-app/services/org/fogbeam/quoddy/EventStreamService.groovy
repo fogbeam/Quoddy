@@ -201,7 +201,7 @@ class EventStreamService {
 			 */
 								
 
-			/* TODO: do a separate query to find any UserGroups for this User.  That means
+			/* do a separate query to find any UserGroups for this User.  That means
 			 * any group the user owns, OR is a member of.  Then compile the list of
 			 * group members from all of those groups, into a collection that we
 			 * can check for membership in.
@@ -225,6 +225,11 @@ class EventStreamService {
 				println "no groups, so adding only current user to validOwners collection";
 				// adding the user to this collection, because anything that returns is something
 				// we'd get anyway, and the query breaks if you use an empty collection here.
+				
+				// NOTE: we might need to revisit this, and make sure this won't pull in something
+				// we didn't actually want. Especially if we make the setting for "include my own
+				// items" explicit with an "includeSelf" setting. 
+				
 				validOwners.add( user );
 			}
 			
@@ -280,6 +285,10 @@ class EventStreamService {
 				// include any posts to groups this user is a member of, or owns
 				// TODO: this should always only include StatusUpdates, but we should add that to the
 				// query here to make it explicit, in case something changes in the future.
+				
+				// NOTE: this isn't right.  This is saying "include anything owned by a user who's in any
+				// group the user is in.  This should be "include anything with a targetUuid that is the
+				// uuid of any group the user is in. 
 				query = query +
 					"( item.owner in :validOwners )";
 								
@@ -412,13 +421,22 @@ class EventStreamService {
 											" and not item.objectClass = '${EventTypes.RSS_FEED_ITEM.name}'" +
 											" and not item.objectClass = '${EventTypes.ACTIVITI_USER_TASK.name}'" +
 											" and item.targetUuid = :targetUuid " +
-						 					")  and ";
+						 					") ";
 										}
 								
 																																
 				println "query now: ${query}";
 												
-				query = query + " stream.id = :streamId ) order by item.published desc";
+				// deal with including group posts here
+				// include any posts to groups this user is a member of, or owns
+				// TODO: sort out how eventtypes factor in here. For now we assume that groups
+				// only receive StatusUpdates and just include any item for a selected group 
+				query = query +
+					"or ( item.targetUuid in :includedGroups )";
+
+				
+				
+				query = query + " and stream.id = :streamId ) order by item.published desc";
 							
 				println "executing query: $query";
 				
@@ -460,6 +478,11 @@ class EventStreamService {
 					// parameters << ['ownerId':user.id];
 				}
 						
+				if( userStream.userGroupUuidsIncluded != null && !userStream.userGroupUuidsIncluded.isEmpty())
+				{
+					parameters <<['includedGroups':userStream.userGroupUuidsIncluded];
+				}
+				
 				println "Using parameters map: ${parameters}";
 				
 				
