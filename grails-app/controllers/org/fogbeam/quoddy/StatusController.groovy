@@ -26,14 +26,14 @@ class StatusController {
 		}
 		else
 		{
-			println "logged in; so proceeding...";
+			log.debug( "logged in; so proceeding...");
 			
 			// get our user
 			user = userService.findUserByUserId( session.user.userId );
 			
-			println "constructing our new StatusUpdate object...";
+			log.debug( "constructing our new StatusUpdate object...");
 			// construct a status object
-			println "statusText: ${params.statusText}";
+			log.debug( "statusText: ${params.statusText}");
 			StatusUpdate newStatus = new StatusUpdate( text:params.statusText,creator : user);
 			newStatus.effectiveDate = new Date(); // now
 			newStatus.targetUuid = "ABC123";
@@ -43,7 +43,7 @@ class StatusController {
 			// Hit Stanbol to get enrichmentData
 			// call Stanbol REST API to get enrichment data
 			String stanbolServerUrl = CH.config.urls.stanbol.endpoint;
-			println "using stanbolServerUrl: ${stanbolServerUrl}";
+			log.debug( "using stanbolServerUrl: ${stanbolServerUrl}");
 			RESTClient restClient = new RESTClient( stanbolServerUrl )
 		
 			boolean enhancementEnabled = Boolean.parseBoolean( CH.config.features.enhancement.enabled ? CH.config.features.enhancement.enabled : "false" );
@@ -55,23 +55,23 @@ class StatusController {
 											body: params.statusText,
 											requestContentType : TEXT );
 										
-				println "restResponse.class: ${restResponse.class}";
-				println "restResponse.status: ${restResponse.status}";
+				log.debug( "restResponse.class: ${restResponse.class}");
+				log.debug( "restResponse.status: ${restResponse.status}");
 				// println "restResponse.statusCode: ${restResponse.statusCode}";
-				println "restResponse.success: ${restResponse.isSuccess()}";
+				log.debug( "restResponse.success: ${restResponse.isSuccess()}");
 
 				Object restResponseData = restResponse.getData();
 			
 				if( restResponseData instanceof InputStream )
 				{
 			
-					println "restResponseData.class: ${restResponseData.class}";
+					log.debug( "restResponseData.class: ${restResponseData.class}");
 			
 					java.util.Scanner s = new java.util.Scanner((InputStream)restResponseData).useDelimiter("\\A");
 	
 					String restResponseText = s.next();
 			
-					println "using Scanner: ${restResponseText}";		
+					log.debug( "using Scanner: ${restResponseText}");		
 			
 					// println "restResponseText: ${restResponseText}";
 			
@@ -99,8 +99,8 @@ class StatusController {
 			// save the newStatus 
 			if( !newStatus.save() )
 			{
-				println( "Saving newStatus FAILED");
-				newStatus.errors.allErrors.each { println it };
+				log.debug(( "Saving newStatus FAILED"));
+				newStatus.errors.allErrors.each { log.debug( it ) };
 			}
 			
 			// put the old "currentStatus" in the oldStatusUpdates collection
@@ -113,12 +113,12 @@ class StatusController {
 			}
 			
 			// set the current status
-			println "setting currentStatus";
+			log.debug( "setting currentStatus");
 			user.currentStatus = newStatus;
 			if( !user.save() )
 			{
-				println( "Saving user FAILED");
-				user.errors.allErrors.each { println it };
+				log.debug( "Saving user FAILED");
+				user.errors.allErrors.each { log.debug( it ) };
 			}
 			else
 			{
@@ -155,7 +155,7 @@ class StatusController {
 			
 			def newContentMsg = [msgType:'NEW_STATUS_UPDATE', activityId:activity.id, activityUuid:activity.uuid ];
 				
-			println "sending message to JMS";
+			log.debug( "sending message to JMS");
 			// jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
 			sendJMSMessage("quoddySearchQueue", newContentMsg );
 			
@@ -163,7 +163,7 @@ class StatusController {
 			
 		}
 		
-		println "redirecting to home:index";
+		log.debug( "redirecting to home:index");
 		redirect( controller:"home", action:"index", params:[userId:user.userId]);
 	}
 
@@ -178,7 +178,7 @@ class StatusController {
 		}
 		else
 		{
-			println "logged in; so proceeding...";
+			log.debug( "logged in; so proceeding...");
 			
 			// get our user
 			user = userService.findUserByUserId( session.user.userId );
@@ -196,13 +196,13 @@ class StatusController {
 		
 		if( item != null )
 		{
-			println( "found it!" );
+			log.debug( "found it!" );
 			item.delete();
 			
 		}
 		else
 		{
-			println( "nope" );
+			log.debug( "nope" );
 		}
 		
 		render( status: 200 );
