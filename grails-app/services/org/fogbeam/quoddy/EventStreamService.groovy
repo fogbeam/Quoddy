@@ -403,17 +403,21 @@ class EventStreamService {
 											
 											query = query + " ( item.owner.id = :ownerId ) ";
 										}
-										else if( userStream.userUuidsIncluded != null && !userStream.userUuidsIncluded.isEmpty())
+										else if( ( userStream.userUuidsIncluded != null && !userStream.userUuidsIncluded.isEmpty() ) || userStream.includeSelf )
 										{
-											println "userUuidsIncluded case";
+											println "userUuidsIncluded case OR includeSelf case";
 											
 											// this means that neither "include all" nor "include self only" was turned on
 											// so here work off the specific list of included users  
 											// Set up the query here to work off the userUuidsIncluded list
+											// NOTE: we enter this block if includeSelf is turned on, even if the
+											// userUuidsIncluded list is empty. That's becuase when includeSelf is
+											// turned on, we add the user himself to the list of User UUIDs we
+											// query against.  See below.
 											
 											// NOTE: this should only return "user stuff", so exclude, for example
 											// subscription items here.  
-											query = query + " and ( ";
+											// query = query + " and ( ";
 											query = query + " (item.owner.uuid in (:userUuidsIncluded)" + 
 											" and not item.objectClass = '${EventTypes.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name}'" +
 											" and not item.objectClass = '${EventTypes.CALENDAR_FEED_ITEM.name}'" +
@@ -492,9 +496,17 @@ class EventStreamService {
 				
 				println "Using parameters map: ${parameters}";
 				
-				if( !userStream.includeSelfOnly && ( userStream.userUuidsIncluded != null && !userStream.userUuidsIncluded.isEmpty() ) )
+				if( ( userStream.userUuidsIncluded != null && !userStream.userUuidsIncluded.isEmpty() ) || userStream.includeSelf )
 				{
-					parameters << ['userUuidsIncluded':userStream.userUuidsIncluded, 'targetUuid':streamPublic.uuid];
+					List<String> userUuidsIncluded = new ArrayList<String>();
+					userUuidsIncluded.addAll( userStream.userUuidsIncluded );
+					
+					if( userStream.includeSelf )
+					{
+						userUuidsIncluded.add( user.uuid );
+					}
+					
+					parameters << ['userUuidsIncluded':userUuidsIncluded, 'targetUuid':streamPublic.uuid];
 				}
 						
 				if( userStream.userGroupUuidsIncluded != null && !userStream.userGroupUuidsIncluded.isEmpty())

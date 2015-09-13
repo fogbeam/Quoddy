@@ -384,6 +384,17 @@ class UserStreamDefinitionController
 					streamToEdit.addToUserUuidsIncluded( userUuid );
 				}
 				
+				String includeSelfParam = params.includeSelf;
+				println "includeSelfParam: \"${includeSelfParam}\""
+				Boolean includeSelf = false;
+				if( includeSelfParam != null && includeSelfParam.equalsIgnoreCase("on"))
+				{
+					println "updating includeSelf value to TRUE";
+					includeSelf = true;
+				}
+				
+				println "setting includeSelf value to ${includeSelf}";
+				streamToEdit.includeSelf = includeSelf;
 				
 				/* load userList list */
 				List<UserList> userLists = userListService.getListsForUser( session.user );
