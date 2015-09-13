@@ -46,6 +46,7 @@ class UserStreamDefinition implements Serializable
 	Boolean includeEverything = true;
 	
 	// users
+	Boolean includeSelf = false;
 	Boolean includeSelfOnly = false;
 	Boolean includeAllUsers = false;
 	

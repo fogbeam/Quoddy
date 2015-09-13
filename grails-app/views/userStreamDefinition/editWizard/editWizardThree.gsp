@@ -10,6 +10,9 @@
 		<div id="bodyContent" class="span9">
 			<h3>Select users to include in this stream.</h3>
 	        <g:form controller="userStreamDefinition" action="editWizard" method="POST">
+				
+				<label for="includeSelf" style="display:inline;">Include Myself: </label><g:checkBox name="includeSelf" value="${streamToEdit.includeSelf}"/>
+				<p />
 				<g:select optionKey="uuid" optionValue="fullName" 
 	        		name="users" 
 	        		from="${users}"
