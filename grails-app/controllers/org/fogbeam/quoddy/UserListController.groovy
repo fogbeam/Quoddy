@@ -83,7 +83,7 @@ class UserListController
 		createWizardOne {
 			on("stage2") {
 				
-				println "transitioning to stage2";
+				log.debug( "transitioning to stage2");
 			   
 				UserList listToCreate = new UserList();
 				listToCreate.name = params.listName;
