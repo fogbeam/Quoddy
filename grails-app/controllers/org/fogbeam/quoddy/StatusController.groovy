@@ -50,14 +50,14 @@ class StatusController {
 			
 			if( enhancementEnabled )
 			{
-				// println "content submitted: ${content}";
+				log.trace( "content submitted: ${content}");
 				HttpResponseDecorator restResponse = restClient.post(	path:'enhancer',
 											body: params.statusText,
 											requestContentType : TEXT );
 										
 				log.debug( "restResponse.class: ${restResponse.class}");
 				log.debug( "restResponse.status: ${restResponse.status}");
-				// println "restResponse.statusCode: ${restResponse.statusCode}";
+				log.trace( "restResponse.statusCode: ${restResponse.statusCode}");
 				log.debug( "restResponse.success: ${restResponse.isSuccess()}");
 
 				Object restResponseData = restResponse.getData();
@@ -73,7 +73,7 @@ class StatusController {
 			
 					log.debug( "using Scanner: ${restResponseText}");		
 			
-					// println "restResponseText: ${restResponseText}";
+					log.trace( "restResponseText: ${restResponseText}");
 			
 					newStatus.enhancementJSON = restResponseText;
 			
