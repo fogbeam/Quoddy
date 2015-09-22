@@ -37,7 +37,7 @@ class SubscriptionController
 		
 		if( session.user != null )
 		{
-			println "got user: ${session.user}";
+			log.debug( "got user: ${session.user}");
 			user = userService.findUserByUserId( session.user.userId );
 		
 			Map model = [:];
@@ -64,7 +64,7 @@ class SubscriptionController
 		if( session.user != null )
 		{
 			def user = userService.findUserByUserId( session.user.userId );
-			// println "Doing display with params: ${params}";
+			log.debug( "Doing display with params: ${params}");
 			def subEvents = new ArrayList<BusinessEventSubscriptionItem>();
 								
 			
@@ -97,7 +97,7 @@ class SubscriptionController
 		if( session.user != null )
 		{
 			def user = userService.findUserByUserId( session.user.userId );
-			// println "Doing display with params: ${params}";
+			log.debug( "Doing display with params: ${params}");
 			def subEvents = new ArrayList<CalendarFeedItem>();
 								
 			
@@ -131,7 +131,7 @@ class SubscriptionController
 		if( session.user != null )
 		{
 			def user = userService.findUserByUserId( session.user.userId );
-			// println "Doing display with params: ${params}";
+			log.debug( "Doing display with params: ${params}");
 			def subEvents = new ArrayList<ActivitiUserTask>();
 								
 			
@@ -165,7 +165,7 @@ class SubscriptionController
 		if( session.user != null )
 		{
 			def user = userService.findUserByUserId( session.user.userId );
-			// println "Doing display with params: ${params}";
+			log.debug(  "Doing display with params: ${params}");
 			def subEvents = new ArrayList<RssFeedItem>();
 								
 			
@@ -204,7 +204,7 @@ class SubscriptionController
 		createWizardOne {
 			on("stage2") {
 				
-				println "transitioning to stage2";				
+				log.debug(  "transitioning to stage2");				
 			}.to("createWizardTemp")
 				
 		}
@@ -242,7 +242,7 @@ class SubscriptionController
 		createBusinessEventSubscriptionWizardOne {
 				
 				on( "stage2" ) {
-					println "Creating BES with params: ${params}";
+					log.debug( "Creating BES with params: ${params}");
 					BusinessEventSubscription subscriptionToCreate = new BusinessEventSubscription();
 					subscriptionToCreate.name = params.subscriptionName;
 					subscriptionToCreate.description = params.subscriptionDescription;
@@ -251,7 +251,7 @@ class SubscriptionController
 					def user = userService.findUserByUserId( session.user.userId );
 					subscriptionToCreate.owner = user;
 				
-					println "about to create: ${subscriptionToCreate}";
+					log.debug( "about to create: ${subscriptionToCreate}");
 					flow.subscriptionToCreate = subscriptionToCreate;
 			
 				}.to("createBusinessEventSubscriptionWizardTwo")
@@ -262,7 +262,7 @@ class SubscriptionController
 		
 		createBusinessEventSubscriptionWizardTwo {
 			on("finishWizard"){
-				println "finishing wizard with params ${params}";
+				log.debug( "finishing wizard with params ${params}");
 				
 				BusinessEventSubscription subscriptionToCreate = flow.subscriptionToCreate;
 				subscriptionToCreate.xQueryExpression = params.xQueryExpression;
@@ -274,11 +274,11 @@ class SubscriptionController
 		/* an action state to do the final save/update on the object */
 		finishBusinessEventSubscription {
 			action {
-				println "create using params: ${params}"
+				log.debug( "create using params: ${params}");
 
 				BusinessEventSubscription subscriptionToCreate = flow.subscriptionToCreate;
 				
-				println "about to save: ${ subscriptionToCreate.toString()}";
+				log.debug( "about to save: ${ subscriptionToCreate.toString()}");
 				
 				if( !subscriptionToCreate.save() )
 				{
