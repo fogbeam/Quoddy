@@ -15,7 +15,7 @@ class CalendarController
 		User user = null;
 		if( session.user != null )
 		{
-			println "Found User in Session";
+			log.debug( "Found User in Session");
 			user = userService.findUserByUserId( session.user.userId );
 			def queryResults = CalendarFeedSubscription.executeQuery( "select calfeed from CalendarFeedSubscription as calfeed where calfeed.owner = :owner", [owner:user] );
 			
@@ -48,13 +48,13 @@ class CalendarController
 			
 			if( !calFeed.save() )
 			{
-				println( "Saving CalendarFeedSubscription FAILED");
-				calFeed.errors.allErrors.each { println it };
+				log.debug( "Saving CalendarFeedSubscription FAILED");
+				calFeed.errors.allErrors.each { log.debug( it ) };
 			}
 		}
 		else
 		{
-			println "No user in Session";
+			log.debug( "No user in Session");
 		}
 		
 		redirect( controller:"calendar", action:"index");
@@ -70,7 +70,7 @@ class CalendarController
 		}
 		else
 		{
-			println "No user in Session";
+			log.debug( "No user in Session");
 		}		
 		
 		[calFeedToEdit:calFeedToEdit];
@@ -87,13 +87,13 @@ class CalendarController
 			
 			if( !calFeed.save() )
 			{
-				println( "Saving CalendarFeedSubscription FAILED");
-				calFeed.errors.allErrors.each { println it };
+				log.debug( "Saving CalendarFeedSubscription FAILED");
+				calFeed.errors.allErrors.each { log.debug( it ) };
 			}
 		}
 		else
 		{
-			println "No user in Session";
+			log.debug( "No user in Session" );
 		}
 		
 		redirect( controller:"calendar", action:"index");
