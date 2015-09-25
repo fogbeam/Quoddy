@@ -22,7 +22,6 @@ class ProfilePicController
 			response.setHeader("Content-Type", "image/jpeg");
 			response.setHeader("Content-Disposition", "attachment;filename=mypic.jpeg");
 			response.setHeader("Content-Length", "${image.length}");
-			// println image;
 			log.debug( "class: " + response.outputStream.getClass().getName());
 			response.outputStream.write( image );
 			response.outputStream.flush();
@@ -39,22 +38,21 @@ class ProfilePicController
 		}
 		else
 		{
-			println( "params.userId found: ${params.id}");
+			log.debug( "params.userId found: ${params.id}");
 			String quoddyHome = System.getProperty( "quoddy.home" );
 			String filePath =
 				"${quoddyHome}/profilepics/${params.id}/${params.id}_profile.jpg";
-			println( "filepath is ${filePath}");
+			log.debug( "filepath is ${filePath}");
 			File picFile = new File(filePath);
 			byte[] image = picFile.getBytes();
-			println( "image size: ${image.length}");
+			log.debug( "image size: ${image.length}");
 			response.setHeader("Content-Type", "image/jpeg");
 			response.setHeader("Content-Disposition", "attachment;filename=mypic.jpeg");
 			response.setHeader("Content-Length", "${image.length}");
-			// println image;
-			println "class: " + response.outputStream.getClass().getName();
+			log.debug(  "class: " + response.outputStream.getClass().getName());
 			response.outputStream.write( image );
 			response.outputStream.flush();
-			println "done";
+			log.debug( "done");
 			return;
 		}
 	}
