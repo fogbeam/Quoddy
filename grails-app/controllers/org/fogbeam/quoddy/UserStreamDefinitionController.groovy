@@ -64,7 +64,7 @@ class UserStreamDefinitionController
 		createWizardOne {
 			on("stage2") {
 				
-				println "stage2";
+				log.debug( "stage2");
 			   
 				UserStreamDefinition streamToCreate = new UserStreamDefinition();
 				streamToCreate.name = params.streamName;
@@ -84,13 +84,13 @@ class UserStreamDefinitionController
 		
 		createWizardTwo {
 			on("stage3"){
-				println "stage3";
-				println "params: ${params}";
+				log.debug( "stage3");
+				log.trace( "params: ${params}");
 				UserStreamDefinition streamToCreate = flow.streamToCreate;
 				// eventTypes:[219, 218]
 				String[] eventTypes = request.getParameterValues( 'eventTypes' );
 				
-				println "eventTypes: ${eventTypes}";
+				log.debug( "eventTypes: ${eventTypes}");
 				
 				for( String eventTypeId : eventTypes ) 
 				{
@@ -100,11 +100,11 @@ class UserStreamDefinitionController
 				
 				/* load user list */
 				// List<User> allusers = userService.findAllUsers();
-				println "getting eligible users: ";
+				log.debug( "getting eligible users: ");
 				List<User> eligibleUsers = userService.findEligibleUsersForUser( session.user );
-				println "Found ${eligibleUsers.size()} eligible users\n";
+				log.debug( "found ${eligibleUsers.size()} eligible users\n");
 				
-				println ("returning eligible users:");
+				log.debug("returning eligible users:");
 				[users:eligibleUsers, selectedUsers:streamToCreate.userUuidsIncluded];
 
 			}.to("createWizardThree")
