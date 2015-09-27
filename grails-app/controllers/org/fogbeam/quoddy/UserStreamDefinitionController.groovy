@@ -112,8 +112,8 @@ class UserStreamDefinitionController
 		
 		createWizardThree {
 			on( "stage4") {
-				println "stage4";
-				println "params: ${params}";
+				log.debug( "stage4" );
+				log.trace( "params: ${params}");
 				UserStreamDefinition streamToCreate = flow.streamToCreate;
 				
 				String userFilter = params.userFilter;
@@ -138,7 +138,7 @@ class UserStreamDefinitionController
 					{
 						User userToInclude = userService.findUserByUuid( userUuid );
 						if( userToInclude == null ) {
-							println "Failed to locate User for uuid ${userUuid}";
+							log.debug( "Failed to locate User for uuid ${userUuid}");
 							continue;
 						}
 						
@@ -165,8 +165,8 @@ class UserStreamDefinitionController
 				
 
 				// save user lists
-				println( "stage5" );
-				println "params: ${params}";
+				log.debug( "stage5" );
+				log.trace( "params: ${params}");
 				UserStreamDefinition streamToCreate = flow.streamToCreate;
 				
 				// userLists
@@ -177,7 +177,7 @@ class UserStreamDefinitionController
 				{
 					UserList userListToInclude = userListService.findUserListByUuid( userListUuid );
 					if( userListToInclude == null ) {
-						println "Failed to locate UserList for uuid ${userListUuid}";
+						log.debug( "Failed to locate UserList for uuid ${userListUuid}");
 						continue;
 					}
 					
@@ -186,7 +186,7 @@ class UserStreamDefinitionController
 												
 				/* load group list */
 				List<UserGroup> groups = userGroupService.getAllGroupsForUser( session.user );
-				println "found ${groups.size()} groups";
+				log.debug( "found ${groups.size()} groups");
 				[groups:groups, selectedGroups:streamToCreate.userGroupUuidsIncluded];
 				
 			}.to( "createWizardFive")
@@ -194,8 +194,8 @@ class UserStreamDefinitionController
 		
 		createWizardFive {
 			on( "stage6") {
-				println "stage6";
-				println "params: ${params}";
+				log.debug( "stage6" );
+				log.trace( "params: ${params}" );
 				UserStreamDefinition streamToCreate = flow.streamToCreate;
 				// save groups
 		
@@ -206,7 +206,7 @@ class UserStreamDefinitionController
 				{
 					UserGroup userGroupToInclude = userGroupService.findUserGroupByUuid( userGroupUuid );
 					if( userGroupToInclude == null ) {
-						println "Failed to locate UserGroup for uuid ${userGroupUuid}";
+						log.debug( "Failed to locate UserGroup for uuid ${userGroupUuid}");
 						continue;
 					}
 					
@@ -225,8 +225,8 @@ class UserStreamDefinitionController
 		
 		createWizardSix {
 			on( "finishWizard") {
-				println "finishing Wizard";
-				println "params: ${params}";
+				log.debug( "finishing Wizard" );
+				log.trace( "params: ${params}" );
 				UserStreamDefinition streamToCreate = flow.streamToCreate;
 				
 				// save subscriptions
@@ -238,7 +238,7 @@ class UserStreamDefinitionController
 				{
 					BusinessEventSubscription eventSubscriptionToInclude = businessEventSubscriptionService.findByUuid( eventSubscriptionUuid );
 					if( eventSubscriptionToInclude == null ) {
-						println "Failed to locate EventSubscription for uuid ${eventSubscriptionUuid}";
+						log.debug( "Failed to locate EventSubscription for uuid ${eventSubscriptionUuid}");
 						continue;
 					}
 					
