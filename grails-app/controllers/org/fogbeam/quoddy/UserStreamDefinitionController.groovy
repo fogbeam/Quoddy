@@ -365,8 +365,8 @@ class UserStreamDefinitionController
 		
 		editWizardThree {
 			on( "stage4") {
-				println "stage4";
-				println "params: ${params}";
+				log.debug(  "stage4" );
+				logger.trace( "params: ${params}" );
 				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				
 				// save users
@@ -377,7 +377,7 @@ class UserStreamDefinitionController
 				{
 					User userToInclude = userService.findUserByUuid( userUuid );
 					if( userToInclude == null ) {
-						println "Failed to locate User for uuid ${userUuid}";
+						log.debug( "Failed to locate User for uuid ${userUuid}");
 						continue;
 					}
 					
@@ -385,15 +385,15 @@ class UserStreamDefinitionController
 				}
 				
 				String includeSelfParam = params.includeSelf;
-				println "includeSelfParam: \"${includeSelfParam}\""
+				log.debug( "includeSelfParam: \"${includeSelfParam}\"");
 				Boolean includeSelf = false;
 				if( includeSelfParam != null && includeSelfParam.equalsIgnoreCase("on"))
 				{
-					println "updating includeSelf value to TRUE";
+					log.debug( "updating includeSelf value to TRUE");
 					includeSelf = true;
 				}
 				
-				println "setting includeSelf value to ${includeSelf}";
+				log.debug( "setting includeSelf value to ${includeSelf}");
 				streamToEdit.includeSelf = includeSelf;
 				
 				/* load userList list */
@@ -408,8 +408,8 @@ class UserStreamDefinitionController
 				
 
 				// save user lists
-				println( "stage5" );
-				println "params: ${params}";
+				log.debug( "stage5" );
+				log.trace( "params: ${params}");
 				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				
 				// userLists
@@ -420,7 +420,7 @@ class UserStreamDefinitionController
 				{
 					UserList userListToInclude = userListService.findUserListByUuid( userListUuid );
 					if( userListToInclude == null ) {
-						println "Failed to locate UserList for uuid ${userListUuid}";
+						log.debug( "Failed to locate UserList for uuid ${userListUuid}");
 						continue;
 					}
 					
@@ -429,7 +429,7 @@ class UserStreamDefinitionController
 												
 				/* load group list */
 				List<UserGroup> groups = userGroupService.getAllGroupsForUser( session.user );
-				println "found ${groups.size()} groups";
+				log.debug( "found ${groups.size()} groups");
 				[groups:groups, selectedGroups:streamToEdit.userGroupUuidsIncluded];
 				
 			}.to( "editWizardFive")	
@@ -437,8 +437,8 @@ class UserStreamDefinitionController
 		
 		editWizardFive {
 			on( "stage6") {
-				println "stage6";
-				println "params: ${params}";
+				log.debug( "stage6" );
+				log.trace( "params: ${params}" );
 				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				// save groups
 		
@@ -449,7 +449,7 @@ class UserStreamDefinitionController
 				{
 					UserGroup userGroupToInclude = userGroupService.findUserGroupByUuid( userGroupUuid );
 					if( userGroupToInclude == null ) {
-						println "Failed to locate UserGroup for uuid ${userGroupUuid}";
+						log.debug( "Failed to locate UserGroup for uuid ${userGroupUuid}");
 						continue;
 					}
 					
@@ -460,7 +460,7 @@ class UserStreamDefinitionController
 				List<BaseSubscription> eventSubscriptions =
 					eventSubscriptionService.getAllSubscriptionsForUser( session.user );
 				
-				println  "Found eventSubscriptions with size: ${eventSubscriptions?.size()}";	
+				log.debug( "Found eventSubscriptions with size: ${eventSubscriptions?.size()}");	
 					
 				[eventSubscriptions:eventSubscriptions, selectedEventSubscriptions:streamToEdit.subscriptionUuidsIncluded];
 			
@@ -470,8 +470,8 @@ class UserStreamDefinitionController
 		
 		editWizardSix {
 			on( "finishWizard") {
-				println "finishing Wizard";
-				println "params: ${params}";
+				log.debug( "finishing Wizard" );
+				log.trace( "params: ${params}" );
 				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				
 				// save subscriptions
@@ -481,10 +481,10 @@ class UserStreamDefinitionController
 				
 				for( String eventSubscriptionUuid : eventSubscriptionUuids )
 				{
-					println "looking for subscription with uuid: ${eventSubscriptionUuid}";
+					log.debug( "looking for subscription with uuid: ${eventSubscriptionUuid}" );
 					BaseSubscription eventSubscriptionToInclude = eventSubscriptionService.findByUuid( eventSubscriptionUuid );
 					if( eventSubscriptionToInclude == null ) {
-						println "Failed to locate EventSubscription for uuid ${eventSubscriptionUuid}";
+						log.debug(  "Failed to locate EventSubscription for uuid ${eventSubscriptionUuid}" );
 						continue;
 					}
 					
@@ -497,14 +497,14 @@ class UserStreamDefinitionController
 		
 		finish {
 			action {
-				println "update using params: ${params}"
+				log.debug( "update using params: ${params}");
 				def streamId = params.streamId;
 				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				
 				if( !streamToEdit.save() )
 				{
-					println( "Saving UserStream FAILED");
-					streamToEdit.errors.allErrors.each { println it };
+					log.error( "Saving UserStream FAILED");
+					streamToEdit.errors.allErrors.each { log.debug(it) };
 				}
 				
 			}
@@ -520,7 +520,7 @@ class UserStreamDefinitionController
 	def edit =
 	{
 		def streamId = params.id;
-		println "Editing UserStream with id: ${streamId}";
+		log.debug( "Editing UserStream with id: ${streamId}");
 		UserStreamDefinition streamToEdit = null;
 		
 		streamToEdit = UserStreamDefinition.findById( streamId );
@@ -536,7 +536,7 @@ class UserStreamDefinitionController
 	{
 		
 		// TODO: implement this...
-		println "update using params: ${params}"
+		log.debug( "update using params: ${params}");
 		def streamId = params.streamId;
 		UserStreamDefinition streamToEdit = null;
 		
