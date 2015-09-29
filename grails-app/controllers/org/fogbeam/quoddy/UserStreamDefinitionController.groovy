@@ -252,13 +252,13 @@ class UserStreamDefinitionController
 		/* an action state to do the final save/update on the object */
 		finish {
 			action {
-				println "create using params: ${params}"
+				log.debug( "create using params: ${params}");
 				UserStreamDefinition streamToCreate = flow.streamToCreate;
 				
 				if( !streamToCreate.save() )
 				{
-					println( "Saving UserStream FAILED");
-					streamToCreate.errors.allErrors.each { println it };
+					log.debug( "saving UserStream FAILED");
+					streamToCreate.errors.allErrors.each { log.debug( it ) };
 				}
 			}
 			on("success").to("exitWizard");
@@ -286,7 +286,7 @@ class UserStreamDefinitionController
 		start {
 			action {
 				def streamId = params.streamId;
-				println "Editing UserStream with id: ${streamId}";
+				log.debug( "Editing UserStream with id: ${streamId}");
 				UserStreamDefinition streamToEdit = null;
 				streamToEdit = UserStreamDefinition.findById( streamId );
 				
@@ -295,7 +295,7 @@ class UserStreamDefinitionController
 				// Set<EventType> eventTypes = eventTypeService.findAllEventTypes();
 				Set<EventType> eventTypes = eventTypeService.findEventTypesByScope( EventTypeScopes.EVENT_TYPE_USER.name );
 				
-				println  "found eventTypes with size = ${eventTypes?.size()}";
+				log.debug(  "found eventTypes with size = ${eventTypes?.size()}");
 				[streamToEdit:streamToEdit, eventTypes:eventTypes];
 			}
 			on("success").to("editWizardOne")
@@ -305,7 +305,7 @@ class UserStreamDefinitionController
 		editWizardOne {
 			on("stage2") {
 				
-				println "transitioning to stage2";
+				log.debug( "transitioning to stage2" );
 			   
 				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				streamToEdit.name = params.streamName;
@@ -330,9 +330,9 @@ class UserStreamDefinitionController
 		
 		editWizardTwo {
 			on("stage3"){
-				println "stage3";
+				log.debug( "stage3" );
 			   
-				println "params: ${params}";
+				log.trace( "params: ${params}");
 				
 				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				
@@ -346,7 +346,7 @@ class UserStreamDefinitionController
 					EventType eventType = eventTypeService.findEventTypeById( Long.valueOf( eventTypeId ) );
 					
 					if( eventType == null ) {
-						println "Failed to locate eventType entry for id: ${eventTypeId}";
+						log.debug(  "Failed to locate eventType entry for id: ${eventTypeId}");
 						continue;	
 					}
 					streamToEdit.addToEventTypesIncluded( eventType );
@@ -356,7 +356,7 @@ class UserStreamDefinitionController
 				List<User> allusers = userService.findAllUsers();
 				List<User> eligibleUsers = userService.findEligibleUsersForUser( session.user );
 				
-				println "Found ${eligibleUsers.size()} eligible users\n";
+				log.debug( "Found ${eligibleUsers.size()} eligible users\n");
 								
 				[users:eligibleUsers, selectedUsers:streamToEdit.userUuidsIncluded];
 			
