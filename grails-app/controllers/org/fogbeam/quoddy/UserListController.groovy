@@ -45,7 +45,7 @@ class UserListController
 		if( session.user != null )
 		{
 			def user = userService.findUserByUserId( session.user.userId );
-			// println "Doing display with params: ${params}";
+			// log.debug( "Doing display with params: ${params}");
 			def activities = new ArrayList<ActivityStreamItem>();
 								
 			
@@ -109,7 +109,7 @@ class UserListController
 		
 		createWizardTwo {
 			on("finishWizard"){
-				println "finishing Wizard";
+				log.debug( "finishing Wizard");
 			   [];
 			}.to("finish")
 		}
@@ -117,11 +117,11 @@ class UserListController
 		/* an action state to do the final save/update on the object */
 		finish {
 			action {
-				println "create using params: ${params}"
+				log.trace( "create using params: ${params}");
 				UserList listToCreate = flow.listToCreate;
 			
 				/* deal with usersToAdd here */
-				println( "dealing with users to add" );
+				log.debug( "dealing with users to add" );
 				def usersToAdd = params.list( 'usersToAdd');
 				for( String userToAdd : usersToAdd )
 				{
@@ -132,8 +132,8 @@ class UserListController
 			
 				if( !listToCreate.save() )
 				{
-					println( "Saving UserList FAILED");
-					listToCreate.errors.allErrors.each { println it };
+					log.error( "Saving UserList FAILED" );
+					listToCreate.errors.allErrors.each { log.debug( it ) };
 				}
 			}
 			on("success").to("exitWizard");
@@ -151,7 +151,7 @@ class UserListController
 		start {
 			action {
 				def listId = params.listId;
-				println "Editing UserList with id: ${listId}";
+				log.debug( "Editing UserList with id: ${listId}");
 				UserList listToEdit = null;
 				listToEdit = UserList.findById( listId );
 		
@@ -164,7 +164,7 @@ class UserListController
 		 editWizardOne {
 			 on("stage2") {
 			 	
-				 println "transitioning to stage2";
+				 log.debug( "transitioning to stage2");
 				
 				 UserList listToEdit = flow.listToEdit;
 				 listToEdit.name = params.listName;
@@ -185,7 +185,7 @@ class UserListController
 		 
 		 editWizardTwo {
 			 on("finishWizard"){
-			 	println "finishing Wizard";
+			 	log.debug( "finishing Wizard" );
 				[];
 			 }.to("finish")
 		 }
@@ -193,12 +193,12 @@ class UserListController
 		 /* an action state to do the final save/update on the object */
 		 finish {
 			 action {
-				 println "update using params: ${params}"
+				 log.debug( "update using params: ${params}");
 				 def listId = params.listId;
 				 UserList listToEdit = flow.listToEdit;
 			 
 				 /* deal with usersToRemove and usersToAdd here */
-				 println "dealing with usersToRemove";
+				 log.debug( "dealing with usersToRemove");
 				 def usersToRemove = params.list('usersToRemove');
 				 for( String userToRemove : usersToRemove )
 				 {
@@ -220,11 +220,11 @@ class UserListController
 				 
 				 if( !listToEdit.save() )
 				 {
-					 println( "Saving UserList FAILED");
-					 listToEdit.errors.allErrors.each { println it };
+					 log.error( "Saving UserList FAILED");
+					 listToEdit.errors.allErrors.each { log.debug( it ) };
 				 }
 				 
-				 println( "dealing with users to add" );
+				 log.debug( "dealing with users to add" );
 				 def usersToAdd = params.list( 'usersToAdd');
 				 for( String userToAdd : usersToAdd )
 				 {
@@ -235,8 +235,8 @@ class UserListController
 			 
 				 if( !listToEdit.save() )
 				 {
-					 println( "Saving UserList FAILED");
-					 listToEdit.errors.allErrors.each { println it };
+					 log.error( "Saving UserList FAILED");
+					 listToEdit.errors.allErrors.each { log.error( it ) };
 				 }
 			 }
 			 on("success").to("exitWizard");
