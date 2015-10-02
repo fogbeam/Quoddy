@@ -70,7 +70,7 @@ class UserGroupController
 	def save = 
 	{
 		
-		println "save using params: ${params}"
+		log.debug( "save using params: ${params}");
 		if( session.user != null )
 		{
 			def user = userService.findUserByUserId( session.user.userId );
@@ -82,8 +82,8 @@ class UserGroupController
 			
 			if( ! groupToCreate.save() )
 			{
-				println( "Saving UserGroup FAILED");
-				groupToCreate.errors.allErrors.each { println it };
+				log.error( "Saving UserGroup FAILED");
+				groupToCreate.errors.allErrors.each { log.debug( it) };
 			}
 		
 			redirect(controller:"userGroup", action:"index");
@@ -97,7 +97,7 @@ class UserGroupController
 	def edit =
 	{
 		def groupId = params.id;
-		println "Editing UserGroup with id: ${groupId}";
+		log.debug( "Editing UserGroup with id: ${groupId}");
 		UserGroup groupToEdit = null;
 		
 		groupToEdit = UserGroup.findById( groupId );
@@ -108,7 +108,7 @@ class UserGroupController
 	
 	def update = 
 	{
-		println "update using params: ${params}"
+		log.debug( "update using params: ${params}");
 		def groupId = params.groupId;
 		UserGroup groupToEdit = null;
 		
@@ -122,8 +122,8 @@ class UserGroupController
 		}
 		if( ! groupToEdit.save(flush:true) )
 		{
-			println( "Saving UserGroup FAILED");
-			groupToEdit.errors.allErrors.each { println it };
+			log.error( "saving UserGroup FAILED");
+			groupToEdit.errors.allErrors.each { log.debug( it) };
 		}
 		
 		// TODO: deal with requireJoinConfirmation
@@ -138,7 +138,7 @@ class UserGroupController
 		if( session.user != null )
 		{
 			def user = userService.findUserByUserId( session.user.userId );
-			// println "Doing display with params: ${params}";
+			log.debug( "Doing display with params: ${params}");
 			
 			// def items = new ArrayList<StreamItemBase>();
 			List<ActivityStreamItem> activities = new ArrayList<ActivityStreamItem>();
@@ -190,7 +190,7 @@ class UserGroupController
 		String groupId = params.groupId;
 		String userId = session.user.id;
 		
-		println "doing joinGroup with groupId = ${groupId} and userId = ${userId}";
+		log.info( "doing joinGroup with groupId = ${groupId} and userId = ${userId}");
 		User user = User.findById( userId );
 		UserGroup group = UserGroup.findById( groupId );
 		
@@ -209,13 +209,13 @@ class UserGroupController
 
 	def postToGroup =
 	{
-		println "Posting to group: ${params.groupId}, with statusText: ${params.statusText}";		
+		log.info( "Posting to group: ${params.groupId}, with statusText: ${params.statusText}");		
 		def groupId = params.groupId;
 		
 		if( session.user )
 		{
 			
-			println "logged in; so proceeding...";
+			log.debug( "logged in; so proceeding...");
 			
 			// get our user
 			User user = userService.findUserByUserId( session.user.userId );
@@ -246,9 +246,9 @@ class UserGroupController
 			}
 			else
 			{
-				println "constructing our new StatusUpdate object...";
+				log.debug( "constructing our new StatusUpdate object...");
 				// construct a status object
-				println "statusText: ${params.statusText}";
+				log.debug( "statusText: ${params.statusText}");
 				StatusUpdate newStatus = new StatusUpdate( text: params.statusText, creator: user );
 				newStatus.effectiveDate = new Date();
 				newStatus.targetUuid = group.uuid; // NOTE: can we take 'targetUuid' out of StatusUpdate??
@@ -260,8 +260,8 @@ class UserGroupController
 				
 				if( !newStatus.save() )
 				{
-					println "Save StatusUpdate FAILED!";
-					newStatus.errors.allErrors.each { println it };	
+					log.error( "Save StatusUpdate FAILED!");
+					newStatus.errors.allErrors.each { log.debug( it ) };	
 				}
 				
 				ActivityStreamItem activity = new ActivityStreamItem(content:newStatus.text);
@@ -293,7 +293,7 @@ class UserGroupController
 				// msg.originTime = activity.dateCreated.time;
 				// msg.targetUuid = activity.targetUuid;
 				
-				// println "sending message to JMS";
+				// log.debug( "sending message to JMS" );
 				// jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );
 			}
 		
