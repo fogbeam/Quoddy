@@ -48,10 +48,6 @@ class ExploreController
 			log.debug("*************************************************\n\n");
 		
 		
-			// def ks= restResponseText.keySet();
-			// ks.each { println it };
-		
-		
 			[content: content, value:restResponseText];
 		}
 		else
