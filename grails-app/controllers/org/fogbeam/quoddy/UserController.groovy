@@ -142,7 +142,7 @@ class UserController {
 		}
 		
 		
-		println "found ${users.size()} users";
+		log.debug( "found ${users.size()} users" );
 		
 		[users:users];
 	}
@@ -214,7 +214,7 @@ class UserController {
 					
 		builder( forJSON );
 		
-		println "JSON Output: ${builder.toString()}";
+		log.debug( "JSON Output: ${builder.toString()}");
 		
 		model.putAt( "predicatesJSON", builder.toString());
 		
@@ -242,15 +242,15 @@ class UserController {
 		
 		if( urc.hasErrors() )
 		{
-				println "UserRegistrationCommand object has errors";
-				urc.errors.allErrors.each {println it};
+				log.warn( "UserRegistrationCommand object has errors");
+				urc.errors.allErrors.each {log.debug( it) };
 				flash.user = urc;
 				flash.message = "Error creating user!";
 				redirect( controller:'user', action:"adminAddUser" );
 		}
 		else
 		{
-			println "in adminSaveUser: about to call createUser()";
+			log.debug( "in adminSaveUser: about to call createUser()");
 			
 			def user = new User( urc.properties );
 			user.password = urc.password;
@@ -289,7 +289,7 @@ class UserController {
 	def adminUpdateUser =
 	{ UserRegistrationCommand urc ->
 	
-		println "saving account for uuid: ${urc.uuid}";
+		log.debug( "saving account for uuid: ${urc.uuid}");
 		User user = userService.findUserByUuid( urc.uuid );
 		if( user )
 		{
@@ -298,20 +298,20 @@ class UserController {
 			theNewProperties.remove( "userId" );
 			user.properties = theNewProperties;
 			
-			println "updating user as: ${user.toString()}";
+			log.debug( "updating user as: ${user.toString()}");
 			
 			user = userService.updateUser( user );
 			
 			if( user )
 			{
 					flash.message = "Account updated, ${urc.displayName ?: urc.userId}";
-					println "message: ${flash.message}";
+					log.debug(  "message: ${flash.message}");
 					redirect(controller:'user', action: 'manageUsers')
 			}
 			else
 			{
 				flash.message = "Error updating account, ${urc.displayName ?: urc.userId}";
-				println "message: ${flash.message}";
+				log.debug( "message: ${flash.message}");
 				// redirect(controller:'user', action: 'editUser');
 				render(view:'adminEditUser', model:[user:user]);
 			}
@@ -320,7 +320,7 @@ class UserController {
 		else
 		{
 			flash.message = "Error updating account, ${urc.displayName ?: urc.userId}";
-			println "message: ${flash.message}";
+			log.debug( "message: ${flash.message}");
 			render(view:'adminEditUser', model:[user:user]);
 		}
 
@@ -400,7 +400,7 @@ class UserController {
 		}
 		else
 		{
-			println "follow: ${params.userId}";
+			log.debug( "follow: ${params.userId}" );
 		
 			currentUser = userService.findUserByUserId( session.user.userId );
 			
@@ -424,7 +424,7 @@ class UserController {
 		}
 		else
 		{
-			println "addToFriends: ${params.userId}";
+			log.debug( "addToFriends: ${params.userId}" );
 		
 			currentUser = userService.findUserByUserId( session.user.userId );
 			
@@ -440,7 +440,7 @@ class UserController {
 
 	def confirmFriend = 
 	{
-		println "confirmFriend";
+		log.debug( "confirmFriend" );
 		User currentUser = null;
 		if( !session.user )
 		{
