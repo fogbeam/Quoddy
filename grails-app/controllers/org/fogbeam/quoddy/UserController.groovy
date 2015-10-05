@@ -745,16 +745,16 @@ class UserController {
 	
 	
 	def saveProfilePrimaryInstantMessenger = {
-		println "Params: \n ${params}";
+		log.debug( "Params: \n ${params}");
 		
 		String userId = params.id;
-		println "Looking for user by userId: $userId";
+		log.debug( "Looking for user by userId: $userId");
 		
 		User user = userService.findUserByUserId( userId );
 		Profile profile = null;
 		if( user != null )
 		{
-			println "found user";
+			log.debug( "found user" );
 			profile = user.profile;
 			String newPrimaryInstantMessenger = params.primaryInstantMessengerInput;
 			if( newPrimaryInstantMessenger != null )
@@ -775,12 +775,12 @@ class UserController {
 				
 				if( !newPrimaryInstantMessengerCA.save(flush:true) )
 				{
-					println "Error saving newPrimaryInstantMessengerCA!";
-					newPrimaryInstantMessengerCA.error.allErrors.each { println it;}
+					log.error( "Error saving newPrimaryInstantMessengerCA!");
+					newPrimaryInstantMessengerCA.error.allErrors.each { log.debug(it);}
 				}
 				else
 				{
-					println "newPrimaryInstantMessengerCA saved OK";
+					log.debug( "newPrimaryInstantMessengerCA saved OK");
 				}
 				
 				
@@ -788,12 +788,12 @@ class UserController {
 				
 				if( !profile.save(flush:true) )
 				{
-					println "Error saving profile...";
-					profile.errors.allErrors.each { println it; } 
+					log.error( "Error saving profile...");
+					profile.errors.allErrors.each { log.debug(it); } 
 				}
 				else
 				{
-					println "profile saved OK";
+					log.debug( "profile saved OK");
 				}
 			}
 			
@@ -809,13 +809,13 @@ class UserController {
 	{
 		
 		String userId = params.id;
-		println "Looking for user by userId: $userId";
+		log.debug( "Looking for user by userId: $userId");
 		
 		User user = userService.findUserByUserId( userId );
 		Profile profile = null;
 		if( user != null )
 		{
-			println "found user";
+			log.debug( "found user" );
 			profile = user.profile;
 		
 			HistoricalEmployer emp1 = new HistoricalEmployer( companyName: params.companyName,
@@ -828,8 +828,8 @@ class UserController {
 			
 			if( !emp1.save(flush:true) )
 			{
-				println "Saving new HistoricalEmployer Record failed";
-				emp1.errors.allErrors.each { println it };
+				log.error( "Saving new HistoricalEmployer Record failed");
+				emp1.errors.allErrors.each { log.debug(it) };
 			}
 
 			profile.addToEmploymentHistory( emp1 );
@@ -846,16 +846,16 @@ class UserController {
 	
 	def saveEducationHistoryEntry =
 	{
-		println "Params:\n${params}";
+		log.debug( "Params:\n${params}");
 				
 		String userId = params.id;
-		println "Looking for user by userId: $userId";
+		log.debug( "Looking for user by userId: $userId");
 		
 		User user = userService.findUserByUserId( userId );
 		Profile profile = null;
 		if( user != null )
 		{
-			println "found user";
+			log.debug( "found user" );
 			profile = user.profile;
 		
 		
@@ -870,18 +870,17 @@ class UserController {
 
 			if( !newEducationalExperience.save(flush:true) )
 			{
-				println "Saving new EducationalExperience Record failed";
-				newEducationalExperience.errors.allErrors.each { println it };
+				log.error( "Saving new EducationalExperience Record failed");
+				newEducationalExperience.errors.allErrors.each { log.debug(it) };
 			}
 			else
 			{
-				println "newEducationalExperience saved";
+				log.debug( "newEducationalExperience saved");
 			}
 
-			// println "newEducationalExperience: ${newEducationalExperience}";
-
+		
 			profile.addToEducationHistory( newEducationalExperience );
-			println "added newEducationalExperience to profile";
+			log.debug( "added newEducationalExperience to profile");
 			profile.save(flush:true);
 		
 			render( "OK" );
@@ -894,16 +893,16 @@ class UserController {
 	
 	
 	def saveProfileLocation = {
-		println "Params: \n ${params}";
+		log.debug( "Params: \n ${params}");
 
 		String userId = params.id;
-		println "Looking for user by userId: $userId";
+		log.debug( "Looking for user by userId: $userId");
 		
 		User user = userService.findUserByUserId( userId );
 		Profile profile = null;
 		if( user != null )
 		{
-			println "found user";
+			log.debug( "found user");
 			profile = user.profile;
 			String newLocation = params.locationInput;
 			if( newLocation != null )
@@ -923,16 +922,16 @@ class UserController {
 	
 	
 	def saveProfileDotPlan = {
-		println "Params: \n ${params}";
+		log.debug( "Params: \n ${params}");
 		
 		String userId = params.id;
-		println "Looking for user by userId: $userId";
+		log.debug( "Looking for user by userId: $userId");
 		
 		User user = userService.findUserByUserId( userId );
 		Profile profile = null;
 		if( user != null )
 		{
-			println "found user";
+			log.debug( "found user" );
 			profile = user.profile;
 			String newDotPlan = params.dotPlanInput;
 			if( newDotPlan != null )
@@ -952,17 +951,17 @@ class UserController {
 	
 	def saveProfileTitle =
 	{
-		// println( "params:\n ${params}" );
-		// println "Saving Title!";
+		log.debug( "params:\n ${params}" );
+		log.debug("Saving Title!");
 		
 		String userId = params.id;
-		println "Looking for user by userId: $userId";
+		log.debug( "Looking for user by userId: $userId");
 		
 		User user = userService.findUserByUserId( userId );
 		Profile profile = null;
 		if( user != null )
 		{
-			println "found user";
+			log.debug( "found user");
 			profile = user.profile;
 			String newTitle = params.titleInput;
 			if( newTitle != null )
@@ -984,20 +983,20 @@ class UserController {
 	
 	def saveProfileSummary =
 	{
-		// println( "params:\n ${params}" );
+		log.debug( "params:\n ${params}" );
 		
 		// TODO: update summary and return... 
 		// summaryInput:Phil is a rad dude, id:prhodes
-		println "Saving Summary!";
+		log.debug("Saving Summary!");
 		
 		String userId = params.id;
-		println "Looking for user by userId: $userId";
+		log.debug("Looking for user by userId: $userId");
 		
 		User user = userService.findUserByUserId( userId );
 		Profile profile = null;
 		if( user != null )
 		{
-			println "found user";
+			log.debug( "found user");
 			profile = user.profile;
 			String newSummary = params.summaryInput;
 			if( newSummary != null )
@@ -1019,23 +1018,23 @@ class UserController {
 	def saveProfileAvatarPic =
 	{
 		
-		println "Saving Avatar Image!";
+		log.debug( "Saving Avatar Image!");
 		
 		String uuid = params.userUuid;
-		println "Looking for user by uuid: $uuid";
+		log.debug( "Looking for user by uuid: $uuid");
 		
 		User user = userService.findUserByUuid( uuid );
 		Profile profile = user.profile;
 		
 		if(request instanceof MultipartHttpServletRequest)
 		{
-			println "is multipart";
+			log.debug( "is multipart");
 			MultipartHttpServletRequest mpr = (MultipartHttpServletRequest)request;
 		  	CommonsMultipartFile f = (CommonsMultipartFile) mpr.getFile("your_photo");
 		  	/* def f = request.getFile('myFile')*/
 		  	if( f != null && !f.empty) 
 			{
-				println "uploading photo file...";
+				log.debug( "uploading photo file...");
 				
 				  // f.transferTo( new File("/tmp/myfile.png") );
 		  	
@@ -1072,7 +1071,7 @@ class UserController {
 			  }
 			  else
 			  {
-				println "ERROR: did not find file in upload!";
+				log.error( "ERROR: did not find file in upload!");
 				
 			  }
 			  
