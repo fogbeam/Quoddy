@@ -513,12 +513,12 @@ class UserController {
 	
 	def create = 
 	{   
-		println "enable self reg? "
-		println CH.config.enable.self.registration;
+		log.debug( "enable self reg? ");
+		log.debug( CH.config.enable.self.registration);
 		
 		if( CH.config.enable.self.registration != true )
 		{
-			println "self registration is disabled";
+			log.debug( "self registration is disabled");
 			// if self registration isn't turned on, just bounce to the front-page here
 			redirect( controller:'home', action:'index')
 		}
@@ -533,7 +533,7 @@ class UserController {
 	
 		List<User> allusers = userService.findAllUsers();
 		
-		println "Found ${allusers.size()} users\n";
+		log.debug( "Found ${allusers.size()} users\n");
 		
 		[users:allusers];
 	}
@@ -598,7 +598,7 @@ class UserController {
 					
 		builder( forJSON );
 		
-		println "JSON Output: ${builder.toString()}";
+		log.trace( "JSON Output: ${builder.toString()}");
 		
 		model.putAt( "predicatesJSON", builder.toString());
 		
@@ -627,16 +627,16 @@ class UserController {
 
 	
 	def saveProfilePrimaryPhone = {
-		println "Params: \n ${params}";
+		log.debug( "Params: \n ${params}");
 		
 		String userId = params.id;
-		println "Looking for user by userId: $userId";
+		log.debug( "Looking for user by userId: $userId" );
 		
 		User user = userService.findUserByUserId( userId );
 		Profile profile = null;
 		if( user != null )
 		{
-			println "found user";
+			log.debug( "found user" );
 			profile = user.profile;
 			String newPrimaryPhone = params.primaryPhoneInput;
 			if( newPrimaryPhone != null )
@@ -657,12 +657,12 @@ class UserController {
 				
 				if( !newPrimaryPhoneCA.save(flush:true) )
 				{
-					println "Error saving newPrimaryPhoneCA!";
-					newPrimaryPhoneCA.error.allErrors.each { println it;}
+					log.error( "Error saving newPrimaryPhoneCA!");
+					newPrimaryPhoneCA.error.allErrors.each { log.debug(it);}
 				}
 				else
 				{
-					println "newPrimaryPhoneCA saved OK";
+					log.debug( "newPrimaryPhoneCA saved OK" );
 				}
 				
 				
@@ -670,12 +670,12 @@ class UserController {
 				
 				if( !profile.save(flush:true) )
 				{
-					println "Error saving profile...";
-					profile.errors.allErrors.each { println it; }
+					log.error( "Error saving profile..." );
+					profile.errors.allErrors.each { log.debug(it); }
 				}
 				else
 				{
-					println "profile saved OK";
+					log.debug( "profile saved OK" );
 				}
 			}
 			
@@ -686,16 +686,16 @@ class UserController {
 	
 	
 	def saveProfilePrimaryEmail = {
-		println "Params: \n ${params}";
+		log.debug( "Params: \n ${params}" );
 
 		String userId = params.id;
-		println "Looking for user by userId: $userId";
+		log.debug( "Looking for user by userId: $userId");
 		
 		User user = userService.findUserByUserId( userId );
 		Profile profile = null;
 		if( user != null )
 		{
-			println "found user";
+			log.debug( "found user" );
 			profile = user.profile;
 			String newPrimaryEmail = params.primaryEmailInput;
 			if( newPrimaryEmail != null )
@@ -716,12 +716,12 @@ class UserController {
 				
 				if( !newPrimaryEmailCA.save(flush:true) )
 				{
-					println "Error saving newPrimaryEmailCA!";
-					newPrimaryEmailCA.error.allErrors.each { println it;}
+					log.error( "Error saving newPrimaryEmailCA!");
+					newPrimaryEmailCA.error.allErrors.each { log.debug(it);}
 				}
 				else
 				{
-					println "newPrimaryEmailCA saved OK";
+					log.debug( "newPrimaryEmailCA saved OK");
 				}
 				
 				
@@ -729,12 +729,12 @@ class UserController {
 				
 				if( !profile.save(flush:true) )
 				{
-					println "Error saving profile...";
-					profile.errors.allErrors.each { println it; } 
+					log.error( "Error saving profile...");
+					profile.errors.allErrors.each { log.debug(it); } 
 				}
 				else
 				{
-					println "profile saved OK";
+					log.debug( "profile saved OK" );
 				}
 			}
 			
