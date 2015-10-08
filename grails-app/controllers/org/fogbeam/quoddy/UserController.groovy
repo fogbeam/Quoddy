@@ -1081,7 +1081,7 @@ class UserController {
 		}
 		else
 		{
-			println "not multipart";
+			log.debug( "not multipart" );
 		}
 	}
 	
@@ -1090,13 +1090,9 @@ class UserController {
 	{ 
 		UserProfileCommand upc ->
 		
-		// println "params: $params";
-		// println "\n";
-		// println "upc: $upc";
-		// println "\n";
 		
 		String uuid = upc.userUuid;
-		// println "Looking for user by uuid: $uuid";
+		log.debug( "Looking for user by uuid: $uuid" );
 		User user = userService.findUserByUuid( uuid );
 		Profile profile = user.profile;
 		
@@ -1116,13 +1112,10 @@ class UserController {
 		
 		if( upc.sex )
 		{
-			// println "sex: ${upc.sex}";
 			profile.sex = Integer.parseInt( upc.sex );
 		}
 				
-		// println "location: ${upc.location}";
 		profile.location = upc.location;
-		// println "hometown: ${upc.hometown}";
 		profile.hometown = upc.hometown;
 		
 		Set paramsNames = params.keySet();
@@ -1180,7 +1173,7 @@ class UserController {
 					
 					if( !existingHistEmp.save() )
 					{
-						println "updating histemp record failed!";	
+						log.error( "updating histemp record failed!" );	
 					}
 					
 					
@@ -1188,8 +1181,6 @@ class UserController {
 				// else, create new record and attach to profile
 				else
 				{
-					// println "creating new HistoricalEmployer record";
-					// println "emp1v: ${emp1v}\n";
 					String monthTo = null;
 					String monthFrom = null;
 					String yearTo = null;
@@ -1224,19 +1215,18 @@ class UserController {
 																		description: emp1v.description );
 					if( !emp1.save() )
 					{
-						println "Saving new HistoricalEmployer Record failed";
-						emp1.errors.allErrors.each { println it };
+						log.error( "Saving new HistoricalEmployer Record failed");
+						emp1.errors.allErrors.each { log.debug( it ) };
 					}
 					
 					profile.addToEmploymentHistory( emp1 );
-					// println "added emp1 to profile";
 				}
 			}
 			else if( it.startsWith( "contactAddress[" ) && it.endsWith( "]" ))
 			{
 				def contactAddress = params.get( it );
 				
-				println "contactAddress: ${contactAddress}";
+				log.debug( "contactAddress: ${contactAddress}" );
 				
 				// is there an ID? Is it valid?  If so, update existing record for profile
 				String contactAddressIdStr = contactAddress.contactAddressId;
@@ -1253,7 +1243,7 @@ class UserController {
 					
 					if( !existingContactAddress.save() )
 					{
-						println "updating contact address record failed!";
+						log.error( "updating contact address record failed!");
 					}
 					
 					
@@ -1269,18 +1259,15 @@ class UserController {
 
 						if( !newContactAddress.save() )
 						{
-							println "Saving new ContactAddress Record failed";
-							newContactAddress.errors.allErrors.each { println it };
+							log.error( "Saving new ContactAddress Record failed" );
+							newContactAddress.errors.allErrors.each { log.debug(it) };
 						}
 					    else
 					    {
-							println "newContactAddress saved";	
+							log.debug( "newContactAddress saved" );	
 					    }
 					
-						// println "newContactAddress: ${newContactAddress}";
-					
-						profile.addToContactAddresses( newContactAddress );														
-						// println "added newContactAddress to profile";
+						profile.addToContactAddresses( newContactAddress );
 					}
 				}
 			}
@@ -1288,8 +1275,6 @@ class UserController {
 			{
 				
 				def educationalHistory = params.get( it );
-				
-				// println "\n\neducationalHistory: ${educationalHistory}\n\n";
 								
 				// is there an ID? Is it valid?  If so, update existing record for profile
 				String educationalExperienceIdStr = educationalHistory.educationalExperienceId;
@@ -1321,7 +1306,7 @@ class UserController {
 					
 					if( !existingEducationalExperience.save() )
 					{
-						println "updating educational experience record failed!";
+						log.error( "updating educational experience record failed!" );
 					}
 					
 					
@@ -1359,25 +1344,23 @@ class UserController {
 
 					if( !newEducationalExperience.save() )
 					{
-						println "Saving new EducationalExperience Record failed";
-						newEducationalExperience.errors.allErrors.each { println it };
+						log.error( "Saving new EducationalExperience Record failed" );
+						newEducationalExperience.errors.allErrors.each { log.debug( it ) };
 					}
 					else
 					{
-						println "newEducationalExperience saved";
+						log.debug( "newEducationalExperience saved" );
 					}
 					
-					// println "newEducationalExperience: ${newEducationalExperience}";
 					
 					profile.addToEducationHistory( newEducationalExperience );
-					// println "added newEducationalExperience to profile";
 					
 				}
 			}
 		};
 
 		// upc.interests
-		println "Interests: " + upc.interests;
+		log.debug( "Interests: " + upc.interests );
 		String[] interestsLines = upc.interests.split("\n" );
 		for( String interestLine : interestsLines )
         {
@@ -1408,7 +1391,7 @@ class UserController {
 		
 		
 		// upc.skills
-		println "Skills: " + upc.skills;
+		log.debug( "Skills: " + upc.skills );
 		String[] skillsLines = upc.skills.split("\n" );
 		for( String skillsLine : skillsLines )
 		{
@@ -1437,7 +1420,7 @@ class UserController {
 		
 		
 		// upc.groupsOrgs
-		println "GroupsOrgs: " + upc.groupsOrgs;
+		log.debug( "GroupsOrgs: " + upc.groupsOrgs );
 		String[] groupsOrgsLines = upc.groupsOrgs.split("\n" );
 		for( String groupsOrgLine : groupsOrgsLines )
 		{
@@ -1518,51 +1501,45 @@ class UserController {
 	
 	def addAnnotation =
 	{
-		println "addAnnotation";
+		log.debug( "addAnnotation" );
 		
 		// add an annotation, possibly about a skill, or maybe a reference to
 		// a Customer or Account or Product or other entity, to the targeted
 		// user...
 		
 		String userId = params.userId;
-		println "adding annotation for User: ${userId}";
+		log.debug( "adding annotation for User: ${userId}");
 		User user = userService.findUserByUserId( userId );
 		
 		String annotationPredicate = params.annotationPredicate;
-		println "annotationPredicate: ${annotationPredicate}";
+		log.debug( "annotationPredicate: ${annotationPredicate}");
 		
 		String annotationObject = params.annotationObject;
-		println "annotationObject: ${annotationObject}";
+		log.debug( "annotationObject: ${annotationObject}");
 		
 		String annotationObjectQN = params.annotationObjectQN;
-		println "annotationObjectQN: ${annotationObjectQN}";
+		log.debug( "annotationObjectQN: ${annotationObjectQN}");
 		
 		// Make a TDB-backed dataset
 		String quoddyHome = System.getProperty( "quoddy.home" );
 		String directory = "${quoddyHome}/jenastore/triples" ;
-		println "Opening TDB triplestore at: ${directory}";
+		log.debug( "Opening TDB triplestore at: ${directory}" );
 		Dataset dataset = TDBFactory.createDataset(directory) ;
 		
-		println "1";
 		dataset.begin(ReadWrite.WRITE);
 		
 		try
 		{
 			// Get model inside the transaction
-			println "2";
 			Model model = dataset.getDefaultModel() ;
 		
-			println "3";
 			Resource newResource = model.createResource( "quoddy:${user.uuid}" );
 		
-			println "4";
 			Resource object = model.createResource( annotationObjectQN );
 			// model.add( object );
 		
-			println "5";
 			Property property = model.createProperty( annotationPredicate );
 		
-			println "6";
 			// model.add( property );
 			
 			// newResource.addProperty( property, object );
@@ -1572,23 +1549,20 @@ class UserController {
 			Statement s = model.createStatement(newResource, property, object);
 			model.add( s );
 			
-			println "7";
 			dataset.commit();
 		}
 		catch( Exception e )
 		{
 			e.printStackTrace();
-			println "9";
 			dataset.abort();
 		}
 		finally
 		{
-			println "8";
 			dataset.end();
 	
 		}
 			
-		println "done adding annotation";
+		log.debug( "done adding annotation");
 		
 		render( "OK" );
 	}
