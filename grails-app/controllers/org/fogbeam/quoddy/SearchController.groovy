@@ -123,7 +123,7 @@ class SearchController
 		// model for rendering...
 		String queryString = params.queryString;
 		
-		println "doAdvancedSearch, queryString: ${queryString}";
+		log.debug( "doAdvancedSearch, queryString: ${queryString}");
 		
 		boolean bSearchEverything = false;
 		boolean bSearchStatusUpdates = false;
@@ -136,12 +136,12 @@ class SearchController
 		boolean bSearchFriends = false;
 		
 		String searchEverything = params.searchEverything;
-		println "searchEverything: ${searchEverything}";
+		log.debug( "searchEverything: ${searchEverything}");
 		bSearchEverything = searchEverything ? true: false;
 		
 		if( bSearchEverything )
 		{
-			println( "setting all flags to true");
+			log.debug( "setting all flags to true");
 			bSearchStatusUpdates = true;
 			bSearchCalendarFeedItems = true;
 			bSearchBusSubItems = true;
@@ -157,35 +157,35 @@ class SearchController
 		
 			String searchStatusUpdates = params.searchStatusUpdates;
 			bSearchStatusUpdates = searchStatusUpdates ? true: false;
-			println "searchStatusUpdates: ${searchStatusUpdates}";
+			log.debug( "searchStatusUpdates: ${searchStatusUpdates}");
 		
 			String searchCalendarFeedItems = params.searchCalendarFeedItems;
 			bSearchCalendarFeedItems = searchCalendarFeedItems ? true : false;
-			println "searchCalendarFeedItems: ${searchCalendarFeedItems}";
+			log.debug( "searchCalendarFeedItems: ${searchCalendarFeedItems}");
 		
 			String searchBusSubItems = params.searchBusSubItems;
 			bSearchBusSubItems = searchBusSubItems ? true : false;
-			println "searchBusSubItems: ${searchBusSubItems}";
+			log.debug( "searchBusSubItems: ${searchBusSubItems}");
 					
 			String searchActivitiUserTasks = params.searchActivitiUserTasks;
 			bSearchActivitiUserTasks = searchActivitiUserTasks ? true : false;
-			println "searchActivitiUserTasks: ${searchActivitiUserTasks}";
+			log.debug( "searchActivitiUserTasks: ${searchActivitiUserTasks}");
 			
 			String searchRssFeedItems = params.searchRssFeedItems;
 			bSearchRssFeedItems = searchRssFeedItems ? true : false;
-			println "searchRssFeedItems: ${searchRssFeedItems}";
+			log.debug( "searchRssFeedItems: ${searchRssFeedItems}");
 		
 			String searchActivityStreamItems = params.searchActivityStreamItems;
 			bSearchActivityStreamItems = searchActivityStreamItems ? true : false;
-			println "searchActivityStreamItems: ${searchActivityStreamItems}";
+			log.debug( "searchActivityStreamItems: ${searchActivityStreamItems}" );
 			
 			String searchUsers = params.searchUsers;
 			bSearchUsers = searchUsers ? true : false;
-			println "searchUsers: ${searchUsers}";
+			log.debug( "searchUsers: ${searchUsers}" );
 			
 			String searchFriends = params.searchFriends;
 			bSearchFriends = searchFriends ? true : false;
-			println "searchFriends: ${searchFriends}";
+			log.debug( "searchFriends: ${searchFriends}" );
 		
 		}
 		
@@ -202,20 +202,20 @@ class SearchController
 		searchResults = new ArrayList<SearchResult>();	
 		if( bSearchStatusUpdates )
 		{
-			println "searching status updates";
+			log.debug( "searching status updates" );
 			List<SearchResult> tempResults = searchService.doStatusUpdateSearch( queryString );
-			println "SearchStatusUpdates returned " + tempResults.size() + " results";
+			log.debug( "SearchStatusUpdates returned " + tempResults.size() + " results" );
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size());
 		}
 		
 		if( bSearchCalendarFeedItems )
 		{
-			println "searching calendar feed items";
+			log.debug( "searching calendar feed items");
 			List<SearchResult> tempResults = searchService.doCalendarFeedItemSearch( queryString );
-			println "SearchCalendarFeedItems returned " + tempResults.size() + " results";
+			log.debug( "SearchCalendarFeedItems returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size());
 		}
 		
 		if( bSearchBusSubItems )
