@@ -48,14 +48,14 @@ class ImportUserController
 	def addImportedUsers = 
 	{
 		
-		println params;
+		log.debug( params );
 		List<String> usersToAdd = new ArrayList<String>();
 		params.each { 
 		
 			String entry = it;
 			if( entry.startsWith( "importUser." ) && entry.endsWith( "=on"))
 			{
-				println "entry: ${entry}";
+				log.debug( "entry: ${entry}" );
 				String uid = entry.split("\\.")[1];
 				uid = uid.replace( "=on", "" );	
 				
@@ -83,7 +83,7 @@ class ImportUserController
 			}
 			else
 			{
-				println "Wrong number of matching uids!";
+				log.debug( "Wrong number of matching uids!");
 			}
 		};
 		
