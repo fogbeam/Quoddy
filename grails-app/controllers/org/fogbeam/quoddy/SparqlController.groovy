@@ -96,7 +96,7 @@ class SparqlController
 				RDFNode x = soln.get("entity" );
 				RDFNode y = soln.get( "y" );
 				
-				System.out.println( x.toString() + " y: " + y.toString() );
+				log.debug( x.toString() + " y: " + y.toString() );
 				
 				// extract our entry UUID from the Subject and locate the matching Entry and
 				// add it to searchResults
