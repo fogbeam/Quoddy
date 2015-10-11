@@ -282,8 +282,8 @@ class SubscriptionController
 				
 				if( !subscriptionToCreate.save() )
 				{
-					println( "Saving BusinessEventSubscription FAILED");
-					subscriptionToCreate.errors.allErrors.each { println it };
+					log.error( "Saving BusinessEventSubscription FAILED");
+					subscriptionToCreate.errors.allErrors.each { log.debug( it ) };
 				}
 				
 			}
@@ -309,14 +309,14 @@ class SubscriptionController
 		
 		finishActivitiUserTaskSubscription {
 			action {
-				println "create using params: ${params}"
+				log.debug( "create using params: ${params}");
 
 				ActivitiUserTaskSubscription subscriptionToCreate = flow.subscriptionToCreate;
 				
 				if( !subscriptionToCreate.save() )
 				{
-					println( "Saving ActivitiUserTaskSubscription FAILED");
-					subscriptionToCreate.errors.allErrors.each { println it };
+					log.debug( "Saving ActivitiUserTaskSubscription FAILED");
+					subscriptionToCreate.errors.allErrors.each { log.debug(it) };
 				}
 				
 			}
@@ -342,14 +342,14 @@ class SubscriptionController
 
 		finishCalendarFeedSubscription {
 			action {
-				println "create using params: ${params}"
+				log.debug( "create using params: ${params}");
 
 				CalendarFeedSubscription calendarFeedToCreate = flow.calendarFeedToCreate;
 				
 				if( !calendarFeedToCreate.save() )
 				{
-					println( "Saving CalendarFeedSubscription FAILED");
-					calendarFeedToCreate.errors.allErrors.each { println it };
+					log.error( "Saving CalendarFeedSubscription FAILED");
+					calendarFeedToCreate.errors.allErrors.each { log.debug( it ) };
 				}
 				
 			}
@@ -374,14 +374,14 @@ class SubscriptionController
 	   finishCreateRssFeedSubscription {
 		   
 		   action {
-			   println "create using params: ${params}"
+			   log.debug( "create using params: ${params}");
 
 			   RssFeedSubscription subscriptionToCreate = flow.subscriptionToCreate;
 			   
 			   if( !subscriptionToCreate.save() )
 			   {
-				   println( "Saving RssFeedSubscription FAILED");
-				   subscriptionToCreate.errors.allErrors.each { println it };
+				   log.error( "Saving RssFeedSubscription FAILED");
+				   subscriptionToCreate.errors.allErrors.each { log.debug( it ) };
 			   }
 			   
 		   }
@@ -400,10 +400,10 @@ class SubscriptionController
 		start {
 			action {
 				def subscriptionId = params.subscriptionId;
-				println "Editing Subscription with id: ${subscriptionId}";
+				log.debug( "Editing Subscription with id: ${subscriptionId}");
 				
 				def subscriptionType = params.subscriptionType;
-				println "subscriptionType: ${subscriptionType}";
+				log.debug( "subscriptionType: ${subscriptionType}");
 				
 				
 				switch( subscriptionType )
@@ -458,7 +458,7 @@ class SubscriptionController
 		editBusinessEventSubscriptionWizardOne {
 			on("stage2") {
 				
-				println "transitioning to stage2";
+				log.debug( "transitioning to stage2");
 				
 				BusinessEventSubscription subscriptionToEdit = flow.subscriptionToEdit;
 				subscriptionToEdit.name = params.subscriptionName;
@@ -470,7 +470,7 @@ class SubscriptionController
 		
 		editBusinessEventSubscriptionWizardTwo {
 			on( "finishWizard" ) {
-				println "finishing wizard";
+				log.debug( "finishing wizard");
 				[];	
 			}.to( "finishBusinessEventSubscriptionWizard" );	
 		}
@@ -478,7 +478,7 @@ class SubscriptionController
 		/* an action state to do the final save/update on the object */
 		finishBusinessEventSubscriptionWizard {
 			action {
-				println "update using params: ${params}"
+				log.debug( "update using params: ${params}");
 				
 				def subscriptionId = params.subscriptionId;
 				BusinessEventSubscription subscriptionToEdit = flow.subscriptionToEdit;
@@ -487,8 +487,8 @@ class SubscriptionController
 				
 				if( !subscriptionToEdit.save() )
 				{
-					println( "Saving BusinessEventSubscription FAILED");
-					subscriptionToEdit.errors.allErrors.each { println it };
+					log.error( "Saving BusinessEventSubscription FAILED");
+					subscriptionToEdit.errors.allErrors.each { log.debug( it ) };
 				}
 				
 			}
@@ -514,14 +514,14 @@ class SubscriptionController
 		{
 			action {
 				
-				println "update using params: ${params}";
+				log.debug( "update using params: ${params}");
 				
 				ActivitiUserTaskSubscription subscriptionToEdit = flow.subscriptionToEdit;
 				
 				if( !subscriptionToEdit.save() )
 				{
-					println( "Saving BusinessEventSubscription FAILED");
-					subscriptionToEdit.errors.allErrors.each { println it };
+					log.debug( "Saving BusinessEventSubscription FAILED");
+					subscriptionToEdit.errors.allErrors.each { log.debug( it ) };
 				}
 				
 			}
@@ -541,14 +541,14 @@ class SubscriptionController
 		{
 			action {
 				
-				println "update using params: ${params}";
+				log.debug( "update using params: ${params}" );
 				
 				CalendarFeedSubscription subscriptionToEdit = flow.subscriptionToEdit;
 				
 				if( !subscriptionToEdit.save() )
 				{
-					println( "Saving CalendarFeedSubscription FAILED");
-					subscriptionToEdit.errors.allErrors.each { println it };
+					log.error( "Saving CalendarFeedSubscription FAILED");
+					subscriptionToEdit.errors.allErrors.each { log.debug( it ) };
 				}
 				
 			}
@@ -567,7 +567,7 @@ class SubscriptionController
 		{
 			action {
 				
-				println "update using params: ${params}";
+				log.debug( "update using params: ${params}");
 			}
 			on( "success").to("exitWizard");
 		}
