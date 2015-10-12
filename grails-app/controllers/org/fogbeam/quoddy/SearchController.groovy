@@ -220,61 +220,61 @@ class SearchController
 		
 		if( bSearchBusSubItems )
 		{
-			println "searching business event subscription items";
+			log.debug( "searching business event subscription items");
 			List<SearchResult> tempResults = searchService.doBusinessSubscriptionItemSearch( queryString );
-			println "SearchBusSubItems returned " + tempResults.size() + " results";
+			log.debug( "SearchBusSubItems returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size());
 		}
 		
 		if( bSearchActivitiUserTasks )
 		{
-			println "searching Activiti User Tasks";
+			log.debug( "searching Activiti User Tasks");
 			List<SearchResult> tempResults = searchService.doActivitiUserTaskSearch( queryString );
-			println "SearchBusSubItems returned " + tempResults.size() + " results";
+			log.debug( "SearchBusSubItems returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size());
 			
 		}
 		
 		if( bSearchRssFeedItems )
 		{
-			println "searching rss feed items";
+			log.debug( "searching rss feed items");
 			List<SearchResult> tempResults = searchService.doRssFeedItemSearch( queryString );
-			println "SearchRssFeedItems returned " + tempResults.size() + " results";
+			log.debug( "SearchRssFeedItems returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size());
 		}
 		
 		if( bSearchActivityStreamItems )
 		{
-			println "searching activity stream items";
+			log.debug( "searching activity stream items" );
 			List<SearchResult> tempResults = searchService.doActivityStreamItemSearch( queryString );
-			println "SearchActivityStreamItems returned " + tempResults.size() + " results";
+			log.debug( "SearchActivityStreamItems returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size());
 		}
 		
 		if( bSearchUsers )
 		{
-			println "searching users";
+			log.debug( "searching users");
 			List<SearchResult> tempResults = searchService.doUserSearch( queryString );
-			println "SearchUsers returned " + tempResults.size() + " results";
+			log.debug( "SearchUsers returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();
+			log.debug( "searchResults.size() = " + searchResults.size());
 		}
 		
 		if( bSearchFriends )
 		{
-			println "searching friends";
+			log.debug( "searching friends");
 			List<SearchResult> tempResults = searchService.doFriendSearch( queryString, session.user );
-			println "SearchFriends returned " + tempResults.size() + " results";
+			log.debug( "SearchFriends returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
-			println "searchResults.size() = " + searchResults.size();		
+			log.debug( "searchResults.size() = " + searchResults.size());		
 		}
 	
 		
-		println "found some results: ${searchResults.size()}";
+		log.debug( "found some results: ${searchResults.size()}");
 		
 		render( view:'everythingSearchResults', model:[searchResults:searchResults]);
 	}
@@ -290,10 +290,10 @@ class SearchController
 		// search users using supplied parameters and return the
 		// model for rendering...				
 		String queryString = params.queryString;
-		println "searching Users, queryString: ${queryString}";
+		log.debug( "searching Users, queryString: ${queryString}");
 		
 		List<SearchResult> results = searchService.doUserSearch();
-		println "found some users: ${results.size()}";
+		log.debug( "found some users: ${results.size()}");
 		
 		render( view:'userSearchResults', model:[allUsers:results]);
 	}
@@ -309,12 +309,12 @@ class SearchController
 		// search users using supplied parameters and return the
 		// model for rendering...
 		String queryString = params.queryString;
-		println "searching People, queryString: ${queryString}";
+		log.debug( "searching People, queryString: ${queryString}");
 				
 		
 		
 		List<SearchResult> results = searchService.doPeopleSearch( queryString );
-		println "found some users: ${results.size()}";
+		log.debug( "found some users: ${results.size()}");
 		
 		render( view:'peopleSearchResults', model:[allUsers:results]);
 		
@@ -323,7 +323,7 @@ class SearchController
 	def doIFollowSearch = 
 	{
 		
-		println "Searching IFollow";
+		log.debug( "Searching IFollow");
 		
 		User user = session.user;
 		
@@ -331,11 +331,11 @@ class SearchController
 		// search users using supplied parameters and return the
 		// model for rendering...
 		String queryString = params.queryString;
-		println "searching IFollow, queryString: ${queryString}";
+		log.debug( "searching IFollow, queryString: ${queryString}");
 				
 
 		List<SearchResult> results = searchService.doIFollowSearch( queryString );
-		println "found some users: ${results.size()}";
+		log.debug( "found some users: ${results.size()}");
 		
 		
 		render( view:'iFollowSearchResults', model:[allUsers:results]);
@@ -352,7 +352,7 @@ class SearchController
 	}
 		
 	def doFriendSearch = {
-		println "Searching Friends";	
+		log.debug( "Searching Friends");	
 		
 		User user = session.user;
 
@@ -360,14 +360,12 @@ class SearchController
 		// search users using supplied parameters and return the
 		// model for rendering...
 		String queryString = params.queryString;
-		println "searching Users, queryString: ${queryString}";
+		log.debug( "searching Users, queryString: ${queryString}");
 				
 		List<SearchResult> results = searchService.doFriendSearch( queryString );
 		
-		println "found some users: ${results.size()}";
+		log.debug( "found some users: ${results.size()}");
 		
-		
-		println "done"
 		render( view:'friendSearchResults', model:[allUsers:results]);
 		
 			
