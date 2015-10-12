@@ -13,10 +13,10 @@ class ActivityStreamOldControllerMethods
 		switch(request.method){
 			case "POST":
 				// def originTime = new Date().getTime();
-			  println "Create\n"
+			  
 			  // String json = request.reader.text;
 			  String json = params.activityJson;
-			  println("Got json:\n " + json );
+			  
 			  
 			  ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
 			  
@@ -39,20 +39,18 @@ class ActivityStreamOldControllerMethods
 			  
 			  // msg.actualEvent = activity;
 			  
-			  println "sending message to JMS";
 			  jmsService.send( queue: 'uitestActivityQueue', /* msg */ activity, 'standard', null );
 			  
-			  // println streamEntry.toString();
 			  
 			  break
 			case "GET":
-			  println "Retrieve\n"
+			  
 			  break
 			case "PUT":
-			  println "Update\n"
+			  
 			  break
 			case "DELETE":
-			  println "Delete\n"
+			  
 			  break
 		  }
 		
