@@ -43,7 +43,7 @@ class UserService {
 	
 	public AccountRole findAccountRoleByName( final String name )
 	{
-		println "searching for AccountRole named ${name}";
+		log.debug( "searching for AccountRole named ${name}");
 		
 		List<AccountRole> roles = AccountRole.executeQuery( "select role from AccountRole as role where role.name = :name", [name:name]);
 		
@@ -53,22 +53,22 @@ class UserService {
 			role = roles[0];
 		}
 
-		println "returning role ${role}";
+		log.debug( "returning role ${role}");
 		return role;
 	}
 	
 	public AccountRole createAccountRole( AccountRole role )
 	{
 		
-		println "UserService.createAccountRole() - about to create role: ${role.toString()}";
+		log.debug( "UserService.createAccountRole() - about to create role: ${role.toString()}");
 	
 		if( !role.save(flush: true))
 		{
-			role.errors.each { println it };
+			role.errors.each { log.debug( it ) };
 			throw new RuntimeException( "couldn't create AccountRole: ${role.toString()}" );
 		}
 		
-		println "returning role: ${role}";
+		log.debug( "returning role: ${role}" );
 		return role;
 	}
 	
