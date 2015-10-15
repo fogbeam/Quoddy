@@ -77,7 +77,7 @@ class UserService {
 	{
 		
 		
-		println "UserService.createUser() - about to create user: ${user.toString()}";
+		log.debug( "UserService.createUser() - about to create user: ${user.toString()}");
 		/* save the user into the uzer table, we need that for associations with other
 		* "system things"
 		*/
@@ -88,7 +88,7 @@ class UserService {
 		
 		if( user.save() )
 		{
-			println "Saving User object.";
+			log.debug( "Saving User object.");
 			
 			accountService.createUser( user );
 			// ldapPersonService.createUser( user );
@@ -103,7 +103,7 @@ class UserService {
 			
 			if( !defaultStream.save())
 			{
-				defaultStream.errors.allErrors.each { println it };
+				defaultStream.errors.allErrors.each { log.debug( it ) };
 				throw new RuntimeException( "couldn't create Default UserStream record for user: ${user.userId}" );
 			}
 			
@@ -120,7 +120,7 @@ class UserService {
 		}
 		else
 		{
-			user.errors.allErrors.each { println it };
+			user.errors.allErrors.each { log.debug( it ) };
 			throw new RuntimeException( "couldn't create User record for user: ${user.userId}" );
 			
 		}
@@ -151,7 +151,7 @@ class UserService {
 			
 			if( !defaultStream.save())
 			{
-				defaultStream.errors.allErrors.each { println it };
+				defaultStream.errors.allErrors.each { log.debug( it ) };
 				throw new RuntimeException( "couldn't create Default UserStream record for user: ${user.userId}" );
 			}
 			
@@ -167,7 +167,7 @@ class UserService {
 		}
 		else
 		{
-			user.errors.allErrors.each { println it; }
+			user.errors.allErrors.each { log.debug( it ); }
 			throw new RuntimeException( "couldn't create User record for user: ${user.userId}" );
 		}	
 	}
@@ -176,7 +176,7 @@ class UserService {
 	{
 		if( ! user.save( flush: true ) )
 		{
-			user.errors.allErrors.each { println it; }
+			user.errors.allErrors.each { log.debug( it ); }
 		}
 		
 		return user;
@@ -220,7 +220,7 @@ class UserService {
 	{
 		List<User> users = new ArrayList<User>();
 		int offset = ( (page * max) -max);
-		println "calculated offset as $offset";
+		log.debug( "calculated offset as $offset");
 		List<User> temp = User.executeQuery( "select user from User as user order by user.fullName", ['offset':offset, 'max':max]);
 		if( temp )
 		{
