@@ -239,22 +239,21 @@ class UserService {
 	 */
 	public List<User> findEligibleUsersForUser( final User user ) 
 	{
-		println "findEligibleUsersForUser()";
+		log.debug( "findEligibleUsersForUser()");
 		List<User> eligibleUsers = new ArrayList<User>();
 		// Set<User> tempUsers = new TreeSet<User>();
 		List<User> tempUsers = new ArrayList<User>();
 		
 		List<User> friends = friendService.listFriends( user );
-		// println "got friends list: ${friends}";
-		// println "${friends.class.name}";
+		log.debug( "got friends list: ${friends}");
+		// log.debug( "${friends.class.name}" );
 		
 		List<User> iFollow = friendService.listIFollow( user );
-		// println "got iFollow list: ${iFollow}";
-		// println "${iFollow.class.name}";
+		log.debug( "got iFollow list: ${iFollow}" );
+		// log.debug( "${iFollow.class.name}" );
 
 		if( friends && !(friends.isEmpty()) )
 		{
-			// println "adding friends";
 			for( User friend : friends )
 			{
 				if( !tempUsers.contains( friend ))
@@ -262,12 +261,10 @@ class UserService {
 					tempUsers.add( friend );
 				}
 			}
-			// println "added friends to tempUsers";
 		}
 		
 		if( iFollow && !(iFollow.isEmpty()))
 		{
-			// println "adding iFollow";
 			for( User iFollowUser : iFollow )
 			{
 				if( !tempUsers.contains( iFollowUser ))
@@ -275,22 +272,19 @@ class UserService {
 					tempUsers.add( iFollowUser );
 				}	
 			}
-			// println "added iFollow to tempUsers";
 		}
 		
 		friends.clear();
 		friends = null;
 		iFollow.clear();
 		iFollow = null;
-		println "cleared temporary lists";
 		
 		eligibleUsers.addAll( tempUsers );
-		println "added tempUsers to eligibleUsers list";
 		
 		tempUsers.clear();
 		tempUsers = null;
 		
-		println "returning eligibleUsers from findEligibleUsersForUser";
+		log.debug( "returning eligibleUsers from findEligibleUsersForUser" );
 		return eligibleUsers;
 	}
 	
