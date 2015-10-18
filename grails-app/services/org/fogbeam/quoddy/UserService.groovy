@@ -343,7 +343,7 @@ class UserService {
 		StatusUpdate oldStatus = user.currentStatus;
 		if( oldStatus != null )
 		{
-			println "found a current status with id: ${oldStatus.id}, deleting it...";
+			log.debug( "found a current status with id: ${oldStatus.id}, deleting it...");
 
 			
 			
@@ -351,11 +351,11 @@ class UserService {
 			
 			if( !user.save(flush:true) )
 			{
-				user.errors.allErrors.each { println it; }
+				user.errors.allErrors.each { log.debug( it ); }
 			}
 			else
 			{
-				println "save()'d User after nulling out currentStatus";
+				log.debug( "save()'d User after nulling out currentStatus" );
 			}
 			
 						
@@ -371,7 +371,7 @@ class UserService {
 		}
 		else
 		{
-			println "no current status found to delete";	
+			log.debug( "no current status found to delete");	
 		}
 		
 
@@ -383,7 +383,7 @@ class UserService {
 		statusUpdates.addAll( user.oldStatusUpdates );
 		for( StatusUpdate update : statusUpdates )
 		{
-			println "removing old status with id: ${update.id}";
+			log.debug( "removing old status with id: ${update.id}");
 			user.removeFromOldStatusUpdates( update );
 			
 			List<ActivityStreamItem> itemsToDelete = 
@@ -400,7 +400,7 @@ class UserService {
 				statusToDelete.delete( flush: true );
 			}
 			
-			println "retCode: ${retCode}";
+			log.debug( "retCode: ${retCode}" );
 		}
 	
 
@@ -420,11 +420,11 @@ class UserService {
 			
 		if( !user.save(flush:true) )
 		{
-			user.errors.allErrors.each { println it; }
+			user.errors.allErrors.each { log.debug( it ); }
 		}
 		else
 		{
-			println "save()'d User after nixing old StatusUpdates";
+			log.debug( "save()'d User after nixing old StatusUpdates");
 		}
 		
 		/* delete subscriptions */
@@ -441,33 +441,33 @@ class UserService {
 		roles.addAll( user.roles );
 		for( AccountRole role : roles )
 		{
-			println "removing role with id: ${role.id}";
+			log.debug( "removing role with id: ${role.id}");
 			user.removeFromRoles( role );
 		}
 
 		if( !user.save(flush:true) )
 		{
-			user.errors.allErrors.each { println it; }
+			user.errors.allErrors.each { log.debug( it ); }
 		}
 
 				
 		user.permissions.removeAll();
 		
 		List<UserStreamDefinition> streams = new ArrayList<UserStreamDefinition>();
-		println "adding all stream definitions to temporary collection";
+		log.debug( "adding all stream definitions to temporary collection");
 		streams.addAll( user.streams);
 		for( UserStreamDefinition streamDef : streams )
 		{
-			println "removing streamDef with id: ${streamDef.id}";
+			log.debug( "removing streamDef with id: ${streamDef.id}");
 			user.removeFromStreams( streamDef );
 		
-			println "deleting streamDef now";
+			log.debug( "deleting streamDef now" );
 			streamDef.delete( flush:true);	
 		}
 		
 		if( !user.save(flush:true) )
 		{
-			user.errors.allErrors.each { println it; }
+			user.errors.allErrors.each { log.debug( it ); }
 		}
 		
 		
