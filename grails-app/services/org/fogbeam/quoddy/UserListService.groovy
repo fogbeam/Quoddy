@@ -57,7 +57,7 @@ class UserListService
 
 	public List<ActivityStreamItem> getRecentActivitiesForList( final UserList list, final int maxCount )
 	{
-		println "getRecentActivitiesForList: ${list.id} - ${maxCount}";
+		log.debug( "getRecentActivitiesForList: ${list.id} - ${maxCount}");
 		
 		List<ActivityStreamItem> recentActivities = new ArrayList<ActivityStreamItem>();
 	
@@ -65,7 +65,7 @@ class UserListService
 		cal.add(Calendar.HOUR_OF_DAY, -2160 );
 		Date cutoffDate = cal.getTime();
 	
-		println "Using ${cutoffDate} as cutoffDate";
+		log.debug( "Using ${cutoffDate} as cutoffDate" );
 
 	
 		List<ActivityStreamItem> queryResults =
@@ -76,7 +76,7 @@ class UserListService
 			
 		if( queryResults )
 		{
-			println "adding ${queryResults.size()} activities read from DB";
+			log.debug( "adding ${queryResults.size()} activities read from DB" );
 			recentActivities.addAll( queryResults );
 		}
 	
