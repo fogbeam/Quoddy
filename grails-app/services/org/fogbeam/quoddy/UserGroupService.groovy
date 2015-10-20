@@ -99,7 +99,7 @@ class UserGroupService
 	
 	public List<ActivityStreamItem> getRecentActivitiesForGroup( final UserGroup group, final int maxCount )
 	{
-		println "getRecentActivitiesForGroup: ${group.id} - ${maxCount}";
+		log.debug( "getRecentActivitiesForGroup: ${group.id} - ${maxCount}");
 			
 		List<ActivityStreamItem> recentActivities = new ArrayList<ActivityStreamItem>();
 		
@@ -107,7 +107,7 @@ class UserGroupService
 		cal.add(Calendar.HOUR_OF_DAY, -2160 );
 		Date cutoffDate = cal.getTime();
 		
-		println "Using ${cutoffDate} as cutoffDate";
+		log.debug( "Using ${cutoffDate} as cutoffDate");
 
 		
 		List<ActivityStreamItem> queryResults =
@@ -116,7 +116,7 @@ class UserGroupService
 
 		if( queryResults )
 		{
-			println "adding ${queryResults.size()} activities read from DB";
+			log.debug( "adding ${queryResults.size()} activities read from DB");
 			recentActivities.addAll( queryResults );	
 		}
 		
@@ -129,7 +129,7 @@ class UserGroupService
 	/*
 	public List<StreamItemBase> getRecentEventsForGroup( final UserGroup group, final int maxCount )
 	{
-		println "getRecentEventsForGroup: ${group.id} - ${maxCount}";
+		log.debug( "getRecentEventsForGroup: ${group.id} - ${maxCount}");
 			
 		List<StreamItemBase> recentEvents = new ArrayList<StreamItemBase>();
 		
@@ -137,7 +137,7 @@ class UserGroupService
 		cal.add(Calendar.HOUR_OF_DAY, -2160 );
 		Date cutoffDate = cal.getTime();
 		
-		println "Using ${cutoffDate} as cutoffDate";
+		log.debug( "Using ${cutoffDate} as cutoffDate");
 
 		
 		List<StreamItemBase> queryResults =
@@ -146,7 +146,7 @@ class UserGroupService
 
 		if( queryResults )
 		{
-			println "adding ${queryResults.size()} activities read from DB";
+			log.debug( "adding ${queryResults.size()} activities read from DB");
 			recentEvents.addAll( queryResults );
 		}
 		
