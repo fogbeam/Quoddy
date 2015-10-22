@@ -9,8 +9,8 @@ class RssFeedItemService
 	{
 		if( !rssFeedItem.save() )
 		{
-			println "Error saving RssFeedItem";
-			rssFeedItem.errors.allErrors.each { println it }
+			log.error( "Error saving RssFeedItem");
+			rssFeedItem.errors.allErrors.each { log.debug(it) }
 		}
 		
 		return rssFeedItem;
