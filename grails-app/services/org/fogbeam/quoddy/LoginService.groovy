@@ -21,21 +21,21 @@ class LoginService
 		boolean trySecondAuthSource = true;
 		if( account )
 		{
-			println "local account FOUND for userId: ${userId}";
+			log.debug( "local account FOUND for userId: ${userId}");
 			
 			trySecondAuthSource = false;  // this is a local user
 			// verify credentials, verify is existing User, load User	
 			String md5HashSubmitted = digestMd5( password );
-			// println "md5HashSubmitted: ${md5HashSubmitted}";
+			// log.debug( "md5HashSubmitted: ${md5HashSubmitted}");
 			md5HashSubmitted = "{MD5}" + md5HashSubmitted;
-			// println "md5HashSubmitted: ${md5HashSubmitted}";
+			// log.debug( "md5HashSubmitted: ${md5HashSubmitted}" );
 			
 			String userPassword = account.password;
-			// println "userPassword: ${userPassword}";
+			// log.debug( "userPassword: ${userPassword}");
 			
 			if( md5HashSubmitted.equals( userPassword ))
 			{
-				println "login successful";
+				log.info( "login successful" );
 				
 				// now find a User that matches this account
 				user = userService.findUserByUserId( account.username );
@@ -43,28 +43,28 @@ class LoginService
 			}
 			else
 			{
-				println "login failed on password match.  "
+				log.info( "login failed on password match.");
 			}
 			
 		}
 		
 		if( trySecondAuthSource )
 		{
-			println "NO local account found for userId: ${userId}";
-			println "trying LDAP for user ${userId}";
+			log.info( "NO local account found for userId: ${userId}");
+			log.info( "trying LDAP for user ${userId}");
 			
 			LDAPPerson person = ldapPersonService.findPersonByUserId( userId );
 			if( person )
 			{
-				println "found matching user in LDAP, verifying password";
+				log.debug(  "found matching user in LDAP, verifying password");
 				// verify credentials, verify is existing User, load User
 				String md5HashSubmitted = digestMd5( password );
 				
-				println "md5HashSubmitted: ${md5HashSubmitted}";
-				println "person.userpassword: ${person.userpassword}";
+				log.debug( "md5HashSubmitted: ${md5HashSubmitted}");
+				log.debug( "person.userpassword: ${person.userpassword}");
 				md5HashSubmitted = md5HashSubmitted.replace( "{md5}", "");
 				
-				println "md5HashSubmitted: ${md5HashSubmitted}";
+				log.debug( "md5HashSubmitted: ${md5HashSubmitted}");
 				
 				String personPassword = person.userpassword
 				if( personPassword.startsWith( "{md5}"))
@@ -80,7 +80,7 @@ class LoginService
 				
 				if( md5HashSubmitted.equals( personPassword ))
 				{
-					println "login successful";
+					log.info( "login successful" );
 					
 					// now find a User that matches this account
 					user = userService.findUserByUserId( person.uid );
@@ -90,7 +90,7 @@ class LoginService
 				}
 				else
 				{
-					println "login failed on password match.  "
+					log.info( "login failed on password match." );
 				}
 				
 			}
