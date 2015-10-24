@@ -27,8 +27,8 @@ class LocalAccountService
 			
 		if( !account.save() )
 		{
-			println( "Saving LocalAccount FAILED");
-			account.errors.allErrors.each { println it };
+			log.error( "Saving LocalAccount FAILED");
+			account.errors.allErrors.each { log.debug( it ) };
 		}
 		
 	}
@@ -41,8 +41,8 @@ class LocalAccountService
 		
 		if( !account.save() )
 		{
-			println( "Updating LocalAccount FAILED");
-			account.errors.allErrors.each { println it };
+			log.error( "Updating LocalAccount FAILED");
+			account.errors.allErrors.each { log.debug(it) };
 		}
 	}
 	
