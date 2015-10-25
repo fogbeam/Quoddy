@@ -34,7 +34,7 @@ class CalendarFeedSubscriptionService
 	public List<ActivityStreamItem> getRecentItemsForSubscription( final CalendarFeedSubscription subscription,  final int maxCount )
 	{
 	
-		println "CalendarFeedSubscriptionService.getRecentItemsForSubscription: ${subscription.id}";
+		log.debug( "CalendarFeedSubscriptionService.getRecentItemsForSubscription: ${subscription.id}");
 		
 		List<ActivityStreamItem> recentEvents = new ArrayList<ActivityStreamItem>();
 	
@@ -42,7 +42,7 @@ class CalendarFeedSubscriptionService
 		cal.add(Calendar.HOUR_OF_DAY, -2160 );
 		Date cutoffDate = cal.getTime();
 	
-		println "Using ${cutoffDate} as cutoffDate";
+		log.debug(  "Using ${cutoffDate} as cutoffDate");
 
 	
 		List<ActivityStreamItem> queryResults =
@@ -54,11 +54,11 @@ class CalendarFeedSubscriptionService
 		  
 		if( queryResults )
 		{
-			println "adding ${queryResults.size()} events read from DB";
+			log.debug( "adding ${queryResults.size()} events read from DB");
 			recentEvents.addAll( queryResults );
 		}
 		else {
-			println "NO results found!";
+			log.debug( "NO results found!" );
 		}
 	
 		return recentEvents;
