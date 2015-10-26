@@ -51,7 +51,7 @@ class LocalFriendService
 	
 	public void addToFriends( final User currentUser, final User newFriend )
 	{
-		println "UserService.addTofriends: ${currentUser.userId} / ${newFriend.userId}";
+		log.debug( "UserService.addTofriends: ${currentUser.userId} / ${newFriend.userId}");
 		
 		FriendRequestCollection friendRequests = FriendRequestCollection.findByOwnerUuid( newFriend.uuid );
 		if( friendRequests == null )
@@ -66,7 +66,7 @@ class LocalFriendService
 	
 	public List<User> listFriends( final User user )
 	{
-		println "listFriends()";
+		log.debug(  "listFriends()");
 		List<User> friends = new ArrayList<User>();
 		FriendCollection friendsCollection = FriendCollection.findByOwnerUuid( user.uuid );
 		
@@ -79,13 +79,13 @@ class LocalFriendService
 		}
 		
 		friendsCollection = null;
-		println "returning friends: ${friends}";
+		log.debug( "returning friends: ${friends}");
 		return friends;
 	}
 	
 	public List<User> listFollowers( final User user )
 	{
-		println "listFollowers()";
+		log.debug(  "listFollowers()");
 		/* list the users who follow the supplied user */
 		List<User> followers = new ArrayList<User>();
 		
@@ -95,18 +95,18 @@ class LocalFriendService
 			IFollowCollection.executeQuery( 
 				"select collection from IFollowCollection as collection join collection.iFollow iFollow where ? in (iFollow)", [user.uuid] );
 		
-		println( "iterating over list of IFollowCollection objects" );
+		log.debug( "iterating over list of IFollowCollection objects" );
 		for( IFollowCollection collection: iFollowCollections )
 		{
-			println "collection id: ${collection.id}";
+			log.debug( "collection id: ${collection.id}");
 			User follower = User.findByUuid( collection.ownerUuid );
 			if( follower )
 			{
-				println "found follower: ${follower.id}";	
+				log.debug( "found follower: ${follower.id}");	
 			}
 			else 
 			{
-				println "no follower found!";
+				log.debug( "no follower found!");
 			}
 			
 			followers.add( follower ); 	
@@ -114,7 +114,7 @@ class LocalFriendService
 		
 		iFollowCollections = null;
 		
-		println "return followers: ${followers}";
+		log.debug( "return followers: ${followers}");
 		return followers;
 	}
 	
