@@ -31,12 +31,12 @@ class BusinessEventSubscriptionService
 		String matchedExpression = msg.getStringProperty( 'matchedExpression' );
 		String summary = msg.getStringProperty( "summary" );
 		
-		println "subscribersWithSubId: ${subscribersWithSubId}";
+		log.debug( "subscribersWithSubId: ${subscribersWithSubId}");
 		
 		ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 		if( subscribersWithSubId != null && !subscribersWithSubId.isEmpty() )
 		{
-			println "Subscribers: ${subscribers}";
+			log.debug( "Subscribers: ${subscribers}" );
 			
 			List<String> subscriberList = subscribersWithSubId.tokenize( " " );
 			for( String subscriber : subscriberList ) {
@@ -47,13 +47,13 @@ class BusinessEventSubscriptionService
 				User owner = userService.findUserByUuid( subscriberUuid );
 				if( owner == null ) 
 				{
-					println "Could not find Subscription Owner: ${subscriberUuid}";	
+					log.warn( "Could not find Subscription Owner: ${subscriberUuid}");	
 				}
 				
 				BusinessEventSubscription owningSubscription = this.findByUuid( subscriptionUuid );
 				if( owningSubscription == null ) 
 				{
-					println "Could not locate Owning Subscription with uuid: ${subscriptionUuid}";	
+					log.warn( "Could not locate Owning Subscription with uuid: ${subscriptionUuid}");	
 				}
 				
 				
@@ -105,7 +105,7 @@ class BusinessEventSubscriptionService
 				
 				def newContentMsg = [msgType:'NEW_BUSINESS_EVENT_SUBSCRIPTION_ITEM', activityId:activity.id, activityUuid:activity.uuid ];
 				
-				println "sending messages to JMS";
+				log.debug( "sending messages to JMS" );
 				
 				// send message to request search indexing
 				sendJMSMessage("quoddySearchQueue", newContentMsg );
@@ -134,14 +134,14 @@ class BusinessEventSubscriptionService
 	{
 		if( ! event.save() )
 		{
-			println( "Saving Event FAILED");
-			event.errors.allErrors.each { println it }
+			log.error( "Saving Event FAILED");
+			event.errors.allErrors.each { log.debug(it) }
 		}
 	}
 	
 	public List<BusinessEventSubscription> getAllSubscriptionsForUser( final User user )
 	{
-		println "getAllSubscriptionsForUser() called for user ${user.toString()}";
+		log.debug( "getAllSubscriptionsForUser() called for user ${user.toString()}");
 		
 		List<BusinessEventSubscription> subscriptions = new ArrayList<BusinessEventSubscription>();
 		
@@ -160,7 +160,7 @@ class BusinessEventSubscriptionService
 	public List<ActivityStreamItem> getRecentEventsForSubscription( final BusinessEventSubscription subscription,  final int maxCount )
 	{
 	
-		println "getRecentEventsForSubscription: ${subscription.id}";
+		log.debug( "getRecentEventsForSubscription: ${subscription.id}" );
 		
 		List<ActivityStreamItem> recentEvents = new ArrayList<ActivityStreamItem>();
 	
@@ -168,7 +168,7 @@ class BusinessEventSubscriptionService
 		cal.add(Calendar.HOUR_OF_DAY, -2160 );
 		Date cutoffDate = cal.getTime();
 	
-		println "Using ${cutoffDate} as cutoffDate";
+		log.debug( "Using ${cutoffDate} as cutoffDate" );
 
 	
 		List<ActivityStreamItem> queryResults =
@@ -179,7 +179,7 @@ class BusinessEventSubscriptionService
 			
 		if( queryResults )
 		{
-			println "adding ${queryResults.size()} events read from DB";
+			log.debug( "adding ${queryResults.size()} events read from DB" );
 			recentEvents.addAll( queryResults );
 			
 			recentEvents.each {
@@ -187,7 +187,7 @@ class BusinessEventSubscriptionService
 			} 
 		}
 		else {
-			println "NO results found!";	
+			log.debug( "NO results found!" );	
 		}
 	
 		return recentEvents;
