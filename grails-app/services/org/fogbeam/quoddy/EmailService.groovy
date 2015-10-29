@@ -11,7 +11,7 @@ class EmailService
 {
 	public void deliverEmail( ContactAddress to, ContactAddress from, String subject, String body )
 	{
-		println "in sendEmail()";
+		log.debug( "in sendEmail()" );
 		try
 		{
 			// TODO: make this configurable
@@ -42,12 +42,11 @@ class EmailService
 		}
 		catch( Exception e )
 		{
-			println "Error sending email!";
-			println e.getMessage();
+			log.error( "Error sending email!", e );
 				
 		}
 		
-		println "email sent!";
+		log.info( "email sent!" );
 	}
 	
 }
