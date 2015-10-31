@@ -23,26 +23,26 @@ class ExistDBService
 	public populateSubscriptionEventWithXmlDoc( Object event )
 	{
 		// unless we're passed a BusinessEventSubscriptionItem instance, this is a NOP
-		println "NOT a BusinessEventSubscriptionItem, nothing to do!";
+		log.info( "NOT a BusinessEventSubscriptionItem, nothing to do!");
 		return event;
 	}
 		
 	public populateSubscriptionEventWithXmlDoc( StreamItemBase event ) 
 	{
 		// unless we're passed a BusinessEventSubscriptionItem instance, this is a NOP
-		println "NOT a BusinessEventSubscriptionItem, nothing to do!";
+		log.info( "NOT a BusinessEventSubscriptionItem, nothing to do!" );
 		return event;	
 	}
 	
 	public BusinessEventSubscriptionItem populateSubscriptionEventWithXmlDoc( BusinessEventSubscriptionItem event )
 	{
 		
-		println "It's a BusinessEventSubscriptionItem, populate XML body";
+		log.info(  "It's a BusinessEventSubscriptionItem, populate XML body");
 		// get the XML uuid from the event, pull the XML from the existDB instance
 		// and populate it into the object for rendering in the stream
 		
 		String collection = "/db/hatteras";
-		System.out.println( "Collection: " + collection );
+		log.debug( "Collection: " + collection );
 		
 		// initialize database drivers
 		Class cl = Class.forName(driver);
@@ -55,7 +55,7 @@ class ExistDBService
 		
 		if( col == null ) 
 		{
-			println "ERROR: could not locate collection: ${URI + collection}";
+			log.error( "ERROR: could not locate collection: ${URI + collection}");
 			return event;
 		}
 		
@@ -65,15 +65,14 @@ class ExistDBService
 		
 		String xmlUuid = event.xmlUuid;
 		
-		println( "xmlUuid = ${xmlUuid}");
+		log.debug( "xmlUuid = ${xmlUuid}");
 		
 		XMLResource res = (XMLResource)col.getResource(xmlUuid);
 		if(res == null)
-			System.out.println("document not found!");
+			log.warn("document not found!");
 		else {
-			println "Found document for id: ${xmlUuid}";
+			log.info( "Found document for id: ${xmlUuid}");
 			// String content = res.getContent();
-			// println "got content as: ${content}";
 			// StringReader xmlDoc = new StringReader( content );
 			org.w3c.dom.Node xmlDoc = res.getContentAsDOM();
 			event.xmlDoc= xmlDoc;
