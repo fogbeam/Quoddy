@@ -12,7 +12,7 @@ class EventSubscriptionService
 		
 	public List<BaseSubscription> getAllSubscriptionsForUser( final User user )
 	{
-		println "getAllSubscriptionsForUser() called for user ${user.toString()}";
+		log.debug( "getAllSubscriptionsForUser() called for user ${user.toString()}");
 		
 		List<BaseSubscription> subscriptions = new ArrayList<BaseSubscription>();
 		

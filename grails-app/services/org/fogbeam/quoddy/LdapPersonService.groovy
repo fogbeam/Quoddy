@@ -100,7 +100,7 @@ class LdapPersonService
 	
 	public User updateUser( User user )
 	{
-		println "about to update user...";
+		log.debug( "about to update user...");
 		
 		// update using ldapTemplate
 		Attribute displayNameAttr = new BasicAttribute("displayName");
@@ -139,7 +139,7 @@ class LdapPersonService
 				
 	public static User copyPersonToUser( final LDAPPerson person, final User user )
 	{
-		println "got user with id: ${user.id}";
+		// log.debug( "got user with id: ${user.id}");
 		user.uuid = person.uuid;
 		user.firstName = person.givenName;
 		user.lastName = person.lastName;
@@ -147,7 +147,7 @@ class LdapPersonService
 		user.email = person.mail;
 		user.userId = person.uid;
 		user.password = person.userpassword;
-		println "returning user with id: ${user.id}";
+		// log.debug( "returning user with id: ${user.id}");
 		return user;
 		
 	}
