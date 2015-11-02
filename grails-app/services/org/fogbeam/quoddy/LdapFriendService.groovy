@@ -79,7 +79,7 @@ class LdapFriendService
 		Group unconfirmedFriendsGroup = unconfirmedGroups.get(0);
 		
 		Name unconfirmedFriendsGroupDn = GroupBuilder.buildUnconfirmedFriendsGroupDn( unconfirmedFriendsGroup, , "o=quoddy" );
-		println "unconfirmedFriendsGroupDn: ${unconfirmedFriendsGroupDn}";
+		log.debug( "unconfirmedFriendsGroupDn: ${unconfirmedFriendsGroupDn}");
 		
 		Attribute removePendingAttr = new BasicAttribute("uniquemember");
 		removePendingAttr.add( newFriendDn.toString() );
