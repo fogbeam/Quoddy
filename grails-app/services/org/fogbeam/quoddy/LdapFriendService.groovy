@@ -88,7 +88,7 @@ class LdapFriendService
 		// uniquemember attribute...
 		ModificationItem removePendingItem = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, removePendingAttr);
 		
-		println "remove pending friend request";
+		log.debug( "remove pending friend request");
 		ldapTemplate.modifyAttributes(unconfirmedFriendsGroupDn, [removePendingItem] as ModificationItem[] );
 		
 		
@@ -103,7 +103,7 @@ class LdapFriendService
 		Group currentUserConfirmedFriendsGroup = currentUserConfirmedGroups.get(0);
 		
 		Name currentUserConfirmedFriendsGroupDn = GroupBuilder.buildConfirmedFriendsGroupDn( currentUserConfirmedFriendsGroup, , "o=quoddy" );
-		println "currentUserConfirmedFriendsGroupDn: ${currentUserConfirmedFriendsGroupDn}";
+		log.debug( "currentUserConfirmedFriendsGroupDn: ${currentUserConfirmedFriendsGroupDn}");
 		
 		// add a new uniquemember attribute with the dn of newFriend
 		Attribute currentUserConfirmedAttr = new BasicAttribute("uniquemember");
@@ -113,7 +113,7 @@ class LdapFriendService
 		// uniquemember attribute...
 		ModificationItem currentUserConfirmedItem = new ModificationItem(DirContext.ADD_ATTRIBUTE, currentUserConfirmedAttr);
 		
-		println "calling modifyAttributes";
+		log.debug( "calling modifyAttributes");
 		ldapTemplate.modifyAttributes(currentUserConfirmedFriendsGroupDn, [currentUserConfirmedItem] as ModificationItem[] );
 		
 		
@@ -128,7 +128,7 @@ class LdapFriendService
 		Group newFriendConfirmedFriendsGroup = newFriendConfirmedGroups.get(0);
 		
 		Name newFriendConfirmedFriendsGroupDn = GroupBuilder.buildConfirmedFriendsGroupDn( newFriendConfirmedFriendsGroup, , "o=quoddy" );
-		println "newFriendConfirmedFriendsGroupDn: ${newFriendConfirmedFriendsGroupDn}";
+		log.debug( "newFriendConfirmedFriendsGroupDn: ${newFriendConfirmedFriendsGroupDn}");
 		
 		// add a new uniquemember attribute with the dn of currentUser
 		Attribute newFriendConfirmedAttr = new BasicAttribute("uniquemember");
@@ -138,7 +138,7 @@ class LdapFriendService
 		// uniquemember attribute...
 		ModificationItem newFriendConfirmedItem = new ModificationItem(DirContext.ADD_ATTRIBUTE, newFriendConfirmedAttr);
 		
-		println "calling modifyAttributes";
+		log.debug( "calling modifyAttributes" );
 		ldapTemplate.modifyAttributes(newFriendConfirmedFriendsGroupDn, [newFriendConfirmedItem] as ModificationItem[] );
 		
 	}
@@ -146,13 +146,13 @@ class LdapFriendService
 	public void addToFriends( User currentUser, User newFriend )
 	{
 		
-		println "UserService.addTofriends: ${currentUser.userId} / ${newFriend.userId}";
+		log.debug( "UserService.addTofriends: ${currentUser.userId} / ${newFriend.userId}");
 		
 		// get the dn of the destination user
 		Name newFriendDn = PersonBuilder.buildDn( LdapPersonService.copyUserToPerson(newFriend), "o=quoddy" );
 		
 		String dnString = newFriendDn.toString();
-		println "dnString: ${dnString}";
+		log.debug( "dnString: ${dnString}" );
 		
 		// search for the group in the unconfirmedfriends tree, with that user as the owner
 		AndFilter groupOwnerFilter = new AndFilter();
@@ -165,19 +165,19 @@ class LdapFriendService
 		Group friendsGroup = groups.get(0);
 		
 		Name friendsGroupDn = GroupBuilder.buildUnconfirmedFriendsGroupDn( friendsGroup, , "o=quoddy" );
-		println "friendsGroupDn: ${friendsGroupDn}";
+		log.debug( "friendsGroupDn: ${friendsGroupDn}");
 		
 		// add a new uniquemember attribute with the dn of the currentuser
 		Attribute attr = new BasicAttribute("uniquemember");
 		String name = PersonBuilder.buildDn( LdapPersonService.copyUserToPerson(currentUser), "o=quoddy").toString();
-		println "name: ${name}";
+		log.debug( "name: ${name}");
 		attr.add( name );
 		
 		// create a modificationitem and update the attributes to add the new
 		// uniquemember attribute...
 		ModificationItem item = new ModificationItem(DirContext.ADD_ATTRIBUTE, attr);
 		
-		println "calling modifyAttributes";
+		log.debug( "calling modifyAttributes");
 		ldapTemplate.modifyAttributes(friendsGroupDn, [item] as ModificationItem[] );
 		
 	}
@@ -201,15 +201,15 @@ class LdapFriendService
 		List<LDAPPerson> members = friendsGroup.members;
 		for( LDAPPerson person: members )
 		{
-			println "working with userId: ${person.uid}";
+			log.debug( "working with userId: ${person.uid}" );
 			User aUser = User.findByUserId( person.uid );
-			println "Found aUser with id = ${aUser.id}";
+			log.debug( "Found aUser with id = ${aUser.id}" );
 			aUser = LdapPersonService.copyPersonToUser( person, aUser );
-			println "after copy, aUser.id = ${aUser.id}";
+			log.debug( "after copy, aUser.id = ${aUser.id}");
 			friends.add( aUser );
 		}
 		
-		println "returning friends: ${friends}";
+		log.debug( "returning friends: ${friends}");
 		return friends;
 	}
 	
@@ -226,7 +226,7 @@ class LdapFriendService
 		groupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
 		groupOwnerFilter.and(new EqualsFilter("uniquemember", dnString));
 		
-		System.out.println( "looking for followers of: ${dnString}" );
+		log.debug( "looking for followers of: ${dnString}" );
 		
 		List<Group> groups = ldapTemplate.search( "ou=followgroups,ou=groups,o=quoddy", groupOwnerFilter.encode(),
 				 new GroupAttributeMapper(ldapTemplate));
@@ -234,7 +234,7 @@ class LdapFriendService
 		
 		for( Group group : groups )
 		{
-			System.out.println( "Follow Group Owner: " + group.owner );
+			log.debug( "Follow Group Owner: " + group.owner );
 			
 			
 			AndFilter memberFilter = new AndFilter();
@@ -242,10 +242,10 @@ class LdapFriendService
 			String ownerString = group.owner;
 			String[] parts = ownerString.split( "," );
 			String memberCn = parts[0];
-			println "memberCn: ${memberCn}";
+			log.debug( "memberCn: ${memberCn}");
 			parts = memberCn.split("=" );
 			memberCn = parts[1];
-			println "memberCn: ${memberCn}";
+			log.debug( "memberCn: ${memberCn}");
 			memberFilter.and(new EqualsFilter("cn", memberCn  ));
 			
 			List<LDAPPerson> persons = ldapTemplate.search("ou=people,o=quoddy", memberFilter.encode(),
@@ -254,7 +254,7 @@ class LdapFriendService
 				 
 			if( persons != null && persons.size() > 0 )
 			{
-				println "Found follower";
+				log.debug( "Found follower" );
 				
 				LDAPPerson person = persons.get(0);
 				user = User.findByUserId( person.uid );
@@ -264,7 +264,7 @@ class LdapFriendService
 			}
 			else
 			{
-				println "Ok, this is wonky";
+				log.warn( "Ok, this is wonky" );
 			}
 		}
 		
