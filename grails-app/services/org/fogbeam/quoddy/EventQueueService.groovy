@@ -23,18 +23,18 @@ class EventQueueService
 	
 	def onMessage(msg)
 	{
-		println "Message class: ${msg.class}";
-		println "Received message from JMS: ${msg}";
+		log.debug( "Message class: ${msg.class}" );
+		log.debug( "Received message from JMS: ${msg}" );
 		
 		
 		// now, figure out which user(s) are interested in this message, and put it on
 		// all the appropriate queues
 		Set<Map.Entry<String, Deque<ActivityStreamItem>>> entries = eventQueues.entrySet();
-		println "got entrySet from eventQueues object: ${entries}";
+		log.debug( "got entrySet from eventQueues object: ${entries}" );
 		for( Map.Entry<String, Deque<ActivityStreamItem>> entry : entries )
 		{
-			println "entry: ${entry}";
-			println "key: ${entry.getKey()}";
+			log.debug( "entry: ${entry}");
+			log.debug( "key: ${entry.getKey()}" );
 			
 			String key = entry.getKey();
 			
@@ -59,17 +59,17 @@ class EventQueueService
 			User msgCreator = userService.findUserByUserId( event.owner.userId );
 			if( msgCreator )
 			{
-				println "found User object for ${msgCreator.userId}";
+				log.debug( "found User object for ${msgCreator.userId}");
 			}
 			else
 			{
-				println( "No User for ${event.owner.userId}");	
+				log.debug( "No User for ${event.owner.userId}");	
 			}
 			
 			FriendCollection friendCollection = FriendCollection.findByOwnerUuid( msgCreator.uuid );
 			if( friendCollection )
 			{
-				println "got a valid friends collection for ${msgCreator.userId}";
+				log.debug(  "got a valid friends collection for ${msgCreator.userId}");
 			}
 			
 			Set<String> friends = friendCollection.friends;
