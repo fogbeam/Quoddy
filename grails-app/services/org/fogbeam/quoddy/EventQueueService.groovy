@@ -55,7 +55,6 @@ class EventQueueService
 			
 			// TODO: don't offer message unless the owner of this queue
 			// and the event creator, are friends (or the owner *is* the creator)
-			// println "msg creator: ${msg.getString( 'creator')}";
 			User msgCreator = userService.findUserByUserId( event.owner.userId );
 			if( msgCreator )
 			{
@@ -75,10 +74,10 @@ class EventQueueService
 			Set<String> friends = friendCollection.friends;
 			if( friends )
 			{
-				println "got valid friends set: ${friends}";
+				log.debug( "got valid friends set: ${friends}");
 				for( String friend : friends )
 				{
-					println "friend: ${friend}";
+					log.debug( "friend: ${friend}");
 				}
 			}
 			User targetUser = userService.findUserByUserId( key );
@@ -86,22 +85,22 @@ class EventQueueService
 				( msgCreator.uuid.equals( targetUser.uuid ) && 
 						!event.objectClass.equals(EventTypes.STATUS_UPDATE.name ) ) )
 			{
-				println "match found, offering message";
+				log.debug( "match found, offering message" );
 				Deque<Map> userQueue = entry.getValue();
 				if( msg instanceof Message )
 				{
-					println "Message being offered";					
-					println "putting message on user queue for user ${key}";
+					log.debug( "Message being offered" );					
+					log.debug( "putting message on user queue for user ${key}");
 					userQueue.offerFirst( event );
 				}
 				else
 				{
-					println "WTF is this? ${msg}";
+					log.debug( "WTF is this? ${msg}");
 				}
 			}			
 		}
 		
-		println "done processing eventQueue instances";
+		log.debug( "done processing eventQueue instances" );
 	}
 	
 	def userStreamAwareQueueFilter =
@@ -109,7 +108,7 @@ class EventQueueService
 		userStream, it ->
 		
 		
-		println "invoking userStreamAwareQueueFilter for userStream";
+		log.debug( "invoking userStreamAwareQueueFilter for userStream" );
 		
 		// "it" is an ActivityStreamItem reference now that we've gone
 		// to the revamped domain model
@@ -134,21 +133,21 @@ class EventQueueService
 		{
 			case "User":
 			
-				println "this was submitted directly by a User";
+				log.debug( "this was submitted directly by a User" );
 				
 				// check to see if the target is stream_public
 				// if it is, we just need to see if the owner's uuid
 				// is in the included list
 				if( it.targetObjectType.equals( "STREAM_PUBLIC" ))
 				{
-					println "targetObjectType == STREAM_PUBLIC";
+					log.debug( "targetObjectType == STREAM_PUBLIC");
 					
 					// is includeAllUsers set to TRUE? If so, we don't have
 					// to do any explicit checking against the actorUuid
 					
 					if( userStream.includeAllUsers )
 					{
-						println "includeallUsers is on!";
+						log.debug( "includeallUsers is on!" );
 						// tentatively set this to true (this may be overridden further down)
 						countThisOne = true;
 					}
@@ -158,7 +157,7 @@ class EventQueueService
 						// list
 						if( userStream.userUuidsIncluded.contains( it.actorUuid ) )
 						{
-							println "actorUuid was in included list";
+							log.debug( "actorUuid was in included list" );
 							countThisOne = true;
 						}
 					}
@@ -169,7 +168,7 @@ class EventQueueService
 					if( it.targetObjectType.equals( "UserGroup" ) )
 					{
 						
-						println "targetObjectType == UserGroup";
+						log.debug( "targetObjectType == UserGroup" );
 						// check if the target is a group? If it is, check
 						// if the targetUuid is in the included list
 						
@@ -192,7 +191,7 @@ class EventQueueService
 					else if( it.targetObjectType.equals( "UserList" ) )
 					{
 						
-						println "targetObjectType == UserList";
+						log.debug( "targetObjectType == UserList" );
 						
 						// check if the target is a list? If it is, check
 						// if the targetUuid is in the included list
@@ -233,11 +232,11 @@ class EventQueueService
 				// this was submitted by a subscription of some sort
 				// check if the subscription is in the included list
 			
-				println "this is a Subscription of some sort";
+				log.debug( "this is a Subscription of some sort" );
 				
 				if( userStream.includeAllSubscriptions )
 				{
-					println "includeAllSubscriptions is on!";
+					log.debug( "includeAllSubscriptions is on!" );
 					countThisOne = true;
 				}
 				else
@@ -253,7 +252,7 @@ class EventQueueService
 				
 			default:
 				// right now there really isn't any other possibility for this
-				println "INVALID";
+				log.debug( "INVALID" );
 				break;
 		}
 			
