@@ -17,15 +17,15 @@ class EventStreamService {
 	
 	public void saveActivity( ActivityStreamItem activity )
 	{
-		println "about to save activity...";
+		log.debug( "about to save activity...");
 		if( !activity.save(flush:true) )
 		{
-			println( "Saving activity FAILED");
-			activity.errors.allErrors.each { println it };
+			log.error( "Saving activity FAILED");
+			activity.errors.allErrors.each { log.debug( it ) };
 		}
 		else 
 		{
-			println "Successfully saved ActivityStreamItem: ${activity.id}";	
+			log.debug( "Successfully saved ActivityStreamItem: ${activity.id}" );	
 		}
 		
 	}
@@ -55,8 +55,8 @@ class EventStreamService {
 								     )
 	{
 		
-		println "getting recent activities for user, using stream: ${userStream}";
-		println "streamId = ${userStream.id}";
+		log.debug( "getting recent activities for user, using stream: ${userStream}" );
+		log.debug( "streamId = ${userStream.id}");
 		
 		/*
 		 
@@ -101,8 +101,8 @@ class EventStreamService {
 		*/
 		
 		int msgsOnQueue = eventQueueService.getQueueSizeForUser( user.userId, userStream );
-		println "Messages available on queue: ${msgsOnQueue}";
-		println "MaxCount requested: ${maxCount}";
+		log.debug( "Messages available on queue: ${msgsOnQueue}");
+		log.debug( "MaxCount requested: ${maxCount}");
 		
 		int msgsToRead = 0;
 		if( msgsOnQueue > 0 )
@@ -118,7 +118,7 @@ class EventStreamService {
 			}
 		}
 		
-		println "Messages to read from queue: ${msgsToRead}";
+		log.debug( "Messages to read from queue: ${msgsToRead}");
 		
 		long oldestOriginTime = new Date().getTime();
 		
@@ -128,15 +128,15 @@ class EventStreamService {
 		List<ActivityStreamItem> messages = eventQueueService.getMessagesForUser( user.userId, msgsToRead, userStream );
 		for( ActivityStreamItem msg : messages )
 		{
-			// println "msg.originTime: ${msg.originTime}";
+			log.debug( "msg.originTime: ${msg.originTime}");
 			if( msg.published.time < oldestOriginTime )
 			{
 				oldestOriginTime = msg.published.time;
 			}
 		}
 		
-		println "oldestOriginTime: ${oldestOriginTime}";
-		println "as date: " + new Date( oldestOriginTime);
+		log.debug( "oldestOriginTime: ${oldestOriginTime}");
+		log.debug( "as date: " + new Date( oldestOriginTime) );
 		
 		List<ActivityStreamItem> recentActivityStreamItems = new ArrayList<ActivityStreamItem>();
 		
