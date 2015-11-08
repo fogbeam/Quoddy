@@ -152,14 +152,14 @@ class EventStreamService {
 		for( int i = 0; i < messages.size(); i++ )
 		{
 			ActivityStreamItem activityStreamItem = messages.get(i);
-			// println "got message: ${msg} off of queue";
+			// log.debug("got message: ${msg} off of queue");
 	
 			activityStreamItem.streamObject = existDBService.populateSubscriptionEventWithXmlDoc( activityStreamItem.streamObject );
 			
 			recentActivityStreamItems.add( activityStreamItem );
 		}
 		
-		println "recentActivityStreamItems.size() = ${recentActivityStreamItems.size()}"
+		log.debug( "recentActivityStreamItems.size() = ${recentActivityStreamItems.size()}");
 		
 		/* NOTE: here, we need to make sure we don't retrieve anything NEWER than the OLDEST
 		 * message we may have in hand - that we received from the queue.  Otherwise, we risk
@@ -171,7 +171,7 @@ class EventStreamService {
 		{
 				
 			int recordsToRetrieve = maxCount - msgsToRead;
-			println "retrieving up to ${recordsToRetrieve} records from the database";
+			log.debug( "retrieving up to ${recordsToRetrieve} records from the database");
 			
 			// NOTE: get up to recordsToRetrieve records, but don't retrieve anything that
 			// would already be in our working set.
@@ -184,8 +184,8 @@ class EventStreamService {
 			cal.add(Calendar.HOUR_OF_DAY, -2160 );
 			Date cutoffDate = cal.getTime();
 			
-			println "Using ${cutoffDate} as cutoffDate";
-			println "Using ${new Date(oldestOriginTime)} as oldestOriginTime";
+			log.debug( "Using ${cutoffDate} as cutoffDate");
+			log.debug("Using ${new Date(oldestOriginTime)} as oldestOriginTime");
 					
 						
 			List<User> friends = userService.listFriends( user );
@@ -210,20 +210,20 @@ class EventStreamService {
 			List<UserGroup> groupsForUser = userGroupService.getAllGroupsForUser(user);
 			Set<User> validOwners = new HashSet<User>();
 			
-			println "found: ${groupsForUser?.size()} groups for user ${user}";
+			log.debug( "found: ${groupsForUser?.size()} groups for user ${user}");
 			
 			if( groupsForUser != null && groupsForUser.size() > 0 )
 			{
-				println "found some groups to add to validOwners!";
+				log.debug( "found some groups to add to validOwners!");
 				for( UserGroup groupForUser : groupsForUser )
 				{
-					println "adding group members for group ${groupForUser}";
+					log.debug( "adding group members for group ${groupForUser}");
 					validOwners.addAll( groupForUser.groupMembers );
 				}	
 			}			
 			else
 			{
-				println "no groups, so adding only current user to validOwners collection";
+				log.debug( "no groups, so adding only current user to validOwners collection");
 				// adding the user to this collection, because anything that returns is something
 				// we'd get anyway, and the query breaks if you use an empty collection here.
 				
@@ -234,10 +234,10 @@ class EventStreamService {
 				validOwners.add( user );
 			}
 			
-			/* println "validOwners.size() = ${validOwners.size()}";
+			/* log.debug( "validOwners.size() = ${validOwners.size()}");
 			for( User validOwner : validOwners )
 			{
-				println "valid owner: ${validOwner}";
+				log.debug( "valid owner: ${validOwner}");
 			}
 			*/
 			
@@ -250,7 +250,7 @@ class EventStreamService {
 			def parameters = [];
 // 			String query = "select item from ActivityStreamItem as item, UserStreamDefinition as stream ";
 			String query = "select item from ActivityStreamItem as item left outer join item.streamObject as streamObject left outer join streamObject.owningSubscription as owningSubscription";
-			println "base query: ${query}";
+			log.debug( "base query: ${query}");
 	
 			// There are two major divisions in how this works.  
 			
@@ -261,7 +261,6 @@ class EventStreamService {
 			// owned by this user.  
 			if( userStream.includeEverything )
 			{	
-				println "userStream.includeEverything = TRUE";
 				log.info( "userStream.includeEverything = TRUE" );
 				
 				query = query + " where item.published >= :cutoffDate " +
@@ -302,18 +301,18 @@ class EventStreamService {
 														
 				query = query +") ";
 					
-				println "query now: ${query}";
+				log.debug( "query now: ${query}");
 				// query = query + " and stream.id = :streamId "; 
 				query = query + " order by item.published desc";
 				
-				println "Final query before execution: $query";
+				log.debug( "Final query before execution: $query" );
 				
-				println "Found ${friends.size()} friends";
+				log.debug( "Found ${friends.size()} friends");
 				List<Integer> friendIds = new ArrayList<Integer>();
 				for( User friend: friends )
 				{
 					def friendId = friend.id;
-					println( "Adding friend id: ${friendId}, userId: ${friend.userId} to list" );
+					log.debug( "Adding friend id: ${friendId}, userId: ${friend.userId} to list" );
 					friendIds.add( friendId );
 				}
 	
@@ -322,7 +321,7 @@ class EventStreamService {
 				// will want to read Activities created by this user (we see our own updates in our
 				// own feed)
 				friendIds.add( user.id );
-				println "friendIds has ${friendIds.size()} entries!";
+				log.debug( "friendIds has ${friendIds.size()} entries!");
 				
 				ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 				
@@ -334,20 +333,20 @@ class EventStreamService {
 						 'userUuid': user.uuid,
 						 'validOwners':validOwners]
 			
-						println "Using parameters map: ${parameters}";
+						log.debug( "Using parameters map: ${parameters}");
 				if( !userStream.includeSelfOnly )
 				{
 					parameters << ['friendIds':friendIds];
 				}
 				
-				println "Using parameters map: ${parameters}";
+				log.debug( "Using parameters map: ${parameters}");
 				
 				if( userStream.includeSelfOnly || ( userStream.userUuidsIncluded == null || userStream.userUuidsIncluded.isEmpty() ) )
 				{
 					parameters << ['ownerId':user.id];
 				}
 						
-				println "Using parameters map: ${parameters}";
+				log.debug( "Using parameters map: ${parameters}" );
 				
 				
 				println "Executing query NOW:";
