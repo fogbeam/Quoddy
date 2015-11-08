@@ -349,7 +349,7 @@ class EventStreamService {
 				log.debug( "Using parameters map: ${parameters}" );
 				
 				
-				println "Executing query NOW:";
+				log.debug( "Executing query NOW:");
 	
 			}
 			
@@ -361,10 +361,9 @@ class EventStreamService {
 			// chose to include it.  
 			else
 			{
-				println "userStream.includeEverything = FALSE";
 				log.info( "userStream.includeEverything = FALSE" );
 
-				println "Query begins as: \n${query}";
+				log.debug( "Query begins as: \n${query}" );
 				
 	
 				query = query + " where item.published >= :cutoffDate " +
@@ -375,7 +374,7 @@ class EventStreamService {
 										/* deal with user filter */
 										if( userStream.includeAllUsers )
 										{
-											println "includeAllUsers == true case";
+											log.debug( "includeAllUsers == true case" );
 											
 											/* NOTE: We may never turn this on, as it may not be a desirable use
 											 * case.  Basically, this is saying "show me posts from every user
@@ -393,7 +392,7 @@ class EventStreamService {
 										}
 										else if( userStream.includeSelfOnly )
 										{
-											println "includeSelfOnly == true case";
+											log.debug( "includeSelfOnly == true case" );
 											
 											// left alone, the existing default query would return posts from any
 											// user in the friends list.  We should rework the entire base query
@@ -404,7 +403,7 @@ class EventStreamService {
 										}
 										else if( ( userStream.userUuidsIncluded != null && !userStream.userUuidsIncluded.isEmpty() ) || userStream.includeSelf )
 										{
-											println "userUuidsIncluded case OR includeSelf case";
+											log.debug( "userUuidsIncluded case OR includeSelf case");
 											
 											// this means that neither "include all" nor "include self only" was turned on
 											// so here work off the specific list of included users  
@@ -430,7 +429,7 @@ class EventStreamService {
 											query = query + " ( true = false ) ";
 										}
 																																
-				println "query now: ${query}";
+				log.debug( "query now: ${query}" );
 				
 				if( userStream.userGroupUuidsIncluded != null && !userStream.userGroupUuidsIncluded.isEmpty())
 				{
@@ -461,14 +460,14 @@ class EventStreamService {
 				// query = query + " and stream.id = :streamId " 
 				query = query + ") order by item.published desc";
 							
-				println "executing query: $query";
+				log.debug( "executing query: $query" );
 				
-				println "Found ${friends.size()} friends";
+				log.debug( "Found ${friends.size()} friends");
 				List<Integer> friendIds = new ArrayList<Integer>();
 				for( User friend: friends )
 				{
 					def friendId = friend.id;
-					println( "Adding friend id: ${friendId}, userId: ${friend.userId} to list" );
+					log.debug( "Adding friend id: ${friendId}, userId: ${friend.userId} to list" );
 					friendIds.add( friendId );
 				}
 	
@@ -476,7 +475,6 @@ class EventStreamService {
 				// would mean picking up all sorts of things we might not want, where "we" are the owner
 				// (eg, subscription items, etc.)				
 				// friendIds.add( user.id );
-				// println "friendIds has ${friendIds.size()} entries!";
 				
 				ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 				
@@ -487,13 +485,13 @@ class EventStreamService {
 						 // 'userUuid': user.uuid
 						 ]
 			
-				println "Using parameters map: ${parameters}";
+				log.debug( "Using parameters map: ${parameters}" );
 				if( !userStream.includeSelfOnly )
 				{
 					// parameters << ['friendIds':friendIds];
 				}
 				
-				println "Using parameters map: ${parameters}";
+				log.debug( "Using parameters map: ${parameters}" );
 				
 				if( ( userStream.userUuidsIncluded != null && !userStream.userUuidsIncluded.isEmpty() ) || userStream.includeSelf )
 				{
@@ -537,10 +535,10 @@ class EventStreamService {
 					parameters << ['includedUserListUsers': includedUserListUsers ];
 				}
 												
-				println "Using parameters map: ${parameters}";
+				log.debug( "Using parameters map: ${parameters}" );
 				
 				
-				println "Executing query NOW:";
+				log.debug( "Executing query NOW:");
 	
 			} // END handling the "not include everything" case.
 
@@ -549,13 +547,13 @@ class EventStreamService {
 			List<ActivityStreamItem> queryResults =
 				ActivityStreamItem.executeQuery( query, parameters, ['max': maxCount ]);
 		
-			println "adding ${queryResults.size()} activities read from DB";
+			log.debug( "adding ${queryResults.size()} activities read from DB" );
 			
 			for( ActivityStreamItem event : queryResults ) 
 			{
 					
-					println "Populating XML into SubscriptionEvents";
-					println "event = ${event}";
+					log.debug( "Populating XML into SubscriptionEvents" );
+					log.debug( "event = ${event}" );
 					event.streamObject = existDBService.populateSubscriptionEventWithXmlDoc( event.streamObject );
 					recentActivityStreamItems.add( event );
 			}
