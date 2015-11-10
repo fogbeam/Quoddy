@@ -72,8 +72,8 @@ public class SearchQueueInputService
 	
     def onMessage(msg)
     { 
-    	System.out.print("INONMESSSAGE:::")
-		System.out.println(msg)
+    	log.debug("in onMessage");
+	log.debug( "msg: " + msg);
     	/* note: what we would ordinarily do where is turn around and copy this message
     	 * to other queue's, topics, etc., or otherwise route it as needed.  But for
     	 * now we just assume we are the "indexer" job.
@@ -83,13 +83,11 @@ public class SearchQueueInputService
     
     	if( msg instanceof java.lang.String )
     	{
-			System.out.println(":::Message is a string")	
+		log.debug("Message is a string")	
     	}
     	else
     	{
-			println( "Received message: ${msg}" );
-			println "Received message: ${msg}";
-			MapMessage mapMessage = (MapMessage)msg;
+		MapMessage mapMessage = (MapMessage)msg;
     		String msgType = mapMessage.getString( "msgType" );
 			
 			//begin get the contents of the update
@@ -99,23 +97,25 @@ public class SearchQueueInputService
 			String msgUUID = null
 			ActivityStreamItem statusUpdateActivity = null
 
-			try{
+			try
+			{
 				statusUpdateActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
-			}catch(Exception e){
-				log.error(':::Unable to get update contents1.1')
-				log.error(e.printStackTrace())
-				log.error('end stack trace:::')
-				msgContents = "This sentance is about New York City by default."
+			}
+			catch(Exception e)
+			{
+				log.error('Unable to get statusUpdateActivity', e );
+				msgContents = "This sentance is about New York City by default.";
 			}
 
-			try{
-				msgContents = statusUpdateActivity.content
-				msgUUID = statusUpdateActivity.uuid
-				System.out.println("::: msgUUID -> ${msgUUID}")
-			}catch(Exception e){
-				log.error(':::Unable to get update contents2.2')
-				log.error(e.printStackTrace())
-				log.error('end stack trace:::')
+			try
+			{
+				msgContents = statusUpdateActivity.content;
+				msgUUID = statusUpdateActivity.uuid;
+				log.debug("::: msgUUID -> ${msgUUID}");
+			}
+			catch(Exception e)
+			{
+				log.error('Unable to get update contents', e );
 				msgContents = "This sentance is about New York City by default."
 			}
 			*/
@@ -141,7 +141,7 @@ public class SearchQueueInputService
 			
     		if( msgType == null || msgType.isEmpty())
 			{
-				println( "No msgType received!" );
+				log.warn( "No msgType received!" );
 				return;
 			}
 			
