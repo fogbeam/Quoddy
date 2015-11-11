@@ -148,25 +148,24 @@ public class SearchQueueInputService
 			
 			if( msgType.equals( "REINDEX_ALL" ))
 			{
-				println "received message: REINDEX_ALL";
+				log.info( "received message: REINDEX_ALL" );
 				rebuildAllIndexes();
 			}
 			else if( msgType.equals( "REINDEX_PERSON" ))
 			{
-				println "received message: REINDEX_PERSON";
+				log.info( "received message: REINDEX_PERSON" );
 				rebuildPersonIndex();
 			}
 			else if( msgType.equals( "REINDEX_GENERAL" ))
 			{
-				println "received message: REINDEX_GENERAL";
+				log.info( "received message: REINDEX_GENERAL" );
 				rebuildGeneralIndex();
 			}
 			else if( msgType.equals( "NEW_STATUS_UPDATE" )) // TODO: rename this to STREAM_POST or something?
     		{
 		    	// add document to index
-				System.out.println("NEWSTATUSUPDATE")
-		    	log.info( "adding document to index: ${mapMessage.getString('activityUuid')}" );				
-				newStatusUpdate( msg );
+		    	log.info( "adding document to index: ${mapMessage.getString('activityUuid')}" );			
+			newStatusUpdate( msg );
 
     		}
 			else if( msgType.equals( "NEW_CALENDAR_FEED_ITEM" ))
@@ -199,7 +198,7 @@ public class SearchQueueInputService
 			else if( msgType.equals( "NEW_STREAM_ENTRY_COMMENT" ))
     		{
     			
-		    	println( "adding StreamEntryComment to index" );
+		    	log.info( "adding StreamEntryComment to index" );
 
 				newStreamEntryComment( msg );
     		}
@@ -214,7 +213,7 @@ public class SearchQueueInputService
 			}
 			else 
     		{
-    			println( "Bad message type: ${msgType}" );
+    			log.warn( "Bad message type: ${msgType}" );
     		}
     	}
     }
@@ -241,7 +240,7 @@ public class SearchQueueInputService
 	private void newStatusUpdate( def msg )
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		println( "got indexDirLocation as: ${indexDirLocation}");
+		log.debug( "got indexDirLocation as: ${indexDirLocation}");
 		
 		if( indexDirLocation == null )
 		{
@@ -255,12 +254,12 @@ public class SearchQueueInputService
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
 		// where we never do get the required lock.
 		int count = 0;
-		println( "Trying to acquire IndexWriter");
+		log.debug( "Trying to acquire IndexWriter");
 		while( writer == null )
 		{
 			count++;
 			if( count > 3 ) {
-				println( "tried to obtain Lucene lock 3 times, giving up..." );
+				log.warn( "tried to obtain Lucene lock 3 times, giving up..." );
 				return;
 			}
 			try
@@ -273,15 +272,13 @@ public class SearchQueueInputService
 			}
 		}
 		
-		println( "opened Writer" );
+		log.debug( "opened Writer" );
 		
 		ActivityStreamItem statusUpdateActivity = null;
 		try
 		{
 			statusUpdateActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 			StatusUpdate statusUpdate = statusUpdateActivity.streamObject;
-			
-			// println( "Trying to add Document to index" );
 			
 			writer.setUseCompoundFile(true);
 
