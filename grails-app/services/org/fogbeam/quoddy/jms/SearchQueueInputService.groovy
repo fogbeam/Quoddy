@@ -342,7 +342,7 @@ public class SearchQueueInputService
 		// Make a TDB-backed dataset
 		String quoddyHome = System.getProperty( "quoddy.home" );
 		String directory = "${quoddyHome}/jenastore/triples" ;
-		println "Opening TDB triplestore at: ${directory}";
+		log.debug( "Opening TDB triplestore at: ${directory}");
 		Dataset dataset = TDBFactory.createDataset(directory) ;
 		try
 		{
@@ -359,7 +359,7 @@ public class SearchQueueInputService
 				Resource anEntity = iter.nextResource();
 		
 				// do we have the "type" (rdf:type) triples that we need for "anEntity"			
-				println "adding resource \"quoddy:${statusUpdateActivity.uuid}\" dcterm:references entity: ${anEntity.toString()}";
+				log.debug( "adding resource \"quoddy:${statusUpdateActivity.uuid}\" dcterm:references entity: ${anEntity.toString()}");
 			
 				Resource newResource = model.createResource( "quoddy:${statusUpdateActivity.uuid}" );
 				newResource.addProperty( DCTerms.references, anEntity);
@@ -393,7 +393,7 @@ public class SearchQueueInputService
 		// }
 		
 		
-		println( "done with onMessage() call" );
+		log.debug( "done with onMessage() call" );
 	}
 	
 	
@@ -401,19 +401,19 @@ public class SearchQueueInputService
 	private void newCalendarFeedItem( def msg )
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		println( "got indexDirLocation as: ${indexDirLocation}");
+		log.debug( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
 		// where we never do get the required lock.
 		int count = 0;
-		println( "Trying to acquire IndexWriter");
+		log.debug( "Trying to acquire IndexWriter");
 		while( writer == null )
 		{
 			count++;
 			if( count > 3 ) {
-				println( "tried to obtain Lucene lock 3 times, giving up..." );
+				log.debug( "tried to obtain Lucene lock 3 times, giving up..." );
 				return;
 			}
 			try
@@ -426,14 +426,14 @@ public class SearchQueueInputService
 			}
 		}
 		
-		println( "opened Writer" );
+		log.debug( "opened Writer" );
 		
 		try
 		{
 			ActivityStreamItem calendarFeedItemActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 			CalendarFeedItem calendarFeedItem = calendarFeedItemActivity.streamObject;
 			
-			println( "Trying to add Document to index" );
+			log.debug( "Trying to add Document to index" );
 			
 			writer.setUseCompoundFile(true);
 
@@ -460,7 +460,7 @@ public class SearchQueueInputService
 			writer.addDocument( doc );
 			writer.optimize();
 			
-			println( "Updated Lucene Index for new CalendarFeedItem" );			
+			log.debug( "Updated Lucene Index for new CalendarFeedItem" );			
 
 		}
 		finally
@@ -503,7 +503,7 @@ public class SearchQueueInputService
 		//	doSemanticEnhancement();
 		// }
 		
-		println( "done with onMessage() call" );
+		log.debug( "done with onMessage() call" );
 	}
 	
 	
@@ -525,19 +525,19 @@ public class SearchQueueInputService
 			indexDirLocation = quoddyHome + "/index";
 		}
 		
-		println( "got indexDirLocation as: ${indexDirLocation}");
+		log.debug( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
 		// where we never do get the required lock.
 		int count = 0;
-		println( "Trying to acquire IndexWriter");
+		log.debug( "Trying to acquire IndexWriter");
 		while( writer == null )
 		{
 			count++;
 			if( count > 3 ) {
-				println( "tried to obtain Lucene lock 3 times, giving up..." );
+				log.debug( "tried to obtain Lucene lock 3 times, giving up..." );
 				return;
 			}
 			try
@@ -550,7 +550,7 @@ public class SearchQueueInputService
 			}
 		}
 		
-		println( "opened Writer" );
+		log.debug( "opened Writer" );
 		
 		ActivityStreamItem besItemActivity = null;
 		try
@@ -558,7 +558,7 @@ public class SearchQueueInputService
 			besItemActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 			BusinessEventSubscriptionItem besItem = besItemActivity.streamObject;
 			besItem = existDBService.populateSubscriptionEventWithXmlDoc( besItem );
-			// println( "Trying to add Document to index" );
+			
 			
 			writer.setUseCompoundFile(true);
 
@@ -584,12 +584,11 @@ public class SearchQueueInputService
 			}
 			else
 			{
-				println( "WARNING: NO XML DOC AVAILABLE IN BES_ITEM" );	
+				log.warn( "WARNING: NO XML DOC AVAILABLE IN BES_ITEM" );	
 			}
 			
 			writer.addDocument( doc );
 			writer.optimize();
-			// println( "Updated Lucene Index for new StatusUpdate" );
 		}
 		finally
 		{
@@ -632,7 +631,7 @@ public class SearchQueueInputService
 		}
 		
 		
-		println( "done with onMessage() call" );
+		log.debug( "done with onMessage() call" );
 	}
 	
 	
