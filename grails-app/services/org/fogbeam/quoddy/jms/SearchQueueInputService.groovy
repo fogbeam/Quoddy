@@ -298,7 +298,6 @@ public class SearchQueueInputService
 				
 			writer.addDocument( doc );
 			writer.optimize();
-			// println( "Updated Lucene Index for new StatusUpdate" );
 		}
 		finally
 		{
@@ -639,19 +638,19 @@ public class SearchQueueInputService
 	private void newActivityStreamItem( def msg )
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		println( "got indexDirLocation as: ${indexDirLocation}");
+		log.debug( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
 		// where we never do get the required lock.
 		int count = 0;
-		println( "Trying to acquire IndexWriter");
+		log.debug( "Trying to acquire IndexWriter");
 		while( writer == null )
 		{
 			count++;
 			if( count > 3 ) {
-				println( "tried to obtain Lucene lock 3 times, giving up..." );
+				log.debug( "tried to obtain Lucene lock 3 times, giving up..." );
 				return;
 			}
 			try
@@ -664,15 +663,13 @@ public class SearchQueueInputService
 			}
 		}
 		
-		println( "opened Writer" );
+		log.debug( "opened Writer" );
 		
 		ActivityStreamItem genericActivityStreamItem = null;
 		
 		try
 		{
 			genericActivityStreamItem = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
-
-			// println( "Trying to add Document to index" );
 			
 			writer.setUseCompoundFile(true);
 
@@ -694,7 +691,6 @@ public class SearchQueueInputService
 			
 			writer.addDocument( doc );
 			writer.optimize();
-			// println( "Updated Lucene Index for new StatusUpdate" );
 			
 		}
 		finally
@@ -738,7 +734,7 @@ public class SearchQueueInputService
 		// }
 		
 				
-		println( "done with onMessage() call" );
+		log.debug( "done with onMessage() call" );
 	}
 	
 	
@@ -746,22 +742,22 @@ public class SearchQueueInputService
 	/* RssFeedItem */
 	private void newRssFeedItem( def msg )
 	{
-		println "newRssFeedItem indexing new item...";
+		log.debug( "newRssFeedItem indexing new item..." );
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		println( "got indexDirLocation as: ${indexDirLocation}");
+		log.debug( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
 		// this will eventually give up, to deal with the pathological case
 		// where we never do get the required lock.
 		int count = 0;
-		println( "Trying to acquire IndexWriter");
+		log.debug( "Trying to acquire IndexWriter");
 		while( writer == null )
 		{
 			count++;
 			if( count > 3 ) {
-				println( "tried to obtain Lucene lock 3 times, giving up..." );
+				log.debug( "tried to obtain Lucene lock 3 times, giving up..." );
 				return;
 			}
 			try
@@ -774,13 +770,13 @@ public class SearchQueueInputService
 			}
 		}
 		
-		println( "opened Writer" );
+		log.debug( "opened Writer" );
 		
 		try
 		{
 			ActivityStreamItem activityStreamItem = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 
-			println( "Trying to add Document to index" );
+			log.debug( "Trying to add Document to index" );
 			
 			RssFeedItem rssFeedItem = activityStreamItem.streamObject;
 			
@@ -850,7 +846,7 @@ public class SearchQueueInputService
 
 			writer.addDocument( doc );
 			writer.optimize();
-			println( "Updated Lucene Index for new RssFeedItem" );
+			log.debug( "Updated Lucene Index for new RssFeedItem" );
 		
 		}
 		finally
@@ -883,7 +879,7 @@ public class SearchQueueInputService
 			}
 		}
 
-		println( "done with onMessage() call" );
+		log.debug( "done with onMessage() call" );
 	}
 	
 	
@@ -958,7 +954,7 @@ public class SearchQueueInputService
 	private void newStreamEntryComment( def msg )
 	{
 		
-		println "adding NEW_STREAM_ENTRY_COMMENT to index!";
+		log.debug( "adding NEW_STREAM_ENTRY_COMMENT to index!" );
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
@@ -1018,7 +1014,7 @@ public class SearchQueueInputService
 	
 			writer.optimize();
 		
-			println "Done adding index for NEW_STREAM_ENTRY_COMMENT";
+			log.debug( "Done adding index for NEW_STREAM_ENTRY_COMMENT" );
 				
 		}
 		finally
@@ -1243,10 +1239,9 @@ public class SearchQueueInputService
 		// Hit Stanbol to get enrichmentData
 		// call Stanbol REST API to get enrichment data
 		String stanbolServerUrl = CH.config.urls.stanbol.endpoint;
-		println "using stanbolServerUrl: ${stanbolServerUrl}";
+		log.debug( "using stanbolServerUrl: ${stanbolServerUrl}" );
 		RESTClient restClient = new RESTClient( stanbolServerUrl );
 	
-		// println "content submitted: ${content}";
 		def restResponse = restClient.post(	path:'enhancer',
 										body: "",
 										requestContentType : TEXT );
@@ -1272,17 +1267,16 @@ public class SearchQueueInputService
 		// Hit Stanbol to get enrichmentData
 		// call Stanbol REST API to get enrichment data
 		String stanbolServerUrl = CH.config.urls.stanbol.endpoint;
-		println "using stanbolServerUrl: ${stanbolServerUrl}";
+		log.debug( "using stanbolServerUrl: ${stanbolServerUrl}" );
 		RESTClient restClient = new RESTClient( stanbolServerUrl );
 	
-		// println "content submitted: ${content}";
+		// log.info( "content submitted: ${content}" );
 		def restResponse = restClient.post(	path:'enhancer',
 										body: content,
 										requestContentType : TEXT );
 	
 		def restResponseText = restResponse.getData();
 		
-		// println "\n************************************\n\n${restResponseText}\n\n****************************************\n";
 		
 		if( restResponseText != null && !restResponseText.isEmpty())
 		{
@@ -1298,7 +1292,7 @@ public class SearchQueueInputService
 			// Make a TDB-backed dataset
 			String quoddyHome = System.getProperty( "quoddy.home" );
 			String directory = "${quoddyHome}/jenastore/triples" ;
-			println "Opening TDB triplestore at: ${directory}";
+			log.debug( "Opening TDB triplestore at: ${directory}" );
 			Dataset dataset = TDBFactory.createDataset(directory) ;
 			
 			dataset.begin(ReadWrite.WRITE);
@@ -1316,7 +1310,7 @@ public class SearchQueueInputService
 				// do we have the "type" (rdf:type) triples that we need for "anEntity"
 				
 				
-				println "adding resource \"quoddy:${userTask.uuid}\" dc:references entity: ${anEntity.toString()}";
+				log.debug( "adding resource \"quoddy:${userTask.uuid}\" dc:references entity: ${anEntity.toString()}" );
 				
 				Resource newResource = model.createResource( "quoddy:${userTask.uuid}" );
 				newResource.addProperty( DCTerms.references, anEntity);
@@ -1333,7 +1327,7 @@ public class SearchQueueInputService
 		}
 		else
 		{
-			println "Can't process JSON -> TDB operation!";
+			log.error( "Can't process JSON -> TDB operation!" );
 		}
 				
 	}
@@ -1371,8 +1365,9 @@ public class SearchQueueInputService
 			t.setOutputProperty(OutputKeys.INDENT, "yes");
 			t.transform(new DOMSource(node), new StreamResult(sw));
 		} 
-		catch (TransformerException te) {
-			System.out.println("nodeToString Transformer Exception");
+		catch (TransformerException te)
+		{
+			log.error( "nodeToString Transformer Exception", te );
 		}
 		
 		return sw.toString();
