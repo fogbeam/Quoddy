@@ -67,7 +67,6 @@ class SearchService
 			indexDirLocation = quoddyHome + "/index";
 		}
 		
-		// println( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
 		
@@ -84,7 +83,7 @@ class SearchService
 		
 		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
-		println "Search returned " + docs.length + " results";
+		log.debug( "Search returned " + docs.length + " results" );
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
@@ -102,7 +101,7 @@ class SearchService
 	public List<SearchResult> doStatusUpdateSearch( final String queryString )
 	{
 		
-		println "in doStatusUpdateSearch";
+		log.debug(  "in doStatusUpdateSearch" );
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		if( indexDirLocation == null )
@@ -111,7 +110,7 @@ class SearchService
 			indexDirLocation = quoddyHome + "/index";
 		}
 		
-		// println( "got indexDirLocation as: ${indexDirLocation}");
+		log.debug( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
 		
@@ -138,7 +137,7 @@ class SearchService
 		
 		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
-		println "Search returned " + docs.length + " results";
+		log.debug( "Search returned " + docs.length + " results" );
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
@@ -159,7 +158,7 @@ class SearchService
 	
 	public List<SearchResult> doCalendarFeedItemSearch( final String queryString )
 	{
-		println "in doCalendarFeedItemSearch";
+		log.debug(  "in doCalendarFeedItemSearch" );
 				
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		
@@ -190,7 +189,7 @@ class SearchService
 		
 		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
-		println "Search returned " + docs.length + " results";
+		log.debug( "Search returned " + docs.length + " results" );
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
