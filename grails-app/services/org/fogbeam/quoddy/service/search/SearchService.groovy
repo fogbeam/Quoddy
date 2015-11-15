@@ -168,7 +168,7 @@ class SearchService
 			indexDirLocation = quoddyHome + "/index";
 		}
 		
-		// println( "got indexDirLocation as: ${indexDirLocation}");
+		log.debug( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
 		
@@ -209,7 +209,7 @@ class SearchService
 	
 	public List<SearchResult> doActivitiUserTaskSearch( final String queryString )
 	{
-		println "in doActivitiUserTaskSearch";
+		log.debug( "in doActivitiUserTaskSearch" );
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		
@@ -220,7 +220,7 @@ class SearchService
 			indexDirLocation = quoddyHome + "/index";
 		}
 		
-		// println( "got indexDirLocation as: ${indexDirLocation}");
+		log.debug( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
 		
@@ -240,7 +240,7 @@ class SearchService
 		
 		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
-		println "Search returned " + docs.length + " results";
+		log.debug( "Search returned " + docs.length + " results" );
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
@@ -262,7 +262,7 @@ class SearchService
 	public List<SearchResult> doBusinessSubscriptionItemSearch( final String queryString )
 	{
 		
-		println "in doBusinessSubscriptionItemSearch";
+		log.debug( "in doBusinessSubscriptionItemSearch");
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		
@@ -272,7 +272,7 @@ class SearchService
 			indexDirLocation = quoddyHome + "/index";
 		}
 		
-		// println( "got indexDirLocation as: ${indexDirLocation}");
+		log.debug( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
 		
@@ -293,7 +293,7 @@ class SearchService
 		
 		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
-		println "Search returned " + docs.length + " results";
+		log.debug( "Search returned " + docs.length + " results" );
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
@@ -320,7 +320,7 @@ class SearchService
 	
 	public List<SearchResult> doRssFeedItemSearch( final String queryString )
 	{
-		println "in doRssFeedItemSearch";
+		log.debug( "in doRssFeedItemSearch" );
 
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		
@@ -330,7 +330,7 @@ class SearchService
 			indexDirLocation = quoddyHome + "/index";
 		}
 		
-		// println( "got indexDirLocation as: ${indexDirLocation}");
+		log.debug( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
 		
@@ -351,7 +351,7 @@ class SearchService
 		
 		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
-		println "Search returned " + docs.length + " results";
+		log.debug( "Search returned " + docs.length + " results" );
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
@@ -369,7 +369,7 @@ class SearchService
 	
 	public List<SearchResult> doActivityStreamItemSearch( final String queryString )
 	{
-		println "in doActivityStreamItemSearch";
+		log.debug( "in doActivityStreamItemSearch" );
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		
@@ -379,7 +379,7 @@ class SearchService
 			indexDirLocation = quoddyHome + "/index";
 		}
 		
-		// println( "got indexDirLocation as: ${indexDirLocation}");
+		log.debug( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		
 		
@@ -400,7 +400,7 @@ class SearchService
 		
 		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
-		println "Search returned " + docs.length + " results";
+		log.debug( "Search returned " + docs.length + " results");
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
