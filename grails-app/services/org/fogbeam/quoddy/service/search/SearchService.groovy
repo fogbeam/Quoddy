@@ -420,7 +420,7 @@ class SearchService
 	
 	public List<SearchResult> doUserSearch( final String queryString )
 	{
-		println "in doUserSearch";
+		log.debug( "in doUserSearch" );
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		
@@ -442,12 +442,12 @@ class SearchService
 		
 		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
-		println "Search returned " + docs.length + " results";
+		log.debug( "Search returned " + docs.length + " results" );
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
 			String userId = result.get("userId")
-			println( userId + " " + result.get("fullName"));
+			log.debug( userId + " " + result.get("fullName"));
 			User userResult = userService.findUserByUserId(userId);
 			searchResults.add( new SearchResult(docType:"user", uuid:userResult.uuid, object:userResult) );
 		
@@ -458,10 +458,9 @@ class SearchService
 	
 	public List<SearchResult> doPeopleSearch( final String queryString )
 	{
-		println "in doPeopleSearch";
+		log.debug( "in doPeopleSearch" );
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		
 		
 		if( indexDirLocation == null )
 		{
@@ -481,12 +480,12 @@ class SearchService
 		
 		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
-		println "Search returned " + docs.length + " results";
+		log.debug( "Search returned " + docs.length + " results");
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
 			String userId = result.get("userId")
-			println( userId + " " + result.get("fullName"));
+			log.debug( userId + " " + result.get("fullName"));
 		
 			User userResult = userService.findUserByUserId(userId);
 			searchResults.add( new SearchResult(docType:"user", uuid:userResult.uuid, object:userResult) );
