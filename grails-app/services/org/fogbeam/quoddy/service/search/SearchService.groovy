@@ -498,7 +498,7 @@ class SearchService
 		
 	public List<SearchResult> doIFollowSearch( final String queryString, final User user )
 	{
-		println "in doIFollowSearch";
+		log.debug( "in doIFollowSearch" );
 		
 		// get a list of my friends
 		List<User> iFollow = userService.listIFollow( user );
@@ -534,19 +534,19 @@ class SearchService
 		outerQuery.add( userQuery, Occur.MUST );
 		outerQuery.add( userIdQuery, Occur.MUST );
 		
-		// System.out.println( "Query (" + outerQuery.getClass().getName() + "): "  + outerQuery.toString() );
+		log.trace( "Query (" + outerQuery.getClass().getName() + "): "  + outerQuery.toString() );
 		
 		
 		TopDocs hits = searcher.search( outerQuery, 20);
 		
 		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
-		println "Search returned " + docs.length + " results";
+		log.debug( "Search returned " + docs.length + " results" );
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
 			String userId = result.get("userId")
-			println( userId + " " + result.get("fullName"));
+			log.debug( userId + " " + result.get("fullName"));
 		
 			User userResult = userService.findUserByUserId(userId);
 			searchResults.add( new SearchResult(docType:"user", uuid:userResult.uuid, object:userResult) );
@@ -558,7 +558,7 @@ class SearchService
 	
 	public List<SearchResult> doFriendSearch( final String queryString, final User user )
 	{
-		println "in doFriendSearch";
+		log.debug( "in doFriendSearch");
 		
 		// get a list of my friends
 		List<User> myFriends = userService.listFriends( user );
@@ -593,19 +593,19 @@ class SearchService
 		outerQuery.add( userQuery, Occur.MUST );
 		outerQuery.add( userIdQuery, Occur.MUST );
 		
-		// System.out.println( "Query (" + outerQuery.getClass().getName() + "): "  + outerQuery.toString() );
+		log.trace( "Query (" + outerQuery.getClass().getName() + "): "  + outerQuery.toString() );
 		
 		
 		TopDocs hits = searcher.search( outerQuery, 20);
 		
 		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		ScoreDoc[] docs = hits.scoreDocs;
-		println "Search returned " + docs.length + " results";
+		log.debug( "Search returned " + docs.length + " results");
 		for( ScoreDoc doc : docs )
 		{
 			Document result = searcher.doc( doc.doc );
 			String userId = result.get("userId")
-			println( userId + " " + result.get("fullName"));
+			log.debug( userId + " " + result.get("fullName"));
 		
 			User userResult = userService.findUserByUserId(userId);
 			searchResults.add( new SearchResult(docType:"user", uuid:userResult.uuid, object:userResult) );
@@ -632,8 +632,8 @@ class SearchService
 			}
 			
 			
-			println "rebuildGeneralIndex";
-			println "indexDirLocation: ${indexDirLocation}";
+			log.debug( "rebuildGeneralIndex" );
+			log.debug( "indexDirLocation: ${indexDirLocation}");
 			
 			indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index") );
 			writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.LIMITED);
