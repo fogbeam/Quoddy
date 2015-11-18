@@ -646,7 +646,7 @@ class SearchService
 			// iterate the list and store each to the DB
 			for( ActivityStreamItem item : items )
 			{
-				println "indexing ASI with id: ${item.id}, uuid: ${item.uuid} and objectClass: ${item.objectClass}";
+				log.debug( "indexing ASI with id: ${item.id}, uuid: ${item.uuid} and objectClass: ${item.objectClass}");
 				// if streamObject is null, the only valid scenario is for this ASI to be a 3rd party (remote)
 				// ActivityStreamItem, so the object we're indexing is the ASI itself.
 				
@@ -707,7 +707,7 @@ class SearchService
 	{
 		
 
-		println "adding ActivitiUserTask object to Search Index";
+		log.debug( "adding ActivitiUserTask object to Search Index");
 		
 		Document doc = new Document();
 		
@@ -770,7 +770,7 @@ class SearchService
 	
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final ActivityStreamItem item )
 	{
-		println "addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final ActivityStreamItem item )";
+		log.debug( "addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final ActivityStreamItem item )");
 		
 		Document doc = new Document();
 		
@@ -792,7 +792,7 @@ class SearchService
 
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final StatusUpdate item )
 	{
-		println "addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final StatusUpdate item )";
+		log.debug(  "addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final StatusUpdate item )");
 		Document doc = new Document();
 		
 		doc.add( new Field( "docType", "docType.statusUpdate", Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO ));
@@ -813,7 +813,7 @@ class SearchService
 		
 	public void addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final CalendarFeedItem item )
 	{
-		println "addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final CalendarFeedItem item )";
+		log.debug( "addToIndex( final IndexWriter writer, final ActivityStreamItem asi, final CalendarFeedItem item )");
 		
 		Document doc = new Document();
 		
@@ -986,7 +986,7 @@ class SearchService
 	{
 		// build the search index using Lucene
 		List<User> users = userService.findAllUsers();
-		println "reindexing ${users.size()} users";
+		log.debug( "reindexing ${users.size()} users");
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		
@@ -996,8 +996,8 @@ class SearchService
 			indexDirLocation = quoddyHome + "/index";
 		}
 		
-		println "rebuildPersonIndex";
-		println "indexDirLocation: ${indexDirLocation}";
+		log.debug( "rebuildPersonIndex");
+		log.debug( "indexDirLocation: ${indexDirLocation}");
 		
 		
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
@@ -1053,8 +1053,8 @@ class SearchService
 			indexDirLocation = quoddyHome + "/index";
 		}
 		
-		println( "initializeGeneralIndex" );
-		println( "indexDirLocation: ${indexDirLocation}" );
+		log.debug( "initializeGeneralIndex" );
+		log.debug( "indexDirLocation: ${indexDirLocation}" );
 		if( indexDirLocation )
 		{
 			File indexFile = new java.io.File( indexDirLocation + "/general_index" );
@@ -1062,7 +1062,7 @@ class SearchService
 			boolean indexIsInitialized = (indexFileChildren != null && indexFileChildren.length > 0 );
 			if( ! indexIsInitialized )
 			{
-				println( "Index not previously initialized, creating empty index" );
+				log.debug( "Index not previously initialized, creating empty index" );
 				/* initialize empty index */
 				Directory indexDir = new NIOFSDirectory( indexFile );
 				IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.UNLIMITED);
@@ -1073,12 +1073,12 @@ class SearchService
 		   else
 		   {
 			   
-			   println( "Index already initialized, skipping..." );
+			   log.debug( "Index already initialized, skipping..." );
 		   }
 		}
 		else
 		{
-			println( "No indexDirLocation configured!!");
+			log.debug( "No indexDirLocation configured!!");
 		}
 		
 	}
@@ -1093,8 +1093,8 @@ class SearchService
 			indexDirLocation = quoddyHome + "/index";
 		}
 		
-		println( "initializePersonIndex" );
-		println( "indexDirLocation: ${indexDirLocation}" );
+		log.debug( "initializePersonIndex" );
+		log.debug( "indexDirLocation: ${indexDirLocation}" );
 		if( indexDirLocation )
 		{
 			File indexFile = new java.io.File( indexDirLocation + "/person_index" );
@@ -1134,8 +1134,9 @@ class SearchService
 			t.setOutputProperty(OutputKeys.INDENT, "yes");
 			t.transform(new DOMSource(node), new StreamResult(sw));
 		}
-		catch (TransformerException te) {
-			System.out.println("nodeToString Transformer Exception");
+		catch (TransformerException te)
+		{
+			log.error( "nodeToString Transformer Exception", te );
 		}
 		
 		return sw.toString();
