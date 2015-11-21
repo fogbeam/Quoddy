@@ -116,10 +116,8 @@ class JenaService
 	public void saveStatementWithResourceObject( final String subject, final String predicate, final String object )
 	{
 		
-		println "saveStatementWithResourceObject";
-		println "subject: ${subject}";
-		println "predicate: ${predicate}";
-		println "object: ${object}";
+		log.debug( "saveStatementWithResourceObject" );
+		log.debug( "subject: ${subject} \npredicate: ${predicate}\nobject: ${object}");
 		
 		
 		Dataset dataset = jenaTemplate.getDataset();
@@ -131,7 +129,7 @@ class JenaService
 		Property rProperty = m.createProperty( predicate );
 		Resource rObject = m.createResource( object );
 		
-		println "rObject: ${rObject}";
+		log.debug( "rObject: ${rObject}");
 		
 		try
 		{
@@ -224,7 +222,7 @@ class JenaService
 			for ( ; solutions.hasNext() ; )
 			{
 				QuerySolution soln = solutions.nextSolution();
-				println "solution: ${soln}";
+				log.debug( "solution: ${soln}");
 				Resource entity = soln.getResource("entity" );
 				Literal label = soln.getLiteral("label");
 				
@@ -291,7 +289,7 @@ class JenaService
 			for ( ; solutions.hasNext() ; )
 			{
 				QuerySolution soln = solutions.nextSolution();
-				println "solution: ${soln}";
+				log.debug( "solution: ${soln}" );
 				
 				
 				allClasses.add( soln );
@@ -358,7 +356,7 @@ class JenaService
 			for ( ; solutions.hasNext() ; )
 			{
 				QuerySolution soln = solutions.nextSolution();
-				println "solution: ${soln}";
+				log.debug( "solution: ${soln}" );
 				Resource entityRes = soln.getResource("entity");
 				Literal labelLit = soln.getLiteral("label");
 				Entity entity = new Entity();
