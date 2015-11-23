@@ -57,7 +57,7 @@ class ActivityStreamTransformerService
 					User userActor = userService.findUserByUserId(entry.actor.id); 
 					if( userActor )
 					{
-						println "Found user: ${userActor}";
+						log.debug( "Found user: ${userActor}");
 						activity.owner = userActor; 
 						activity.actorUuid = userActor.uuid;
 						activity.actorObjectType = entry.actor.objectType;
