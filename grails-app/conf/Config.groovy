@@ -13,6 +13,16 @@ import grails.util.Environment;
 // }
 
 String quoddyHome = System.getProperty( "quoddy.home");
+if( quoddyHome == null || quoddyHome.isEmpty() )
+{
+	quoddyHome = System.getEnv( "QUODDY_HOME" );
+}
+
+if( quoddyHome == null || quoddyHome.isEmpty() )
+{
+	quoddyHome = "/opt/fogcutter/quoddy";
+}
+
 
 if(!grails.config.locations || !(grails.config.locations instanceof List)) 
 {
@@ -118,7 +128,7 @@ environments {
 			serverPort = "8080";
 		}
 
-		grails.serverURL = "http://localhost:${serverPort}/${appName}"
+		grails.serverURL = "http://${quoddy.hostName}:${serverPort}/${appName}"
     }
     test {
 		def serverPort = System.getProperty( "server.port");
