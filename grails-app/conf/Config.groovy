@@ -15,7 +15,7 @@ import grails.util.Environment;
 String quoddyHome = System.getProperty( "quoddy.home");
 if( quoddyHome == null || quoddyHome.isEmpty() )
 {
-	quoddyHome = System.getEnv( "QUODDY_HOME" );
+	quoddyHome = System.getenv( "QUODDY_HOME" );
 }
 
 if( quoddyHome == null || quoddyHome.isEmpty() )
@@ -54,6 +54,7 @@ switch( Environment.current  )
 	default:
 		break;
 }
+
 
 String fogbeamDevMode = System.getProperty( "fogbeam.devmode" );
 if( fogbeamDevMode != null )
@@ -128,7 +129,7 @@ environments {
 			serverPort = "8080";
 		}
 
-		grails.serverURL = "http://${quoddy.hostName}:${serverPort}/${appName}"
+		grails.serverURL = "http://localhost:${serverPort}/${appName}"
     }
     test {
 		def serverPort = System.getProperty( "server.port");
@@ -161,11 +162,11 @@ log4j = {
 	       'org.codehaus.groovy.grails.commons', // core / classloading
 	       'org.codehaus.groovy.grails.plugins', // plugins
 	       'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
-		   'org.springframework',
-           'net.sf.ehcache.hibernate'
+	       'org.springframework',
+               'net.sf.ehcache.hibernate'
 
     warn   'org.mortbay.log',
-		   'org.hibernate'
+           'org.hibernate'
 }
 
 jms {
