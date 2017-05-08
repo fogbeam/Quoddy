@@ -57,7 +57,7 @@ class StatusController {
 										
 				log.debug( "restResponse.class: ${restResponse.class}");
 				log.debug( "restResponse.status: ${restResponse.status}");
-				log.trace( "restResponse.statusCode: ${restResponse.statusCode}");
+				log.trace( "restResponse.statusLine: ${restResponse.statusLine}");
 				log.debug( "restResponse.success: ${restResponse.isSuccess()}");
 
 				Object restResponseData = restResponse.getData();
