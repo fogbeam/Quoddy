@@ -155,12 +155,12 @@ log4j = {
 	// debug  'org.hibernate'
 	
 	appenders {
-            rollingFile name: "myAppender", maxFileSize: 10000000, file: "/usr/share/tomcat/logs/quoddy.log", threshold: org.apache.log4j.Level.DEBUG
+            rollingFile name: "myAppender", maxFileSize: 10000000, file: "/opt/fogcutter/quoddy/quoddy.log", threshold: org.apache.log4j.Level.DEBUG
             console name: "stdout", threshold: org.apache.log4j.Level.INFO
 	      }
 	
 	root {
-           debug 'stdout', 'myAppender'
+           warn 'stdout', 'myAppender'
          }
 
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
@@ -184,8 +184,10 @@ log4j = {
 
     info   additivity: false
            myAppender: ['grails.controllers.org.fogbeam.quoddy.ActivityStreamController']
-    debug  additivity: false
-           myAppender: ['grails.controllers','grails.services','grails.domain']
+    debug  'grails.controllers',
+    	   'grails.services',
+           'grails.domain'
+
 
     warn  'grails.app'
 }
