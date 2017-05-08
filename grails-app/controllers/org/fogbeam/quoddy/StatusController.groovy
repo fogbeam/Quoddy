@@ -50,7 +50,7 @@ class StatusController {
 			
 			if( enhancementEnabled )
 			{
-				log.trace( "content submitted: ${content}");
+				log.trace( "content submitted: ${params.statusText}");
 				HttpResponseDecorator restResponse = restClient.post(	path:'enhancer',
 											body: params.statusText,
 											requestContentType : TEXT );
