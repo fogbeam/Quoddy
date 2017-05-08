@@ -153,7 +153,16 @@ log4j = {
     //}
 
 	// debug  'org.hibernate'
-		
+	
+	appenders {
+            rollingFile name: "myAppender", maxFileSize: 10000000, file: "/usr/share/tomcat/logs/quoddy.log", threshold: org.apache.log4j.Level.DEBUG
+            console name: "stdout", threshold: org.apache.log4j.Level.INFO
+	      }
+	
+	root {
+           debug 'stdout', 'myAppender'
+         }
+
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
 	       'org.codehaus.groovy.grails.web.pages', //  GSP
 	       'org.codehaus.groovy.grails.web.sitemesh', //  layouts
@@ -163,10 +172,22 @@ log4j = {
 	       'org.codehaus.groovy.grails.plugins', // plugins
 	       'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
 	       'org.springframework',
-               'net.sf.ehcache.hibernate'
+               'net.sf.ehcache.hibernate',
+	       'org.hibernate',
+	       'net.sf.ehcache',
+               'org.jboss',
+               'org.jboss.remoting',
+	       'org.quartz'
 
     warn   'org.mortbay.log',
            'org.hibernate'
+
+    info   additivity: false
+           myAppender: ['grails.controllers.org.fogbeam.quoddy.ActivityStreamController']
+    debug  additivity: false
+           myAppender: ['grails.controllers','grails.services','grails.domain']
+
+    warn  'grails.app'
 }
 
 jms {
