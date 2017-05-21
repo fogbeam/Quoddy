@@ -282,7 +282,15 @@ class ActivityStreamController
 				emailBodyBuffer.append( "---------------------------------------------------------------------------" );
 				String emailBody = emailBodyBuffer.toString();
 				
-				emailService.deliverEmail( toEmail, senderEmail, "Video conference invitation from ${creatingUser.displayName}", emailBody );
+				try 
+				{
+					emailService.deliverEmail( toEmail, senderEmail, "Video conference invitation from ${creatingUser.displayName}", emailBody );
+				}
+				catch( Exception e )
+				{
+				   // TODO: turn this into a notification to the user
+				   e.printStackTrace();
+				}
 				
 			}			
 		}
