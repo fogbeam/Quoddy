@@ -12,6 +12,8 @@ import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ResharedActivityStreamItem
 import org.fogbeam.quoddy.stream.StreamItemBase
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
+
 @Mixin(SidebarPopulatorMixin)
 class ActivityStreamController 
 {
@@ -191,7 +193,8 @@ class ActivityStreamController
 		
 		// prereq... instantiate a RESTClient and generate OM session ID and login
 		// TODO: make this URL a configurable item
-		def client = new RESTClient( 'http://demo2.fogbeam.org:5080/' )
+		String openMeetingsEndpoint = CH.config.urls.openmeetings.endpoint; // "http://demo2.fogbeam.org:5080/"
+		def client = new RESTClient( openMeetingsEndpoint )
 		
 		// call getSession
 		def resp = client.get( path : 'openmeetings/services/UserService/getSession', contentType:XML );
@@ -218,7 +221,7 @@ class ActivityStreamController
 			query:[ SID:sid, name: "Test Room", roomtypes_id: 1, comment: "", numberOfPartizipants:25, ispublic:true, appointment:false, isDemoRoom:false, demoTime:0, isModeratedRoom:false ] );
 		
 		int newRoomID = -1;
-		String roomURL = "http://demo2.fogbeam.org:5080/openmeetings/#room/";
+		String roomURL = "${openMeetingsEndpoint}openmeetings/#room/";
 		
 		if( !( resp.status == 200 )) // HTTP response code; 404 means not found, etc.
 		{
@@ -249,7 +252,7 @@ class ActivityStreamController
 				def hash = resp.data.return;
 				log.debug( "Invitation Hash: $hash" );
 				
-				def inviteUrl = "http://demo2.fogbeam.org:5080/openmeetings/?invitationHash=$hash";
+				def inviteUrl = "${openMeetingsEndpoint}openmeetings/?invitationHash=$hash";
 				
 				log.debug( "URL: $inviteUrl");
 				
