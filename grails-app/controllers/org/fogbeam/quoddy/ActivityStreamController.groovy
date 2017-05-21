@@ -192,8 +192,7 @@ class ActivityStreamController
 		log.debug( "Invoking OpenMeetings integration here...");
 		
 		// prereq... instantiate a RESTClient and generate OM session ID and login
-		// TODO: make this URL a configurable item
-		String openMeetingsEndpoint = CH.config.urls.openmeetings.endpoint; // "http://demo2.fogbeam.org:5080/"
+		String openMeetingsEndpoint = CH.config.urls.openmeetings.endpoint;
 		def client = new RESTClient( openMeetingsEndpoint )
 		
 		// call getSession
@@ -203,8 +202,9 @@ class ActivityStreamController
 
 		// TODO: deal with this username/password properly...
 		// call login using the SID from getSession
-		resp = client.get( path : 'openmeetings/services/UserService/loginUser', contentType:XML, query: [ SID:sid, username:'prhodes',
-																												userpass:'3nothing' ] );
+		String omUsername = CH.credentials.om.username;
+		String omPassword = CH.credentials.om.password;
+		resp = client.get( path : 'openmeetings/services/UserService/loginUser', contentType:XML, query: [ SID:sid, username:omUsername, userpass:omPassword ] );
 		
 		/**
 		 
