@@ -202,8 +202,8 @@ class ActivityStreamController
 
 		// TODO: deal with this username/password properly...
 		// call login using the SID from getSession
-		String omUsername = CH.credentials.om.username;
-		String omPassword = CH.credentials.om.password;
+		String omUsername = CH.config.credentials.om.username;
+		String omPassword = CH.config.credentials.om.password;
 		resp = client.get( path : 'openmeetings/services/UserService/loginUser', contentType:XML, query: [ SID:sid, username:omUsername, userpass:omPassword ] );
 		
 		/**
