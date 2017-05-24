@@ -103,4 +103,22 @@ beans = {
 		tdbDirectory = System.getProperty("quoddy.home") + "/jenastore/triples";
 	}
 	
+	// select the EmailService implementation based on parameter
+	switch( CH.config.emailservice.backend )
+	{
+		case 'direct_smtp':
+			emailService(org.fogbeam.quoddy.email.DirectSmtpEmailService);
+			break;
+		case 'gmail_api':
+			emailService(org.fogbeam.quoddy.email.GMailApiEmailService)
+			break;
+		case 'amazon_ses':
+			emailService(org.fogbeam.quoddy.email.AmazonSesEmailService)
+			break;
+		default:
+			emailService(org.fogbeam.quoddy.email.DirectSmtpEmailService);
+			break;
+	}
+	
+	
 }

@@ -1,4 +1,4 @@
-package org.fogbeam.quoddy
+package org.fogbeam.quoddy.email
 
 import javax.mail.Message
 import javax.mail.Transport
@@ -7,7 +7,7 @@ import javax.mail.internet.MimeMessage
 
 import org.fogbeam.quoddy.profile.ContactAddress
 
-class EmailService
+class DirectSmtpEmailService implements EmailService
 {
 	public void deliverEmail( ContactAddress to, ContactAddress from, String subject, String body )
 	{

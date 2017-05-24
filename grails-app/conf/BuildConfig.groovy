@@ -2,13 +2,16 @@ grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir	= "target/test-reports"
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
+
+// grails.project.dependency.resolver="maven"
+
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits( "global" ) {
         // uncomment to disable ehcache
 		excludes 'slf4j-api', 'slf4j-log4j12', 'jcl-over-slf4j', 'jul-to-slf4j'
     }
-    log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+    log "verbose" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     repositories {        
 	
 	grailsCentral()
@@ -19,12 +22,12 @@ grails.project.dependency.resolution = {
         // from public Maven repositories
         mavenLocal()
         mavenCentral()
-        mavenRepo "http://snapshots.repository.codehaus.org"
-        mavenRepo "http://repository.codehaus.org"
+        // mavenRepo "http://snapshots.repository.codehaus.org"
+        // mavenRepo "http://repository.codehaus.org"
         mavenRepo "http://download.java.net/maven/2/"
         mavenRepo "http://repository.jboss.com/maven2/"
-	mavenRepo "http://maven.restlet.org/"
-	mavenRepo "https://repo.grails.org/grails/plugins"
+		mavenRepo "http://maven.restlet.org/"
+		mavenRepo "https://repo.grails.org/grails/plugins"
     }
     
     dependencies {
@@ -34,9 +37,16 @@ grails.project.dependency.resolution = {
 		compile "org.grails:grails-webflow:$grailsVersion"
 		compile "antlr:antlr:2.7.7"
 		compile "commons-logging:commons-logging:1.1.1"
-
 		compile "org.grails:grails-webflow:$grailsVersion"
-
+		
+		compile 'com.google.api-client:google-api-client:1.22.0'
+		compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
+		compile 'com.google.apis:google-api-services-gmail:v1-rev65-1.22.0'
+		compile 'commons-codec:commons-codec:1.6'
+		compile 'org.apache.httpcomponents:httpclient:4.1.2'
+		compile 'javax.mail:javax.mail-api:1.5.5'
+		compile 'com.sun.mail:javax.mail:1.5.5'
+		
 	}    
    plugins {
 
