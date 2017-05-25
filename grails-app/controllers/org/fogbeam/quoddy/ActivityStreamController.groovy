@@ -52,11 +52,11 @@ class ActivityStreamController
 				userStream = userStreamDefinitionService.getStreamForUser( session.user, UserStreamDefinition.DEFAULT_STREAM  );	
 			}
 			
-			log.debug( "checking queueSize for user: ${session.user.userId}" );
+			// log.trace( "checking queueSize for user: ${session.user.userId}" );
 			queueSize = eventQueueService.getQueueSizeForUser( session.user.userId, userStream );
 		}
 		
-		log.trace( "got queueSize as ${queueSize}" ); 
+		// log.trace( "got queueSize as ${queueSize}" ); 
 		
 		render( queueSize );
 	}
@@ -189,7 +189,7 @@ class ActivityStreamController
 		 * room ID to the caller so we can put our current user into the conference 
 		 */
 		
-		log.debug( "Invoking OpenMeetings integration here...");
+		log.info( "Invoking OpenMeetings integration here...");
 		
 		// prereq... instantiate a RESTClient and generate OM session ID and login
 		String openMeetingsEndpoint = CH.config.urls.openmeetings.endpoint;
@@ -198,7 +198,7 @@ class ActivityStreamController
 		// call getSession
 		def resp = client.get( path : 'openmeetings/services/UserService/getSession', contentType:XML );
 		String sid = resp.data.return.session_id;
-		log.debug( "sessionId: $sid");
+		log.info( "sessionId: $sid");
 
 		// TODO: deal with this username/password properly...
 		// call login using the SID from getSession
@@ -230,7 +230,7 @@ class ActivityStreamController
 		else
 		{
 			String strNewRoomID = resp.data.return;
-			log.debug( "newRoomID: $strNewRoomID");
+			log.info( "newRoomID: $strNewRoomID");
 			newRoomID = Integer.parseInt( strNewRoomID );
 			roomURL = roomURL + newRoomID;
 			 
@@ -250,11 +250,11 @@ class ActivityStreamController
 			{
 				
 				def hash = resp.data.return;
-				log.debug( "Invitation Hash: $hash" );
+				log.info( "Invitation Hash: $hash" );
 				
 				def inviteUrl = "${openMeetingsEndpoint}openmeetings/?invitationHash=$hash";
 				
-				log.debug( "URL: $inviteUrl");
+				log.info( "URL: $inviteUrl");
 				
 				// After creating has, and then what... ???  email the hashes to the usesr?  IM them?  Post to their Quoddy
 				// stream? What??  Should the incoming request tell us which contact mechanism to use?  
@@ -284,12 +284,15 @@ class ActivityStreamController
 				
 				try 
 				{
+					log.info( "about to send invitation email!")
+
 					emailService.deliverEmail( toEmail, senderEmail, "Video conference invitation from ${creatingUser.displayName}", emailBody );
 				}
 				catch( Exception e )
 				{
 				   // TODO: turn this into a notification to the user
 				   e.printStackTrace();
+				   log.error( "Error sending invitation email", e );
 				}
 				
 			}			
@@ -298,6 +301,7 @@ class ActivityStreamController
 		// return the generated room number to the user who created the room so the client-side
 		// code can put the user in the conference
 		// render( );	
+		log.info( "calling render()" );
 		render(contentType: 'text/json') {[
 			newRoomID: newRoomID, 
 			roomURL:roomURL

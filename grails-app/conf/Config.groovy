@@ -108,7 +108,7 @@ grails.json.legacy.builder=false
 // enabled native2ascii conversion of i18n properties files
 grails.enable.native2ascii = true
 // whether to install the java.util.logging bridge for sl4j. Disable fo AppEngine!
-grails.logging.jul.usebridge = true
+grails.logging.jul.usebridge = false
 // packages to include in Spring bean scanning
 grails.spring.bean.packages = []
 
@@ -156,11 +156,11 @@ log4j = {
 	
 	appenders {
             rollingFile name: "myAppender", maxFileSize: 10000000, file: "/opt/fogcutter/quoddy/quoddy.log", threshold: org.apache.log4j.Level.DEBUG
-            console name: "stdout", threshold: org.apache.log4j.Level.INFO
+            console name: "stdout", threshold: org.apache.log4j.Level.DEBUG
 	      }
 	
 	root {
-           warn 'stdout', 'myAppender'
+           info 'stdout', 'myAppender'
          }
 
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
@@ -182,14 +182,10 @@ log4j = {
     warn   'org.mortbay.log',
            'org.hibernate'
 
-    info   additivity: false
-           myAppender: ['grails.controllers.org.fogbeam.quoddy.ActivityStreamController']
     debug  'grails.controllers',
     	   'grails.services',
            'grails.domain'
 
-
-    warn  'grails.app'
 }
 
 jms {

@@ -82,17 +82,22 @@ class GMailApiEmailService implements EmailService {
 	public void deliverEmail( final ContactAddress to, final ContactAddress from, final String subject, final String body)
 	{
 		
+		println "in deliverEmail() call";
+
 		// Build a new authorized API client service.
 		Gmail service = getGmailService();
-
-		UUID uuid = UUID.randomUUID();
+		println "got Gmail service"
 		
+		UUID uuid = UUID.randomUUID();
+		println "got UUID: " + uuid.toString()		
+
 		MimeMessage msg = createEmail( to.getAddress(), from.getAddress(), subject + ": "  + uuid.toString(), body );
 		
+		println "created MimeMessage instance"
 		Message message = createMessageWithEmail( msg );
-		
+		println "created Message instance"
 		service.users().messages().send("me", message).execute();
-		
+		println "sent message"
 		
 	}
 	
