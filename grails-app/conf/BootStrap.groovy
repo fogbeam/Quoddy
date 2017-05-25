@@ -6,6 +6,7 @@ import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.stream.EventType
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.constants.EventTypes
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
 
 class BootStrap {
 
@@ -22,8 +23,15 @@ class BootStrap {
 		 switch( Environment.current  )
 	     {
 	         case Environment.DEVELOPMENT:
-			 	 createRoles();
-	             createSomeUsers();
+			 	 
+
+				println "quoddy.hostName: ${CH.config.quoddy.hostName}"
+				println "fooHost: ${CH.config.fooHost}"
+
+
+
+                                 createRoles();
+	                         createSomeUsers();
 				 createShareTargets();
 				 createEventTypes();
 	             break;

@@ -1,3 +1,18 @@
+05-21-2017:
+
+Externalize the configuration for the openmeetings login username and password
+
+Create an EmailService implementation that uses Amazon SES instead of a direct SMTP
+connection. That will be better for demo use, given how quirky Google's SMTP servers
+are.
+
+Create a way to turn certain internal errors into user notifications.  That is, things
+they would want to know, but that don't otherwise prevent the current operation from 
+continuing (failing to send an email for example)
+
+OLDER:
+
+
 make sure the "pending messages" count is right... it's kinda dodgy right now
  (basically this means we need to refresh it immediately when that link is clicked)
 

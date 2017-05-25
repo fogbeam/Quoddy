@@ -27,36 +27,6 @@
 			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="BuildConfig.groovy|*DataSource.groovy|UrlMappings.groovy|Config.groovy|BootStrap.groovy|spring/resources.groovy" kind="src" path=".link_to_grails_plugins/jaxrs-0.8/grails-app/conf">
-		<attributes>
-			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.8/grails-app/controllers">
-		<attributes>
-			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.8/grails-app/i18n">
-		<attributes>
-			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.8/grails-app/resources">
-		<attributes>
-			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.8/src/groovy">
-		<attributes>
-			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path=".link_to_grails_plugins/jaxrs-0.8/src/java">
-		<attributes>
-			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="src" path=".link_to_grails_plugins/jms-1.2/grails-app/services">
 		<attributes>
 			<attribute name="org.grails.ide.eclipse.core.SOURCE_FOLDER" value="true"/>
