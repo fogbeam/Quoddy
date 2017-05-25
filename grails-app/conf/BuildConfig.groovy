@@ -11,7 +11,7 @@ grails.project.dependency.resolution = {
         // uncomment to disable ehcache
 		excludes 'slf4j-api', 'slf4j-log4j12', 'jcl-over-slf4j', 'jul-to-slf4j'
     }
-    log "verbose" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+    log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     repositories {        
 	
 	grailsCentral()
