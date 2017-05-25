@@ -182,6 +182,12 @@ log4j = {
     warn   'org.mortbay.log',
            'org.hibernate'
 
+// <<<<<<< Updated upstream
+// =======
+//    info   additivity: false
+//           myAppender: ['grails.controllers.org.fogbeam.quoddy.ActivityStreamController']
+//	   
+// >>>>>>> Stashed changes
     debug  'grails.controllers',
     	   'grails.services',
            'grails.domain'

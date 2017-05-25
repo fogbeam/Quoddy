@@ -7,7 +7,7 @@ dataSource {
 	username = "postgres"
 	password = "database"
 	// password = ""
-	logSql=true
+	logSql=false
 }
 hibernate {
     cache.use_second_level_cache=true
@@ -19,12 +19,12 @@ environments {
 	development {
 		dataSource {
 
-			dbCreate = "create-drop" // one of 'create', 'create-drop','update'
+			dbCreate = "update" // one of 'create', 'create-drop','update'
 						//create-drop to drop/rebuild all tables
 						//update to persist data
 			// url = "jdbc:postgresql:quoddy2";
 			// url = "jdbc:postgresql:quoddy_prhodes";
-			url = "jdbc:postgresql:quoddy_dev";
+			url = "jdbc:postgresql:quoddy";
 		}
 	}
 	test {

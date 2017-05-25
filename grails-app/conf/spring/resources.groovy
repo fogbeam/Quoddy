@@ -95,7 +95,7 @@ beans = {
 	jmsConnectionFactory(org.springframework.jndi.JndiObjectFactoryBean) {
 		jndiName="ConnectionFactory"
 		jndiEnvironment=["java.naming.factory.initial":"org.jnp.interfaces.NamingContextFactory",
-"java.naming.provider.url":"ip-10-0-0-61.ec2.internal:1099"]
+"java.naming.provider.url":"localhost:1099"]
 		}
 	
 	jenaTemplate( org.fogbeam.quoddy.spring.factorybean.JenaTemplateFactoryBean)
@@ -108,18 +108,22 @@ beans = {
 	{
 		case 'direct_smtp':
 		        println "direct_smtp"
+			log.info( "direct_smtp")
 			emailService(org.fogbeam.quoddy.email.DirectSmtpEmailService);
 			break;
 		case 'gmail_api':
 		        println "gmail_api"
+			log.info( "gmail_api")
 			emailService(org.fogbeam.quoddy.email.GMailApiEmailService)
 			break;
 		case 'amazon_ses':
 		        println "amazon_ses"
+			log.info( "amazon_ses")
 			emailService(org.fogbeam.quoddy.email.AmazonSesEmailService)
 			break;
 		default:
                         println "default (direct_smtp)"
+			log.info( "default (direct_smtp)" );
 			emailService(org.fogbeam.quoddy.email.DirectSmtpEmailService);
 			break;
 	}

@@ -11,14 +11,13 @@
         <wb-resource deploy-path="/" source-path="/grails-app/domain"/>
         <wb-resource deploy-path="/" source-path="/grails-app/services"/>
         <wb-resource deploy-path="/" source-path="/grails-app/ldap"/>
+        <wb-resource deploy-path="/" source-path="/grails-app/resources"/>
+        <wb-resource deploy-path="/" source-path="/grails-app/providers"/>
+        <wb-resource deploy-path="/" source-path="/grails-app/jobs"/>
+        <wb-resource deploy-path="/" source-path="/grails-app/listeners"/>
+        <wb-resource deploy-path="/" source-path="/grails-app/realms"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/code-coverage-1.2/grails-app/i18n"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/hibernate-2.2.3/grails-app/i18n"/>
-        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/grails-app/conf"/>
-        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/grails-app/controllers"/>
-        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/grails-app/i18n"/>
-        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/grails-app/resources"/>
-        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/src/groovy"/>
-        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/src/java"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jms-1.2/grails-app/services"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jms-1.2/grails-app/utils"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jms-1.2/src/groovy"/>
@@ -43,10 +42,12 @@
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/shiro-1.1.4/grails-app/taglib"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/shiro-1.1.4/src/groovy"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/shiro-1.1.4/src/java"/>
-        <wb-resource deploy-path="/" source-path="/grails-app/jobs"/>
-        <wb-resource deploy-path="/" source-path="/grails-app/resources"/>
-        <wb-resource deploy-path="/" source-path="/grails-app/providers"/>
-        <wb-resource deploy-path="/" source-path="/grails-app/listeners"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/grails-app/conf"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/grails-app/controllers"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/grails-app/i18n"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/grails-app/resources"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/src/groovy"/>
+        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/src/java"/>
 
     </wb-module>
 </project-modules>

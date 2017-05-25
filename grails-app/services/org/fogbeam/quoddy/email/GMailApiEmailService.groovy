@@ -1,5 +1,7 @@
 package org.fogbeam.quoddy.email
 
+import org.apache.log4j.Logger;
+
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
 
 import java.io.ByteArrayOutputStream;
@@ -33,8 +35,9 @@ import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.Message;
 
+import org.springframework.beans.factory.InitializingBean;
 
-class GMailApiEmailService implements EmailService {
+class GMailApiEmailService implements EmailService, InitializingBean {
 
 	/** Application name. */
 	private static final String APPLICATION_NAME = "Gmail API Java Quickstart";
@@ -64,16 +67,21 @@ class GMailApiEmailService implements EmailService {
 			GmailScopes.GMAIL_LABELS, GmailScopes.GMAIL_COMPOSE,
 			GmailScopes.GMAIL_SEND, GmailScopes.GMAIL_INSERT);
 
-	
-	static 
+
+	private static final Logger log = Logger.getLogger( GMailApiEmailService.class);
+
+	public	void afterPropertiesSet()
 	{
+		log.info( "GMailApiEmailService.afterPropertiesSet()");
+		
 		try 
 		{
 			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
 			DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
 		} catch (Throwable t) {
+		  	println "Exception in initializer for GMailApiEmailService"
+			log.error( "Exception in initializer for GMailApiEmailService", t);
 			t.printStackTrace();
-			System.exit(1);
 		}
 	}
 		
