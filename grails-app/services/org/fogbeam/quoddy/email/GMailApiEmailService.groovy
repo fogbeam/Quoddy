@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,6 +26,7 @@ import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInsta
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -39,16 +41,10 @@ import org.springframework.beans.factory.InitializingBean;
 
 class GMailApiEmailService implements EmailService, InitializingBean {
 
+	private static final Logger log = Logger.getLogger( GMailApiEmailService.class);
+	
 	/** Application name. */
 	private static final String APPLICATION_NAME = "Gmail API Java Quickstart";
-	
-	/** Directory to store user credentials for this application. */
-	private static final java.io.File DATA_STORE_DIR = new java.io.File(
-			System.getProperty("user.home"),
-			".credentials/gmail-java-quickstart");
-	
-	/** Global instance of the {@link FileDataStoreFactory}. */
-	private static FileDataStoreFactory DATA_STORE_FACTORY;
 
 	/** Global instance of the JSON factory. */
 	private static final JsonFactory JSON_FACTORY = JacksonFactory
@@ -56,31 +52,23 @@ class GMailApiEmailService implements EmailService, InitializingBean {
 
 	/** Global instance of the HTTP transport. */
 	private static HttpTransport HTTP_TRANSPORT;
-	
+
 	/**
 	 * Global instance of the scopes required by this quickstart.
-	 *
+	 * 
 	 * If modifying these scopes, delete your previously saved credentials at
 	 * ~/.credentials/gmail-java-quickstart
 	 */
-	private static final List<String> SCOPES = Arrays.asList(
-			GmailScopes.GMAIL_LABELS, GmailScopes.GMAIL_COMPOSE,
-			GmailScopes.GMAIL_SEND, GmailScopes.GMAIL_INSERT);
+	private static final List<String> SCOPES = Arrays.asList( GmailScopes.GMAIL_COMPOSE );
 
-
-	private static final Logger log = Logger.getLogger( GMailApiEmailService.class);
 
 	public	void afterPropertiesSet()
 	{
 		log.info( "GMailApiEmailService.afterPropertiesSet()");
 		
-		try 
-		{
+		try {
 			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-			DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
 		} catch (Throwable t) {
-		  	println "Exception in initializer for GMailApiEmailService"
-			log.error( "Exception in initializer for GMailApiEmailService", t);
 			t.printStackTrace();
 		}
 	}
@@ -116,22 +104,19 @@ class GMailApiEmailService implements EmailService, InitializingBean {
 	 * @return an authorized Credential object.
 	 * @throws IOException
 	 */
-	public static Credential authorize() throws IOException {
-		// Load client secrets.
-		InputStream inStream = new FileInputStream( CH.config.service.email.google.secretdir + "/client_secret.json" );
-		
-		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load( JSON_FACTORY, new InputStreamReader(inStream));
+	public static Credential authorize() throws Exception {
 
-		// Build flow and trigger user authorization request.
-		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-				HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-				.setDataStoreFactory(DATA_STORE_FACTORY)
-				.setAccessType("offline").build();
-		Credential credential = new AuthorizationCodeInstalledApp(flow,
-				new LocalServerReceiver()).authorize("user");
-		System.out.println("Credentials saved to "
-				+ DATA_STORE_DIR.getAbsolutePath());
+		GoogleCredential credential = new GoogleCredential.Builder()
+		.setTransport(HTTP_TRANSPORT)
+		.setJsonFactory(JSON_FACTORY)
+		.setServiceAccountId( CH.config.gmailapi.serviceaccount.accountId ) /*  */
+		.setServiceAccountPrivateKeyFromP12File(new File( CH.config.gmailapi.serviceaccount.privateKey ))
+		.setServiceAccountScopes(SCOPES)
+		.setServiceAccountUser( CH.config.gmailapi.serviceaccount.user )
+		.build();
+
 		return credential;
+
 	}
 
 	/**
@@ -171,13 +156,4 @@ class GMailApiEmailService implements EmailService, InitializingBean {
 		message.setRaw(encodedEmail);
 		return message;
 	}
-	
-	
-	
-	
-	
-
-
-	
-
 }
