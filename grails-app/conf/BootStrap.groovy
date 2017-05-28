@@ -31,14 +31,14 @@ class BootStrap {
 
 
                                  createRoles();
-	                         createSomeUsers();
+	                         // createSomeUsers();
 				 createShareTargets();
 				 createEventTypes();
 	             break;
 	         case Environment.PRODUCTION:
 	             println "No special configuration required";
 				 createRoles();
-				 createSomeUsers();
+				 // createSomeUsers();
 				 createShareTargets();
 				 createEventTypes();
 				 break;

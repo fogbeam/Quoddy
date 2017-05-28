@@ -86,6 +86,11 @@ class UserService {
 			user.profile = new Profile();	
 		}
 		
+		if( user.dateCreated == null )
+		{
+			user.dateCreated = new Date();
+		}
+		
 		if( user.save() )
 		{
 			log.debug( "Saving User object.");
