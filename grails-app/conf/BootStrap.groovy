@@ -339,6 +339,7 @@ class BootStrap {
 								displayName: "Test User${i}" );
 				  
 					testUser.password = "secret";
+					testUser.uuid = "test_user_${i}";
 					Profile profile = new Profile();
 					// profile.userUuid = testUser.uuid;
 					profile.setOwner( testUser );
