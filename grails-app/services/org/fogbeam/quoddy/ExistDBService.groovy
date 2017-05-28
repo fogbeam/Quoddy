@@ -55,7 +55,7 @@ class ExistDBService
 		
 		if( col == null ) 
 		{
-			log.error( "ERROR: could not locate collection: ${URI + collection}");
+			log.error( "ERROR: could not locate collection: ${existDbUri + collection}");
 			return event;
 		}
 		
