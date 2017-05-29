@@ -172,7 +172,24 @@ class BootStrap {
      void createSystemUser()
      {
 
-            User ghostUser = userService.findUserByUserId( "SYS_ghost_user" );
+
+                 AccountRole userRole = userService.findAccountRoleByName( "user" );
+
+                 if( userRole == null )
+                 {
+                         println "did not locate user role!";
+                 }
+
+
+                 AccountRole adminRole = userService.findAccountRoleByName( "admin" );
+                 if( adminRole == null )
+                 {
+                         println "did not locate admin role!";
+                 }
+
+
+
+                 User ghostUser = userService.findUserByUserId( "SYS_ghost_user" );
 			
 			if( ghostUser != null )
 			{
