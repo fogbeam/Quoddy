@@ -11,4 +11,9 @@ public class RssFeedSubscription extends BaseSubscription implements Serializabl
 	}
 	
 	String url;
+	
+	
+	boolean internal;
+	boolean cacheContent;
+	
 }
