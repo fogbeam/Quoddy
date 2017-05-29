@@ -32,6 +32,7 @@ class BootStrap {
 
                                  createRoles();
 	                         // createSomeUsers();
+				 createSystemUser();
 				 createShareTargets();
 				 createEventTypes();
 	             break;
@@ -39,6 +40,7 @@ class BootStrap {
 	             println "No special configuration required";
 				 createRoles();
 				 // createSomeUsers();
+				 createSystemUser();
 				 createShareTargets();
 				 createEventTypes();
 				 break;
@@ -166,7 +168,45 @@ class BootStrap {
 		 
 		 
 	 }
-	 
+
+     void createSystemUser()
+     {
+
+            User ghostUser = userService.findUserByUserId( "SYS_ghost_user" );
+			
+			if( ghostUser != null )
+			{
+				  println "Found existing SYS_ghost_user!";
+		
+			}
+			else
+			{
+				  println "Could not find SYS_ghost_user";
+				  println "Creating new SYS_ghost_user user";
+				  ghostUser = new User();
+				  ghostUser.uuid = "abc126";
+				  ghostUser.displayName = "Ghost User";
+				  ghostUser.firstName = "System";
+				  ghostUser.lastName = "Ghost User";
+				  ghostUser.email = "SYS_ghost_user@example.com";
+				  ghostUser.userId = "SYS_ghost_user";
+				  ghostUser.password = "secret";
+				  ghostUser.bio = "bio";
+				  
+				  Profile profileGhost = new Profile();
+				  
+				  profileGhost.setOwner( ghostUser );
+				  ghostUser.profile = profileGhost;
+				  
+				  ghostUser.addToRoles( userRole );
+				  ghostUser.addToRoles( adminRole );
+	
+				  userService.createUser( ghostUser );
+				 
+			}
+
+    }
+
      void createSomeUsers()
      {
 		 println "Creating some users!";
