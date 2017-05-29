@@ -40,6 +40,7 @@ class FOAFPersonCollectionResource {
 	def userService;
 
 
+	
 	@GET
 	Response readAll() {
 
@@ -71,7 +72,7 @@ class FOAFPersonCollectionResource {
 	@Produces( "text/plain")
 	Response addUser( String input )
 	{
-		// System.out.println( "input to addUser: " + input );
+		log.info( "input to addUser: " + input );
 
 		Model model = null;
 
@@ -194,7 +195,7 @@ class FOAFPersonCollectionResource {
 	@Produces( "text/plain")
 	Response updateUser( String input )
 	{
-		// System.out.println( "input to addUser: " + input );
+		log.info( "input to addUser: " + input );
 
 		Model model = null;
 
@@ -219,7 +220,7 @@ class FOAFPersonCollectionResource {
 				String identifier = foafPerson.getProperty(DCTerms.identifier).getString();
 
 				identifier = identifier.split("\\:")[1];
-				// println "identifier: " + identifier;
+				log.info( "identifier: " + identifier);
 
 				// lookup this user by their identifier and then update the record with the input data
 				Resource email = foafPerson.getPropertyResourceValue(hasEmailProperty);
