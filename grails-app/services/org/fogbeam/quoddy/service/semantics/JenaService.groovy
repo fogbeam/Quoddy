@@ -1,5 +1,9 @@
 package org.fogbeam.quoddy.service.semantics
 
+import org.fogbeam.quoddy.User
+import org.fogbeam.quoddy.semantics.Entity
+import org.fogbeam.quoddy.semantics.Property as SemanticProperty
+
 import com.hp.hpl.jena.ontology.OntClass
 import com.hp.hpl.jena.ontology.OntModel
 import com.hp.hpl.jena.ontology.OntModelSpec
@@ -23,15 +27,50 @@ import com.hp.hpl.jena.rdf.model.Statement
 import com.hp.hpl.jena.rdf.model.StmtIterator
 import com.hp.hpl.jena.reasoner.Reasoner
 import com.hp.hpl.jena.reasoner.ReasonerRegistry
-
-import org.fogbeam.quoddy.semantics.Entity;
-import org.fogbeam.quoddy.semantics.Property as SemanticProperty;
 /* import org.fogbeam.quoddy.semantics.Property as SemanticProperty */
 
 class JenaService 
 {
 
 	def jenaTemplate;
+
+	
+	def addUserAnnotation( final User user, final String annotationPredicate, final String annotationObjectQN ) 
+	{
+		// add a semantic annotation about a User here... 
+		Dataset dataset = jenaTemplate.getDataset();
+		dataset.begin(ReadWrite.WRITE);
+		
+		try
+		{
+			// Get model inside the transaction
+			Model model = dataset.getDefaultModel() ;
+		
+			Resource newResource = model.createResource( "quoddy:${user.uuid}" );
+		
+			Resource object = model.createResource( annotationObjectQN );
+			
+			Property property = model.createProperty( annotationPredicate );
+
+			Statement s = model.createStatement(newResource, property, object);
+			model.add( s );
+			
+			dataset.commit();
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+			dataset.abort();
+		}
+		finally
+		{
+			dataset.end();
+	
+		}
+			
+		log.debug( "done adding annotation");
+	}
+	
 	
 	List<Statement> listAllStatements()
 	{

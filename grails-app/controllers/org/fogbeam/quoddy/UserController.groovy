@@ -33,6 +33,7 @@ class UserController {
 	def userService;
 	def profileService;
 	def searchService;
+	def jenaService;
 	def scaffold = false;
 
 	def eventStreamService;
@@ -1499,6 +1500,8 @@ class UserController {
 	}	
 
 	
+	// TODO: refactor this to put the logic in the jenaService and make a reusable service we can
+	// use from multiple places...
 	def addAnnotation =
 	{
 		log.debug( "addAnnotation" );
@@ -1519,50 +1522,8 @@ class UserController {
 		
 		String annotationObjectQN = params.annotationObjectQN;
 		log.debug( "annotationObjectQN: ${annotationObjectQN}");
-		
-		// Make a TDB-backed dataset
-		String quoddyHome = System.getProperty( "quoddy.home" );
-		String directory = "${quoddyHome}/jenastore/triples" ;
-		log.debug( "Opening TDB triplestore at: ${directory}" );
-		Dataset dataset = TDBFactory.createDataset(directory) ;
-		
-		dataset.begin(ReadWrite.WRITE);
-		
-		try
-		{
-			// Get model inside the transaction
-			Model model = dataset.getDefaultModel() ;
-		
-			Resource newResource = model.createResource( "quoddy:${user.uuid}" );
-		
-			Resource object = model.createResource( annotationObjectQN );
-			// model.add( object );
-		
-			Property property = model.createProperty( annotationPredicate );
-		
-			// model.add( property );
-			
-			// newResource.addProperty( property, object );
-			
-			// model.add( newResource );
 
-			Statement s = model.createStatement(newResource, property, object);
-			model.add( s );
-			
-			dataset.commit();
-		}
-		catch( Exception e )
-		{
-			e.printStackTrace();
-			dataset.abort();
-		}
-		finally
-		{
-			dataset.end();
-	
-		}
-			
-		log.debug( "done adding annotation");
+		jenaService.addUserAnnotation( user, annotationPredicate, annotationObjectQN)		
 		
 		render( "OK" );
 	}
