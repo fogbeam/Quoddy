@@ -26,6 +26,13 @@ import com.sun.syndication.io.SyndFeedInput
 import com.sun.syndication.io.XmlReader
 
 
+
+// TODO: run the content through the Stanbol semantic enhancement and save triples with the DCTERM:references
+// property between the content (as a link) and the entities it references.  Note: if the content is from
+// "outside" we probably want to cache it, since the link could die at some arbitrary time.  Otherwise, we
+// can just point to the original link. 
+
+
 class UpdateRssFeedSubscriptionsJob 
 {
 	
