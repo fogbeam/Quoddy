@@ -24,16 +24,23 @@ class UserAnnotationResource
 	@Produces(['text/plain'])
 	public Response addUserAnnotation( String inputData )
 	{
-		
+		println "inputData: \n ${inputData}";
+		log.info( "inputData:\n ${inputData}");
+
 		JsonSlurper jsonSlurper = new JsonSlurper();
 		def jsonObject = jsonSlurper.parseText(inputData);
 		
 		if( jsonObject instanceof Map )
 		{
+			println "single object found";
+			log.info( "single object found" );
 			insertSingleAnnotation( jsonObject );
 		}
 		else if( jsonObject instanceof List )
 		{
+			println "list found";
+			log.info( "list found");
+
 			for( Object singleAnnotation : jsonObject ) 
 			{
 				insertSingleAnnotation( singleAnnotation );
@@ -45,7 +52,9 @@ class UserAnnotationResource
 	
 	private void insertSingleAnnotation( def jsonObject )
 	{
-		
+		println "inserting annotation: ${jsonObject}";
+		log.info( "inserting annotation: ${jsonObject}");
+
 		String userId = jsonObject.userId;
 		String annotationPredicate = jsonObject.annotationPredicate;
 		String annotationObjectQN = jsonObject.annotationObjectQN;
