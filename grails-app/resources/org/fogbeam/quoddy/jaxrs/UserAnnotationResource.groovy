@@ -1,18 +1,40 @@
 package org.fogbeam.quoddy.jaxrs
 
+import groovy.json.JsonSlurper
+
 import javax.ws.rs.Consumes
+import javax.ws.rs.PUT
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
+import javax.ws.rs.core.Response
+
+import org.fogbeam.quoddy.User
 
 @Path('/api/user/annotation')
-@Consumes(['application/xml','application/json'])
-@Produces(['application/rdf+xml','application/xml', 'text/xml'])
 class UserAnnotationResource 
 {
+	
 	def jenaService;
+	def userService;
 	
-	// TODO: implement the PUT (create new) method for a UserAnnotation 
-	
-	
-	
+	@PUT
+	@Consumes(['application/json'])
+	@Produces(['text/xml'])
+	public Response addUserAnnotation( String inputData )
+	{
+		
+		JsonSlurper jsonSlurper = new JsonSlurper();
+		def jsonObject = jsonSlurper.parseText(inputData);
+		
+		String userId = jsonObject.userId;
+		String annotationPredicate = jsonObject.annotationPredicate;
+		String annotationObjectQN = jsonObject.annotationObjectQN;
+		
+		User user = userService.findUserByUserId( userId );
+		
+		// [quoddy:test_user_1, http://schema.fogbeam.com/people#hasExpertise, http://customers.fogbeam.com#Acme_Widgets]
+		jenaService.addUserAnnotation( user, annotationPredicate, annotationObjectQN );
+		
+		ok( "OK" );
+	}	
 }
