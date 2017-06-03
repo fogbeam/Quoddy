@@ -21,22 +21,40 @@ class UserAnnotationResource
 	
 	@PUT
 	@Consumes(['application/json'])
-	@Produces(['text/xml'])
+	@Produces(['text/plain'])
 	public Response addUserAnnotation( String inputData )
 	{
 		
 		JsonSlurper jsonSlurper = new JsonSlurper();
 		def jsonObject = jsonSlurper.parseText(inputData);
 		
+		if( jsonObject instanceof Map )
+		{
+			insertSingleAnnotation( jsonObject );
+		}
+		else if( jsonObject instanceof List )
+		{
+			for( Object singleAnnotation : jsonObject ) 
+			{
+				insertSingleAnnotation( singleAnnotation );
+			}
+		}
+		
+		ok( "OK" );
+	}
+	
+	private void insertSingleAnnotation( def jsonObject )
+	{
+		
 		String userId = jsonObject.userId;
 		String annotationPredicate = jsonObject.annotationPredicate;
 		String annotationObjectQN = jsonObject.annotationObjectQN;
-		
+	
 		User user = userService.findUserByUserId( userId );
-		
+	
 		// [quoddy:test_user_1, http://schema.fogbeam.com/people#hasExpertise, http://customers.fogbeam.com#Acme_Widgets]
 		jenaService.addUserAnnotation( user, annotationPredicate, annotationObjectQN );
 		
-		ok( "OK" );
-	}	
+	}
+		
 }
