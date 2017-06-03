@@ -1,5 +1,7 @@
 package org.fogbeam.quoddy.jaxrs
 
+
+import static org.grails.jaxrs.response.Responses.*
 import groovy.json.JsonSlurper
 
 import javax.ws.rs.Consumes
