@@ -1,0 +1,8 @@
+{	
+	"subscriptionName":"UserTasks",
+	"subscriptionDescription":"User Tasks for Admin group",
+	"activitiServer":"http://107.20.101.77:8040/activiti-rest/service/",
+	"candidateGroup":"admin",
+	"assignee":"",
+	"userId":"prhodes"
+}
