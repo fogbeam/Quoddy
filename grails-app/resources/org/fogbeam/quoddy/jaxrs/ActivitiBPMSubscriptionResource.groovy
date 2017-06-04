@@ -15,6 +15,7 @@ class ActivitiBPMSubscriptionResource {
 
 
 	def activitiUserTaskSubscriptionService;
+	def userService;
 	
 	
 	@POST
