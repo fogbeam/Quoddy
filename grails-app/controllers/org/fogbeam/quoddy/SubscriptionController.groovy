@@ -313,11 +313,8 @@ class SubscriptionController
 
 				ActivitiUserTaskSubscription subscriptionToCreate = flow.subscriptionToCreate;
 				
-				if( !subscriptionToCreate.save() )
-				{
-					log.debug( "Saving ActivitiUserTaskSubscription FAILED");
-					subscriptionToCreate.errors.allErrors.each { log.debug(it) };
-				}
+				// save this new subscription using the activitiSubscriptionService
+				activitiUserTaskSubscriptionService.saveSubscription( subscriptionToCreate );
 				
 			}
 			on("success").to("exitWizard");

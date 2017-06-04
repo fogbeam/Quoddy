@@ -1,5 +1,6 @@
-package org.fogbeam.quoddy
+package org.fogbeam.quoddy.bpm
 
+import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.subscription.ActivitiUserTaskSubscription
 
