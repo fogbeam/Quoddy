@@ -14,13 +14,11 @@ class ActivitiUserTaskSubscriptionService
 	public ActivitiUserTaskSubscription saveSubscription( final ActivitiUserTaskSubscription subscription )
 	{
 
-		if( !subscription.save() )
+		if( !subscription.save(flush:true) )
 		{
 			log.error( "Error saving ActivitiUserTaskSubscription");
 			subscription.errors.allErrors.each { log.warn(it); } 	
 		}
-		
-		subscription.refresh();
 		
 		
 		return subscription;
