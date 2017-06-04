@@ -13,7 +13,18 @@ class ActivitiUserTaskSubscriptionService
 	
 	public ActivitiUserTaskSubscription saveSubscription( final ActivitiUserTaskSubscription subscription )
 	{
-		throw new RuntimeException( "not implemented yet...");
+
+		if( !subscription.save() )
+		{
+			log.error( "Error saving ActivitiUserTaskSubscription");
+			subscription.errors.allErrors.each { log.warn(it); } 	
+		}
+		
+		subscription.refresh();
+		
+		
+		return subscription;
+		
 	}
 	
 	public List<ActivitiUserTaskSubscription> getAllSubscriptionsForUser( final User user )
