@@ -13,7 +13,14 @@ class CalendarFeedSubscriptionService
 	
 	public CalendarFeedSubscription saveSubscription( final CalendarFeedSubscription subscription )
 	{
-		throw new RuntimeException( "not implemented yet...");
+		if( !subscription.save() )
+		{
+			log.error( "Saving CalendarFeedSubscription FAILED");
+			subscription.errors.allErrors.each { log.warn( it ) };
+		}
+		
+		
+		return subscription;
 	}
 	
 	public List<CalendarFeedSubscription> getAllSubscriptionsForUser( final User user )

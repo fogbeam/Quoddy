@@ -313,11 +313,8 @@ class SubscriptionController
 
 				ActivitiUserTaskSubscription subscriptionToCreate = flow.subscriptionToCreate;
 				
-				if( !subscriptionToCreate.save() )
-				{
-					log.debug( "Saving ActivitiUserTaskSubscription FAILED");
-					subscriptionToCreate.errors.allErrors.each { log.debug(it) };
-				}
+				// save this new subscription using the activitiSubscriptionService
+				activitiUserTaskSubscriptionService.saveSubscription( subscriptionToCreate );
 				
 			}
 			on("success").to("exitWizard");
@@ -345,13 +342,9 @@ class SubscriptionController
 				log.debug( "create using params: ${params}");
 
 				CalendarFeedSubscription calendarFeedToCreate = flow.calendarFeedToCreate;
-				
-				if( !calendarFeedToCreate.save() )
-				{
-					log.error( "Saving CalendarFeedSubscription FAILED");
-					calendarFeedToCreate.errors.allErrors.each { log.debug( it ) };
-				}
-				
+
+				calendarFeedSubscriptionService.saveSubscription( calendarFeedToCreate);
+					
 			}
 			on("success").to("exitWizard");
 	   }
@@ -378,12 +371,7 @@ class SubscriptionController
 
 			   RssFeedSubscription subscriptionToCreate = flow.subscriptionToCreate;
 			   
-			   if( !subscriptionToCreate.save() )
-			   {
-				   log.error( "Saving RssFeedSubscription FAILED");
-				   subscriptionToCreate.errors.allErrors.each { log.debug( it ) };
-			   }
-			   
+		   	   rssFeedSubscriptionService.saveSubscription(subscriptionToCreate);
 		   }
 		   on("success").to("exitWizard");
 		   

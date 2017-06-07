@@ -1,0 +1,5 @@
+{
+	"userId": "prhodes",
+	"annotationPredicate": "http://schema.fogbeam.com/people#hasExpertise",
+	"annotationObjectQN": "http://schema.fogbeam.com/skill#Java"
+}

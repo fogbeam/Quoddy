@@ -13,7 +13,15 @@ class RssFeedSubscriptionService
 	
 	public RssFeedSubscription saveSubscription( final RssFeedSubscription subscription )
 	{
-		throw new RuntimeException( "not implemented yet...");
+		
+		if( !subscription.save() )
+		{
+			log.error( "Saving RssFeedSubscription FAILED");
+			subscription.errors.allErrors.each { log.warn( it ) };
+		}
+		
+		return subscription;
+
 	}
 	
 	public List<RssFeedSubscription> getAllSubscriptionsForUser( final User user )

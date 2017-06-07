@@ -1,5 +1,6 @@
-package org.fogbeam.quoddy
+package org.fogbeam.quoddy.bpm
 
+import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.subscription.ActivitiUserTaskSubscription
 
@@ -12,7 +13,16 @@ class ActivitiUserTaskSubscriptionService
 	
 	public ActivitiUserTaskSubscription saveSubscription( final ActivitiUserTaskSubscription subscription )
 	{
-		throw new RuntimeException( "not implemented yet...");
+
+		if( !subscription.save(flush:true) )
+		{
+			log.error( "Error saving ActivitiUserTaskSubscription");
+			subscription.errors.allErrors.each { log.warn(it); } 	
+		}
+		
+		
+		return subscription;
+		
 	}
 	
 	public List<ActivitiUserTaskSubscription> getAllSubscriptionsForUser( final User user )
