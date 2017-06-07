@@ -97,6 +97,7 @@ class ActivitiBPMController
 	def completeTaskForm = {
 		
 		println "completeTaskForm() - params: ${params}";
+		log.info( "completeTaskForm() - params: ${params}" );
 		
 		String taskUuid = params.id;
 		
@@ -114,6 +115,8 @@ class ActivitiBPMController
 		String quoddyHome = System.getProperty( "quoddy.home" );
 		String directory = "${quoddyHome}/jenastore/triples" ;
 		println "Opening TDB triplestore at: ${directory}";
+		log.info( "Opening TDB triplestore at: ${directory}" );
+		
 		Dataset dataset = TDBFactory.createDataset(directory) ;
 		
 		dataset.begin(ReadWrite.READ) ;
@@ -141,10 +144,14 @@ class ActivitiBPMController
 		List<ResourceLink> links = new ArrayList<ResourceLink>();
 										 
 		println "Looking for people for customerNumber: ${customerNumber}";
+		log.info( "Looking for people for customerNumber: ${customerNumber}" );
 		
 		// query for people that "haveExpertise" regarding our customer number
 		// [quoddy:a7274c07-c904-4a70-bc98-6d8c21a962ce, http://schema.fogbeam.com/people#hasExpertise, http://customers.fogbeam.com/Boxer_Steel]
 		String queryString = """select distinct ?entity ?y where {?entity fogpeople:hasExpertise ?y . ?y rdfs:label "${customerNumber}"^^<http://www.w3.org/2001/XMLSchema#string> .}""";
+		
+		log.info( """queryString: select distinct ?entity ?y where {?entity fogpeople:hasExpertise ?y . ?y rdfs:label "${customerNumber}"^^<http://www.w3.org/2001/XMLSchema#string> .}""" );
+		
 		
 		/* Now create and execute the query using a Query object */
 		queryString = baseQueryString + queryString;
@@ -161,16 +168,19 @@ class ActivitiBPMController
 				for ( ; results.hasNext() ; )
 				{
 					println( "People search: found one solution..." );
+					log.info( "People search: found one solution..." );
 					QuerySolution soln = results.nextSolution() ;
 					RDFNode x = soln.get("entity" );
 					RDFNode y = soln.get( "y" );
 				
 					System.out.println( x.toString() + " y: " + y.toString() );
-				
+					log.info( "x: ${x.toString()}, y: ${y.toString()}" );
+					
 					// extract our entry UUID from the Subject and locate the matching Entry and
 					// add it to searchResults
 					String subject = x.toString();
 					String uuid = subject.replace( "quoddy:", "" );
+					log.info("uuid: ${uuid}");
 					
 					// lookup User by UUID
 					User user = User.findByUuid( uuid );
@@ -187,11 +197,13 @@ class ActivitiBPMController
 			}
 			
 			// query for content items that dc:reference our customer number
+			log.info( "query for content items that dc:reference our customer number" );
 			// [quoddy:ab384185-7e70-4804-b44e-593b7cc1a72f, http://purl.org/dc/terms/references, http://customers.fogbeam.com/Boxer_Steel]
 			queryString = """select distinct ?entity ?y where { ?entity dcterm:references ?y . ?y rdfs:label "${customerNumber}"^^<http://www.w3.org/2001/XMLSchema#string> . }""";
 			
 			queryString = baseQueryString + queryString;
 			// println "Our Query: ${queryString}";
+			log.info( "Our Query: ${queryString}" );
 			
 			println "\n\n\n*******************************************************************\n\n\n";
 			
@@ -205,18 +217,22 @@ class ActivitiBPMController
 				for ( ; results.hasNext() ; )
 				{
 					println "Found a Potential Status Update!";
+					log.info( "Found a Potential Status Update!" );
 					
 					QuerySolution soln = results.nextSolution() ;
 					RDFNode x = soln.get("entity" );
 					RDFNode y = soln.get( "y" );
 					
 					System.out.println( x.toString() + " y: " + y.toString() );
-				
+					log.info(x.toString() + " y: " + y.toString());
+					
 					// extract our entry UUID from the Subject and locate the matching Entry and
 					// add it to searchResults
 					String subject = x.toString();
 					String uuid = subject.replace( "quoddy:", "" );
 								
+					log.info("uuid: ${uuid}");
+					
 					// look up Status Update by uuid
 					ActivityStreamItem update = ActivityStreamItem.findByUuid( uuid );
 					if( update != null && update.streamObject instanceof StatusUpdate )
@@ -243,6 +259,7 @@ class ActivitiBPMController
 			// [fogcust:Boxer_Steel, http://schema.fogbeam.com#internalLink, "http://crm.int.fogbeam.com/index.php?module=Accounts&action=DetailView&record=2e383b79-3892-799a-ad7d-529ae40d866e"^^http://www.w3.org/2001/XMLSchema#string]
 			// [fogcust:Boxer_Steel, http://www.w3.org/2000/01/rdf-schema#label, "CUS729897"^^http://www.w3.org/2001/XMLSchema#string]
 			queryString = """select distinct ?entity ?z ?prefLabel where {?entity fogbeam:internalLink ?z . ?entity rdfs:label "${customerNumber}"^^<http://www.w3.org/2001/XMLSchema#string> . ?entity dc:title ?prefLabel }""";
+			log.info( "query for entities with an internalLink that have our customer number" );
 			
 			queryString = baseQueryString + queryString;
 			// println "Our Query: ${queryString}";
@@ -265,7 +282,10 @@ class ActivitiBPMController
 					// extract our entry UUID from the Subject and locate the matching Entry and
 					// add it to searchResults
 					String internalLink = intLink.getString();
+					
 					println "internalLink: " + internalLink;
+					log.info( "internalLink: " + internalLink );
+					
 					String linkName = prefLabel.getString();
 					ResourceLink aLink = new ResourceLink( href: internalLink, name: linkName );
 					links.add( aLink );			
