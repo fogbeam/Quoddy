@@ -4,8 +4,10 @@ package org.fogbeam.quoddy.jaxrs
 import static org.grails.jaxrs.response.Responses.*
 import groovy.json.JsonSlurper
 
+import javax.ws.rs.Consumes
 import javax.ws.rs.POST
 import javax.ws.rs.Path
+import javax.ws.rs.Produces
 import javax.ws.rs.core.Response
 
 import org.fogbeam.quoddy.subscription.ActivitiUserTaskSubscription
@@ -19,6 +21,8 @@ class ActivitiBPMSubscriptionResource {
 	
 	
 	@POST
+	@Consumes( "application/json")
+	@Produces( "text/plain")
 	public Response createNewActivitiBPMSubscription( String inputData )
 	{
 		
