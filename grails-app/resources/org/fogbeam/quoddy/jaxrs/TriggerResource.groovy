@@ -10,6 +10,7 @@ import javax.ws.rs.Produces
 import javax.ws.rs.core.Response
 import javax.ws.rs.core.Response.Status
 
+import org.codehaus.groovy.grails.commons.ArtefactHandler
 import org.codehaus.groovy.grails.commons.GrailsClass
 import org.quartz.Trigger
 import org.quartz.impl.triggers.SimpleTriggerImpl
@@ -17,6 +18,8 @@ import org.quartz.impl.triggers.SimpleTriggerImpl
 @Path( "api/scheduledjob/trigger" )
 class TriggerResource 
 {
+	def grailsApplication;
+	
 	@POST
 	@Consumes( "application/json")
 	@Produces( "text/plain")
