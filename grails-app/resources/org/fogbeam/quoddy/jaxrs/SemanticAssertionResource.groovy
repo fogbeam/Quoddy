@@ -21,7 +21,7 @@ class SemanticAssertionResource {
 		String predicate = jsonObject.predicate;
 		String object = jsonObject.object;
 		
-		jenaService.saveStatementWithResourceObject( "", "", "" );
+		jenaService.saveStatementWithResourceObject( subject, predicate, object );
 	}
 	
 	/* add an arbitrary Statement to the Jena store.  This mainly exists for setting up demos
