@@ -17,6 +17,18 @@ class RssSubscriptionResource
 	def userService;
 	def rssFeedSubscriptionService;
 	
+	public void insertSingleSubscription( def jsonObject ) 
+	{
+				
+		RssFeedSubscription subscriptionToCreate = new RssFeedSubscription();
+		subscriptionToCreate.name = jsonObject.subscriptionName;
+		subscriptionToCreate.url = jsonObject.subscriptionUrl;
+		
+		def user = userService.findUserByUserId( jsonObject.userId );
+		subscriptionToCreate.owner = user;
+	
+		rssFeedSubscriptionService.saveSubscription( subscriptionToCreate );
+	}
 	
 	@POST
 	public Response createNewRssFeedSubscription( final String inputData )
@@ -28,15 +40,22 @@ class RssSubscriptionResource
 		JsonSlurper jsonSlurper = new JsonSlurper();
 		def jsonObject = jsonSlurper.parseText(inputData);
 
-			
-		RssFeedSubscription subscriptionToCreate = new RssFeedSubscription();
-		subscriptionToCreate.name = jsonObject.subscriptionName;
-		subscriptionToCreate.url = jsonObject.subscriptionUrl;
-		
-		def user = userService.findUserByUserId( jsonObject.userId );
-		subscriptionToCreate.owner = user;
-	
-		rssFeedSubscriptionService.saveSubscription( subscriptionToCreate );
+		if( jsonObject instanceof Map )
+		{
+			println "single object found";
+			log.info( "single object found" );
+			insertSingleSubscription( jsonObject );
+		}
+		else if( jsonObject instanceof List )
+		{
+			println "list found";
+			log.info( "list found");
+
+			for( Object singleSubscription : jsonObject )
+			{
+				insertSingleSubscription( singleSubscription );
+			}
+		}
 		
 		
 		ok( "OK" );

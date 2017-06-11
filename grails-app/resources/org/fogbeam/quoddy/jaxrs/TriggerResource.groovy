@@ -19,21 +19,9 @@ import org.quartz.impl.triggers.SimpleTriggerImpl
 class TriggerResource 
 {
 	def grailsApplication;
-	
-	@POST
-	@Consumes( "application/json")
-	@Produces( "text/plain")
-	public Response addTrigger( String inputData ) 
+
+	public void insertSingleTrigger( def jsonObject )
 	{
-		
-		
-		println "inputData: \n ${inputData}";
-		log.info( "inputData:\n ${inputData}");
-
-		JsonSlurper jsonSlurper = new JsonSlurper();
-		def jsonObject = jsonSlurper.parseText(inputData);
-
-		
 		String jobGroup = jsonObject.jobGroup;
 		String jobName = jsonObject.jobName;
 		
@@ -51,7 +39,8 @@ class TriggerResource
 		if( jobClass == null )
 		{
 			log.error( "Could not load GrailsClass for ${jobName}" );
-			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+			throw new RuntimeException( "Could not load GrailsClass for ${jobName}" );
+			// return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		else
 		{
@@ -60,8 +49,37 @@ class TriggerResource
 			Trigger trigger = new SimpleTriggerImpl( triggerName, triggerGroup, repeatCount, recurrenceInterval);
 			jobClass.newInstance().schedule( trigger );
 		}
-				
-			
+		
+	}
+		
+	
+	@POST
+	@Consumes( "application/json")
+	@Produces( "text/plain")
+	public Response addTrigger( String inputData ) 
+	{
+		println "inputData: \n ${inputData}";
+		log.info( "inputData:\n ${inputData}");
+
+		JsonSlurper jsonSlurper = new JsonSlurper();
+		def jsonObject = jsonSlurper.parseText(inputData);
+
+		if( jsonObject instanceof Map )
+		{
+			println "single object found";
+			log.info( "single object found" );
+			insertSingleTrigger( jsonObject );
+		}
+		else if( jsonObject instanceof List )
+		{
+			println "list found";
+			log.info( "list found");
+
+			for( Object singleSubscription : jsonObject )
+			{
+				insertSingleTrigger( singleSubscription );
+			}
+		}
 		
 		ok( "OK" );
 	}

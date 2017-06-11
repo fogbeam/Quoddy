@@ -1,5 +1,13 @@
-{
-	"subscriptionName":"Hacker News",
-	"subscriptionUrl":"https://news.ycombinator.com/rss",
-	"userId":"prhodes"
-}
+[
+	
+	{
+		"subscriptionName":"Hacker News",
+		"subscriptionUrl":"https://news.ycombinator.com/rss",
+		"userId":"prhodes"
+	},
+	{
+		"subscriptionName":"Slashdot",
+		"subscriptionUrl":"http://rss.slashdot.org/Slashdot/slashdotMain",
+		"userId":"prhodes"
+	}
+]

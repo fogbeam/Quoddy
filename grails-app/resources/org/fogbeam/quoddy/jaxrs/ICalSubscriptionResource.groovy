@@ -22,16 +22,8 @@ class ICalSubscriptionResource
 	def userService;
 	
 	
-	@POST
-	public Response addNewCalendarFeedSubscription( final String inputData )
+	public void insertSingleSubscription( def jsonObject )
 	{
-		
-		println "inputData: \n ${inputData}";
-		log.info( "inputData:\n ${inputData}");
-
-		JsonSlurper jsonSlurper = new JsonSlurper();
-		def jsonObject = jsonSlurper.parseText(inputData);
-		
 		
 		CalendarFeedSubscription calendarFeedSubscriptionToCreate = new CalendarFeedSubscription();
 		
@@ -43,6 +35,36 @@ class ICalSubscriptionResource
 	
 		
 		calendarFeedSubscriptionService.saveSubscription( calendarFeedSubscriptionToCreate )
+
+	}
+	
+	@POST
+	public Response addNewCalendarFeedSubscription( final String inputData )
+	{
+		
+		println "inputData: \n ${inputData}";
+		log.info( "inputData:\n ${inputData}");
+
+		JsonSlurper jsonSlurper = new JsonSlurper();
+		def jsonObject = jsonSlurper.parseText(inputData);
+		
+		if( jsonObject instanceof Map )
+		{
+			println "single object found";
+			log.info( "single object found" );
+			insertSingleSubscription( jsonObject );
+		}
+		else if( jsonObject instanceof List )
+		{
+			println "list found";
+			log.info( "list found");
+
+			for( Object singleSubscription : jsonObject )
+			{
+				insertSingleSubscription( singleSubscription );
+			}
+		}
+		
 		
 		ok( "OK" );
 	}

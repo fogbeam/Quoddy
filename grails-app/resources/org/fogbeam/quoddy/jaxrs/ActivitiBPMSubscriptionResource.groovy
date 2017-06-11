@@ -19,7 +19,22 @@ class ActivitiBPMSubscriptionResource {
 	def activitiUserTaskSubscriptionService;
 	def userService;
 	
+	public void insertSingleSubscription( def jsonObject ) 
+	{
+		ActivitiUserTaskSubscription subscriptionToCreate = new ActivitiUserTaskSubscription();
+		subscriptionToCreate.name = jsonObject.subscriptionName;
+		subscriptionToCreate.description = jsonObject.subscriptionDescription;
+		subscriptionToCreate.activitiServer = jsonObject.activitiServer;
+		subscriptionToCreate.candidateGroup = jsonObject.candidateGroup;
+		subscriptionToCreate.assignee = jsonObject.assignee;
+   
+		def user = userService.findUserByUserId( jsonObject.userId );
+		subscriptionToCreate.owner = user;
 	
+		activitiUserTaskSubscriptionService.saveSubscription( subscriptionToCreate );
+
+	}
+
 	@POST
 	@Consumes( "application/json")
 	@Produces( "text/plain")
@@ -32,19 +47,22 @@ class ActivitiBPMSubscriptionResource {
 		JsonSlurper jsonSlurper = new JsonSlurper();
 		def jsonObject = jsonSlurper.parseText(inputData);
 
-		
-		ActivitiUserTaskSubscription subscriptionToCreate = new ActivitiUserTaskSubscription();
-		subscriptionToCreate.name = jsonObject.subscriptionName;
-		subscriptionToCreate.description = jsonObject.subscriptionDescription;
-		subscriptionToCreate.activitiServer = jsonObject.activitiServer;
-		subscriptionToCreate.candidateGroup = jsonObject.candidateGroup;
-		subscriptionToCreate.assignee = jsonObject.assignee;
-   
-		def user = userService.findUserByUserId( jsonObject.userId );
-		subscriptionToCreate.owner = user;
-	
-		activitiUserTaskSubscriptionService.saveSubscription( subscriptionToCreate );
-			
+		if( jsonObject instanceof Map )
+		{
+			println "single object found";
+			log.info( "single object found" );
+			insertSingleSubscription( jsonObject );
+		}
+		else if( jsonObject instanceof List )
+		{
+			println "list found";
+			log.info( "list found");
+
+			for( Object singleSubscription : jsonObject ) 
+			{
+				insertSingleSubscription( singleSubscription );
+			}
+		}
 		
 		ok( "OK" );
 	}
