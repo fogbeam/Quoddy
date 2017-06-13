@@ -127,7 +127,17 @@ class BusinessEventSubscriptionService
 		BusinessEventSubscription subscription = BusinessEventSubscription.findByUuid( uuid );
 		return subscription;	
 	}
-	
+
+	public void saveSubscription( final BusinessEventSubscription subscriptionToSave ) 
+	{
+		if( !subscriptionToSave.save() )
+		{
+			log.error( "Saving BusinessEventSubscription FAILED");
+			subscriptionToSave.errors.allErrors.each { log.debug( it ) };
+		}
+
+	}
+		
 	// note: would it make sense to wrap "save and notify" into one message and
 	// take advantage of Spring's method level transaction demarcation stuff?
 	public void saveEvent( StreamItemBase event )

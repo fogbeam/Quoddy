@@ -280,12 +280,8 @@ class SubscriptionController
 				
 				log.debug( "about to save: ${ subscriptionToCreate.toString()}");
 				
-				if( !subscriptionToCreate.save() )
-				{
-					log.error( "Saving BusinessEventSubscription FAILED");
-					subscriptionToCreate.errors.allErrors.each { log.debug( it ) };
-				}
-				
+				businessEventSubscriptionService.saveSubscription( subscriptionToCreate );
+								
 			}
 			on("success").to("exitWizard");
 	   }
