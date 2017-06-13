@@ -42,7 +42,7 @@ class BusinessEventSubscriptionResource
 		
 		
 		// UserService userService = grailsApplication.mainContext.getBean('userService');
-		def user = userService.findUserByUserId( session.user.userId );
+		def user = userService.findUserByUserId( jsonObject.userId );
 		subscriptionToCreate.owner = user;
 
 		businessEventSubscriptionService.saveSubscription( subscriptionToCreate );

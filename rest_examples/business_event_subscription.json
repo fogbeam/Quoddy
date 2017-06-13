@@ -1,6 +1,7 @@
 {
 	"name":"RFQ's West",
 	"description":"RFQ's for the West region",
-	"xQueryExpression":"//oagis:RFQ[@territory=\"west\"]"		
+	"xQueryExpression":"//oagis:RFQ[@territory=\"west\"]",
+	"userId":"prhodes"		
 }
 
