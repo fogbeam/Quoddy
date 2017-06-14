@@ -42,24 +42,24 @@ class ActivitiBPMController
 		// make the REST call back to the Activiti server to complete this task
 		// using the supplied form values
 		
-		println "completeTaskForm() - params: ${params}";
+		log.info( "completeTaskForm() - params: ${params}");
 		
 		Map activitiForm = params.activitiForm;
 		
 		String taskUuid = params.taskUuid;
 		
-		println "taskUuid: " + taskUuid;
+		log.info( "taskUuid: " + taskUuid );
 		
 		// lookup our ActivitiUserTask instance by uuid
 		ActivitiUserTask userTask = ActivitiUserTask.findByUuid( taskUuid );
 		
 		if( userTask )
 		{
-			println "located ActivitiUserTask instance!";
+			log.info( "located ActivitiUserTask instance!");
 		}
 		else
 		{
-			println "Failed to lookup ActivitiUserTask instance!";
+			log.error( "Failed to lookup ActivitiUserTask instance!");
 			throw new RuntimeException( "Failed to locate ActivitiUserTask instance");
 		}
 		
@@ -89,7 +89,7 @@ class ActivitiBPMController
 			requestContentType:  JSON,
 			body: activitiForm );
 		
-		println "restResponse: ${restResponse.data}";
+		log.info( "restResponse: ${restResponse.data}" );
 		
 		redirect( controller:'dummy' );
 	}
@@ -109,7 +109,8 @@ class ActivitiBPMController
 		ActivitiUserTaskSubscription owningSubscription = userTask.owningSubscription;
 		
 		String customerNumber = userTask.variables.get( "customerNumber" );
-		
+		log.info( "customerNumber: ${customerNumber}");		
+
 		// construct a TDB backed store on our triples
 		// Make a TDB-backed dataset
 		String quoddyHome = System.getProperty( "quoddy.home" );
@@ -155,7 +156,7 @@ class ActivitiBPMController
 		
 		/* Now create and execute the query using a Query object */
 		queryString = baseQueryString + queryString;
-		// println "Our Query: ${queryString}";
+		log.info( "Our Query: ${queryString}" );
 		try
 		{
 			Query query = QueryFactory.create(queryString);
