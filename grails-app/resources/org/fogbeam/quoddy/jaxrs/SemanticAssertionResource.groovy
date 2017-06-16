@@ -20,18 +20,23 @@ class SemanticAssertionResource {
 		String subject = jsonObject.subject;
 		String predicate = jsonObject.predicate;
 		String object = jsonObject.object;
+		String objectType = jsonObject.objectType;
 		
 		log.info( "object: \"${object}\"");
 		
-		if( object.contains("XMLSchema#string"))
+		if( objectType.equals("literal"))
 		{
 			log.info( "saving with Literal object");
 			jenaService.saveStatementWithLiteralObject( subject, predicate, object );
 		}
-		else
+		else if( objectType.equals( "resource"))
 		{
 			log.info( "saving with Resource object");
 			jenaService.saveStatementWithResourceObject( subject, predicate, object );
+		}
+		else
+		{
+			throw new RuntimeException( "invalid objectType: ${objectType}");
 		}
 	}	
 	
