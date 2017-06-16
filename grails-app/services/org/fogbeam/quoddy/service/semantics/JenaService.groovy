@@ -197,13 +197,10 @@ class JenaService
 		
 		Resource rSubject = m.createResource( subject );
 		Property rProperty = m.createProperty( predicate );
-			
+		Literal lObject = m.createTypedLiteral( object );
 		try
 		{
-		
-			Statement s = m.createStatement(rSubject, rProperty, object);
-		
-			m.add( s );
+			m.addLiteral( rSubject, rProperty, lObject );
 		
 			dataset.commit();
 		}
