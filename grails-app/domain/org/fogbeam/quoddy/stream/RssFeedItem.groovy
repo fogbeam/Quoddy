@@ -11,6 +11,14 @@ public class RssFeedItem extends StreamItemBase
 		datePublished(nullable:true)
 	}
 	
+	static mapping = {
+		title type: 'text'
+		description type:'text'
+		leadingSnippet type:'text'
+		datePublished type:'text'
+		linkUrl type:'text'
+	}
+	
 	String title;
 	String description;
 	String leadingSnippet;
