@@ -242,7 +242,7 @@ public class SearchQueueInputService
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		log.debug( "got indexDirLocation as: ${indexDirLocation}");
 		
-		if( indexDirLocation == null )
+		if( indexDirLocation == null || indexDirLocation.isEmpty())
 		{
 			String quoddyHome = System.getProperty( "quoddy.home" );
 			indexDirLocation = quoddyHome + "/index";
@@ -400,6 +400,13 @@ public class SearchQueueInputService
 	private void newCalendarFeedItem( def msg )
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+
+		if( indexDirLocation == null || indexDirLocation.isEmpty()) 
+		{		
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		log.debug( "got indexDirLocation as: ${indexDirLocation}");
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
@@ -518,7 +525,7 @@ public class SearchQueueInputService
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		
-		if( indexDirLocation == null )
+		if( indexDirLocation == null || indexDirLocation.isEmpty())
 		{
 			String quoddyHome = System.getProperty( "quoddy.home" );
 			indexDirLocation = quoddyHome + "/index";
@@ -639,6 +646,13 @@ public class SearchQueueInputService
 	{
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		log.debug( "got indexDirLocation as: ${indexDirLocation}");
+		
+		if( indexDirLocation == null || indexDirLocation.isEmpty()) 
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
@@ -746,6 +760,13 @@ public class SearchQueueInputService
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		log.debug( "got indexDirLocation as: ${indexDirLocation}");
+
+		if( indexDirLocation == null || indexDirLocation.isEmpty())
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}		
+		
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
@@ -893,6 +914,12 @@ public class SearchQueueInputService
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
 		
+		if(indexDirLocation == null || indexDirLocation.isEmpty())
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
 		// where we never do get the required lock.
 		while( writer == null )
@@ -958,6 +985,13 @@ public class SearchQueueInputService
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
 		IndexWriter writer = null;
+		
+		if( indexDirLocation == null || indexDirLocation.isEmpty()) 
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
 		// where we never do get the required lock.
@@ -1045,6 +1079,12 @@ public class SearchQueueInputService
 		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index" ) );
 		IndexWriter writer = null;
 
+		if( indexDirLocation == null || indexDirLocation.isEmpty()) 
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
 		
 		int luceneLockRetryCount = 0;
 		while( writer == null )
@@ -1114,6 +1154,14 @@ public class SearchQueueInputService
     	log.debug( "addTag called with uuid: ${uuid} and tagName: ${tagName}" );
     	
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		if( indexDirLocation == null || indexDirLocation.isEmpty()) 
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
+		
     	Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation ) );
     	IndexReader indexReader = IndexReader.open( indexDir, false );
     	
