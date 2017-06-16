@@ -21,12 +21,16 @@ class SemanticAssertionResource {
 		String predicate = jsonObject.predicate;
 		String object = jsonObject.object;
 		
+		log.info( "object: \"${object}\"");
+		
 		if( object.contains("XMLSchema#string"))
 		{
+			log.info( "saving with Literal object");
 			jenaService.saveStatementWithLiteralObject( subject, predicate, object );
 		}
 		else
 		{
+			log.info( "saving with Resource object");
 			jenaService.saveStatementWithResourceObject( subject, predicate, object );
 		}
 	}	
