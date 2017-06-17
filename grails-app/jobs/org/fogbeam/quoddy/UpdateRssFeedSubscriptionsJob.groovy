@@ -73,7 +73,7 @@ class UpdateRssFeedSubscriptionsJob
 			{
 				reader = new XmlReader(feedUrl)
 				feed = input.build(reader);
-				println( "Feed: ${feed.getTitle()}" );
+				log.info( "Feed: ${feed.getTitle()}" );
 				
 				List<SyndEntry> entries = feed.getEntries();
 				
@@ -84,18 +84,20 @@ class UpdateRssFeedSubscriptionsJob
 				for( SyndEntry entry in entries )
 				{
 					String linkUrl = entry.getLink();
+					log.info( "linkUrl: ${linkUrl}")
 					String linkTitle = entry.getTitle();
+					log.info( "linkTitle: ${linkTitle}")
 					
 					RssFeedItem testForExisting = rssFeedItemService.findRssFeedItemByUrlAndSubscription( linkUrl, sub );
 					if( testForExisting != null )
 					{
-						println( "An RssFeedItem entry for this link (${linkUrl}) already exists. Skipping" );							
+						log.info( "An RssFeedItem entry for this link (${linkUrl}) already exists. Skipping" );							
 						continue;
 					}
 					else
 					{	
 						
-						println( "creating and adding entry for link: ${linkUrl} with title: ${linkTitle}" );
+						log.info( "creating and adding entry for link: ${linkUrl} with title: ${linkTitle}" );
 			
 						// Entry newEntry = new Entry( url: linkUrl, title: linkTitle, submitter: anonymous );
 						RssFeedItem rssFeedItem = new RssFeedItem();
@@ -169,7 +171,7 @@ class UpdateRssFeedSubscriptionsJob
 						if( rssFeedItem )
 						{
 							good++;
-							log.debug( "saved new RssFeedItem entry with id: ${rssFeedItem.id}" );
+							log.info( "saved new RssFeedItem entry with id: ${rssFeedItem.id}" );
 							
 							
 							ActivityStreamItem activity = new ActivityStreamItem(content:"RSSFeedItem");
@@ -204,7 +206,7 @@ class UpdateRssFeedSubscriptionsJob
 							log.debug( "sending new entry message to JMS quoddySearchQueue" );
 							
 							// send message to request search indexing
-							jmsService.send( queue: 'quoddySearchQueue', newContentMsg, 'standard', null );
+							jmsService.info( queue: 'quoddySearchQueue', newContentMsg, 'standard', null );
 							
 			
 
@@ -217,18 +219,18 @@ class UpdateRssFeedSubscriptionsJob
 						{
 							bad++;
 							// failed to save newEntry
-							log.debug( "Failed processing RssFeedItem!" );
+							log.error( "Failed processing RssFeedItem!" );
 						}
 						
 					}
 				}
 				
-				log.debug( "Good entries: ${good}, bad entries:${bad}" );
+				log.info( "Good entries: ${good}, bad entries:${bad}" );
 				
 			}
 			catch( Exception e )
 			{
-				println "Caught Exception in RssFeedSubscription Processing Loop!";
+				log.error( "Caught Exception in RssFeedSubscription Processing Loop!");
 				
 				e.printStackTrace();
 				
