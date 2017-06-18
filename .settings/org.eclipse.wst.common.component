@@ -42,11 +42,5 @@
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/shiro-1.1.4/grails-app/taglib"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/shiro-1.1.4/src/groovy"/>
         <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/shiro-1.1.4/src/java"/>
-        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/grails-app/conf"/>
-        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/grails-app/controllers"/>
-        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/grails-app/i18n"/>
-        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/grails-app/resources"/>
-        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/src/groovy"/>
-        <wb-resource deploy-path="/" source-path="/.link_to_grails_plugins/jaxrs-0.8/src/java"/>
     </wb-module>
 </project-modules>
