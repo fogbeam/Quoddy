@@ -27,11 +27,9 @@ class BootStrap {
 
 				println "quoddy.hostName: ${CH.config.quoddy.hostName}"
 				println "fooHost: ${CH.config.fooHost}"
-
-
-
-                                 createRoles();
-	                         // createSomeUsers();
+				
+				 createRoles();
+	             createSomeUsers();
 				 createSystemUser();
 				 createShareTargets();
 				 createEventTypes();
