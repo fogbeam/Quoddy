@@ -126,6 +126,7 @@ class ScheduleController {
 		{
 			// SimpleTrigger(String name, String group, int repeatCount, long repeatInterval)
 			Trigger trigger = new SimpleTriggerImpl( params.triggerName, params.triggerGroup, Integer.parseInt(params.repeatCount), Long.parseLong(params.recurrenceInterval));
+			
 			// jobClass.newInstance().schedule( Long.parseLong( recurrenceInterval ), SimpleTrigger.REPEAT_INDEFINITELY, sparams );
 			jobClass.newInstance().schedule( trigger );
 		}
