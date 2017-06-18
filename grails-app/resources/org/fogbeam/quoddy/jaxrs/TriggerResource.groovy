@@ -8,9 +8,7 @@ import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.Response
-import javax.ws.rs.core.Response.Status
 
-import org.codehaus.groovy.grails.commons.ArtefactHandler
 import org.codehaus.groovy.grails.commons.GrailsClass
 import org.quartz.Trigger
 import org.quartz.impl.triggers.SimpleTriggerImpl
