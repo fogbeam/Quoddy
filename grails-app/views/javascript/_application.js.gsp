@@ -11,14 +11,8 @@
 		
 	}    
     
+    function initHandlers() {
     
-	$j(document).ready( 
-		 		
-			function()
-		 	{
-		 	
-		 		
-		 	
 				$j( "#discussDialog" ).dialog(
 					{
 						autoOpen: false,
@@ -88,11 +82,15 @@
 					$j( "#discussDialog" ).data('discussItemUuid', discussItemUuid).dialog( "open" );
 				});
 				
-				$j( ".shareButton" ).click(function() {
+				$j( ".shareButton" ).click(function( event) {
 				
+					event.preventDefault();
 					var name = $j(this).attr('name');
 					var shareItemUuid = name.split( "." )[1];
+					$j( "#shareDialog" ).css( "display", "" );
 					$j( "#shareDialog" ).data('shareItemUuid', shareItemUuid).dialog( "open" );
+					
+					return false;
 				});
 
 				$j( ".xButton").click( function() {
@@ -109,6 +107,7 @@
 				});
 
 				$j('#loadMoreLink').data("page", 1 );
+				
 				// setup an onclick handler for the status submit button
 				// and serialize the associated form along with it...
 				$j('#updateStatusSubmit').bind( 'click',  
@@ -155,9 +154,20 @@
 
 					$j('#activityStream').load( "${ createLink(controller:'activityStream', action:'getContentHtml', params:['streamId':streamId ] )}" );
 					return false;
-				})
-				
-				$j('#loadMoreLink').bind( 'click', function() {
+				});    
+    	}
+    
+    
+		$j(document).ready( 
+		 		
+			function()
+		 	{
+		 	
+		 	    initHandlers();
+		 						
+				$j('#loadMoreLink').bind( 'click', function(event) {
+					
+					event.preventDefault();
 					
 					var page = $j('#loadMoreLink').data("page");
 					page = page +1;
@@ -168,11 +178,16 @@
 						// load more content from the server, pass the page so it knows how much
 						// to return us...
 						
-						$j('#activityStream').load( "${ createLink(controller:'activityStream', action:'getContentHtml', params:['streamId':streamId, 'page':page ] )}" );
+						$j('#activityStream').load( "${ createLink(controller:'activityStream', action:'getContentHtml')}", {"page":page}, function() {
+						
+							initHandlers();
+						} );
+					    	
 					}
 					
 					return false;
 				} );
+				
 				
 				$j( '.addCommentTextInput' ).bind( 'focus', function()  {
 				

@@ -3,7 +3,7 @@
 </g:each>
 
 
-<div id="discussDialog" title="">
+<div id="discussDialog" title="" style="display:none;">
 	
 		<g:formRemote name="discussItemForm" url="[controller: 'activityStream', action:'discussItem']" onSuccess="openDiscussion(data)" >
 	
@@ -26,7 +26,7 @@
 </div>
 
 
-<div id="shareDialog" title="Share this Item">
+<div id="shareDialog" title="Share this Item" style="display:none;">
 	
 	<g:formRemote name="shareItemForm" url="[controller: 'activityStream', action:'shareItem']">
 	
