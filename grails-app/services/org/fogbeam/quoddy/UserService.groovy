@@ -91,9 +91,9 @@ class UserService {
 			user.dateCreated = new Date();
 		}
 		
-		if( user.save() )
+		if( user.save(flush:true) )
 		{
-			log.debug( "Saving User object.");
+			log.info( "Saving User object.");
 			
 			accountService.createUser( user );
 			// ldapPersonService.createUser( user );
@@ -108,7 +108,7 @@ class UserService {
 			
 			if( !defaultStream.save())
 			{
-				defaultStream.errors.allErrors.each { log.debug( it ) };
+				defaultStream.errors.allErrors.each { log.error( it ) };
 				throw new RuntimeException( "couldn't create Default UserStream record for user: ${user.userId}" );
 			}
 			
@@ -118,14 +118,11 @@ class UserService {
 			iFollowCollection.save();
 			FriendRequestCollection friendRequestCollection = new FriendRequestCollection( ownerUuid: user.uuid );
 			friendRequestCollection.save();
-			
-			
-			
-			
+		
 		}
 		else
 		{
-			user.errors.allErrors.each { log.debug( it ) };
+			user.errors.allErrors.each { log.error( it ) };
 			throw new RuntimeException( "couldn't create User record for user: ${user.userId}" );
 			
 		}
