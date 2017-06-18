@@ -1062,47 +1062,7 @@ class SearchService
 			boolean indexIsInitialized = (indexFileChildren != null && indexFileChildren.length > 0 );
 			if( ! indexIsInitialized )
 			{
-				log.debug( "Index not previously initialized, creating empty index" );
-				/* initialize empty index */
-				Directory indexDir = new NIOFSDirectory( indexFile );
-				IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.UNLIMITED);
-				Document doc = new Document();
-				writer.addDocument(doc);
-				writer.close();
-		   }
-		   else
-		   {
-			   
-			   log.debug( "Index already initialized, skipping..." );
-		   }
-		}
-		else
-		{
-			log.debug( "No indexDirLocation configured!!");
-		}
-		
-	}
-	
-	public void initializePersonIndex()
-	{
-		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		
-		if( indexDirLocation == null )
-		{
-			String quoddyHome = System.getProperty( "quoddy.home" );
-			indexDirLocation = quoddyHome + "/index";
-		}
-		
-		log.debug( "initializePersonIndex" );
-		log.debug( "indexDirLocation: ${indexDirLocation}" );
-		if( indexDirLocation )
-		{
-			File indexFile = new java.io.File( indexDirLocation + "/person_index" );
-			String[] indexFileChildren = indexFile.list();
-			boolean indexIsInitialized = (indexFileChildren != null && indexFileChildren.length > 0 );
-			if( ! indexIsInitialized )
-			{
-				log.debug( "Index not previously initialized, creating empty index" );
+				log.info( "Index not previously initialized, creating empty index" );
 				/* initialize empty index */
 				Directory indexDir = new NIOFSDirectory( indexFile );
 				IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.UNLIMITED);
@@ -1118,7 +1078,47 @@ class SearchService
 		}
 		else
 		{
-			log.warn( "No indexDirLocation configured!!");
+			log.error( "No indexDirLocation configured!!");
+		}
+		
+	}
+	
+	public void initializePersonIndex()
+	{
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		if( indexDirLocation == null )
+		{
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			indexDirLocation = quoddyHome + "/index";
+		}
+		
+		log.info( "initializePersonIndex" );
+		log.info( "indexDirLocation: ${indexDirLocation}" );
+		if( indexDirLocation )
+		{
+			File indexFile = new java.io.File( indexDirLocation + "/person_index" );
+			String[] indexFileChildren = indexFile.list();
+			boolean indexIsInitialized = (indexFileChildren != null && indexFileChildren.length > 0 );
+			if( ! indexIsInitialized )
+			{
+				log.info( "Index not previously initialized, creating empty index" );
+				/* initialize empty index */
+				Directory indexDir = new NIOFSDirectory( indexFile );
+				IndexWriter writer = new IndexWriter( indexDir, new StandardAnalyzer(Version.LUCENE_30), true, MaxFieldLength.UNLIMITED);
+				Document doc = new Document();
+				writer.addDocument(doc);
+				writer.close();
+		   }
+		   else
+		   {
+			   
+			   log.info( "Index already initialized, skipping..." );
+		   }
+		}
+		else
+		{
+			log.error( "No indexDirLocation configured!!");
 		}
 		
 	}
