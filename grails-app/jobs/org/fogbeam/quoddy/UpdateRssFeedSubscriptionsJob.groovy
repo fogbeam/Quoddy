@@ -19,6 +19,10 @@ import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.constants.EventTypes
 import org.fogbeam.quoddy.subscription.RssFeedSubscription
+import org.quartz.DisallowConcurrentExecution
+import org.quartz.JobDetail
+import org.quartz.JobExecutionContext
+import org.quartz.Scheduler
 
 import com.sun.syndication.feed.synd.SyndEntry
 import com.sun.syndication.feed.synd.SyndFeed
@@ -33,21 +37,55 @@ import com.sun.syndication.io.XmlReader
 // can just point to the original link. 
 
 
+@DisallowConcurrentExecution
 class UpdateRssFeedSubscriptionsJob 
 {
 	
 	def group = "MyGroup";
 	def volatility = false;
+	def concurrentExecutionDisallowed = true;
 	def jmsService;
 	def eventStreamService;
 	def rssFeedItemService;
 	
 	static triggers = {
-		
+		def volatility = false;	
 	}
 	
-    def execute() 
+    def execute( def context ) 
 	{
+		
+		Scheduler sched = context.getScheduler();
+		JobDetail existingJobDetail = context.getJobDetail();
+		log.warn( "Beginning execution of UpdateRssFeedSubscriptionsJob");
+		log.info( "existingJobDetail: " + existingJobDetail.toString());
+		
+		if (existingJobDetail != null) 
+		{
+			List<JobExecutionContext> currentlyExecutingJobs = (List<JobExecutionContext>) sched.getCurrentlyExecutingJobs();
+			for (JobExecutionContext jec : currentlyExecutingJobs) 
+			{
+				log.info( "evaluating jec.jobDetail: " + jec.jobDetail.toString());
+				
+				if(jec.jobDetail.key.equals(existingJobDetail.key) && (!(jec.jobDetail == existingJobDetail))) 
+				{
+					String message = "another instance for " + existingJobDetail.toString() + " is already running.";
+					log.warn(message);
+					
+					// throw new JobExecutionException(message,false);
+					return;
+				}
+				else 
+				{
+					log.info( "not a match, proceed.");
+				}
+			}
+		}
+		else 
+		{
+			log.info( "existingJobDetail is NULL");
+		}
+		
 		
 		ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 		
@@ -83,10 +121,14 @@ class UpdateRssFeedSubscriptionsJob
 				
 				for( SyndEntry entry in entries )
 				{
-					String linkUrl = entry.getLink();
+
+					String linkUrl = entry.getLink().trim();
 					log.info( "linkUrl: ${linkUrl}")
-					String linkTitle = entry.getTitle();
+					String linkTitle = entry.getTitle().trim();
 					log.info( "linkTitle: ${linkTitle}")
+					
+					log.info( "Testing for possible duplicate.  linkurl: ${linkUrl}, subscription: ${sub.toString()}");
+					
 					
 					RssFeedItem testForExisting = rssFeedItemService.findRssFeedItemByUrlAndSubscription( linkUrl, sub );
 					if( testForExisting != null )
@@ -120,14 +162,14 @@ class UpdateRssFeedSubscriptionsJob
 							
 						} 
 						catch ( HttpException he) {
-						   log.error("Http error connecting to '" + url + "'");
-						   log.error(he.getMessage());
+						   log.error("Http error connecting to '" + linkUrl + "'", he );
+						   log.error(he.message);
 						   continue;
 						} 
 						catch (IOException ioe){
 						   // ioe.printStackTrace();
-						   log.error("Unable to connect to '" + url + "'");
-						   log.error( ioe );
+						   log.error("Unable to connect to '" + linkUrl + "'", ioe);
+						   log.error( ioe.message );
 						   continue;
 						}
 				   
@@ -161,6 +203,7 @@ class UpdateRssFeedSubscriptionsJob
 						}
 						catch( Exception e )
 						{
+							log.error( "error extracing text from link", e );
 							e.printStackTrace();
 							rssFeedItem = null;
 						}
@@ -206,7 +249,7 @@ class UpdateRssFeedSubscriptionsJob
 							log.debug( "sending new entry message to JMS quoddySearchQueue" );
 							
 							// send message to request search indexing
-							jmsService.info( queue: 'quoddySearchQueue', newContentMsg, 'standard', null );
+							jmsService.send( queue: 'quoddySearchQueue', newContentMsg, 'standard', null );
 							
 			
 
@@ -230,7 +273,7 @@ class UpdateRssFeedSubscriptionsJob
 			}
 			catch( Exception e )
 			{
-				log.error( "Caught Exception in RssFeedSubscription Processing Loop!");
+				log.error( "Caught Exception in RssFeedSubscription Processing Loop!", e);
 				
 				e.printStackTrace();
 				
