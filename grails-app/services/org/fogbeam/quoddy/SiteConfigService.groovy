@@ -7,17 +7,17 @@ class SiteConfigService {
 
 	public String getSiteConfigEntry( final String name )
 	{
-		log.debug( "siteConfigEntry request for ${name}");
+		log.info( "siteConfigEntry request for ${name}");
 		
 		SiteConfigEntry entry = SiteConfigEntry.findByName( name );
 		
 		if( entry != null )
 		{
-			log.debug( "found a value for ${name}");	
+			log.info( "found a value for ${name}");	
 		}
 		else
 		{
-			log.debug( "found no value for ${name}" );
+			log.warn( "found no value for ${name}" );
 		}
 		
 		return entry?.value;
