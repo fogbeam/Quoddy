@@ -25,10 +25,10 @@ class LocalAccountService
 		account.username = user.userId;
 		account.password = digestMd5( user.password );
 			
-		if( !account.save() )
+		if( !account.save(flush:true) )
 		{
 			log.error( "Saving LocalAccount FAILED");
-			account.errors.allErrors.each { log.debug( it ) };
+			account.errors.allErrors.each { log.error( it ) };
 		}
 		
 	}
