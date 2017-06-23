@@ -47,7 +47,6 @@ class UpdateRssFeedSubscriptionsJob
 	def jmsService;
 	def eventStreamService;
 	def rssFeedItemService;
-	def concurrent = false;
 	
 	static triggers = {
 		def volatility = false;	
