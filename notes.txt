@@ -1,3 +1,0 @@
-for LDAP Person entries, switch LDAP "cn" attribute out to be our UUID.  Use "givenName" and "surname" fields for
-name stuff.  Also look at displayName and commonName attributes.
-
