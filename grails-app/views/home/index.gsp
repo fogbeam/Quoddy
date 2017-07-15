@@ -126,6 +126,11 @@
 					id="updateStatusSubmit" type="submit" value="Update Status" />
 			</g:form>
 
+
+			<fogcutter:externalTemplate externalTemplate="megamenu.gsp" />
+
+
+
 			<!--  we should have a collection available to render, with the statusupdates for this
             	User, that exist when this page is loaded.  Once we're loaded, we'll update an "available posts"
             	message with AJAX and provide an AJAX powered "update" link that will refresh this view
