@@ -9,7 +9,7 @@
 	<body>
 	<div class="span8 listView">
 	<!-- Blank state, should display when there are not any streams
-	<div class="hero-unit">
+	<div class="jumbotron">
 		<h1>Streams</h1>
     <p>Add new streams and manage existing ones here. <a href="#">What are streams?</a></p>
     <p><a class="btn btn-primary btn-large">Create a New Stream</a></p>
@@ -18,7 +18,7 @@
 
 
 	<!-- populated state -->
-	<div class="hero-unit">
+	<div class="jumbotron">
 		<div class="span4">
 		<h2>Streams</h2>
 		<p>Manage existing streams and create new ones.</p>

@@ -14,8 +14,8 @@
 
 	<div id="bodyContent">
 		
-		<div class="row-fluid">
-			<div class="span12">
+		<div class="row">
+			<div class="col-md-12">
 				<g:if test="${flash.message}">
 					<div class="flash">
 					${flash.message}
@@ -49,9 +49,9 @@
 			</div>
 		</div>
 		
-		<div class="row-fluid">
+		<div class="row">
 
-			<div class="span12"
+			<div class="col-md-12"
 				style="background-color: #F6F7F8; min-height: 85px;">
 
 				<div style="float: left;">
@@ -188,8 +188,8 @@
 			</div>
 		</div>
 
-		<div class="row-fluid">
-			<div class="span12"
+		<div class="row">
+			<div class="col-md-12"
 				style="margin-top: 15px; background-color: #F6F7F8; min-height: 85px;">
 
 				<div class="tabbable tabs-left">

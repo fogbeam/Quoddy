@@ -7,7 +7,7 @@
 	</head>
 	
 	<body>
-	<div class="hero-unit span6">	
+	<div class="jumbotron span6">	
 		<h2>Edit Calendar Feed Subscription</h2>
 		<g:form controller="subscription" action="editWizard" method="POST">
 			<label for="calFeedName">Name:</label> <g:textField name="calFeedName" 

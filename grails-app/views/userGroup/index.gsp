@@ -10,7 +10,7 @@
 
   <div class="span8 listView">
   <!-- Blank state, should display when there are not any streams
-  <div class="hero-unit">
+  <div class="jumbotron">
     <h1>Groups</h1>
     <p>Add new groups and manage existing ones here. <a href="#">What are groups?</a></p>
     <p><a class="btn btn-primary btn-large">Create a New Group</a></p>
@@ -19,7 +19,7 @@
 
 
   <!-- populated state -->
-  <div class="hero-unit">
+  <div class="jumbotron">
     <div class="span4">
     <h2>Groups</h2>
     <p>Manage existing groups and create new ones.</p>

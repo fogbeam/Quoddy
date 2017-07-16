@@ -10,8 +10,8 @@
     				<g:render template="/navbar" />
   				</div>
 			</div>
-			<div class="row-fluid">
-  				<div class="span12">
+			<div class="row">
+  				<div class="col-md-12">
 					
 					<ul>
 					<g:each in="${allStatements}" var="statement">

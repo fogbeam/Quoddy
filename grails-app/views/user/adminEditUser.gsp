@@ -5,7 +5,7 @@
         <nav:resources />
     </head>
     <body>
-           <div class="hero-unit span6">
+           <div class="jumbotron span6">
 
              <!-- start body content -->
 			 <div class="flash">

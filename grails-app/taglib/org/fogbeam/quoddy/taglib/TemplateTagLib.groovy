@@ -5,12 +5,13 @@ import groovy.text.Template
 
 import org.codehaus.groovy.grails.web.pages.GroovyPagesTemplateEngine
 
-class TemplateLib 
+class TemplateTagLib 
 {
 	static namespace = "fogcutter";
 	static defaultEncodeAs = "raw";
 
-	PageRenderer groovyPageRenderer;
+	// PageRenderer groovyPageRenderer;
+	def groovyPagesTemplateEngine;
 	
 	
 	def externalTemplate = { attrs, body ->
@@ -24,16 +25,19 @@ class TemplateLib
 		
 		String externalTemplateName = attrs.externalTemplate
 
-		File externalTemplateFile = new File( quoddyHome + externalTemplateName ); 
-		
-		GroovyPagesTemplateEngine groovyPagesTemplateEngine = new GroovyPagesTemplateEngine();
-		
+		File externalTemplateFile = new File( quoddyHome + "templates/" + externalTemplateName ); 
+				
 		StringWriter sw = new StringWriter();
 		
-		Template compiledContent = groovyPagesTemplateEngine.createTemplate(externalTemplateFile.text, UUID.randomUUID().toString());
+		String content = externalTemplateFile.text;
+		// System.out.println( "***********************************************\n${content}\n**************************************************");
+		
+		Template compiledContent = groovyPagesTemplateEngine.createTemplate(content, UUID.randomUUID().toString() );
 		
 		compiledContent?.make()?.writeTo(sw)
+		
 		String renderedContent = sw.toString()
+		
 		
 		out << renderedContent;
 	}

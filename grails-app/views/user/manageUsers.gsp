@@ -10,16 +10,16 @@
 		
 		<div class="adminContentArea">
 			<div class="row">
-				<div class="span2">
+				<div class="col-md-2">
 					<a href="${createLink(controller:'user', action:'adminAddUser')}" class="btn btn-primary">Add User</a>
 				
 				</div>
 				
-				<div class="span2">
+				<div class="col-md-2">
 					<a href="${createLink(controller:'admin', action:'importUsers')}" class="btn btn-primary">Import Users</a>
 				</div>
 				
-				<div class="span8">&nbsp;</div>
+				<div class="col-md-8">&nbsp;</div>
 				
 			</div>
 	

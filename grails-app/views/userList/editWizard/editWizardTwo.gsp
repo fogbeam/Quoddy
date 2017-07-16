@@ -8,7 +8,7 @@
 	</head>
 	
 	<body>
-	  	<div class="hero-unit span6">
+	  	<div class="jumbotron span6">
 		
         	<g:form controller="userList" action="editWizard" method="POST">
             

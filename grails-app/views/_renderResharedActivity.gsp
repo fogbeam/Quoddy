@@ -29,16 +29,16 @@
             <!-- if super-secret fogbeam-dev mode is on, render the "delete" button -->
         	<g:if test="CH.config.fogbeam.devmode">
         		<span class="xButton" id="xButton.${item.uuid}" name="xButton.${item.uuid}" >
-        			<a href="#" class="btn">X</a>
+        			<a href="#" class="btn btn-default">X</a>
       			</span>	
         	</g:if>
         
         
       		<span class="plusOneButton" id="plusOneButton.${item.uuid}" name="plusOneButton.${item.uuid}" >
-        		<a href="#" class="btn">+1</a>
+        		<a href="#" class="btn btn-default">+1</a>
       		</span>
       		<span class="shareButton" id="shareButton.${item.uuid}" name="shareButton.${item.uuid}" >
-        		<a href="#" class="btn">Share</a>
+        		<a href="#" class="btn btn-default">Share</a>
       		</span>
       		<span class="showHideCommentsButton">
       			<!-- change the initial state of this button
@@ -48,10 +48,10 @@
       			-->
       			
       			<g:if test="${item.streamObject.comments.size() > 0}">
-        			<a href="#" class="btn">Hide Comments</a>
+        			<a href="#" class="btn btn-default">Hide Comments</a>
       			</g:if>
       			<g:else>
-      				<a href="#" class="btn">No Comments</a>
+      				<a href="#" class="btn btn-default">No Comments</a>
       			</g:else>
       		</span>
     	</div>		

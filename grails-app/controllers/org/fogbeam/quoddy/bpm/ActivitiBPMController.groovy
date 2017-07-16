@@ -245,9 +245,7 @@ class ActivitiBPMController
 					{
 						println "Nope";
 					}
-					
 				}
-
 			}
 			finally
 			{

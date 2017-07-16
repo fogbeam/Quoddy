@@ -5,7 +5,7 @@
     </head>
     <body>
 
-		<div class="span10">	
+		<div class="col-md-10">	
 			<ul>
 				<g:each in="${allStatements}" var="statement">
 					<li>${statement}</li>

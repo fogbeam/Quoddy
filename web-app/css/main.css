@@ -1,104 +1,27 @@
-a/* theme */
-
-body {overflow-x: hidden; overflow-y:auto;}
-
-body, #header {
+body {
 	background: #e0e1e3 url('../images/theme/bg.png') repeat; 
 }
 
 .headerNavContainer {
 	background: #04324c url('../images/theme/header_bg.jpg') repeat;
-	height: 50px;
 }
 
-.headerNav {
-	max-width: 1200px;
-	min-width: 960px;
-	margin: 0 auto;
-	height:50px;
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    background-color: #add1dd;
+    color: #fcfeff;
 }
 
-.leftContentNav {
-/*	margin-left:12px !important; */
-	float:left;
-	margin-top:0px;
+.quoddy-brand {
+	font-size: 26pt;
+	color: #fcfeff !important;
 }
 
-.headerNav ul.customNav {
-	list-style-type: none;
-	color: #fefefe;
+.navbar-default .navbar-nav > li > a {
+	color: #f4f9f9;
+	font-size:14pt;
 }
 
-.headerNav ul.customNav h1 a {
-	position:relative;
-	top: -10px;
-}
-.headerNav ul.customNav h1 a:hover {
-	text-decoration: none;
-}
-
-.settingsNav a, .settingsNav a:hover,
-.headerNav ul.customNav h1,
-.headerNav ul.customNav a {
-	color: #fefefe;
-}
-
-.headerNav ul.customNav li {
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-weight:200;
-	font-size:12px;
-}
-
-.settingsNav {
-	float:right;
-  width: auto;
-}
-
-.dropdown a i {margin-left:4px;}
-
-.usertext {
- color:gray;
- padding-left:5px;
- padding-right:5px;
- display:inline-block;
-}
-
-ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list-style-type:none;margin:0;padding:0 .5em 0 0;}
-
-#header {
-	padding-top: 1px;
-	font-size:12px;
-	font-weight: bold;
-	height: 87px;
-}
-
-.leftContentNav .hero-unit {
-    background-color: #F5F5F5;
-    border-radius: 6px 6px 6px 6px;
-    margin-bottom: 30px;
-    padding: 12px;
-    width: 120px;
-    float:left;
-}
-	
-.leftContentNav h3 {margin:12px 0; }
-.leftContentNav .hero-unit h3 span {
-	font-size:11px; display:block;
-}
-
-.leftContentNav .hero-unit img {
-	border: solid 10px #fefefe; margin-bottom: 6px; width: 90px; height: 80px;
-}
-
-.leftContentNav .hero-unit ul {
-	margin-left:16px; margin-bottom:24px;
-}
-
-.leftContentNav .hero-unit p a.btn {
-	width: 80px;
-	display:inline-block;
-  font-size:12px;
-}
+.clear {clear:both; height:1%;}
 
 .btn.manageStreams {
     float: right;
@@ -129,33 +52,6 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 	margin-top: 11px;
 }
 
-#gbw ul {
-	list-style-type:none;
-}
-
-#gbw ul.customNav li {
-	float: left;
-	margin:10px;
-	font-size:12px;
-	display:block;
-}
-
-.topLevel > li,
-.customNav ul > li {
-  margin: 8px 4px;
-	font-size:12px;
-	display:block;
-	float:left;
-	font-weight: 200;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.searchBoxContainer {width:280px;}
-.searchBoxContainer input {padding:8px; height:14px !important;}
-.searchBoxContainer .btn-group {float: right; position: relative; left: 8px;}
-.searchBoxContainer .btn-group button { margin-right: 31px; font-size: 11px; margin-top: -3px !important; left:-6px; padding: 4px 6px; }
-
-/* .searchBox { margin-left:-50px;} */
 
 .aseWrapper {
   padding-top:18px;
@@ -214,8 +110,8 @@ ul.menu li{display:inline;list-style-image:none;list-style-position:outside;list
 .aseAvatarBlock {
 	float:left; 
 	width: 38px;
-  	margin-left: 10px;
-  	margin-top: 6px;
+  	margin-left: 2px;
+  	// margin-top: 6px;
   	margin-right:15px;
 }
 
@@ -295,29 +191,6 @@ form.login label {
 	margin-bottom:12px;
 }
 
-/* stream, list pages, etc */
-
-.listView .hero-unit {
-	padding:32px 10px 0px 10px;
-}
-
-.listView .hero-unit:after {
-	clear:both;
-}
-
-.listView .hero-unit .btn {
-	font-size: 16px;
-  font-weight: 200;
-  margin-bottom: -24px;
-  padding: 16px;
-  position: relative;
-  top: -68px;
-	float:right;
-}
-
-input[type="text"] {height:24px;}
-
-.clear {clear:both; height:1%;}
 
 form#profileForm input {
 	width: 272px;

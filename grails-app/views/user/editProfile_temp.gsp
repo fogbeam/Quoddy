@@ -242,7 +242,7 @@
     </head>
     	<body>
 			<!-- start body content -->
-			<div class="hero-unit span12">
+			<div class="jumbotron col-md-12">
               
 				<h2>Edit Profile</h2>
 				
@@ -263,18 +263,18 @@
 								</div>
 									<div class="dateRow left">
 										<b>Birthday</b>
-										<div class="span1">
+										<div class="col-md-1">
 											<label for="birthMonth">Month</label>
 											<g:select name="birthMonth" from="${months}" value="${profileToEdit.birthMonth}" optionKey="id" 
                           noSelection="${['':'Choose...']}" optionValue="text" />
 
 										</div>
-										<div class="span1">
+										<div class="col-md-1">
 											<label for="birthDayOfMonth">Day</label>
 											<g:select name="birthDayOfMonth" from="${days}" value="${profileToEdit.birthDayOfMonth}" optionKey="id" 
                           noSelection="${['':'Choose...']}" optionValue="text" />
 										</div>
-										<div class="span1">
+										<div class="col-md-1">
 											<label for="birthYear">Year</label>
                       <g:select name="birthYear" from="${years}" value="${profileToEdit.birthYear}" optionKey="id" 
                           noSelection="${['':'Choose...']}" optionValue="text" />

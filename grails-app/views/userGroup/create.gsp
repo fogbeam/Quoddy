@@ -7,7 +7,7 @@
 	</head>
 	
 	<body>
-	  <div class="hero-unit span6">	
+	  <div class="jumbotron span6">	
 		<h2>Create Group</h2>
 		<p />
 		<g:form controller="userGroup" action="save" method="POST">

@@ -1,6 +1,6 @@
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 
-<div class="hero-unit">
+<div class="jumbotron">
 	<shiro:authenticated>
 		<img style="float: left;"
 			src="${createLink(controller:'profilePic',action:'thumbnail',id:user.userId)}" />

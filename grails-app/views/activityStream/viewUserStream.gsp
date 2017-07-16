@@ -120,10 +120,9 @@
 		</div>
 		
 		<shiro:authenticated>
-			<g:form name="updateStatusForm" controller="status"
-				action="updateStatus">
+			<g:form name="updateStatusForm" controller="status" action="updateStatus">
 				<input type="text" id="statusText" name="statusText" class="span6" />
-				<input class="btn btn-primary btn-large span2"
+				<input class="btn btn-primary btn-large col-md-2"
 					id="updateStatusSubmit" type="submit" value="Update Status" />
 			</g:form>
 

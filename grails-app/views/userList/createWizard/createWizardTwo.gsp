@@ -8,7 +8,7 @@
 	</head>
 	
 	<body>
-		<div class="hero-unit span6">
+		<div class="jumbotron span6">
 			
 			<h3 style="margin-left:-40px;">Edit List Membership</h3>
 	        

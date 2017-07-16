@@ -13,6 +13,7 @@ class BusinessEventSubscriptionService
 	static expose = ['jms']
 	static destination = "eventSubscriptionInQueue";
 	
+	
 	def userService;
 	def jmsService;
 	def existDBService;
@@ -20,6 +21,13 @@ class BusinessEventSubscriptionService
 	
 	def onMessage( msg ) 
 	{
+		
+		// TODO: run this content through Stanbol, and insert any relevant
+		// triples into the Jena KB.  We especially want to make sure things like
+		// customer numbers, part numbers, and the like get recorded. 
+		
+		
+		
 		
 		// create an event for this, and store all the attributes needed
 		// to pull this into the user event stream when retrieved later.

@@ -7,7 +7,7 @@
 	</head>
 	
 	<body>
-	<div class="hero-unit span6">     
+	<div class="jumbotron span6">     
 		<h2>Friend Requests</h2>
 		<g:if test="${flash.message}">
 	        <div class="flash">

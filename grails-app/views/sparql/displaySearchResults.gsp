@@ -6,7 +6,7 @@
     </head>
     <body>
     
-    	<div class="span10" id="searchResults">  
+    	<div class="col-md-10" id="searchResults">  
 			<p />
 			
 			<ul>

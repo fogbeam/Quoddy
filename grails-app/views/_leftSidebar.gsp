@@ -1,37 +1,27 @@
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 
-<div class="hero-unit">
-	<shiro:authenticated>
-		<img style="float: left;"
-			src="${createLink(controller:'profilePic',action:'thumbnail',id:SecurityUtils.subject.principal.userId)}" />
-		<h3>
-			<a href="${createLink(controller:'user', action:'viewUser', params:[userId:SecurityUtils.subject.principal.userId])}">
-				<shiro:principal property="fullName"/>
-			</a>
-		</h3>
-	</shiro:authenticated>
+<div class="jumbotron" style="padding-top:10px; padding-left:20px;padding-right:10px;max-width:180px;">
+
+	<img src="${createLink(controller:'profilePic',action:'thumbnail',id:SecurityUtils.subject.principal.userId)}" />
+	<p />
+	<a href="${createLink(controller:'user', action:'viewUser', params:[userId:SecurityUtils.subject.principal.userId])}">
+		<shiro:principal property="fullName"/>
+	</a>
 	<p>
-		<a class="btn btn-info selected"
-			href="${createLink(controller:'user', action:'listFriends')}">All
-			Friends</a>
+		<a style="min-width:120px;" class="btn btn-info selected" href="${createLink(controller:'user', action:'listFriends')}">All Friends</a>
 	</p>
 	<p>
-		<a class="btn btn-primary"
-			href="${createLink(controller:'user', action:'listFollowers')}">All
-			Followers</a>
+		<a style="min-width:120px;" class="btn btn-primary" href="${createLink(controller:'user', action:'listFollowers')}">All Followers</a>
 	</p>
 	<p>
-		<a class="btn btn-success"
-			href="${createLink(controller:'user', action:'listIFollow')}">People
-			I follow</a>
+		<a style="min-width:120px;" class="btn btn-success" href="${createLink(controller:'user', action:'listIFollow')}">People I follow</a>
 	</p>
 	<p>
-		<a class="btn btn-inverse"
-			href="${createLink(controller:'userGroup', action:'list')}">All
-			Groups</a>
+		<a style="min-width:120px;" class="btn btn-warning" href="${createLink(controller:'userGroup', action:'list')}">All Groups</a>
 	</p>
 	<p>
-		<a class="btn" href="${createLink(controller:'user', action:'list')}">All
-			Users</a>
+		<a style="min-width:120px;" class="btn btn-default" href="${createLink(controller:'user', action:'list')}">All Users</a>
 	</p>
+	
 </div>
+

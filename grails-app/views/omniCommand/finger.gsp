@@ -8,7 +8,7 @@
 	
 	<body>
 		<div class="span8">
-			<div class="hero-unit" style="min-height:130px;margin-top:5px;padding-top:10px;padding-bottom:15px;">
+			<div class="jumbotron" style="min-height:130px;margin-top:5px;padding-top:10px;padding-bottom:15px;">
 			
 				<div style="display: inline-block; margin-left: 20px; margin-top: 5px; height: 70px; width: 150px; vertical-align: top;">
 					<label>UserId:</label>

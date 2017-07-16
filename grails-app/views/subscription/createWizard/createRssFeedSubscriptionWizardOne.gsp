@@ -7,7 +7,7 @@
 	</head>
 	
 	<body>
-	<div class="hero-unit span6">	
+	<div class="jumbotron span6">	
 		<h2>Create RSS Feed Subscription</h2>
 		<g:form controller="subscription" action="createWizard" method="POST">
 			<label for="subscriptionName">Name:</label> <g:textField name="subscriptionName" value=""/>

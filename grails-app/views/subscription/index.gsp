@@ -10,7 +10,7 @@
 
   <div class="span8 listView">
   <!-- Blank state, should display when there are not any subscriptions
-  <div class="hero-unit">
+  <div class="jumbotron">
     <h1>Subscriptions</h1>
     <p>Add new event subscriptions and manage existing ones here. <a href="#">What are subscriptions?</a></p>
     <p><a class="btn btn-primary btn-large">Create a New Subscription</a></p>
@@ -19,7 +19,7 @@
 
 
   <!-- populated state -->
-  <div class="hero-unit">
+  <div class="jumbotron">
     <div class="span4">
     <h2>Subscriptions</h2>
     <p>Manage existing event subscriptions and create new ones.</p>
