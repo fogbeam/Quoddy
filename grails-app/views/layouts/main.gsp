@@ -22,6 +22,13 @@
 	href="${createLinkTo(dir:'css', file:'hopscotch.css')}" />
 
 
+<!--  for "mega menu" using YAMM3 -->
+<link rel="stylesheet" type="text/css"
+	href="${createLinkTo(dir:'css', file:'demo.css')}" />
+<link rel="stylesheet" type="text/css"
+	href="${createLinkTo(dir:'css', file:'yamm.css')}" />
+
+
 <link rel="stylesheet" type="text/css"
 	href="${createLinkTo(dir:'js/jquery-ui-1.10.3.custom/css/vader', file:'jquery-ui-1.10.3.custom.css') }" />
 
@@ -184,7 +191,7 @@
 <body>
 
 
-	<nav class="navbar navbar-default headerNavContainer">
+	<nav class="navbar yamm navbar-default headerNavContainer">
 		<div class="container-fluid">
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
