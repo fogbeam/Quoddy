@@ -314,8 +314,21 @@ div#gbg {
 	font-weight:bold;
 }
 
-.searchBoxContainer {width:280px;}
+.searchBoxContainer {width:350px;}
 .searchBoxContainer input {padding:8px; height:14px !important;}
 .searchBoxContainer .btn-group {float: right; position: relative; left: 8px;}
 .searchBoxContainer .btn-group button { margin-right: 31px; font-size: 11px; margin-top: -3px !important; left:-6px; padding: 4px 6px; }
 
+#queryString { 
+	min-width:350px;
+	height:35px;
+}
+
+#statusText {
+	width:50%;
+	height: 50px;
+	font-size:18pt;
+	outline: none; 
+	white-space: pre-wrap; 
+	word-wrap: break-word;
+}
