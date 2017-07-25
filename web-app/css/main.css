@@ -313,3 +313,9 @@ div#gbg {
 	font-size:13pt;
 	font-weight:bold;
 }
+
+.searchBoxContainer {width:280px;}
+.searchBoxContainer input {padding:8px; height:14px !important;}
+.searchBoxContainer .btn-group {float: right; position: relative; left: 8px;}
+.searchBoxContainer .btn-group button { margin-right: 31px; font-size: 11px; margin-top: -3px !important; left:-6px; padding: 4px 6px; }
+

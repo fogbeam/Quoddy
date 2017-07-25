@@ -225,24 +225,24 @@
 					</li>			
 				</ul>					
 				
-				<!-- <div class="searchBoxContainer"> -->
+				<div class="searchBoxContainer">
 				
-				<g:form name="searchForm" controller="search" action="doSearch" method="GET" class="navbar-form navbar-left">
-					<input id="queryString" name="queryString" type="text" class="searchBox"  autocomplete="off" style="width:350px;" />
-					<div class="btn-group">
-						<button id="foo" name="foo" data-toggle="dropdown" class="btn dropdown-toggle btn-small"> Search <span class="caret"></span></button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a id="searchPplBtn" name="searchPplBtn" href="#">People</a></li>
-							<li><a id="searchFriendsBtn" name="searchFriendsBtn" href="#">Friends</a></li>
-							<li><a id="searchPplIFollowBtn" name="searchPplIFollowBtn" href="#">People I Follow</a></li>
-							<li class="divider"></li>
-							<li><a id="searchEverythingBtn" name="searchEverythingBtn" href="#">Everything</a></li>
-							<li><a id="sparqlSearchBtn" name="sparqlSearchBtn" href="#">SPARQL</a></li>
-						</ul>
-					</div>
-				</g:form>
+					<g:form name="searchForm" controller="search" action="doSearch" method="GET" class="navbar-form navbar-left">
+						<input id="queryString" name="queryString" type="text" class="searchBox"  autocomplete="off" style="width:350px;" />
+						<div class="btn-group">
+							<button id="foo" name="foo" data-toggle="dropdown" class="btn dropdown-toggle btn-small"> Search <span class="caret"></span></button>
+							<ul class="dropdown-menu" role="menu">
+								<li><a id="searchPplBtn" name="searchPplBtn" href="#">People</a></li>
+								<li><a id="searchFriendsBtn" name="searchFriendsBtn" href="#">Friends</a></li>
+								<li><a id="searchPplIFollowBtn" name="searchPplIFollowBtn" href="#">People I Follow</a></li>
+								<li class="divider"></li>
+								<li><a id="searchEverythingBtn" name="searchEverythingBtn" href="#">Everything</a></li>
+								<li><a id="sparqlSearchBtn" name="sparqlSearchBtn" href="#">SPARQL</a></li>
+							</ul>
+						</div>
+					</g:form>
 	
-				<!--  </div> -->
+				</div>
 				
 				<ul class="nav navbar-nav navbar-right">
 				
