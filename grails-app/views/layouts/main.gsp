@@ -223,14 +223,14 @@
 							<fogcutter:externalTemplate externalTemplate="megamenu.gsp" />
 						</ul>
 					</li>			
-				</ul>					
-				
+							
+				<li>
 				<div class="searchBoxContainer">
 				
 					<g:form name="searchForm" controller="search" action="doSearch" method="GET" class="navbar-form navbar-left">
-						<input id="queryString" name="queryString" type="text" class="searchBox"  autocomplete="off" style="width:350px;" />
+						<input id="queryString" name="queryString" type="text" class="searchBox"  autocomplete="off" />
 						<div class="btn-group">
-							<button id="foo" name="foo" data-toggle="dropdown" class="btn dropdown-toggle btn-small"> Search <span class="caret"></span></button>
+							<button id="searchMenuBtn" name="foo" data-toggle="dropdown" class="btn dropdown-toggle btn-small"> Search <span class="caret"></span></button>
 							<ul class="dropdown-menu" role="menu">
 								<li><a id="searchPplBtn" name="searchPplBtn" href="#">People</a></li>
 								<li><a id="searchFriendsBtn" name="searchFriendsBtn" href="#">Friends</a></li>
@@ -243,6 +243,8 @@
 					</g:form>
 	
 				</div>
+				</li>
+				</ul>
 				
 				<ul class="nav navbar-nav navbar-right">
 				
