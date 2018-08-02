@@ -19,4 +19,6 @@ help/docs
 help/docs/*
 .link_to_grails_plugins
 *.not_jar
+.gradle/
+build/
 
