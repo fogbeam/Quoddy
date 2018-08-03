@@ -5,6 +5,7 @@
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/views"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/i18n"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/conf"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/java"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/init"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/controllers"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/domain"/>
