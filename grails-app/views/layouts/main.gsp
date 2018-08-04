@@ -1,58 +1,96 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title><g:layoutTitle default="Quoddy" /></title>
-<nav:resources />
+<title>
+	<g:layoutTitle default="Quoddy" />
+</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" type="text/css"
-	href="${createLinkTo(dir:'css', file:'bootstrap.css')}" />
+	href="${resource(dir:'css', file:'bootstrap.css')}" />
 <link rel="stylesheet" type="text/css"
-	href="${createLinkTo(dir:'css', file:'bootstrap-dropdown-multilevel.css')}" />
+	href="${resource(dir:'css', file:'bootstrap-dropdown-multilevel.css')}" />
 <link rel="stylesheet" type="text/css"
-	href="${createLinkTo(dir:'css', file:'main.css')}" />
+	href="${resource(dir:'css', file:'main.css')}" />
 <link rel="stylesheet" type="text/css"
-	href="${createLinkTo(dir:'css/FontAwesome/css', file:'font-awesome.css')}">
-<link rel="stylesheet" type="text/css"
-	href="${createLinkTo(dir:'css', file:'oagis.css')}" />
-<link rel="stylesheet" type="text/css"
-	href="${createLinkTo(dir:'css', file:'crappy_css_added_by_phil.css')}" />
-<link rel="stylesheet" type="text/css"
-	href="${createLinkTo(dir:'css', file:'hopscotch.css')}" />
+	href="${resource(dir:'css', file:'FontAwesome/css/font-awesome.css')}">
 
+<!-- 
+<link rel="stylesheet" type="text/css"
+	href="${resource(dir:'css', file:'oagis.css')}" />
+-->
 
+<link rel="stylesheet" type="text/css"
+	href="${resource(dir:'css', file:'crappy_css_added_by_phil.css')}" />
+<link rel="stylesheet" type="text/css"
+	href="${resource(dir:'css', file:'hopscotch.css')}" />
 <!--  for "mega menu" using YAMM3 -->
 <link rel="stylesheet" type="text/css"
-	href="${createLinkTo(dir:'css', file:'demo.css')}" />
+	href="${resource(dir:'css', file:'demo.css')}" />
 <link rel="stylesheet" type="text/css"
-	href="${createLinkTo(dir:'css', file:'yamm.css')}" />
+	href="${resource(dir:'css', file:'yamm.css')}" />
 
 
 <link rel="stylesheet" type="text/css"
-	href="${createLinkTo(dir:'js/jquery-ui-1.10.3.custom/css/vader', file:'jquery-ui-1.10.3.custom.css') }" />
+	href="${resource(dir:'javascripts', file:'jquery-ui-1.10.3.custom/css/vader/jquery-ui-1.10.3.custom.css') }" />
 
 
+<!--
 <g:javascript library="jquery-ui-1.10.3.custom/js/jquery-1.9.1" />
+-->
+<script type="text/javascript"
+	src="${resource(dir:'javascripts', file:'jquery-ui-1.10.3.custom/js/jquery-1.9.1.js')}"></script>
+
+
+
 
 <g:javascript>
 	var $j = jQuery.noConflict();	
 </g:javascript>
 
+<!--
 <g:javascript library="hopscotch" />
+-->
+<script type="text/javascript"
+	src="${resource(dir:'javascripts', file:'hopscotch.js')}"></script>
+
+<!-- 
 <g:javascript library="quoddy_intro_tour" />
+-->
+<script type="text/javascript"
+	src="${resource(dir:'javascripts', file:'quoddy_intro_tour.js')}"></script>
+
+<!--
 <g:javascript library="activiti_bpm" />
+-->
+<script type="text/javascript"
+	src="${resource(dir:'javascripts', file:'activiti_bpm.js')}"></script>
 
 
+
+<!--
 <g:javascript
 	library="jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom" />
+-->
+<script type="text/javascript"
+	src="${resource(dir:'javascripts', file:'jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js')}"></script>
+
+
+
 
 <script type="text/javascript"
-	src="${createLinkTo(dir:'js', file:'bootstrap.js')}"></script>
-<script type="text/javascript"
-	src="${createLinkTo(dir:'js', file:'bootstrap-dropdown-multilevel.js')}"></script>
+	src="${resource(dir:'javascripts', file:'bootstrap.js')}"></script>
 
+<script type="text/javascript"
+	src="${resource(dir:'javascripts', file:'bootstrap-dropdown-multilevel.js')}"></script>
+
+<!--
 <g:javascript library="jquery.timers-1.2" />
+-->
+<script type="text/javascript"
+	src="${resource(dir:'javascripts', file:'jquery.timers-1.2.js')}"></script>
+
 
 <script type="text/javascript">
 	<g:render template="/javascript/application.js"/>

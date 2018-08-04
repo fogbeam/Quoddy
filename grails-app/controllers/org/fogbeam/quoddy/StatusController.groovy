@@ -8,10 +8,9 @@ import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.StatusUpdate
 import org.fogbeam.quoddy.stream.constants.EventTypes
-// import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
 
-class StatusController {
-
+class StatusController 
+{	
 	def userService;
 	def eventStreamService;
 	def jmsService;
@@ -42,13 +41,13 @@ class StatusController {
 			
 			// Hit Stanbol to get enrichmentData
 			// call Stanbol REST API to get enrichment data
-			String stanbolServerUrl = CH.config.urls.stanbol.endpoint;
+			String stanbolServerUrl = grailsApplication.config.urls.stanbol.endpoint;
 			log.debug( "using stanbolServerUrl: ${stanbolServerUrl}");
 			
 			// RESTClient restClient = new RESTClient( stanbolServerUrl )
 			def restClient = null;
 			
-			boolean enhancementEnabled = Boolean.parseBoolean( CH.config.features.enhancement.enabled ? CH.config.features.enhancement.enabled : "false" );
+			boolean enhancementEnabled = Boolean.parseBoolean( grailsApplication.config.features.enhancement.enabled ? grailsApplication.config.features.enhancement.enabled : "false" );
 			
 			if( enhancementEnabled )
 			{

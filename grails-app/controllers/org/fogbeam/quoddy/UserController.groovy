@@ -3,7 +3,6 @@ package org.fogbeam.quoddy;
 import groovy.json.JsonBuilder
 
 import org.apache.commons.io.FilenameUtils
-// import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.fogbeam.quoddy.annotation.AnnotationResource
 import org.fogbeam.quoddy.dto.UserProfileCommand
 import org.fogbeam.quoddy.profile.ContactAddress
@@ -28,13 +27,12 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile
 // import com.hp.hpl.jena.tdb.TDBFactory
 
 
-class UserController {
-
+class UserController 
+{	
 	def userService;
 	def profileService;
 	def searchService;
 	def jenaService;
-//	def scaffold = false;
 
 	def eventStreamService;
 	
@@ -359,7 +357,7 @@ class UserController {
     def registerUser = 
 	{ UserRegistrationCommand urc ->
     
-		if( CH.config.enable.self.registration != true )
+		if( grailsApplication.config.enable.self.registration != true )
 		{
 			redirect( controller:'home', action:'index')
 			return;
@@ -515,9 +513,9 @@ class UserController {
 	def create = 
 	{   
 		log.debug( "enable self reg? ");
-		log.debug( CH.config.enable.self.registration);
+		log.debug( grailsApplication.config.enable.self.registration);
 		
-		if( CH.config.enable.self.registration != true )
+		if( grailsApplication.config.enable.self.registration != true )
 		{
 			log.debug( "self registration is disabled");
 			// if self registration isn't turned on, just bounce to the front-page here

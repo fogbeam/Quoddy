@@ -12,8 +12,8 @@ import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ResharedActivityStreamItem
 import org.fogbeam.quoddy.stream.StreamItemBase
+import groovyx.net.http.*;
 
-// import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
 
 // @Mixin(SidebarPopulatorMixin)
 class ActivityStreamController 
@@ -193,8 +193,8 @@ class ActivityStreamController
 		log.info( "Invoking OpenMeetings integration here...");
 		
 		// prereq... instantiate a RESTClient and generate OM session ID and login
-		String openMeetingsEndpoint = CH.config.urls.openmeetings.endpoint;
-		def client = null; // new RESTClient( openMeetingsEndpoint )
+		String openMeetingsEndpoint = grailsApplication.config.urls.openmeetings.endpoint;
+		def client = new RESTClient( openMeetingsEndpoint )
 		
 		// call getSession
 		def resp = client.get( path : 'openmeetings/services/UserService/getSession', contentType:XML );
@@ -203,8 +203,8 @@ class ActivityStreamController
 
 		// TODO: deal with this username/password properly...
 		// call login using the SID from getSession
-		String omUsername = CH.config.credentials.om.username;
-		String omPassword = CH.config.credentials.om.password;
+		String omUsername = grailsApplication.config.credentials.om.username;
+		String omPassword = grailsApplication.config.credentials.om.password;
 		resp = client.get( path : 'openmeetings/services/UserService/loginUser', contentType:XML, query: [ SID:sid, username:omUsername, userpass:omPassword ] );
 		
 		/**

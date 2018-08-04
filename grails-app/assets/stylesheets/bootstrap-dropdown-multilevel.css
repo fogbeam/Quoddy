@@ -1,0 +1,26 @@
+.dropdown-menu .dropdown-menu {
+	// position: static;
+	padding: 5px 0;
+	list-style: none;
+	font-size: 14px;
+	background-color: #fff;
+	border: none;
+	-webkit-box-shadow: none;
+	box-shadow:none;
+	background-clip: padding-box;
+    border-radius:6px 0 6px 6px;
+}
+
+.dropdownleft {
+	position:absolute;
+	float: left;
+	margin-top: -100px;
+    margin-left:-90px;
+}
+
+.dropdownright {
+	position:absolute;
+	float: right;
+	margin-top: -100px;
+    margin-left:110px;
+}
