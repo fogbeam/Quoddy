@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response
 import org.fogbeam.quoddy.jaxrs.collection.EventSubscriptionCollection
 import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
 
-@Path('/api/eventsubscription')
+@Path('/api/eventsubscriptions')
 @Consumes(['application/xml','application/json'])
 @Produces(['application/xml','application/json'])
 class EventSubscriptionCollectionResource

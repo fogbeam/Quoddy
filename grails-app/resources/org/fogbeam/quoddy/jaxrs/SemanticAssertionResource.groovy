@@ -11,7 +11,7 @@ import javax.ws.rs.Produces
 import javax.ws.rs.core.Response
 import javax.ws.rs.core.Response.Status
 
-@Path( "api/semantic/assertion" )
+@Path( "/api/semantic/assertion" )
 class SemanticAssertionResource {
 
 	def jenaService;

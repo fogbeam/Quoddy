@@ -14,7 +14,7 @@ import grails.core.GrailsClass
 import org.quartz.Trigger
 import org.quartz.impl.triggers.SimpleTriggerImpl
 
-@Path( "api/scheduledjob/trigger" )
+@Path( "/api/scheduledjob/trigger" )
 class TriggerResource 
 {
 	def grailsApplication;

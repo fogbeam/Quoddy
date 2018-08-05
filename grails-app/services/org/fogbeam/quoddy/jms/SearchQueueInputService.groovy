@@ -4,7 +4,7 @@ import static groovyx.net.http.ContentType.TEXT
 import static groovyx.net.http.ContentType.URLENC
 import groovyx.net.http.RESTClient
 
-import javax.jms.MapMessage
+// import javax.jms.MapMessage
 import javax.xml.transform.OutputKeys
 import javax.xml.transform.Transformer
 import javax.xml.transform.TransformerException
@@ -67,8 +67,8 @@ public class SearchQueueInputService
 	def userService;
 	def existDBService;
 	
-    static expose = ['jms']
-    static destination = "quoddySearchQueue"                 
+	// static expose = ['jms']
+    // static destination = "quoddySearchQueue"                 
 	
     def onMessage(msg)
     { 
@@ -87,8 +87,8 @@ public class SearchQueueInputService
     	}
     	else
     	{
-		MapMessage mapMessage = (MapMessage)msg;
-    		String msgType = mapMessage.getString( "msgType" );
+			// MapMessage mapMessage = (MapMessage)msg;
+    		String msgType = ""; // mapMessage.getString( "msgType" );
 			
 			//begin get the contents of the update
 			//var msgContents to store the update contents

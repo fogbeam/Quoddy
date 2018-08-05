@@ -1,13 +1,13 @@
 package org.fogbeam.quoddy.jaxrs
 
-import groovy.json.JsonSlurper
+import static org.grails.plugins.jaxrs.response.Responses.*;
 
+import groovy.json.JsonSlurper
 import javax.ws.rs.POST
 import javax.ws.rs.Path
-import static org.grails.plugins.jaxrs.response.Responses.*;
 import org.fogbeam.quoddy.User
 
-@Path( "api/user" )
+@Path( "/api/user" )
 class UserResource 
 {
 	def userService;

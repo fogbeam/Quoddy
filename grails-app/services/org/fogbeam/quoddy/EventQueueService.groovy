@@ -1,6 +1,6 @@
 package org.fogbeam.quoddy
 
-import javax.jms.Message
+// import javax.jms.Message
 
 import org.fogbeam.quoddy.social.FriendCollection
 import org.fogbeam.quoddy.stream.ActivityStreamItem
@@ -18,8 +18,8 @@ class EventQueueService
 	
 	Map<String, Deque<ActivityStreamItem>> eventQueues = new HashMap<String, Deque<ActivityStreamItem>>();
 	
-	static expose = ['jms']
-	static destination = "uitestActivityQueue"; // TODO: rename this to something more meaningful
+	// static expose = ['jms']
+	// static destination = "uitestActivityQueue"; // TODO: rename this to something more meaningful
 	
 	def onMessage(msg)
 	{
@@ -87,6 +87,8 @@ class EventQueueService
 			{
 				log.debug( "match found, offering message" );
 				Deque<Map> userQueue = entry.getValue();
+				
+				/* 
 				if( msg instanceof Message )
 				{
 					log.debug( "Message being offered" );					
@@ -97,6 +99,7 @@ class EventQueueService
 				{
 					log.debug( "WTF is this? ${msg}");
 				}
+				*/
 			}			
 		}
 		

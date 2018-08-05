@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response
 
 import org.fogbeam.quoddy.subscription.RssFeedSubscription
 
-@Path( "api/subscription/rssfeed" )
+@Path( "/api/subscription/rssfeed" )
 class RssSubscriptionResource 
 {
 	

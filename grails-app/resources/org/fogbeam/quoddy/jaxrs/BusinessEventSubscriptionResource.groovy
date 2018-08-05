@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response
 
 import org.fogbeam.quoddy.subscription.BusinessEventSubscription
 
-@Path( "api/subscription/businessevent" )
+@Path( "/api/subscription/businessevent" )
 class BusinessEventSubscriptionResource 
 {
 	def businessEventSubscriptionService;

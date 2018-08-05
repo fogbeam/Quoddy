@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response
 
 import org.fogbeam.quoddy.subscription.ActivitiUserTaskSubscription
 
-@Path( "api/subscription/activiti" )
+@Path( "/api/subscription/activiti" )
 class ActivitiBPMSubscriptionResource {
 
 
