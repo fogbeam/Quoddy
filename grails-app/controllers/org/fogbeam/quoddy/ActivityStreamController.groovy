@@ -6,7 +6,7 @@ package org.fogbeam.quoddy
 // import groovyx.net.http.RESTClient
 
 
-// import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.profile.ContactAddress
 import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.stream.ActivityStreamItem
@@ -17,7 +17,7 @@ import grails.plugin.springsecurity.annotation.Secured
 import groovyx.net.http.*;
 
 
-// @Mixin(SidebarPopulatorMixin)
+@Mixin(SidebarPopulatorMixin)
 class ActivityStreamController 
 {
 	def eventStreamService;
@@ -34,8 +34,8 @@ class ActivityStreamController
 	def activitiUserTaskSubscriptionService;
 	def rssFeedSubscriptionService;
 	
-	
-	def getQueueSize =
+    @Secured(['ROLE_USER', 'ROLE_ADMIN'])
+	def getQueueSize()
 	{	
 		// check and see how many queued up messages are waiting for this user...	
 		// we'll call this on a timer basis and build up a message that says

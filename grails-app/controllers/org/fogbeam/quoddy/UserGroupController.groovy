@@ -1,6 +1,6 @@
 package org.fogbeam.quoddy
 
-// import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.StatusUpdate
 import org.fogbeam.quoddy.stream.constants.EventTypes
@@ -8,7 +8,7 @@ import org.fogbeam.quoddy.stream.constants.EventTypes
 import grails.plugin.springsecurity.annotation.Secured
 
 
-// @Mixin(SidebarPopulatorMixin)
+@Mixin(SidebarPopulatorMixin)
 class UserGroupController
 {
 	def eventStreamService;

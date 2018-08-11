@@ -1,5 +1,7 @@
 package org.fogbeam.quoddy
 
+import org.springframework.security.core.GrantedAuthority
+
 import grails.compiler.GrailsCompileStatic
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -7,7 +9,7 @@ import groovy.transform.ToString
 @GrailsCompileStatic
 @EqualsAndHashCode(includes='authority')
 @ToString(includes='authority', includeNames=true, includePackage=false)
-class AccountRole
+class AccountRole implements GrantedAuthority
 {
 	private static final long serialVersionUID = 1
 

@@ -1,11 +1,11 @@
 package org.fogbeam.quoddy
 
-// import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 
 import grails.plugin.springsecurity.annotation.Secured
 
-// @Mixin(SidebarPopulatorMixin)
+@Mixin(SidebarPopulatorMixin)
 class UserListController
 {
 	def userService;

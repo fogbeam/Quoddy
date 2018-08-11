@@ -37,6 +37,11 @@ repositories {
 
 
 dependencies {
+
+    // This should be temporary until we can replace all the formRemote and remoteLink stuff
+    // with pure Javascript 
+    compile 'org.grails.plugins:ajax-tags:1.0.0'
+
     compile "org.springframework.boot:spring-boot-starter-logging"
     compile "org.springframework.boot:spring-boot-autoconfigure"
     compile "org.grails:grails-core"

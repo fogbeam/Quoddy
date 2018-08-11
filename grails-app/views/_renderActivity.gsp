@@ -1,5 +1,3 @@
-<%@ page import="org.codehaus.groovy.grails.commons.ConfigurationHolder as CH" %>
-
 <!--  begin aseWrapper area -->
 
 <div class="aseWrapper" id="aseWrapper.${item.uuid}">
@@ -35,7 +33,7 @@
         <div class="commentButtonBar">
         	
         	<!-- if super-secret fogbeam-dev mode is on, render the "delete" button -->
-        	<g:if test="CH.config.fogbeam.devmode">
+        	<g:if test="grailsApplication.config.fogbeam.devmode">
         		<span class="xButton" id="xButton.${item.uuid}" name="xButton.${item.uuid}" >
         			<a href="#" class="btn btn-default">X</a>
       			</span>	

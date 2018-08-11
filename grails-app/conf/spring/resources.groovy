@@ -1,6 +1,7 @@
 package spring;
 
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
+import org.fogbeam.quoddy.security.UserDetailsService;
 
 // Place your Spring DSL code here
 beans = {
@@ -10,6 +11,11 @@ beans = {
 	// userPasswordEncoderListener(UserPasswordEncoderListener, ref('hibernateDatastore'))
 	// authenticationUserDetailsService( FogcutterUserDetailsService )
 
+    userDetailsService( UserDetailsService )
+    {
+        userService = ref('userService')
+    }
+    
 	authenticationEntryPoint( LoginUrlAuthenticationEntryPoint, "/localLogin/index" );
 
 	

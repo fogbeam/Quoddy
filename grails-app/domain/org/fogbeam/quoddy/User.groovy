@@ -1,6 +1,5 @@
 package org.fogbeam.quoddy;
 
-import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -8,10 +7,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.fogbeam.quoddy.profile.Profile;
 import org.fogbeam.quoddy.stream.ActivityStreamItem;
 import org.fogbeam.quoddy.stream.StatusUpdate;
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 
 @XmlRootElement
 @XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.NONE)
-class User implements Serializable
+class User implements Serializable, UserDetails
 {
 
 	public User()
@@ -91,9 +92,15 @@ class User implements Serializable
 	static mappedBy = [oldStatusUpdates:'creator']
 
     
-    Set<AccountRole> getAuthorities()
+    Set<GrantedAuthority> getAuthorities()
     {
-        (UserAccountRoleMapping.findAllByUser(this) as List<UserAccountRoleMapping>)*.role as Set<AccountRole>
+        Set<GrantedAuthority> authorities = null;
+        UserAccountRoleMapping.withNewSession
+        {
+            authorities = (UserAccountRoleMapping.findAllByUser(this) as List<UserAccountRoleMapping>)*.role as Set<GrantedAuthority>
+        }
+        
+        return authorities;
     }
 
     
@@ -136,5 +143,40 @@ class User implements Serializable
 	{
 		return "/renderUser";
 	}
+
+
+    @Override
+    public String getUsername()
+    {
+        return userId;
+    }
+
+
+    @Override
+    public boolean isAccountNonExpired()
+    {
+        return !accountExpired;
+    }
+
+
+    @Override
+    public boolean isAccountNonLocked()
+    {
+        return !accountLocked;
+    }
+
+
+    @Override
+    public boolean isCredentialsNonExpired()
+    {
+        return !passwordExpired;
+    }
+
+
+    @Override
+    public boolean isEnabled()
+    {
+        return !disabled;
+    }
 	
 }

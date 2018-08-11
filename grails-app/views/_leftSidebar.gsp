@@ -1,7 +1,7 @@
 
 <div class="jumbotron" style="padding-top:10px; padding-left:20px;padding-right:10px;max-width:180px;">
 
-	<img src="${createLink(controller:'profilePic',action:'thumbnail',id:'1')}" />
+	<img src="${createLink(controller:'profilePic',action:'thumbnail',id:sec.loggedInUserInfo(field: 'userId'))}" />
 	<p />
 	<a href="${createLink(controller:'user', action:'viewUser')}">
 		<!--   <shiro:principal property="fullName"/> -->

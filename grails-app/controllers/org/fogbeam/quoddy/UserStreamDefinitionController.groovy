@@ -1,6 +1,6 @@
 package org.fogbeam.quoddy
 
-// import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
+import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.stream.EventType
 import org.fogbeam.quoddy.stream.constants.EventTypeScopes
 import org.fogbeam.quoddy.subscription.BaseSubscription
@@ -8,7 +8,7 @@ import org.fogbeam.quoddy.subscription.BusinessEventSubscription
 
 import grails.plugin.springsecurity.annotation.Secured
 
-// @Mixin(SidebarPopulatorMixin)
+@Mixin(SidebarPopulatorMixin)
 class UserStreamDefinitionController
 {
 	def userService;
