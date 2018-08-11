@@ -49,7 +49,7 @@
 </div>
 
 <div class="activityStreamFooter" style="clear:both;">
-	<shiro:authenticated>
+	<sec:ifLoggedIn>
 		<center><a href="#" id="loadMoreLink">Get More Events</a></center>
-	</shiro:authenticated>
+	</sec:ifLoggedIn>
 </div>

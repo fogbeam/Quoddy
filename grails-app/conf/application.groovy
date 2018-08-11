@@ -4,7 +4,8 @@ grails.plugin.springsecurity.cas.serviceUrl = 'http://localhost:8080/login/cas'
 grails.plugin.springsecurity.cas.serverUrlPrefix = 'https://sso.fogbeam.com/cas'
 
 
-/* TODO: fix up this user/role stuff */
+grails.plugin.springsecurity.auth.loginFormUrl="/localLogin/index"
+grails.plugin.springsecurity.failureHandler.defaultFailureUrl="/localLogin/index?login_error=1"
 
 // Added by the Spring Security Core plugin:
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'org.fogbeam.quoddy.User'

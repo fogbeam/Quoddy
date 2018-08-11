@@ -9,7 +9,7 @@
 	<body>
 		<div id="bodyContent" class="span8">
 
-        <shiro:authenticated>
+        <sec:ifLoggedIn>
 			<p />
 			<g:if test="${userIsGroupMember}" >
 				<g:link controller="userGroup" 
@@ -55,7 +55,7 @@
 				
 				</div>
 			</g:if>
-		</shiro:authenticated>
+		</sec:ifLoggedIn>
 		</div>
 	</body>
 </html>

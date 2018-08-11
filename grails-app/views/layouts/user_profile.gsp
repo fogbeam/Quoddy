@@ -68,12 +68,12 @@
 					</li>
 					
 					
-					<shiro:authenticated>
+					<sec:ifLoggedIn>
 						<li><a href="#">Email</a></li>
 						<li><a href="#">Calendar</a></li>
 						<li><a href="#">Apps</a></li>
 						<li><a href="#">Workflows</a></li>
-					</shiro:authenticated>
+					</sec:ifLoggedIn>
 				</ul>
 				<div id="gbg" class="settingsNav navbar">
 					<ul class="topLevel">
@@ -108,7 +108,7 @@
 							data-toggle="dropdown" href="#">My Account<b class="caret"></b></a>
 							<ul class="dropdown-menu">
 								
-								<shiro:authenticated>
+								<sec:ifLoggedIn>
 									<li><a
 										href="${createLink(controller:'user', action:'listOpenFriendRequests')}">
 										Pending Friend Requests</a></li>
@@ -121,7 +121,7 @@
 									<li><a
 										href="${createLink(controller:'user', action:'editProfile')}">
 										Edit Profile</a></li>
-								</shiro:authenticated>
+								</sec:ifLoggedIn>
 								
 								<li class="divider"></li>
 								<g:if test="${session.enable_self_registration == true}">
@@ -130,14 +130,14 @@
 										href="${createLink(controller:'user', action:'create')}">Register</a></li>
 								</g:if>
 								
-								<shiro:authenticated>
+								<sec:ifLoggedIn>
 									<li><a href="${createLink(controller:'login') }">Login</a></li>
-								</shiro:authenticated>
+								</sec:ifLoggedIn>
 								
-								<shiro:authenticated>
+								<sec:ifLoggedIn>
 									<li><a
 										href="${createLink(controller:'login', action:'logout')}">Logout</a></li>
-								</shiro:authenticated>
+								</sec:ifLoggedIn>
 							</ul>
 						</li>
 						
@@ -157,8 +157,8 @@
 
 
 						<!-- Admin menu -->
-						<shiro:authenticated>
-							<shiro:hasRole name="admin">
+						<sec:ifLoggedIn>
+							<sec:ifAllGranted roles="ROLE_ADMIN
 								<li class="dropdown"><a class="dropdown-toggle"
 									data-toggle="dropdown" href="#">Admin<b class="caret"></b></a>
 									<ul class="dropdown-menu">
@@ -182,10 +182,9 @@
 										<li><a href="#">Whatever...</a></li>
 									</ul>
 								</li>
-							</shiro:hasRole>
-						</shiro:authenticated>
+							</sec:ifAllGranted>
+						</sec:ifLoggedIn>
 						<!--  end Admin menu -->
-						
 					</ul>
 				</div>
 			</div>

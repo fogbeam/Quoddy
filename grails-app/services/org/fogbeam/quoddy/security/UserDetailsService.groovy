@@ -24,6 +24,11 @@ class UserDetailsService implements org.springframework.security.core.userdetail
             ourUser = userService.findUserByUserId( username );
         }
         
+        if( ourUser == null )
+        {
+            ourUser = userService.findUserByUserId( "SYS_anonymous" );
+        }
+        
         println "returning user: " + ourUser;
         
         return ourUser;

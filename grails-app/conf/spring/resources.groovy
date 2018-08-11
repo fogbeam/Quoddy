@@ -1,15 +1,13 @@
 package spring;
 
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.fogbeam.quoddy.security.UserDetailsService;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
+
+import grails.plugin.springsecurity.SpringSecurityUtils
 
 // Place your Spring DSL code here
 beans = {
     
-    // userPasswordEncoderListener(UserPasswordEncoderListener, ref('hibernateDatastore'))
-	
-	// userPasswordEncoderListener(UserPasswordEncoderListener, ref('hibernateDatastore'))
-	// authenticationUserDetailsService( FogcutterUserDetailsService )
 
     userDetailsService( UserDetailsService )
     {

@@ -1,5 +1,3 @@
-<%@ page import="org.apache.shiro.SecurityUtils"%>
-
 <html>
 <head>
 <title>Quoddy: Edit Profile</title>

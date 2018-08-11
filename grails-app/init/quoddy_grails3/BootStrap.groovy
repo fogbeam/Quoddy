@@ -255,6 +255,41 @@ class BootStrap
 				println "did not locate admin role!";
 		}
 
+        
+        /* Create default Anonymous user */
+        boolean anonUserFound = false;
+
+        User userAnonymous= userService.findUserByUserId( "SYS_anonymous" );
+
+        if( userAnonymous != null )
+        {
+             println "Found existing SYS_anonymous user!";
+
+        }
+        else
+        {
+            println "Could not find SYS_anonymous";
+            println "Creating new SYS_anonymous user";
+            userAnonymous = new User();
+            userAnonymous.uuid = "-1";
+            userAnonymous.displayName = "Anonymous User";
+            userAnonymous.firstName = "Anonymous";
+            userAnonymous.lastName = "User";
+            userAnonymous.email = "anonymous@example.com";
+            userAnonymous.userId = "SYS_anonymous";
+            userAnonymous.password = "notapplicable";
+            userAnonymous.bio = "N/A";
+            userAnonymous.disabled = true;
+            
+            Profile profileAnonymous = new Profile();
+            profileAnonymous.setOwner( userAnonymous );
+            userAnonymous.profile = profileAnonymous;
+             
+            userAnonymous = userService.createUser( userAnonymous );
+                    
+        }
+        
+        
 		boolean prhodesFound = false;
 
 		User userPrhodes= userService.findUserByUserId( "prhodes" );

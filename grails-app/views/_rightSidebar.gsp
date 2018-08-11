@@ -8,8 +8,8 @@
 		</g:if>
 		
 		<li><a href="${createLink(controller:'login') }">Login</a></li>
-		<shiro:authenticated>
-			<li><a href="${createLink(controller:'login', action:'logout')}">Logout</a></li>
+		<sec:ifLoggedIn>
+			<li><a href="${createLink(controller:'localLogin', action:'logout')}">Logout</a></li>
 			<li><a href="${createLink(controller:'user', action:'editAccount')}">Edit Account Info</a></li>
 			<li><a href="${createLink(controller:'user', action:'editProfile')}">Edit Profile</a></li>
 			<li><a href="${createLink(controller:'status', action:'listUpdates')}">List My Updates</a></li>
@@ -24,6 +24,6 @@
 			<li><a href="${createLink(controller:'userGroup', action:'list')}">List All Groups</a></li>
 			<li><a href="${createLink(controller:'schedule', action:'index')}">Manage Scheduled Jobs</a></li>
 			<li><a href="${createLink(controller:'calendar', action:'index')}">Manage Calendar Feeds</a></li>
-		</shiro:authenticated>
+		</sec:ifLoggedIn>
 	</ul>
 </div>

@@ -4,7 +4,7 @@
 	<img src="${createLink(controller:'profilePic',action:'thumbnail',id:sec.loggedInUserInfo(field: 'userId'))}" />
 	<p />
 	<a href="${createLink(controller:'user', action:'viewUser')}">
-		<!--   <shiro:principal property="fullName"/> -->
+		<sec:loggedInUserInfo field='fullName'/>
 	</a>
 	<p>
 		<a style="min-width:120px;" class="btn btn-info selected" href="${createLink(controller:'user', action:'listFriends')}">All Friends</a>

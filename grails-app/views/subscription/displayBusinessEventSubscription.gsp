@@ -8,13 +8,13 @@
 	
 	<body>
 		<div id="bodyContent" class="span8">	
-		<shiro:authenticated>
+		<sec:ifLoggedIn>
 			<g:if test="${activities != null}">
 					<div id="activityStream">
 						<g:render template="/activityStream" />
 					</div>
 				</g:if>
-        	</shiro:authenticated>
+        	</sec:ifLoggedIn>
 		</div>
 	</body>
 	

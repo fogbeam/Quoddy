@@ -302,7 +302,7 @@
 							
 							<li><a href="${createLink(controller:'login') }">Login</a></li>
 							
-							<li><a href="${createLink(controller:'login', action:'logout')}">Logout</a></li>
+							<li><a href="${createLink(controller:'localLogin', action:'logout')}">Logout</a></li>
 						</ul>
 					</li>
 					
@@ -320,7 +320,7 @@
 					<!--  end Help menu -->
 		
 					<!-- Admin menu -->
-					<shiro:hasRole name="admin">
+					<sec:ifAllGranted roles="ROLE_ADMIN">
 						<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<b class="caret"></b></a>
 							<ul class="dropdown-menu">
 								<li><a href="${createLink(controller:'admin', action:'index')}">Admin Home</a></li>
@@ -333,7 +333,7 @@
 								<li><a href="#">Whatever...</a></li>
 							</ul>
 						</li>
-					</shiro:hasRole>
+					</sec:ifAllGranted>
 					<!--  end Admin menu -->
 					
 				</ul>

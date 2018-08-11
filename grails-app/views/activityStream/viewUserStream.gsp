@@ -10,7 +10,7 @@
 			<ul class="nav nav-pills">
 
 				<li class="dropdown">
-				<shiro:authenticated>
+				<sec:ifLoggedIn>
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Streams
 							<b class="caret"></b>
 						</a>
@@ -32,11 +32,11 @@
 									</g:link></li>
 							</g:each>
 						</ul>
-					</shiro:authenticated>
+					</sec:ifLoggedIn>
 				</li>
 
 				<li class="dropdown">
-					<shiro:authenticated>
+					<sec:ifLoggedIn>
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Lists
 							<b class="caret"></b>
 						</a>
@@ -51,11 +51,11 @@
 										</g:link></li>
 								</g:each>
 							</ul>
-					</shiro:authenticated>
+					</sec:ifLoggedIn>
 				</li>
 
 				<li class="dropdown">
-				<shiro:authenticated>
+				<sec:ifLoggedIn>
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Groups
 							<b class="caret"></b>
 						</a>
@@ -71,11 +71,11 @@
 										</g:link></li>
 								</g:each>
 							</ul>
-					</shiro:authenticated>
+					</sec:ifLoggedIn>
 				</li>
 
 				<li class="dropdown">
-					<shiro:authenticated>
+					<sec:ifLoggedIn>
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Subscriptions
 							<b class="caret"></b>
 						</a>
@@ -113,13 +113,13 @@
 							
 							
 						</ul>
-					</shiro:authenticated>
+					<sec:ifLoggedIn>
 				</li>
 
 			</ul>
 		</div>
 		
-		<shiro:authenticated>
+		<sec:ifLoggedIn>
 			<g:form name="updateStatusForm" controller="status" action="updateStatus">
 				<input type="text" id="statusText" name="statusText" class="span6" />
 				<input class="btn btn-primary btn-large col-md-2"
@@ -141,7 +141,7 @@
 
 				</div>
 			</g:if>
-		</shiro:authenticated>
+		</sec:ifLoggedIn>
 	</div>
 </body>
 </html>

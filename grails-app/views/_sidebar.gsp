@@ -13,8 +13,8 @@
 		</g:if>
 		
 		<li><a href="/login">Login</a></li>
-		<shiro:authenticated>
-			<li><a href="/login/logout">Logout</a></li>
+		<sec:ifLoggedIn>
+			<li><a href="/localLogin/logout">Logout</a></li>
 			<li><a href="/user/editAccount">Edit Account Info</a></li>
 			<li><a href="/user/editProfile">Edit Profile</a></li>
 			<li><a href="/status/listUpdates">List My Updates</a></li>
@@ -26,6 +26,6 @@
 			<li><a href="/search/searchFriends">Search Friends</a></li>
 			<li><a href="/search/searchIFollow">Search People I Follow</a></li>
 			<li><a href="/user/listOpenFriendRequests">List Pending Friend Requests</a></li>
-		</shiro:authenticated>			
+		</sec:ifLoggedIn>			
 	</ul>
 </div>

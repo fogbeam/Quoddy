@@ -8,7 +8,7 @@
 	
 	<body>		
 		<p />
-        <shiro:authenticated>
+        <sec:ifLoggedIn>
         
 			<g:if test="${activities != null}">
 
@@ -18,6 +18,6 @@
 				
 				</div>
 			</g:if>
-		</shiro:authenticated>
+		</sec:ifLoggedIn>
 	</body>
 </html>

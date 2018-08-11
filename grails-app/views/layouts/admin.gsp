@@ -129,7 +129,7 @@
 								
 								<g:if test="${session.user != null}">
 									<li><a
-										href="${createLink(controller:'login', action:'logout')}">Logout</a></li>
+										href="${createLink(controller:'localLogin', action:'logout')}">Logout</a></li>
 								</g:if>
 							</ul>
 						</li>
@@ -151,8 +151,8 @@
 						
 						
 						<!-- Admin menu -->
-						<shiro:authenticated>
-							<shiro:hasRole name="admin">
+						<sec:ifLoggedIn>
+							<sec:ifAllGranted roles="ROLE_ADMIN">
 								<li class="dropdown"><a class="dropdown-toggle"
 									data-toggle="dropdown" href="#">Admin<b class="caret"></b></a>
 									<ul class="dropdown-menu">
@@ -176,8 +176,8 @@
 										<li><a href="#">Whatever...</a></li>
 									</ul>
 								</li>
-							</shiro:hasRole>
-						</shiro:authenticated>
+							</sec:ifAllGranted>
+						<sec:ifLoggedIn>
 						<!--  end Admin menu -->
 						
 					</ul>
