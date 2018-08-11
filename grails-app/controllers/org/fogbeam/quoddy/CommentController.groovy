@@ -2,18 +2,20 @@ package org.fogbeam.quoddy
 
 import org.fogbeam.quoddy.stream.ActivityStreamItem;
 import org.fogbeam.quoddy.stream.StreamItemComment;
+
+import grails.plugin.springsecurity.annotation.Secured
+
 import org.fogbeam.quoddy.stream.StreamItemBase;
 
 
-class CommentController {
-
-//	def scaffold = false;
-	
+class CommentController 
+{	
 	def eventStreamService;
 	// def entryService;
 	
-	def addComment = {
-			
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def addComment()
+    {
 		log.debug("addComment params: ${params}");
 		
 		// lookup the Event by id

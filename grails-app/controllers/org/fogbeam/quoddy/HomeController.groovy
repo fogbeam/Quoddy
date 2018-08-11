@@ -4,8 +4,11 @@ package org.fogbeam.quoddy
 // import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 
+import grails.plugin.springsecurity.annotation.Secured
+
 // @Mixin(SidebarPopulatorMixin)
-class HomeController {
+class HomeController 
+{
 
 	def userService;
 	def eventStreamService;
@@ -17,7 +20,9 @@ class HomeController {
 	def activitiUserTaskSubscriptionService;
 	def rssFeedSubscriptionService;
 		
-    def index = {
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def index()
+    {
     		
     	def userId = params.userId;
     	User user = null;

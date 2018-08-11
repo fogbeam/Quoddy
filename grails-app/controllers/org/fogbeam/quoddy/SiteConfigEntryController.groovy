@@ -2,35 +2,41 @@ package org.fogbeam.quoddy
 
 import org.fogbeam.quoddy.system.settings.SiteConfigEntry
 
-class SiteConfigEntryController {
+import grails.plugin.springsecurity.annotation.Secured
 
-//	def scaffold = false;
-	
-	def index =
+class SiteConfigEntryController 
+{
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def index()
 	{
 		redirect(controller:"siteConfigEntry", action:"list");
 	}
 
-	def list =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def list()
 	{
 		List<SiteConfigEntry> allEntries = SiteConfigEntry.findAll();
 		[allEntries:allEntries];	
 	}
 
-	def edit =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def edit()
 	{
 		SiteConfigEntry theEntry = SiteConfigEntry.findById( params.id );
 		
 		[ theEntry: theEntry ];	
 	}
 	
-	def create = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def create() 
 	{
 		
 		[];	
 	}
 	
-	def save =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def save()
 	{
 		SiteConfigEntry theEntry = new SiteConfigEntry();
 		theEntry.name = params.entryName;
@@ -46,7 +52,8 @@ class SiteConfigEntryController {
 		redirect( controller:"siteConfigEntry", action:"list" );
 	}
 			
-	def update =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def update()
 	{	
 		SiteConfigEntry theEntry = SiteConfigEntry.findById( params.entryId );
 		theEntry.name = params.entryName;
@@ -62,12 +69,12 @@ class SiteConfigEntryController {
 		redirect( controller:"siteConfigEntry", action:"list" );	
 	}
 	
-	def delete =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def delete()
 	{
 		SiteConfigEntry theEntry = SiteConfigEntry.findById( params.entryId );
 		theEntry.delete();
 		
 		redirect( controller:"siteConfigEntry", action:"list" );
 	}
-	
 }

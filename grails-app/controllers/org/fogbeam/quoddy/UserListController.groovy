@@ -3,6 +3,8 @@ package org.fogbeam.quoddy
 // import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 
+import grails.plugin.springsecurity.annotation.Secured
+
 // @Mixin(SidebarPopulatorMixin)
 class UserListController
 {
@@ -15,7 +17,8 @@ class UserListController
 	def activitiUserTaskSubscriptionService;
 	def rssFeedSubscriptionService;
 	
-	def index =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def index()
 	{
 		User user = null;
 		
@@ -39,9 +42,10 @@ class UserListController
 		}
 	}	
 	
-	def display = 
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def display()
 	{
-		
 		if( session.user != null )
 		{
 			def user = userService.findUserByUserId( session.user.userId );
@@ -70,7 +74,9 @@ class UserListController
 		}
 	}
 	
-	def createWizardFlow =
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def createWizardFlow()
 	{
 		start {
 			action {
@@ -145,8 +151,8 @@ class UserListController
 		
 	}
 	
-	
-	def editWizardFlow =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def editWizardFlow()
 	{
 		start {
 			action {

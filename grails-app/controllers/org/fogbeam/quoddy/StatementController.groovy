@@ -1,26 +1,27 @@
 package org.fogbeam.quoddy
 
+import grails.plugin.springsecurity.annotation.Secured
+
 class StatementController 
 {
 
 	def jenaService;
 	
-	def list =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def list()
 	{
-		
 		List allStatements = jenaService.listAllStatements();
-				
-		
+					
 		Map model = [:];
 		
 		model.put( "allStatements", allStatements);
 		
 		return model;
-		
 	}	
 	
-	
-	def addProperty =
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def addProperty()
 	{
 		
 		Map model = [:];
@@ -28,7 +29,8 @@ class StatementController
 		return model;
 	}
 	
-	def saveProperty =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def saveProperty()
 	{
 		String propertyUri = params.propertyUri;
 		String propertyLabel = params.propertyLabel;
@@ -38,7 +40,8 @@ class StatementController
 		redirect(controller:"statement", action:"list" );
 	}
 	
-	def addClass =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def addClass()
 	{
 		
 		Map model = [:];
@@ -46,7 +49,8 @@ class StatementController
 		return model;
 	}
 	
-	def saveClass =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def saveClass()
 	{
 		String classUri = params.classUri;
 		String classLabel = params.classLabel;
@@ -56,8 +60,8 @@ class StatementController
 		redirect(controller:"statement", action:"list" );
 	}
 	
-	
-	def create = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def create()
 	{
 		Map model = [:];
 		
@@ -65,7 +69,8 @@ class StatementController
 	}
 	
 	
-	def save = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def save()
 	{
 		String subject = params.subject;
 		String predicate = params.predicate;
@@ -77,7 +82,8 @@ class StatementController
 		
 	}
 	
-	def listProperties =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def listProperties()
 	{
 		List allStatements = jenaService.listProperties();
 		
@@ -86,11 +92,10 @@ class StatementController
 		model.put( "allStatements", allStatements );
 		
 		return model;
-
 	}
 	
-	
-	def listClasses =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def listClasses()
 	{
 		List allStatements = jenaService.listClasses();
 				
@@ -99,6 +104,5 @@ class StatementController
 		model.put( "allStatements", allStatements );
 		
 		return model;
-
 	}
 }

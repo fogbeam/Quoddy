@@ -1,9 +1,12 @@
 package org.fogbeam.quoddy
 
+import grails.plugin.springsecurity.annotation.Secured
+
 class OmniCommandController
 {
-	def submitCommand = {
-	
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def submitCommand() 
+    {
 		String queryString = params.queryString;
 		
 		if( queryString.startsWith("@"))

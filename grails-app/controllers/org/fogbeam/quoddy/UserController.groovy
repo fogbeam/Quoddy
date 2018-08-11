@@ -18,6 +18,8 @@ import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.commons.CommonsMultipartFile
 
+import grails.plugin.springsecurity.annotation.Secured
+
 // import com.hp.hpl.jena.query.Dataset
 // import com.hp.hpl.jena.query.ReadWrite
 // import com.hp.hpl.jena.rdf.model.Model
@@ -106,8 +108,8 @@ class UserController
 	}	
 				   
 
-	
-	def manageUsers =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def manageUsers()
 	{
 		List<User> users = new ArrayList<User>();
 		
@@ -146,9 +148,9 @@ class UserController
 		[users:users];
 	}
 	
-	def viewUser = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def viewUser()
 	{
-		
 		def userId = params.userId;
 		def user = null;
 		if( null != userId )
@@ -220,7 +222,8 @@ class UserController
 		return model;
 	}
 
-	def editUser = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def editUser()
 	{
 		User user = userService.findUserByUuid(  params.id );
 		
@@ -229,16 +232,16 @@ class UserController
 	
 	
 	/* TODO: Start a Webflow wizard here... */
-	
-	def adminAddUser =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def adminAddUser()
 	{
 		
 		[];
 	}
 	
-	def adminSaveUser =
-	{ UserRegistrationCommand urc ->
-		
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def adminSaveUser( UserRegistrationCommand urc )
+	{	
 		if( urc.hasErrors() )
 		{
 				log.warn( "UserRegistrationCommand object has errors");
@@ -276,18 +279,18 @@ class UserController
 	
 	/* TODO: start a Webflow wizard here */
 	
-	
-	def adminEditUser =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def adminEditUser()
 	{
 		User user = userService.findUserByUuid(  params.id );
 		
 		[user:user];
 	}
 	
-	
-	def adminUpdateUser =
-	{ UserRegistrationCommand urc ->
-	
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def adminUpdateUser( UserRegistrationCommand urc )
+	{
 		log.debug( "saving account for uuid: ${urc.uuid}");
 		User user = userService.findUserByUuid( urc.uuid );
 		if( user )
@@ -325,8 +328,8 @@ class UserController
 
 	}
 	
-	
-	def disableUser =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def disableUser()
 	{
 		User user = userService.findUserByUuid(  params.id );
 		
@@ -335,7 +338,8 @@ class UserController
 		redirect( controller:'user', action:'manageUsers');
 	}
 	
-	def enableUser = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def enableUser()
 	{
 		User user = userService.findUserByUuid(  params.id );
 		
@@ -344,7 +348,8 @@ class UserController
 		redirect( controller:'user', action:'manageUsers');
 	}
 	
-	def deleteUser =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def deleteUser()
 	{
 		User user = userService.findUserByUuid(  params.id );
 		
@@ -353,10 +358,9 @@ class UserController
 		redirect( controller:'user', action:'manageUsers');
 	}
 	
-	
-    def registerUser = 
-	{ UserRegistrationCommand urc ->
-    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def registerUser( UserRegistrationCommand urc )
+    {
 		if( grailsApplication.config.enable.self.registration != true )
 		{
 			redirect( controller:'home', action:'index')
@@ -388,10 +392,9 @@ class UserController
         }
     }
 
-	
-	def addToFollow = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def addToFollow()
 	{
-		
 		def currentUser = null;
 		if( !session.user ) 
 		{
@@ -405,17 +408,16 @@ class UserController
 			
 			def targetUser = userService.findUserByUserId( params.userId );
 		
-			userService.addToFollow( currentUser, targetUser );
-			
+			userService.addToFollow( currentUser, targetUser );		
 		}
 		
 		// render(view:'viewUser', model:[user:currentUser]);
 		render( "OK" );	
 	}
 	
-	def addToFriends = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def addToFriends()
 	{
-		
 		def currentUser = null;
 		if( !session.user ) 
 		{
@@ -437,7 +439,8 @@ class UserController
 		render( "OK" );
 	}
 
-	def confirmFriend = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def confirmFriend()
 	{
 		log.debug( "confirmFriend" );
 		User currentUser = null;
@@ -457,7 +460,8 @@ class UserController
 		redirect( controller:'home', action:'index')	
 	}
 	
-	def listFollowers =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def listFollowers()
 	{
 		def user = null;
 		if( !session.user ) 
@@ -474,7 +478,9 @@ class UserController
 		[followers:followers];
 	}
 	
-	def listFriends = 
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def listFriends()
 	{
 
 		def user = null;
@@ -492,9 +498,9 @@ class UserController
 		[friends:friends];
 	}
 		
-	def listIFollow = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def listIFollow()
 	{
-		
 		def user = null;
 		if( !session.user ) 
 		{
@@ -510,7 +516,8 @@ class UserController
 		[ifollow: iFollow];
 	}
 	
-	def create = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def create()
 	{   
 		log.debug( "enable self reg? ");
 		log.debug( grailsApplication.config.enable.self.registration);
@@ -527,9 +534,9 @@ class UserController
 		}
 	}
 
-	def list = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def list()
 	{
-	
 		List<User> allusers = userService.findAllUsers();
 		
 		log.debug( "Found ${allusers.size()} users\n");
@@ -537,8 +544,8 @@ class UserController
 		[users:allusers];
 	}
 		
-	
-	def viewUserProfile =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def viewUserProfile()
 	{
 		def userId = params.userId;
 		def user = null;
@@ -605,7 +612,8 @@ class UserController
 		return model;
 	}
 	
-	def editProfile = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def editProfile()
 	{
 		String userId;
 		if( session.user )
@@ -624,8 +632,9 @@ class UserController
 	}
 	
 
-	
-	def saveProfilePrimaryPhone = {
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def saveProfilePrimaryPhone()
+    {
 		log.debug( "Params: \n ${params}");
 		
 		String userId = params.id;
@@ -683,8 +692,10 @@ class UserController
 		render( profile.primaryPhoneNumber.address );
 	}
 	
-	
-	def saveProfilePrimaryEmail = {
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def saveProfilePrimaryEmail() 
+    {
 		log.debug( "Params: \n ${params}" );
 
 		String userId = params.id;
@@ -742,8 +753,10 @@ class UserController
 		render( profile.primaryEmailAddress.address );
 	}
 	
-	
-	def saveProfilePrimaryInstantMessenger = {
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def saveProfilePrimaryInstantMessenger()
+    {
 		log.debug( "Params: \n ${params}");
 		
 		String userId = params.id;
@@ -804,9 +817,10 @@ class UserController
 		}
 	}
 	
-	def saveEmploymentHistoryEntry =
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def saveEmploymentHistoryEntry()
 	{
-		
 		String userId = params.id;
 		log.debug( "Looking for user by userId: $userId");
 		
@@ -843,7 +857,9 @@ class UserController
 			
 	}
 	
-	def saveEducationHistoryEntry =
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def saveEducationHistoryEntry()
 	{
 		log.debug( "Params:\n${params}");
 				
@@ -890,8 +906,10 @@ class UserController
 		}	
 	}
 	
-	
-	def saveProfileLocation = {
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def saveProfileLocation()
+    {
 		log.debug( "Params: \n ${params}");
 
 		String userId = params.id;
@@ -919,8 +937,10 @@ class UserController
 
 	}
 	
-	
-	def saveProfileDotPlan = {
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def saveProfileDotPlan()
+    {
 		log.debug( "Params: \n ${params}");
 		
 		String userId = params.id;
@@ -948,7 +968,8 @@ class UserController
 	}
 	
 	
-	def saveProfileTitle =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def saveProfileTitle()
 	{
 		log.debug( "params:\n ${params}" );
 		log.debug("Saving Title!");
@@ -979,8 +1000,8 @@ class UserController
 	}
 	
 	
-	
-	def saveProfileSummary =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def saveProfileSummary()
 	{
 		log.debug( "params:\n ${params}" );
 		
@@ -1013,10 +1034,9 @@ class UserController
 		
 	}
 	
-	
-	def saveProfileAvatarPic =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def saveProfileAvatarPic()
 	{
-		
 		log.debug( "Saving Avatar Image!");
 		
 		String uuid = params.userUuid;
@@ -1084,12 +1104,10 @@ class UserController
 		}
 	}
 	
-	
-	def saveProfile =
-	{ 
-		UserProfileCommand upc ->
-		
-		
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def saveProfile( UserProfileCommand upc )
+	{	
 		String uuid = upc.userUuid;
 		log.debug( "Looking for user by uuid: $uuid" );
 		User user = userService.findUserByUuid( uuid );
@@ -1387,8 +1405,7 @@ class UserController
 			}
 		}
 		
-		
-		
+        
 		// upc.skills
 		log.debug( "Skills: " + upc.skills );
 		String[] skillsLines = upc.skills.split("\n" );
@@ -1460,9 +1477,10 @@ class UserController
 		redirect(controller:"userHome",action:"index", params:[id:user.userId]);
 	}
 	
-	def editAccount = 
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def editAccount()
 	{
-	
 		def user = null;
 		if( !session.user ) 
 		{
@@ -1476,9 +1494,9 @@ class UserController
 		[user:user];
 	}	
 
-
-	def listOpenFriendRequests = {
-
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def listOpenFriendRequests()
+    {
 		def user = null;
 		List<FriendRequest> openFriendRequests = new ArrayList<FriendRequest>();
 		if( !session.user )
@@ -1500,7 +1518,8 @@ class UserController
 	
 	// TODO: refactor this to put the logic in the jenaService and make a reusable service we can
 	// use from multiple places...
-	def addAnnotation =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def addAnnotation()
 	{
 		log.debug( "addAnnotation" );
 		

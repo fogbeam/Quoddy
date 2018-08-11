@@ -1,5 +1,8 @@
 package org.fogbeam.quoddy;
 
+import grails.plugin.springsecurity.annotation.Secured
+
+@Secured("ROLE_ADMIN")
 public class AdminController
 {
 	
@@ -9,13 +12,13 @@ public class AdminController
 	def userService;
 	def searchService;
 	
-	def index =
+	def index()
 	{
 
 	}
 
 	
-	def importUsers = 
+	def importUsers() 
 	{
 		log.debug( "importUsers" );
 		

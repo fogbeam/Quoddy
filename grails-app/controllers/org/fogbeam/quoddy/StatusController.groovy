@@ -9,13 +9,17 @@ import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.StatusUpdate
 import org.fogbeam.quoddy.stream.constants.EventTypes
 
+import grails.plugin.springsecurity.annotation.Secured
+
 class StatusController 
 {	
 	def userService;
 	def eventStreamService;
 	def jmsService;
 	
-	def updateStatus = {
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def updateStatus() 
+    {
 		
 		User user = null;
 		
@@ -168,7 +172,9 @@ class StatusController
 		redirect( controller:"home", action:"index", params:[userId:user.userId]);
 	}
 
-	def listUpdates =
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def listUpdates()
 	{
 		User user = null;
 		List<StatusUpdate> updates = new ArrayList<StatusUpdate>();
@@ -190,7 +196,8 @@ class StatusController
 		[updates:updates]
 	}
 	
-	def deleteStatus =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def deleteStatus()
 	{
 		String delItemUuid = params.item;
 		ActivityStreamItem item = ActivityStreamItem.findByUuid( delItemUuid );
@@ -208,6 +215,4 @@ class StatusController
 		
 		render( status: 200 );
 	}
-	
-	
 }

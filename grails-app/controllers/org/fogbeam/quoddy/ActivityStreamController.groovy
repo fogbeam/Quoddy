@@ -12,6 +12,8 @@ import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ResharedActivityStreamItem
 import org.fogbeam.quoddy.stream.StreamItemBase
+
+import grails.plugin.springsecurity.annotation.Secured
 import groovyx.net.http.*;
 
 
@@ -67,7 +69,8 @@ class ActivityStreamController
 	// if necessary.  Return N total messages.  We need to make "N" a parameter
 	// or something if we want a "click here to load more" button that just keeps pulling
 	// in more messages on each click.
-	def getContentHtml = 
+    @Secured(['ROLE_USER', 'ROLE_ADMIN'])
+    public void getContentHtml() 
 	{
 		
 		// NOTE: this should be receiving a streamId parameter.  If there isn't one
@@ -118,9 +121,9 @@ class ActivityStreamController
 	}
 	
 
-	
-	def viewUserStream = {
-		
+    @Secured(['ROLE_USER', 'ROLE_ADMIN'])
+	public Object viewUserStream()
+    {
 		log.trace( "viewUserStream: " );
 		User user = session.user;
 		
@@ -164,8 +167,9 @@ class ActivityStreamController
 				
 	}
 	
-	
-	def discussItem = 
+    
+    @Secured(['ROLE_USER', 'ROLE_ADMIN'])
+	public void discussItem() 
 	{
 		log.trace( "ActivityStreamController.discussItem invoked:" );
 		log.trace( "params: ${params}" );
@@ -309,7 +313,8 @@ class ActivityStreamController
 		]}
 	}
 	
-	def shareItem =
+    @Secured(['ROLE_USER', 'ROLE_ADMIN'])
+	public void shareItem()
 	{
 		
 		log.debug(  "ActivityStreamController.shareItem invoked:");

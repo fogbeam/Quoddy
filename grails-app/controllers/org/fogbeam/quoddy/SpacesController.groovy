@@ -2,7 +2,7 @@ package org.fogbeam.quoddy
 
 class SpacesController 
 {
-	def index =
+	def index()
 	{
 		
 	}

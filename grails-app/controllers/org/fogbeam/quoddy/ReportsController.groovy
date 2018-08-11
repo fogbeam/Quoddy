@@ -2,7 +2,7 @@ package org.fogbeam.quoddy
 
 class ReportsController 
 {
-	def index = 
+	def index()
 	{
 		[]	
 	}

@@ -40,6 +40,8 @@ class User implements Serializable
 		return "id: ${id}, uuid: ${uuid}, userId: ${userId}, password: ${password}, firstName: ${firstName}, lastName: ${lastName}, homepage: ${homepage}, disabled: ${disabled}";
 	}
 	
+    // UserAccountRoleMapping roleMapping;
+	
 	@XmlElement
     String uuid;
 	@XmlElement
@@ -53,7 +55,7 @@ class User implements Serializable
 	
 	/* stuff objects of this class "carry around" but aren't persisted as part of the object. 
 	 * This stuff is pulled in from an external source, like, say, LDAP. */
-	String password;
+	String password = "notused";
 	@XmlElement
 	String homepage;
 	@XmlElement
@@ -66,7 +68,13 @@ class User implements Serializable
 	String bio;
 	@XmlElement
 	String email;
-	
+	@XmlElement
+    boolean accountExpired;
+    @XmlElement
+    boolean accountLocked;
+    @XmlElement
+    boolean passwordExpired;
+    
 	static transients = [ "password", "templateName" ]
 	
     static mapping = {
@@ -82,7 +90,18 @@ class User implements Serializable
     static hasMany = [oldStatusUpdates:StatusUpdate, roles: AccountRole, permissions: String, streams:UserStreamDefinition];
 	static mappedBy = [oldStatusUpdates:'creator']
 
-	
+    
+    Set<AccountRole> getAuthorities()
+    {
+        (UserAccountRoleMapping.findAllByUser(this) as List<UserAccountRoleMapping>)*.role as Set<AccountRole>
+    }
+
+    
+    boolean getEnabled()
+    {
+        return !disabled;
+    }
+       
     public void setUuid( String uuid ){
     	
     	// never overwrite existing uuid value with NULL

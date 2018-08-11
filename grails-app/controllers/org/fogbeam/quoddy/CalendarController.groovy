@@ -2,6 +2,8 @@ package org.fogbeam.quoddy
 
 import org.fogbeam.quoddy.subscription.CalendarFeedSubscription;
 
+import grails.plugin.springsecurity.annotation.Secured
+
 class CalendarController
 {
 	def userService;
@@ -9,7 +11,8 @@ class CalendarController
 	def activitiUserTaskSubscriptionService;
 	def rssFeedSubscriptionService;
 	
-	def index =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def index()
 	{
 		List<CalendarFeedSubscription> calFeeds = new ArrayList<CalendarFeedSubscription>();
 		User user = null;
@@ -29,12 +32,14 @@ class CalendarController
 		[calFeeds:calFeeds];
 	}
 	
-	def createFeed =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def createFeed()
 	{
 		[];
 	}
 	
-	def saveFeed =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def saveFeed()
 	{
 		
 		if( session.user != null )
@@ -60,7 +65,8 @@ class CalendarController
 		redirect( controller:"calendar", action:"index");
 	}
 	
-	def editFeed =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def editFeed()
 	{
 		CalendarFeedSubscription calFeedToEdit = null;
 		if( session.user != null )
@@ -76,7 +82,8 @@ class CalendarController
 		[calFeedToEdit:calFeedToEdit];
 	}
 	
-	def updateFeed =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def updateFeed()
 	{
 		if( session.user != null )
 		{
@@ -99,7 +106,9 @@ class CalendarController
 		redirect( controller:"calendar", action:"index");
 	}
 	
-	def display = {
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def display()
+	{
 		[];	
 	}
 }

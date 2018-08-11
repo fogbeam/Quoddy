@@ -1,10 +1,13 @@
 package org.fogbeam.quoddy
 
+import grails.plugin.springsecurity.annotation.Secured
+
 class UserHomeController 
 {
 	def userService;
 	
-	def index = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def index()
 	{		
 		String userId = params.id;
 		

@@ -41,11 +41,11 @@ class UserService {
 	}
 	
 	
-	public AccountRole findAccountRoleByName( final String name )
+	public AccountRole findAccountRoleByAuthority( final String authority )
 	{
-		log.debug( "searching for AccountRole named ${name}");
+		log.debug( "searching for AccountRole with authority: ${authority}");
 		
-		List<AccountRole> roles = AccountRole.executeQuery( "select role from AccountRole as role where role.name = :name", [name:name]);
+		List<AccountRole> roles = AccountRole.executeQuery( "select role from AccountRole as role where role.authority = :authority", [authority:authority]);
 		
 		AccountRole role = null;
 		if( roles.size == 1 )

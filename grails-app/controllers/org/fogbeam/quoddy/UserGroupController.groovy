@@ -5,6 +5,8 @@ import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.StatusUpdate
 import org.fogbeam.quoddy.stream.constants.EventTypes
 
+import grails.plugin.springsecurity.annotation.Secured
+
 
 // @Mixin(SidebarPopulatorMixin)
 class UserGroupController
@@ -19,7 +21,8 @@ class UserGroupController
 	def activitiUserTaskSubscriptionService;
 	def rssFeedSubscriptionService;
 	
-	def index =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def index()
 	{
 		User user = null;
 		
@@ -62,14 +65,15 @@ class UserGroupController
 		}
 	}
 	
-	def create = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def create()
 	{
 		[];	
 	}
 	
-	def save = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def save()
 	{
-		
 		log.debug( "save using params: ${params}");
 		if( session.user != null )
 		{
@@ -94,7 +98,8 @@ class UserGroupController
 		}
 	}
 	
-	def edit =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def edit()
 	{
 		def groupId = params.id;
 		log.debug( "Editing UserGroup with id: ${groupId}");
@@ -106,7 +111,8 @@ class UserGroupController
 		[groupToEdit:groupToEdit];	
 	}
 	
-	def update = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def update()
 	{
 		log.debug( "update using params: ${params}");
 		def groupId = params.groupId;
@@ -132,9 +138,10 @@ class UserGroupController
 		redirect(controller:"userGroup", action:"index");
 	}
 
-	def display = 
-	{
-		
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def display()
+	{	
 		if( session.user != null )
 		{
 			def user = userService.findUserByUserId( session.user.userId );
@@ -180,7 +187,8 @@ class UserGroupController
 		}
 	}	
 
-	def joinGroup =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def joinGroup()
 	{
 		// TODO: find group, see if joinConfirmation is required, 
 		// and add user to group OR add pending group request
@@ -199,15 +207,17 @@ class UserGroupController
 		redirect( controller:"userGroup", action:"display", params:['groupId':groupId]);	
 	}
 	
-	
-	def list =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def list()
 	{
 		List<UserGroup> allGroups = userGroupService.getAllGroups();
 		
 		[allGroups: allGroups];	
 	}
 
-	def postToGroup =
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def postToGroup()
 	{
 		log.info( "Posting to group: ${params.groupId}, with statusText: ${params.statusText}");		
 		def groupId = params.groupId;

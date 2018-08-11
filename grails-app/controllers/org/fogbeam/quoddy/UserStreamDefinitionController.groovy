@@ -6,6 +6,8 @@ import org.fogbeam.quoddy.stream.constants.EventTypeScopes
 import org.fogbeam.quoddy.subscription.BaseSubscription
 import org.fogbeam.quoddy.subscription.BusinessEventSubscription
 
+import grails.plugin.springsecurity.annotation.Secured
+
 // @Mixin(SidebarPopulatorMixin)
 class UserStreamDefinitionController
 {
@@ -21,7 +23,9 @@ class UserStreamDefinitionController
 	def rssFeedSubscriptionService;
 	def eventSubscriptionService;
 	
-	def index =
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def index()
 	{
 		User user = null;
 		
@@ -51,8 +55,8 @@ class UserStreamDefinitionController
 		}
 	}
 	
-
-	def createWizardFlow =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def createWizardFlow()
 	{
 		start {
 			action {	
@@ -281,7 +285,8 @@ class UserStreamDefinitionController
 	 * of the real object, and then merge it only in the final state.  This also ensures we don't persist a change
 	 * that the user intended to abandon (by not finshing the wizard). See Bugzilla bug #125. 
 	 */
-	def editWizardFlow =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def editWizardFlow()
 	{
 		start {
 			action {
@@ -516,8 +521,8 @@ class UserStreamDefinitionController
 	   }
 	}
 	
-		
-	def edit =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def edit()
 	{
 		def streamId = params.id;
 		log.debug( "Editing UserStream with id: ${streamId}");
@@ -532,9 +537,9 @@ class UserStreamDefinitionController
 	/* TODO: This method is never called now that we use the wizard approach, right? This
 	 * should be dead code that we can delete.  Verify and delete this if so.
 	 */
-	def update = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def update()
 	{
-		
 		// TODO: implement this...
 		log.debug( "update using params: ${params}");
 		def streamId = params.streamId;

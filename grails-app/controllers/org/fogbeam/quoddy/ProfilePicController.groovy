@@ -1,10 +1,12 @@
 package org.fogbeam.quoddy
 
+import grails.plugin.springsecurity.annotation.Secured
+
 class ProfilePicController
 {
-	def thumbnail = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def thumbnail()
 	{
-		
 		if( !params.id ) 
 		{
 			[]	
@@ -30,7 +32,8 @@ class ProfilePicController
 		}
 	}
 	
-	def full = 
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def full()
 	{
 		if( !params.id )
 		{

@@ -1,13 +1,14 @@
 package quoddy_grails3
 
-import grails.util.Environment
-
 import org.fogbeam.quoddy.AccountRole
 import org.fogbeam.quoddy.User
+import org.fogbeam.quoddy.UserAccountRoleMapping
 import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.stream.EventType
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.constants.EventTypes
+
+import grails.util.Environment
 
 
 class BootStrap 
@@ -96,152 +97,164 @@ class BootStrap
 	
 	void createRoles()
 	{
-		
 		println "Creating roles...";
-		AccountRole userRole = userService.findAccountRoleByName( "user" );
-		if( userRole != null )
+		
+		AccountRole userRole = null;
+		AccountRole.withTransaction
 		{
-			println "Existing AccountRole user found";
-		}
-		else
-		{
-			println "No existing AccountRole user found, so creating now...";
 			
-		   userRole = new AccountRole( name: "user" );
-		   userRole.addToPermissions( "activityStream:*" );
-		   userRole.addToPermissions( "comment:*" );
-		   userRole.addToPermissions( "home:*" );
-		   userRole.addToPermissions( "login:*" );
-		   userRole.addToPermissions( "openSocial:*" );
-		   userRole.addToPermissions( "profilePic:*" );
-		   userRole.addToPermissions( "search:*" );
-		   userRole.addToPermissions( "status:*" );
-		   userRole.addToPermissions( "subscription:*" );
-		   userRole.addToPermissions( "tag:*" );
-		   userRole.addToPermissions( "user:*" );
-		   userRole.addToPermissions( "userGroup:*" );
-		   userRole.addToPermissions( "userHome:*" );
-		   userRole.addToPermissions( "userList:*" );
-		   userRole.addToPermissions( "userStreamDefinition:*" );
-		   
-		   userRole = userService.createAccountRole( userRole );
-		   
-		   if( !userRole )
-		   {
-			   println "Error creating userRole";
-		   }
-
+			userRole = AccountRole.findByAuthority( "ROLE_USER" );
+			if( !userRole )
+			{
+				userRole = new AccountRole(authority: 'ROLE_USER');
+			
+				if( !userRole.save(flush:true) )
+				{
+					userRole.errors.allErrors.each { println it };
+				}
+				else
+				{
+					println "userRole created!";
+				}
+			}
+			else
+			{
+				println "userRole already exists!";
+			}
 		}
 		
-		AccountRole adminRole = userService.findAccountRoleByName( "admin" );
-		if( adminRole != null )
-		{
-			println "Existing AccountRole admin found";
-		}
-		else
-		{
-			println "No existing AccountRole admin found, so creating now...";
-			
-			adminRole = new AccountRole( name: "admin" );
-			
-			adminRole.addToPermissions( "admin:*" );
-			adminRole.addToPermissions( "calendar:*" );
-			adminRole.addToPermissions( "special:*" );
-			adminRole.addToPermissions( "dummy:*" );
-			adminRole.addToPermissions( "reports:*" );
-			adminRole.addToPermissions( "schedule:*" );
-			adminRole.addToPermissions( "siteConfigEntry:*" );
-			adminRole.addToPermissions( "userSettings:*" );
-			adminRole.addToPermissions( "importUser:*" );
-			adminRole.addToPermissions( "installer:*" );
-			
-			adminRole = userService.createAccountRole( adminRole );
 		
+		AccountRole adminRole = null;
+		AccountRole.withTransaction
+		{
+			adminRole = AccountRole.findByAuthority( "ROLE_ADMIN" );
 			if( !adminRole )
 			{
-				println "Error creating adminRole";
+				adminRole = new AccountRole( authority: 'ROLE_ADMIN');
+				if( !adminRole.save(flush:true) )
+				{
+					adminRole.errors.allErrors.each { println it };
+				}
+				else
+				{
+					println "adminRole created!";
+				}
 			}
-			
+			else
+			{
+				println "adminRole already exists!";
+			}
 		}
-
-		
-		
 	}
 
+	
 	void createSystemUser()
 	{
+		AccountRole userRole = userService.findAccountRoleByAuthority( "ROLE_USER" );
 
+		if( userRole == null )
+		{
+				println "did not locate user role!";
+		}
 
-				AccountRole userRole = userService.findAccountRoleByName( "user" );
+		AccountRole adminRole = userService.findAccountRoleByAuthority( "ROLE_ADMIN" );
+		if( adminRole == null )
+		{
+				println "did not locate admin role!";
+		}
 
-				if( userRole == null )
-				{
-						println "did not locate user role!";
-				}
-
-
-				AccountRole adminRole = userService.findAccountRoleByName( "admin" );
-				if( adminRole == null )
-				{
-						println "did not locate admin role!";
-				}
-
-
-
-				User ghostUser = userService.findUserByUserId( "SYS_ghost_user" );
-		   
-		   if( ghostUser != null )
-		   {
-				 println "Found existing SYS_ghost_user!";
+		User ghostUser = userService.findUserByUserId( "SYS_ghost_user" );
 	   
-		   }
-		   else
-		   {
-				 println "Could not find SYS_ghost_user";
-				 println "Creating new SYS_ghost_user user";
-				 ghostUser = new User();
-				 ghostUser.uuid = "abc126";
-				 ghostUser.displayName = "Ghost User";
-				 ghostUser.firstName = "System";
-				 ghostUser.lastName = "Ghost User";
-				 ghostUser.email = "SYS_ghost_user@example.com";
-				 ghostUser.userId = "SYS_ghost_user";
-				 ghostUser.password = "secret";
-				 ghostUser.bio = "bio";
-				 
-				 Profile profileGhost = new Profile();
-				 
-				 profileGhost.setOwner( ghostUser );
-				 ghostUser.profile = profileGhost;
-				 
-				 ghostUser.addToRoles( userRole );
-				 ghostUser.addToRoles( adminRole );
-   
-				 userService.createUser( ghostUser );
-				
-		   }
+		if( ghostUser != null )
+		{
+			println "Found existing SYS_ghost_user!";
+ 		}
+		else
+		{
+			println "Could not find SYS_ghost_user";
+			println "Creating new SYS_ghost_user user";
+			ghostUser = new User();
+			ghostUser.uuid = "abc126";
+			ghostUser.displayName = "Ghost User";
+			ghostUser.firstName = "System";
+			ghostUser.lastName = "Ghost User";
+			ghostUser.email = "SYS_ghost_user@example.com";
+			ghostUser.userId = "SYS_ghost_user";
+			ghostUser.password = "secret";
+			ghostUser.bio = "bio";
+			 
+			Profile profileGhost = new Profile();
+			 
+			profileGhost.setOwner( ghostUser );
+			ghostUser.profile = profileGhost;
+			 
+			ghostUser = userService.createUser( ghostUser );
+			
+			UserAccountRoleMapping adminUser_UserRole = null;
+			UserAccountRoleMapping.withSession
+			{
+				adminUser_UserRole = UserAccountRoleMapping.findByUserAndRole( ghostUser, userRole );
+				if( !adminUser_UserRole )
+				{
+					adminUser_UserRole = new UserAccountRoleMapping( ghostUser, userRole );
+					if( ! adminUser_UserRole.save( flush: true ) )
+					{
+						adminUser_UserRole.errors.allErrors.each { println it };
+                        throw new RuntimeException( "Failed to create adminUser_UserRole" );
+					}
+					else
+					{
+						println "adminUser_UserRole created!";
+					}
+				}
+				else
+				{
+					 println "adminUser_UserRole already exists!";
+				}
+			}
 
-   }
+			UserAccountRoleMapping adminUser_AdminRole = null;
+			UserAccountRoleMapping.withSession
+			{
+				adminUser_AdminRole = UserAccountRoleMapping.findByUserAndRole( ghostUser, adminRole );
+				if( !adminUser_AdminRole )
+				{
+					adminUser_AdminRole = new UserAccountRoleMapping( ghostUser, adminRole );
+					if( ! adminUser_AdminRole.save( flush: true ) )
+					{
+						adminUser_AdminRole.errors.allErrors.each { println it };
+                        throw new RuntimeException( "Failed to create adminUser_AdminRole" );
+					}
+					else
+					{
+						println "adminUser_AdminRole created!";
+					}
+				}
+				else
+				{
+					println "adminUser_AdminRole already exists!";
+				}
+			}
+	   	}
+	}
 
 	void createSomeUsers()
 	{
 		println "Creating some users!";
 	
-		AccountRole userRole = userService.findAccountRoleByName( "user" );
-		
+		AccountRole userRole = userService.findAccountRoleByAuthority( "ROLE_USER" );
+
 		if( userRole == null )
 		{
-			println "did not locate user role!";
-		}
-		
-		
-		AccountRole adminRole = userService.findAccountRoleByName( "admin" );
-		if( adminRole == null )
-		{
-			println "did not locate admin role!";
+				println "did not locate user role!";
 		}
 
-		
+		AccountRole adminRole = userService.findAccountRoleByAuthority( "ROLE_ADMIN" );
+		if( adminRole == null )
+		{
+				println "did not locate admin role!";
+		}
+
 		boolean prhodesFound = false;
 
 		User userPrhodes= userService.findUserByUserId( "prhodes" );
@@ -252,135 +265,154 @@ class BootStrap
 
 		}
 		else
-		 {
-			 println "Could not find prhodes";
-			 println "Creating new prhodes user";
-			 userPrhodes = new User();
-			 userPrhodes.uuid = "abc123";
-			 userPrhodes.displayName = "Phillip Rhodes";
-			 userPrhodes.firstName = "Phillip";
-			 userPrhodes.lastName = "Rhodes";
-			 userPrhodes.email = "motley.crue.fan@gmail.com";
-			 userPrhodes.userId = "prhodes";
-			 userPrhodes.password = "secret";
-			 userPrhodes.bio = "bio";
+		{
+			println "Could not find prhodes";
+			println "Creating new prhodes user";
+			userPrhodes = new User();
+			userPrhodes.uuid = "abc123";
+			userPrhodes.displayName = "Phillip Rhodes";
+			userPrhodes.firstName = "Phillip";
+			userPrhodes.lastName = "Rhodes";
+			userPrhodes.email = "motley.crue.fan@gmail.com";
+			userPrhodes.userId = "prhodes";
+			userPrhodes.password = "secret";
+			userPrhodes.bio = "bio";
 			 
-			 Profile profilePrhodes = new Profile();
-			 // profile.userUuid = "abc123";
-			 profilePrhodes.setOwner( userPrhodes );
-			 userPrhodes.profile = profilePrhodes;
+			Profile profilePrhodes = new Profile();
+			// profile.userUuid = "abc123";
+			profilePrhodes.setOwner( userPrhodes );
+			userPrhodes.profile = profilePrhodes;
 			 
-			 userPrhodes.addToRoles( userRole );
-			 userPrhodes.addToRoles( adminRole );
-			 
-			 
-			 userService.createUser( userPrhodes );
+			userPrhodes = userService.createUser( userPrhodes );
 			
+			// userPrhodes.addToRoles( userRole );
+			UserAccountRoleMapping prhodesUser_UserRole = null;
+			UserAccountRoleMapping.withSession
+			{
+				prhodesUser_UserRole = UserAccountRoleMapping.findByUserAndRole( userPrhodes, userRole );
+				if( !prhodesUser_UserRole )
+				{
+					prhodesUser_UserRole = new UserAccountRoleMapping( userPrhodes, userRole );
+					if( !prhodesUser_UserRole.save( flush: true ) )
+					{
+						prhodesUser_UserRole.errors.allErrors.each { println it };
+						throw new RuntimeException( "Failed to create prhodesUser_UserRole" );
+					}
+					else
+					{
+						println "prhodesUser_UserRole created!";
+					}
+				}
+				else
+				{
+					println "prhodesUser_UserRole already exists!";
+				}
+			}
+ 
+			 
+			// userPrhodes.addToRoles( adminRole );
+			UserAccountRoleMapping prhodesUser_AdminRole = null;
+			UserAccountRoleMapping.withSession
+			{
+				 prhodesUser_AdminRole = UserAccountRoleMapping.findByUserAndRole( userPrhodes, adminRole );
+				 if( !prhodesUser_AdminRole )
+				 {
+					 prhodesUser_AdminRole = new UserAccountRoleMapping( userPrhodes, adminRole );
+					 if( ! prhodesUser_AdminRole.save( flush: true ) )
+					 {
+						prhodesUser_AdminRole.errors.allErrors.each { println it };
+					 	throw new RuntimeException( "Failed to create prhodesUser_AdminRole" );
+					 }
+					 else
+					 {
+						 println "prhodesUser_AdminRole created!";
+					 }
+				 }
+				 else
+				 {
+					 println "prhodesUser_AdminRole already exists!";
+				 }
+			 }
 		 }
 
 		 
 		 User userSarah = userService.findUserByUserId( "sarah" );
  
-		  if( userSarah != null )
-		  {
+		 if( userSarah != null )
+		 {
 			   println "Found existing sarah user!";
  
-		  }
-		  else
-		   {
-			   println "Could not find sarah";
-			   println "Creating new sarah user";
-			   userSarah = new User();
-			   userSarah.uuid = "abc124";
-			   userSarah.displayName = "Sarah Kahn";
-			   userSarah.firstName = "Sarah";
-			   userSarah.lastName = "Kahn";
-			   userSarah.email = "snkahn@gmail.com";
-			   userSarah.userId = "sarah";
-			   userSarah.password = "secret";
-			   userSarah.bio = "bio";
+		 }
+		 else
+		 {
+			 println "Could not find sarah";
+			 println "Creating new sarah user";
+			 userSarah = new User();
+			 userSarah.uuid = "abc124";
+			 userSarah.displayName = "Sarah Kahn";
+			 userSarah.firstName = "Sarah";
+			 userSarah.lastName = "Kahn";
+			 userSarah.email = "snkahn@gmail.com";
+			 userSarah.userId = "sarah";
+			 userSarah.password = "secret";
+			 userSarah.bio = "bio";
 			   
-			   Profile profileSarah = new Profile();
-			   // profile.userUuid = "abc123";
-			   profileSarah.setOwner( userSarah );
-			   userSarah.profile = profileSarah;
+			 Profile profileSarah = new Profile();
+			 // profile.userUuid = "abc123";
+			 profileSarah.setOwner( userSarah );
+			 userSarah.profile = profileSarah;
 
-			   userSarah.addToRoles( userRole );
-			   userSarah.addToRoles( adminRole );
- 
-							   
-			   userService.createUser( userSarah );
-			  
-		   }
-		 
-		 
-		   User userEric = userService.findUserByUserId( "eric" );
-		   
-		   if( userEric != null )
-		   {
-				 println "Found existing eric user!";
-	   
-		   }
-		   else
-		   {
-				 println "Could not find eric";
-				 println "Creating new eric user";
-				 userEric = new User();
-				 userEric.uuid = "abc125";
-				 userEric.displayName = "Eric Stone";
-				 userEric.firstName = "Eric";
-				 userEric.lastName = "Stone";
-				 userEric.email = "emstone@gmail.com";
-				 userEric.userId = "eric";
-				 userEric.password = "secret";
-				 userEric.bio = "bio";
-				 
-				 Profile profileEric = new Profile();
-				 // profile.userUuid = "abc123";
-				 profileEric.setOwner( userEric );
-				 userEric.profile = profileEric;
-				 
-				 userEric.addToRoles( userRole );
-				 userEric.addToRoles( adminRole );
+			 userSarah = userService.createUser( userSarah );
+			 			   
+			 UserAccountRoleMapping sarahUser_UserRole = null;
+			 UserAccountRoleMapping.withSession
+			 {
+				 sarahUser_UserRole = UserAccountRoleMapping.findByUserAndRole( userSarah, userRole );
+				 if( !sarahUser_UserRole )
+				 {
+					 sarahUser_UserRole = new UserAccountRoleMapping( userSarah, userRole );
+					 if( ! sarahUser_UserRole.save( flush: true ) )
+					 {
+						 sarahUser_UserRole.errors.allErrors.each { println it };
+						 throw new RuntimeException( "Failed to create sarahUser_UserRole" );
+					 }
+					 else
+					 {
+						 println "sarahUser_UserRole created!";
+					 }
+				 }
+				 else
+				 {
+					 println "sarahUser_UserRole already exists!";
+				 }
+			 }
    
-				 userService.createUser( userEric );
-				
+			   
+			 UserAccountRoleMapping sarahUser_AdminRole = null;
+			 UserAccountRoleMapping.withSession
+			 {
+				 sarahUser_AdminRole = UserAccountRoleMapping.findByUserAndRole( userSarah, adminRole );
+				 if( !sarahUser_AdminRole )
+				 {
+					 sarahUser_AdminRole = new UserAccountRoleMapping( userSarah, adminRole );
+					 if( ! sarahUser_AdminRole.save( flush: true ) )
+					 {
+						 sarahUser_AdminRole.errors.allErrors.each { println it };
+					 	 throw new RuntimeException( "Failed to create sarahUser_AdminRole" );
+					 }
+					 else
+					 {
+						 println "sarahUser_AdminRole created!";
+					 }
+				 }
+				 else
+				 {
+					 println "sarahUser_AdminRole already exists!";
+				 }
+			 }
 		 }
 		 
-		   User ghostUser = userService.findUserByUserId( "SYS_ghost_user" );
-		   
-		   if( ghostUser != null )
-		   {
-				 println "Found existing SYS_ghost_user!";
-	   
-		   }
-		   else
-		   {
-				 println "Could not find SYS_ghost_user";
-				 println "Creating new SYS_ghost_user user";
-				 ghostUser = new User();
-				 ghostUser.uuid = "abc126";
-				 ghostUser.displayName = "Ghost User";
-				 ghostUser.firstName = "System";
-				 ghostUser.lastName = "Ghost User";
-				 ghostUser.email = "SYS_ghost_user@example.com";
-				 ghostUser.userId = "SYS_ghost_user";
-				 ghostUser.password = "secret";
-				 ghostUser.bio = "bio";
-				 
-				 Profile profileGhost = new Profile();
-				 
-				 profileGhost.setOwner( ghostUser );
-				 ghostUser.profile = profileGhost;
-				 
-				 ghostUser.addToRoles( userRole );
-				 ghostUser.addToRoles( adminRole );
-   
-				 userService.createUser( ghostUser );
-				
-		   }
-		   
-					 
+		 
 		 for( int i = 0; i < 20; i++ )
 		 {
 			 if( userService.findUserByUserId( "testuser${i}" ) == null )
@@ -394,26 +426,44 @@ class BootStrap
 							   bio:"stuff",
 							   displayName: "Test User${i}" );
 				 
-				   testUser.password = "secret";
-				   testUser.uuid = "test_user_${i}";
-				   Profile profile = new Profile();
-				   // profile.userUuid = testUser.uuid;
-				   profile.setOwner( testUser );
-				   testUser.profile = profile;
-						   
-				   testUser.addToRoles( userRole );
-				   
-				   println "about to create user: ${testUser.toString()}";
-				   userService.createUser( testUser );
+				  testUser.password = "secret";
+				  testUser.uuid = "test_user_${i}";
+				  Profile profile = new Profile();
+				  // profile.userUuid = testUser.uuid;
+				  profile.setOwner( testUser );
+				  testUser.profile = profile;
+				
+				  println "about to create user: ${testUser.toString()}";
+				  testUser = userService.createUser( testUser );
+
+				  		   
+				  UserAccountRoleMapping testUser_UserRole = null;
+				  UserAccountRoleMapping.withSession
+				  {
+					  testUser_UserRole = UserAccountRoleMapping.findByUserAndRole( testUser, userRole );
+					  if( !testUser_UserRole )
+					  {
+						  testUser_UserRole = new UserAccountRoleMapping( testUser, userRole );
+						  if( ! testUser_UserRole.save( flush: true ) )
+						  {
+							  testUser_UserRole.errors.allErrors.each { println it };
+                              throw new RuntimeException( "Failed to create testUser_UserRole" );
+						  }
+						  else
+						  {
+							  println "testUser_UserRole created!";
+						  }
+					  }
+					  else
+					  {
+						  println "testUser_UserRole already exists!";
+					  }
+				  }				   
 			 }
 			 else
 			 {
 				 println "Existing TESTUSER ${i} user, skipping...";
 			 }
 		 }
-		 
 	}
-	
-	
-	
 }

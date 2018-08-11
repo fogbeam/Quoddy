@@ -3,10 +3,14 @@ grails.plugin.springsecurity.cas.loginUri = '/login'
 grails.plugin.springsecurity.cas.serviceUrl = 'http://localhost:8080/login/cas'
 grails.plugin.springsecurity.cas.serverUrlPrefix = 'https://sso.fogbeam.com/cas'
 
+
+/* TODO: fix up this user/role stuff */
+
 // Added by the Spring Security Core plugin:
-grails.plugin.springsecurity.userLookup.userDomainClassName = 'org.fogbeam.example.springsecurity.User'
-grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'org.fogbeam.example.springsecurity.UserRole'
-grails.plugin.springsecurity.authority.className = 'org.fogbeam.example.springsecurity.Role'
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'org.fogbeam.quoddy.User'
+grails.plugin.springsecurity.userLookup.usernamePropertyName = "userId"
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'org.fogbeam.quoddy.UserAccountRoleMapping'
+grails.plugin.springsecurity.authority.className = 'org.fogbeam.quoddy.AccountRole'
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/',               access: ['permitAll']],
 	[pattern: '/localLogin/**',  access: ['permitAll']],

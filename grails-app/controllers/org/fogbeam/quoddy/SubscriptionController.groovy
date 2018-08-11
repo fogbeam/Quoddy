@@ -10,6 +10,8 @@ import org.fogbeam.quoddy.subscription.BusinessEventSubscription
 import org.fogbeam.quoddy.subscription.CalendarFeedSubscription
 import org.fogbeam.quoddy.subscription.RssFeedSubscription
 
+import grails.plugin.springsecurity.annotation.Secured
+
 // @Mixin(SidebarPopulatorMixin)
 class SubscriptionController
 {
@@ -22,7 +24,8 @@ class SubscriptionController
 	def activitiUserTaskSubscriptionService;
 	def rssFeedSubscriptionService;
 	
-	def index =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def index()
 	{
 		User user = null;
 		
@@ -57,10 +60,9 @@ class SubscriptionController
 		}
 	}
 
-	def displayBusinessEventSubscription =
-	{
-		
-		
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def displayBusinessEventSubscription()
+	{	
 		if( session.user != null )
 		{
 			def user = userService.findUserByUserId( session.user.userId );
@@ -90,10 +92,9 @@ class SubscriptionController
 		
 	}
 
-	def displayCalendarFeedSubscription =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def displayCalendarFeedSubscription()
 	{
-		
-		
 		if( session.user != null )
 		{
 			def user = userService.findUserByUserId( session.user.userId );
@@ -123,11 +124,9 @@ class SubscriptionController
 		
 	}
 
-	
-	def displayActivitiUserTaskSubscription =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def displayActivitiUserTaskSubscription()
 	{
-		
-		
 		if( session.user != null )
 		{
 			def user = userService.findUserByUserId( session.user.userId );
@@ -157,11 +156,9 @@ class SubscriptionController
 		
 	}
 		
-
-	def displayRssFeedSubscription =
-	{
-		
-		
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def displayRssFeedSubscription()
+	{	
 		if( session.user != null )
 		{
 			def user = userService.findUserByUserId( session.user.userId );
@@ -191,8 +188,8 @@ class SubscriptionController
 		
 	}
 
-				
-	def createWizardFlow =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def createWizardFlow()
 	{
 		start {
 			action {
@@ -379,7 +376,8 @@ class SubscriptionController
 		
 	}
 	
-	def editWizardFlow =
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def editWizardFlow()
 	{
 		start {
 			action {
@@ -559,18 +557,6 @@ class SubscriptionController
 
 		exitWizard {
 			redirect(controller:"subscription", action:"index");
-		}
-
-				
-	}	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-		
+		}			
+	}
 }
