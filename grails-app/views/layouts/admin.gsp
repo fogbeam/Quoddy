@@ -177,7 +177,7 @@
 									</ul>
 								</li>
 							</sec:ifAllGranted>
-						<sec:ifLoggedIn>
+						</sec:ifLoggedIn>
 						<!--  end Admin menu -->
 						
 					</ul>

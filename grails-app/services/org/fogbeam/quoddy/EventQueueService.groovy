@@ -1,6 +1,6 @@
 package org.fogbeam.quoddy
 
-// import javax.jms.Message
+import javax.jms.Message
 
 import org.fogbeam.quoddy.social.FriendCollection
 import org.fogbeam.quoddy.stream.ActivityStreamItem
@@ -18,11 +18,16 @@ class EventQueueService
 	
 	Map<String, Deque<ActivityStreamItem>> eventQueues = new HashMap<String, Deque<ActivityStreamItem>>();
 	
-	// static expose = ['jms']
-	// static destination = "uitestActivityQueue"; // TODO: rename this to something more meaningful
+	static expose = ['jms']
+	static destination = "uitestActivityQueue"; // TODO: rename this to something more meaningful
 	
 	def onMessage(msg)
 	{
+        
+        println( "Message class: ${msg.class}" );
+        println( "Received message from JMS: ${msg}" );
+
+        
 		log.debug( "Message class: ${msg.class}" );
 		log.debug( "Received message from JMS: ${msg}" );
 		

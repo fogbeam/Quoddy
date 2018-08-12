@@ -50,8 +50,6 @@ class BootStrap
 		
 		searchService.initializeGeneralIndex();
 		searchService.initializePersonIndex();
-
-		
 	}
     
 	def destroy = 

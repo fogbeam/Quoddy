@@ -1,8 +1,6 @@
 package org.fogbeam.quoddy;
 
-// import static groovyx.net.http.ContentType.TEXT
-// import groovyx.net.http.HttpResponseDecorator
-// import groovyx.net.http.RESTClient
+import static groovyx.net.http.ContentType.TEXT
 
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.ShareTarget
@@ -10,6 +8,8 @@ import org.fogbeam.quoddy.stream.StatusUpdate
 import org.fogbeam.quoddy.stream.constants.EventTypes
 
 import grails.plugin.springsecurity.annotation.Secured
+import groovy.json.JsonBuilder
+import groovyx.net.http.RESTClient
 
 class StatusController 
 {	
@@ -44,22 +44,23 @@ class StatusController
 		String stanbolServerUrl = grailsApplication.config.urls.stanbol.endpoint;
 		log.debug( "using stanbolServerUrl: ${stanbolServerUrl}");
 		
-		// RESTClient restClient = new RESTClient( stanbolServerUrl )
-		def restClient = null;
+		RESTClient restClient = new RESTClient( stanbolServerUrl )
+		// def restClient = null;
 		
 		boolean enhancementEnabled = Boolean.parseBoolean( grailsApplication.config.features.enhancement.enabled ? grailsApplication.config.features.enhancement.enabled : "false" );
-		
+		log.info( "enhancementEnabled: ${enhancementEnabled}" );
+        
 		if( enhancementEnabled )
 		{
-			log.trace( "content submitted: ${params.statusText}");
+			log.debug( "content submitted to Stanbol: ${params.statusText}");
 			/* HttpResponseDecorator */ def restResponse = restClient.post(	path:'enhancer',
 										body: params.statusText,
 										requestContentType : TEXT );
 									
-			log.debug( "restResponse.class: ${restResponse.class}");
-			log.debug( "restResponse.status: ${restResponse.status}");
-			log.trace( "restResponse.statusLine: ${restResponse.statusLine}");
-			log.debug( "restResponse.success: ${restResponse.isSuccess()}");
+			// log.debug( "restResponse.class: ${restResponse.class}");
+			// log.debug( "restResponse.status: ${restResponse.status}");
+			// log.trace( "restResponse.statusLine: ${restResponse.statusLine}");
+			// log.debug( "restResponse.success: ${restResponse.isSuccess()}");
 
 			Object restResponseData = restResponse.getData();
 		
@@ -73,35 +74,44 @@ class StatusController
 				String restResponseText = s.next();
 		
 				log.debug( "using Scanner: ${restResponseText}");		
-		
-				log.trace( "restResponseText: ${restResponseText}");
+                log.info( "got InputStream, using Scanner to extract" );
+				log.info( "restResponseText:\n\n ${restResponseText}\n\n");
 		
 				newStatus.enhancementJSON = restResponseText;
 		
 			}
 			else if( restResponseData instanceof net.sf.json.JSONObject )
 			{
-				newStatus.enhancementJSON = restResponseData.toString();
+                String restResponseText = restResponseData.toString();
+                log.info( "got JSONObject, using toString() to extract" );
+                log.info( "restResponseText:\n\n ${restResponseText}\n\n");
+				newStatus.enhancementJSON = restResponseText;
 			}
 			else if( restResponseData instanceof java.lang.String )
 			{
+                log.info( "got String, no extraction required" );
+                log.info( "restResponseData:\n\n ${restResponseData}\n\n");
 				newStatus.enhancementJSON = new String( restResponseData );
 			}
 			else
 			{
-				newStatus.enhancementJSON = restResponseData.toString();
+                log.info( "got Other (${restResponseData.getClass().getName()}), using toString() to extract" );
+                String restResponseText = new JsonBuilder(restResponseData).toPrettyString();
+                log.info( "restResponseText:\n\n ${restResponseText}\n\n");
+				newStatus.enhancementJSON = restResponseText;
 			}
 		}
 		else
 		{
+            log.info( "semantic enhancement is NOT enabled" );
 			newStatus.enhancementJSON = "";
 		}
 		
 		// save the newStatus 
 		if( !newStatus.save() )
 		{
-			log.debug(( "Saving newStatus FAILED"));
-			newStatus.errors.allErrors.each { log.debug( it ) };
+			log.error(( "Saving newStatus FAILED"));
+			newStatus.errors.allErrors.each { log.error( it ) };
 		}
 		
 		// put the old "currentStatus" in the oldStatusUpdates collection
@@ -153,16 +163,13 @@ class StatusController
 		
 		eventStreamService.saveActivity( activity );
 		
-		
+        log.debug( "sending message to JMS");
+        
 		def newContentMsg = [msgType:'NEW_STATUS_UPDATE', activityId:activity.id, activityUuid:activity.uuid ];
-			
-		log.debug( "sending message to JMS");
-		
-        // TODO: restore JMS functionality and re-add this message send
-        // sendJMSMessage("quoddySearchQueue", newContentMsg );
-		
-        // TODO: restore JMS functionality and re-add this message send
-		// jmsService.send( queue: 'uitestActivityQueue', activity, 'standard', null );
+        jmsService.send("quoddySearchQueue", newContentMsg );		
+ 		
+        def activityMsg = [msgType: 'ACTIVITY_STREAM_ITEM', activityId:activity.id, activityUuid:activity.uuid ];
+        jmsService.send( 'uitestActivityQueue', activityMsg );
 		
 		log.debug( "redirecting to home:index");
 		redirect( controller:"home", action:"index", params:[userId:user.userId]);

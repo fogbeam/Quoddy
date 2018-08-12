@@ -14,7 +14,7 @@
 						<g:render template="/activityStream" />
 					</div>
 				</g:if>
-        	<sec:ifLoggedIn>
+        	</sec:ifLoggedIn>
 		</div>
 	</body>
 	

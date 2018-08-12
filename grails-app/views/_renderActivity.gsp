@@ -4,7 +4,7 @@
 
 	<g:if test="${item.streamObject.enhancementJSON != null  && !item.streamObject.enhancementJSON.isEmpty() }">
 		<script class="enhancementJSON" id="enhancementJSON-${item.uuid}" type="text/javascript" language="javascript">
-			${item.streamObject.enhancementJSON}
+			${raw(item.streamObject.enhancementJSON)}
 		</script>
 	</g:if>
 	

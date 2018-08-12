@@ -35,3 +35,4 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 	[pattern: '/**',             filters: 'JOINED_FILTERS']
 ]
 
+spring.autoconfigure.exclude = "org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration"

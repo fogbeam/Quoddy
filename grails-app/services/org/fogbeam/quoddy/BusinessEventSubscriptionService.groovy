@@ -116,8 +116,7 @@ class BusinessEventSubscriptionService
 				log.debug( "sending messages to JMS" );
 				
 				// send message to request search indexing
-				sendJMSMessage("quoddySearchQueue", newContentMsg );
-			
+				jmsService.send("quoddySearchQueue", newContentMsg );
 				
 				// send message for UI notification
 				jmsService.send( queue: 'uitestActivityQueue', activity, 'standard', null );

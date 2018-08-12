@@ -2,7 +2,9 @@
 <html>
 <head>
 <title><g:layoutTitle default="Quoddy" /></title>
-<nav:resources />
+
+<!-- < nav : resources / > -->
+
 <link rel="stylesheet" type="text/css"
 	href="${createLinkTo(dir:'css', file:'main.css')}" />
 <link rel="stylesheet" type="text/css"
@@ -136,7 +138,7 @@
 								
 								<sec:ifLoggedIn>
 									<li><a
-										href="${createLink(controller:'login', action:'logout')}">Logout</a></li>
+										href="${createLink(controller:'localLogin', action:'logout')}">Logout</a></li>
 								</sec:ifLoggedIn>
 							</ul>
 						</li>
@@ -158,7 +160,7 @@
 
 						<!-- Admin menu -->
 						<sec:ifLoggedIn>
-							<sec:ifAllGranted roles="ROLE_ADMIN
+							<sec:ifAllGranted roles="ROLE_ADMIN">
 								<li class="dropdown"><a class="dropdown-toggle"
 									data-toggle="dropdown" href="#">Admin<b class="caret"></b></a>
 									<ul class="dropdown-menu">

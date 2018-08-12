@@ -113,7 +113,7 @@
 							
 							
 						</ul>
-					<sec:ifLoggedIn>
+					</sec:ifLoggedIn>
 				</li>
 
 			</ul>

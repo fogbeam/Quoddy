@@ -10,6 +10,7 @@ import org.fogbeam.quoddy.stream.StreamItemBase;
 
 class CommentController 
 {	
+    def jmsService;
 	def eventStreamService;
 	// def entryService;
 	
@@ -47,7 +48,7 @@ class CommentController
 									  comment_text:newComment.text ];
 			
 	    	// send a JMS message to our testQueue
-			sendJMSMessage("quoddySearchQueue", newCommentMessage );			
+			jmsService.send("quoddySearchQueue", newCommentMessage );			
 			
 			log.debug( "saved StreamItemComment for user ${user.userId}, item ${item.id}" );
 		}

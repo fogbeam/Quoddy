@@ -1,15 +1,50 @@
-import grails.util.BuildSettings
-import grails.util.Environment
+import static ch.qos.logback.classic.Level.DEBUG
+import static ch.qos.logback.classic.Level.INFO
+import static ch.qos.logback.core.spi.FilterReply.ACCEPT
+import static ch.qos.logback.core.spi.FilterReply.DENY
+
+import java.nio.charset.Charset
+
 import org.springframework.boot.logging.logback.ColorConverter
 import org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter
 
-import java.nio.charset.Charset
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder
+import ch.qos.logback.classic.filter.LevelFilter
+import ch.qos.logback.core.ConsoleAppender
+import ch.qos.logback.core.FileAppender
+import grails.util.BuildSettings
+import grails.util.Environment
 
 conversionRule 'clr', ColorConverter
 conversionRule 'wex', WhitespaceThrowableProxyConverter
 
+
 // See http://logback.qos.ch/manual/groovy.html for details on configuration
+appender("DEBUG_FILE", FileAppender) {
+    
+    filter(LevelFilter) {
+        level = DEBUG
+        onMatch = ACCEPT
+        onMismatch = DENY
+      }
+
+    
+    file = "${System.getProperty('quoddy.home')}/quoddy.log"
+    append = true
+    encoder(PatternLayoutEncoder) {
+        pattern = "%level %logger - %msg%n"
+    }
+}
+
 appender('STDOUT', ConsoleAppender) {
+    
+  filter(LevelFilter) {
+        level = INFO
+        onMatch = ACCEPT
+        onMismatch = DENY
+      }
+    
+    
     encoder(PatternLayoutEncoder) {
         charset = Charset.forName('UTF-8')
 
@@ -22,6 +57,7 @@ appender('STDOUT', ConsoleAppender) {
     }
 }
 
+
 def targetDir = BuildSettings.TARGET_DIR
 if (Environment.isDevelopmentMode() && targetDir != null) {
     appender("FULL_STACKTRACE", FileAppender) {
@@ -31,6 +67,8 @@ if (Environment.isDevelopmentMode() && targetDir != null) {
             pattern = "%level %logger - %msg%n"
         }
     }
+    
     logger("StackTrace", ERROR, ['FULL_STACKTRACE'], false)
 }
-root(ERROR, ['STDOUT'])
+
+root(DEBUG, ['STDOUT', 'DEBUG_FILE'])

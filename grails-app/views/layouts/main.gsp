@@ -215,14 +215,14 @@
 </script>
 
 
-<g:javascript library="application" />
-
-<g:layoutHead />
+<script type="text/javascript"
+    src="${resource(dir:'javascripts', file:'enrich_content.js')}"></script>
 
 <script type="text/javascript">
 	<g:render template="/javascript/hashtag.js"/>
 </script>
-<g:javascript library="enrich_content" />
+
+<g:layoutHead />
 
 
 </head>

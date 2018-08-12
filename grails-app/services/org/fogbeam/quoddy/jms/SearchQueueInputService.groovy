@@ -4,7 +4,7 @@ import static groovyx.net.http.ContentType.TEXT
 import static groovyx.net.http.ContentType.URLENC
 import groovyx.net.http.RESTClient
 
-// import javax.jms.MapMessage
+import javax.jms.MapMessage
 import javax.xml.transform.OutputKeys
 import javax.xml.transform.Transformer
 import javax.xml.transform.TransformerException
@@ -67,13 +67,17 @@ public class SearchQueueInputService
 	def userService;
 	def existDBService;
 	
-	// static expose = ['jms']
-    // static destination = "quoddySearchQueue"                 
+	static expose = ['jms']
+    static destination = "quoddySearchQueue"                 
 	
     def onMessage(msg)
     { 
+        println( "in onMessage()" );
+        println( "GOT MESSAGE: ${msg}" );
+        
     	log.debug("in onMessage");
-	log.debug( "msg: " + msg);
+	    log.debug( "msg: " + msg);
+        
     	/* note: what we would ordinarily do where is turn around and copy this message
     	 * to other queue's, topics, etc., or otherwise route it as needed.  But for
     	 * now we just assume we are the "indexer" job.
@@ -83,7 +87,7 @@ public class SearchQueueInputService
     
     	if( msg instanceof java.lang.String )
     	{
-		log.debug("Message is a string")	
+            log.debug("Message is a string")	
     	}
     	else
     	{
