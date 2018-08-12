@@ -15,13 +15,16 @@ import com.hp.hpl.jena.rdf.model.Model
 import com.hp.hpl.jena.rdf.model.RDFNode
 import com.hp.hpl.jena.tdb.TDBFactory
 
+import grails.plugin.springsecurity.annotation.Secured
+
 
 class SparqlController
 {
 	
 	def userService;
 
-	def index = 
+    @Secured(['ROLE_USER','ROLE_ADMIN'])
+	def index()
 	{
 		User user = null;
 		if( session.user )
@@ -40,8 +43,8 @@ class SparqlController
 		return model;
 	}	
 	
-	
-	def doSearch =
+    @Secured(['ROLE_USER','ROLE_ADMIN'])
+	def doSearch()
 	{
 		
 		User user = null;
@@ -131,13 +134,8 @@ class SparqlController
 		dataset.commit();
 		dataset.end();
 
-		
-		
-		
 		def model = [searchResults:searchResults];
 			
 		render(view:"displaySearchResults", model:model);
-
 	}
-	
 }

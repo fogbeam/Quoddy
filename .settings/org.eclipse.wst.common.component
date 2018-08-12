@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project-modules id="moduleCoreId" project-version="2.0">
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
 	<wb-module deploy-name="quoddy_grails3">
 		<property name="context-root" value="quoddy_grails3"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/views"/>
@@ -13,5 +12,6 @@
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/resources"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/services"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/groovy"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/grails-app/jobs"/>
 	</wb-module>
 </project-modules>

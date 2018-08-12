@@ -2,6 +2,8 @@ package org.fogbeam.quoddy
 
 import grails.core.ArtefactHandler
 import grails.core.GrailsClass
+import grails.plugin.springsecurity.annotation.Secured
+
 import org.quartz.JobDetail
 import org.quartz.JobKey
 import org.quartz.Trigger
@@ -10,11 +12,14 @@ import org.quartz.impl.matchers.GroupMatcher
 import org.quartz.impl.matchers.StringMatcher
 import org.quartz.impl.triggers.SimpleTriggerImpl
 
-class ScheduleController {
-
+class ScheduleController 
+{
+    
 	def jobManagerService;
 	
-	def index = {
+    @Secured('ROLE_ADMIN')
+	def index()
+	{
 		
 		// get all the "Job" Artefacts
 		GrailsClass[] artefacts = grailsApplication.getArtefacts( "Job" );
@@ -34,7 +39,8 @@ class ScheduleController {
 			
 	}
 
-	def editSchedule =
+    @Secured('ROLE_ADMIN')
+	def editSchedule()
 	{
 		log.debug( "editSchedule received id: ${params.id}" );
 	
@@ -67,7 +73,8 @@ class ScheduleController {
 		[existingTriggers:triggers, jobGroup: jobGroup, jobName: jobName, jobFullName: jobFullName];
 	}
 	
-	def createTrigger =
+    @Secured('ROLE_ADMIN')
+	def createTrigger()
 	{
 		log.debug( "createTrigger:" );
 		log.debug( "params: ${params}");
@@ -108,7 +115,8 @@ class ScheduleController {
 			
 	}
 	
-	def addTrigger =
+    @Secured('ROLE_ADMIN')
+	def addTrigger()
 	{
 		String jobGroup = params.jobGroup;
 		String jobName = params.jobName;
@@ -135,7 +143,8 @@ class ScheduleController {
 		redirect(action:"index");
 	}
 	
-	def executeJobNow =
+    @Secured('ROLE_ADMIN')
+	def executeJobNow()
 	{
 		GrailsClass jobClass = grailsApplication.getArtefact( "Job", params.jobName );
 		jobClass.newInstance().triggerNow();
@@ -143,7 +152,8 @@ class ScheduleController {
 		redirect(action:"index");
 	}
 	
-	def editTrigger =
+    @Secured('ROLE_ADMIN')
+	def editTrigger()
 	{
 		log.debug( "Edit Trigger, params: ${params}" );
 		
@@ -151,14 +161,15 @@ class ScheduleController {
 		[trigger: theTrigger];
 	}
 
-	
-	def deleteTrigger =
+    @Secured('ROLE_ADMIN')
+	def deleteTrigger()
 	{
 		jobManagerService.quartzScheduler.unscheduleJob( new TriggerKey( params.triggerName, params.triggerGroup ) );
 		redirect(action:"index");
 	}
 		
-	def saveTrigger =
+    @Secured('ROLE_ADMIN')
+	def saveTrigger()
 	{
 		TriggerKey theKey = new TriggerKey( params.oldTriggerName, params.oldTriggerGroup )
 		Trigger theTrigger = jobManagerService.quartzScheduler.getTrigger(theKey);

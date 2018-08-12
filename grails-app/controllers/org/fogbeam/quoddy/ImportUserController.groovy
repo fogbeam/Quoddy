@@ -6,15 +6,18 @@ import org.springframework.ldap.filter.AndFilter
 import org.springframework.ldap.filter.EqualsFilter 
 import org.springframework.ldap.filter.LikeFilter;
 import org.springframework.ldap.filter.OrFilter;
-import org.springframework.ldap.filter.WhitespaceWildcardsFilter 
+import org.springframework.ldap.filter.WhitespaceWildcardsFilter
 
+import grails.plugin.springsecurity.annotation.Secured 
+
+@Secured('ROLE_ADMIN')
 class ImportUserController 
 {
 	def ldapTemplate;
 	def ldapPersonService;
 	def userService;
 	
-	def importUserSearch =
+	def importUserSearch()
 	{
 		String queryString = params.queryString;
 	
@@ -45,7 +48,7 @@ class ImportUserController
 		[ldapPersons: persons];		
 	}
 
-	def addImportedUsers = 
+	def addImportedUsers() 
 	{
 		
 		log.debug( params );

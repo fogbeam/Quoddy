@@ -1,6 +1,8 @@
 package org.fogbeam.quoddy
 
 import static groovyx.net.http.ContentType.TEXT
+
+import grails.plugin.springsecurity.annotation.Secured
 import groovy.json.JsonSlurper
 import groovyx.net.http.RESTClient
 // import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH;
@@ -8,15 +10,16 @@ import groovyx.net.http.RESTClient
 class ExploreController
 {
 
-	def index = 
+    @Secured(['ROLE_USER', 'ROLE_ADMIN'])
+	def index()
 	{
 		
 		return [];
 	}
 	
-	def enrich =
+    @Secured(['ROLE_USER', 'ROLE_ADMIN'])
+	def enrich()
 	{
-		
 		log.debug( "params:\n " + params);
 		
 		def content = params.content;

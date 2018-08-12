@@ -3,6 +3,8 @@ package org.fogbeam.quoddy
 
 import org.fogbeam.quoddy.search.SearchResult
 
+import grails.plugin.springsecurity.annotation.Secured
+
 
 class SearchController 
 {
@@ -12,12 +14,14 @@ class SearchController
 	def searchService;
 	def jmsService;
 	
-	def index = 
+    @Secured(['ROLE_USER','ROLE_ADMIN'])
+	def index() 
 	{	
 		[]		
 	}
 	
-	def doSearch =
+    @Secured(['ROLE_USER','ROLE_ADMIN'])
+	def doSearch()
 	{
 		log.info( "Searching using queryString: ${params.queryString}");
 		String queryString = params.queryString;
@@ -107,18 +111,12 @@ class SearchController
 			log.debug( "searchResults.size() = " + searchResults.size());
 		}
 		
-		
-		
-		
-		
-		
 		render( view:'basicSearchResults', model:[searchResults:searchResults]);
 	}
 	
-	
-	def doAdvancedSearch =
+    @Secured(['ROLE_USER','ROLE_ADMIN'])
+	def doAdvancedSearch()
 	{
-		
 		// search using supplied parameters and return the
 		// model for rendering...
 		String queryString = params.queryString;
@@ -152,9 +150,7 @@ class SearchController
 			bSearchFriends = true;
 		}
 		else
-		{
-
-		
+		{	
 			String searchStatusUpdates = params.searchStatusUpdates;
 			bSearchStatusUpdates = searchStatusUpdates ? true: false;
 			log.debug( "searchStatusUpdates: ${searchStatusUpdates}");
@@ -279,12 +275,14 @@ class SearchController
 		render( view:'everythingSearchResults', model:[searchResults:searchResults]);
 	}
 	
-	def showAdvanced =
+    @Secured(['ROLE_USER','ROLE_ADMIN'])
+	def showAdvanced()
 	{
 		[]	
 	}
 	
-	def searchUsers = 
+    @Secured(['ROLE_USER','ROLE_ADMIN'])
+	def searchUsers()
 	{
 	
 		// search users using supplied parameters and return the
@@ -298,12 +296,14 @@ class SearchController
 		render( view:'userSearchResults', model:[allUsers:results]);
 	}
 
-	def searchIFollow = 
+    @Secured(['ROLE_USER','ROLE_ADMIN'])
+	def searchIFollow()
 	{
 		
 	}
 	
-	def doPeopleSearch =
+    @Secured(['ROLE_USER','ROLE_ADMIN'])
+	def doPeopleSearch()
 	{
 		
 		// search users using supplied parameters and return the
@@ -320,9 +320,9 @@ class SearchController
 		
 	}
 	
-	def doIFollowSearch = 
+    @Secured(['ROLE_USER','ROLE_ADMIN'])
+	def doIFollowSearch()
 	{
-		
 		log.debug( "Searching IFollow");
 		
 		User user = session.user;
@@ -338,20 +338,24 @@ class SearchController
 		log.debug( "found some users: ${results.size()}");
 		
 		
-		render( view:'iFollowSearchResults', model:[allUsers:results]);
-		
-			
+		render( view:'iFollowSearchResults', model:[allUsers:results]);		
 	}
 	
-	def searchFriends = {
+    @Secured(['ROLE_USER','ROLE_ADMIN'])
+	def searchFriends()
+    {
 	
 	}
 
-	def searchPeople = {
+    @Secured(['ROLE_USER','ROLE_ADMIN'])
+	def searchPeople() 
+    {
 	
 	}
 		
-	def doFriendSearch = {
+    @Secured(['ROLE_USER','ROLE_ADMIN'])
+	def doFriendSearch()
+    {
 		log.debug( "Searching Friends");	
 		
 		User user = session.user;
@@ -366,41 +370,38 @@ class SearchController
 		
 		log.debug( "found some users: ${results.size()}");
 		
-		render( view:'friendSearchResults', model:[allUsers:results]);
-		
-			
+		render( view:'friendSearchResults', model:[allUsers:results]);		
 	}
 	
-	
-	def rebuildAll = {
-	
+    
+    @Secured(['ROLE_ADMIN'])
+	def rebuildAll() 
+    {
 		// send JMS message requesting ALL index rebuild
 		def msg = [ msgType:'REINDEX_ALL'];
 		jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
 		
-		render( "<html><head><title>Person Index Rebuilding...</title></head><body><h1>All Indexes Rebuilding...</h1></body></html>" );
-		
+		render( "<html><head><title>Person Index Rebuilding...</title></head><body><h1>All Indexes Rebuilding...</h1></body></html>" );	
 	}
 	
-	def rebuildPersonIndex = {
+    @Secured(['ROLE_ADMIN'])
+	def rebuildPersonIndex()
+	{
 		
 		// TODO: send JMS message requesting PERSON index rebuild
 		def msg = [ msgType:'REINDEX_PERSON'];
 		jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
 		
-		render( "<html><head><title>Person Index Rebuilding...</title></head><body><h1>Person Index Rebuilding...</h1></body></html>" );
-		
+		render( "<html><head><title>Person Index Rebuilding...</title></head><body><h1>Person Index Rebuilding...</h1></body></html>" );	
 	}
 	
-	def rebuildGeneralIndex = {
-		
+    @Secured(['ROLE_ADMIN'])
+	def rebuildGeneralIndex()
+	{	
 		// TODO: send JMS message requesting GENERAL index rebuild
 		def msg = [ msgType:'REINDEX_GENERAL'];
 		jmsService.send( queue: 'quoddySearchQueue', msg, 'standard', null );
 		
-		render( "<html><head><title>General Index Rebuilding...</title></head><body><h1>General Index Rebuilding...</h1></body></html>" );
-		
+		render( "<html><head><title>General Index Rebuilding...</title></head><body><h1>General Index Rebuilding...</h1></body></html>" );	
 	}
-	
-	
 }
