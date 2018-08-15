@@ -1,7 +1,6 @@
 import static ch.qos.logback.classic.Level.DEBUG
 import static ch.qos.logback.classic.Level.INFO
-import static ch.qos.logback.core.spi.FilterReply.ACCEPT
-import static ch.qos.logback.core.spi.FilterReply.DENY
+import static ch.qos.logback.classic.Level.ERROR
 
 import java.nio.charset.Charset
 
@@ -9,7 +8,7 @@ import org.springframework.boot.logging.logback.ColorConverter
 import org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter
 
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
-import ch.qos.logback.classic.filter.LevelFilter
+import ch.qos.logback.classic.filter.ThresholdFilter
 import ch.qos.logback.core.ConsoleAppender
 import ch.qos.logback.core.FileAppender
 import grails.util.BuildSettings
@@ -22,12 +21,9 @@ conversionRule 'wex', WhitespaceThrowableProxyConverter
 // See http://logback.qos.ch/manual/groovy.html for details on configuration
 appender("DEBUG_FILE", FileAppender) {
     
-    filter(LevelFilter) {
+    filter(ThresholdFilter) {
         level = DEBUG
-        onMatch = ACCEPT
-        onMismatch = DENY
-      }
-
+    }
     
     file = "${System.getProperty('quoddy.home')}/quoddy.log"
     append = true
@@ -38,12 +34,9 @@ appender("DEBUG_FILE", FileAppender) {
 
 appender('STDOUT', ConsoleAppender) {
     
-  filter(LevelFilter) {
-        level = INFO
-        onMatch = ACCEPT
-        onMismatch = DENY
-      }
-    
+    filter(ThresholdFilter) {
+      level = INFO
+    }
     
     encoder(PatternLayoutEncoder) {
         charset = Charset.forName('UTF-8')
@@ -56,6 +49,22 @@ appender('STDOUT', ConsoleAppender) {
                         '%m%n%wex' // Message
     }
 }
+
+   
+logger( "org.grails", INFO )
+logger( "org.springframework", INFO )
+logger( "org.hibernate", INFO )
+logger( "org.apache", INFO )
+logger( "grails.plugin", INFO )
+logger( "org.quartz", INFO )
+logger( "grails.app", INFO )
+logger( "grails.util", ERROR )
+logger( "grails.boot", INFO )
+logger( "net.sf.ehcache", INFO )
+logger( "org.jasig.cas.client", INFO )
+logger( "reactor.spring", INFO )
+logger( "asset.pipeline", INFO )
+logger( "org.fogbeam.quoddy", DEBUG )
 
 
 def targetDir = BuildSettings.TARGET_DIR

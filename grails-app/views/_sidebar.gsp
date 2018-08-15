@@ -12,7 +12,6 @@
 			<li><a href="/user/create">Register</a></li>
 		</g:if>
 		
-		<li><a href="/login">Login</a></li>
 		<sec:ifLoggedIn>
 			<li><a href="/localLogin/logout">Logout</a></li>
 			<li><a href="/user/editAccount">Edit Account Info</a></li>

@@ -76,7 +76,7 @@ class User implements Serializable, UserDetails
     @XmlElement
     boolean passwordExpired;
     
-	static transients = [ "password", "templateName" ]
+	static transients = [ "password", "templateName", "fullName" ]
 	
     static mapping = {
     	table 'uzer'

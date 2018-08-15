@@ -82,6 +82,8 @@ class Profile implements Serializable
 	// favorites (books, TV shows, movies, etc)
 	Set<Favorite> favorites;
 	
+    String userUuid;
+    
 	// publications
 	// TODO: publications.
 	
@@ -94,6 +96,8 @@ class Profile implements Serializable
 	
 	static belongsTo = [owner:User];	
 
+    static transients = ['userUuid']
+    
 	public String getUserUuid()
 	{
 		return owner?.uuid;	

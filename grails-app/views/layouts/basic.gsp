@@ -70,7 +70,7 @@
 									<li><a
 										href="${createLink(controller:'user', action:'create')}">Register</a></li>
 								</g:if>
-								<li><a href="${createLink(controller:'login') }">Login</a></li>
+								
 								<g:if test="${session.user != null}">
 									<li><a
 										href="${createLink(controller:'localLogin', action:'logout')}">Logout</a></li>

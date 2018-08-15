@@ -4,12 +4,12 @@ class ExampleJob
 {
     static triggers = 
     {
-      simple repeatInterval: 65000L // execute job once in 5 seconds
+        // simple repeatInterval: 60000L; // repeat every 1 minute
     }
 
     def execute() 
     {
         // execute job
-        println "ExampleJob firing...";
+        // println "ExampleJob firing...";
     }
 }

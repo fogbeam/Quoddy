@@ -41,7 +41,7 @@ class GMailApiEmailService implements EmailService, InitializingBean
 {
 	def grailsApplication;
 	
-	private static final Logger log = Logger.getLogger( GMailApiEmailService.class);
+	// private static final Logger log = Logger.getLogger( GMailApiEmailService.class);
 	
 	/** Application name. */
 	private static final String APPLICATION_NAME = "Gmail API Java Quickstart";

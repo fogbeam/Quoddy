@@ -312,7 +312,6 @@ class BootStrap
 			userPrhodes.bio = "bio";
 			 
 			Profile profilePrhodes = new Profile();
-			// profile.userUuid = "abc123";
 			profilePrhodes.setOwner( userPrhodes );
 			userPrhodes.profile = profilePrhodes;
 			 
@@ -391,7 +390,6 @@ class BootStrap
 			 userSarah.bio = "bio";
 			   
 			 Profile profileSarah = new Profile();
-			 // profile.userUuid = "abc123";
 			 profileSarah.setOwner( userSarah );
 			 userSarah.profile = profileSarah;
 
@@ -462,7 +460,6 @@ class BootStrap
 				  testUser.password = "secret";
 				  testUser.uuid = "test_user_${i}";
 				  Profile profile = new Profile();
-				  // profile.userUuid = testUser.uuid;
 				  profile.setOwner( testUser );
 				  testUser.profile = profile;
 				

@@ -140,11 +140,17 @@
 				$j(this).everyTime( 2000, 
 								function() 
 								{
+								
+								    /* TODO: add logic to stop this timer when we are logging out. */
+								    /* and don't do this if we aren't logged in / session is expired */
+								
+								
 									$j.get( "${ createLink(controller:'activityStream', action:'getQueueSize',
 															 params:['streamId':streamId ] )}", 
 											function(data) 
 											{
 												$j('#refreshMessagesLink').html( data + " messages pending" );
+												return false;
 											} );
 								}, 
 							0 );
