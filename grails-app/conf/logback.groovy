@@ -65,6 +65,7 @@ logger( "org.jasig.cas.client", INFO )
 logger( "reactor.spring", INFO )
 logger( "asset.pipeline", INFO )
 logger( "org.fogbeam.quoddy", DEBUG )
+logger( "org.springframework.security", DEBUG )
 
 
 def targetDir = BuildSettings.TARGET_DIR

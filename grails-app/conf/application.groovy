@@ -8,6 +8,8 @@ grails.plugin.springsecurity.auth.loginFormUrl="/localLogin/index"
 grails.plugin.springsecurity.failureHandler.defaultFailureUrl="/localLogin/index?login_error=1"
 
 // Added by the Spring Security Core plugin:
+grails.plugin.springsecurity.password.algorithm = 'MD5'
+grails.plugin.springsecurity.password.hash.iterations = 1
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'org.fogbeam.quoddy.User'
 grails.plugin.springsecurity.userLookup.usernamePropertyName = "userId"
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'org.fogbeam.quoddy.UserAccountRoleMapping'

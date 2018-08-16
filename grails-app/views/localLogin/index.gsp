@@ -22,11 +22,20 @@
 						<td><input type="password" name="password" value="" /></td>
 					</tr>
 					<!--
+					
 					<tr>
 						<td>Remember me?:</td>
 						<td><g:checkBox name="rememberMe" value="${rememberMe}" /></td>
 					</tr>
 					-->
+					<tr>
+					   <td>
+					       <select name="useLocal">
+					           <option value="false">---</option>
+                                <option value="true">UseLocal</option>
+					       </select>
+					   </td>
+					</tr>
 					<tr>
 						<td />
 						<td><input type="submit" value="Sign in" /></td>

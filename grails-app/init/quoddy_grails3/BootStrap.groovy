@@ -7,6 +7,8 @@ import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.stream.EventType
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.constants.EventTypes
+import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
+import org.springframework.security.authentication.encoding.PasswordEncoder
 
 import grails.util.Environment
 
@@ -23,6 +25,10 @@ class BootStrap
     def init = 
 	{ servletContext ->
     
+        
+        searchService.initializeGeneralIndex();
+        searchService.initializePersonIndex();
+        
 		switch( Environment.current  )
 		{
 			case Environment.DEVELOPMENT:
@@ -36,6 +42,7 @@ class BootStrap
 				createSystemUser();
 				createShareTargets();
 				createEventTypes();
+                rebuildIndexes();
 				break;
 			case Environment.PRODUCTION:
 				println "No special configuration required";
@@ -48,14 +55,19 @@ class BootStrap
 		}
 	
 		
-		searchService.initializeGeneralIndex();
-		searchService.initializePersonIndex();
+		
 	}
     
 	def destroy = 
 	{
 	}
 	
+    void rebuildIndexes()
+    {
+        searchService.rebuildGeneralIndex();
+        searchService.rebuildPersonIndex();
+    }
+    
 	void createEventTypes()
 	{
 		
@@ -178,7 +190,7 @@ class BootStrap
 			ghostUser.lastName = "Ghost User";
 			ghostUser.email = "SYS_ghost_user@example.com";
 			ghostUser.userId = "SYS_ghost_user";
-			ghostUser.password = "secret";
+			ghostUser.password = "notused";
 			ghostUser.bio = "bio";
 			 
 			Profile profileGhost = new Profile();
@@ -308,7 +320,11 @@ class BootStrap
 			userPrhodes.lastName = "Rhodes";
 			userPrhodes.email = "motley.crue.fan@gmail.com";
 			userPrhodes.userId = "prhodes";
-			userPrhodes.password = "secret";
+			userPrhodes.disabled = false;
+            
+            PasswordEncoder encoder = new MessageDigestPasswordEncoder("MD5");
+            String hashedPassword = encoder.encodePassword( "secret", null );
+            userPrhodes.password = hashedPassword;
 			userPrhodes.bio = "bio";
 			 
 			Profile profilePrhodes = new Profile();

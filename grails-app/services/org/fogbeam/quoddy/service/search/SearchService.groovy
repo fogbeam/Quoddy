@@ -458,7 +458,7 @@ class SearchService
 	
 	public List<SearchResult> doPeopleSearch( final String queryString )
 	{
-		log.debug( "in doPeopleSearch" );
+		log.debug( "in doPeopleSearch.  query: [${queryString}]" );
 		
 		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
 		
@@ -468,7 +468,11 @@ class SearchService
 			indexDirLocation = quoddyHome + "/index";
 		}
 		
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/person_index") );
+        indexDirLocation = indexDirLocation + "/person_index";
+        
+        log.debug( "indexDirLocation: ${indexDirLocation}" );
+        
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation ) );
 		IndexSearcher searcher = new IndexSearcher( indexDir );
 
 		BooleanQuery outerQuery = new BooleanQuery();

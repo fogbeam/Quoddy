@@ -56,7 +56,7 @@ class User implements Serializable, UserDetails
 	
 	/* stuff objects of this class "carry around" but aren't persisted as part of the object. 
 	 * This stuff is pulled in from an external source, like, say, LDAP. */
-	String password = "notused";
+	String password = "notused"; // normal users login using CAS and don't have a password stored locally
 	@XmlElement
 	String homepage;
 	@XmlElement
@@ -76,7 +76,7 @@ class User implements Serializable, UserDetails
     @XmlElement
     boolean passwordExpired;
     
-	static transients = [ "password", "templateName", "fullName" ]
+	static transients = [ "templateName", "fullName" ]
 	
     static mapping = {
     	table 'uzer'
