@@ -12,6 +12,11 @@
         <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css" />
        
         
+        <g:javascript>
+            window.appContext = '${request.contextPath}';
+        </g:javascript>
+        
+        
         <g:javascript library="jquery-1.4" />
         <g:javascript library="jquery.timers-1.2" />
         <g:javascript>

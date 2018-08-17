@@ -35,6 +35,9 @@ class HomeController
     	}
     	else
     	{
+            // TODO: get the user from the SecurityContext instead of the Session object
+            
+            
 			log.debug( "Looking up User in session");
 			// user = SecurityUtils.subject.principal;
 			if( user != null )

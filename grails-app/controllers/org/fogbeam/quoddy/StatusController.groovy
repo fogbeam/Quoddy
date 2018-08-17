@@ -108,7 +108,7 @@ class StatusController
 		}
 		
 		// save the newStatus 
-		if( !newStatus.save() )
+		if( !newStatus.save(flush:true) )
 		{
 			log.error(( "Saving newStatus FAILED"));
 			newStatus.errors.allErrors.each { log.error( it ) };
@@ -126,7 +126,7 @@ class StatusController
 		// set the current status
 		log.debug( "setting currentStatus");
 		user.currentStatus = newStatus;
-		if( !user.save() )
+		if( !user.save(flush:true) )
 		{
 			log.debug( "Saving user FAILED");
 			user.errors.allErrors.each { log.debug( it ) };
@@ -181,20 +181,13 @@ class StatusController
 	{
 		User user = null;
 		List<StatusUpdate> updates = new ArrayList<StatusUpdate>();
+
+			
+		// get our user
+		user = userService.findUserByUserId( session.user.userId );
 		
-		if( !session.user )
-		{
-			flash.message = "Must be logged in before updating status";
-		}
-		else
-		{
-			log.debug( "logged in; so proceeding...");
-			
-			// get our user
-			user = userService.findUserByUserId( session.user.userId );
-			
-			updates.addAll( user.oldStatusUpdates.sort { it.dateCreated }.reverse() );
-		}
+		updates.addAll( user.oldStatusUpdates.sort { it.dateCreated }.reverse() );
+
 		
 		[updates:updates]
 	}

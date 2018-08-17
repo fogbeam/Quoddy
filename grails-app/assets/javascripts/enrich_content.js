@@ -335,6 +335,12 @@ $j(document).ready( function()
 		}
 	});
 	
-	$j(document).tooltip();	
-					
+	try
+	{
+		$j(document).tooltip();	
+	}
+	catch( err )
+	{
+		console.log( err );
+	}
 });

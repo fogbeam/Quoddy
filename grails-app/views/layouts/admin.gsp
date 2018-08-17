@@ -35,6 +35,9 @@
 <link rel="stylesheet" type="text/css"
     href="${resource(dir:'javascripts', file:'jquery-ui-1.10.3.custom/css/vader/jquery-ui-1.10.3.custom.css') }" />
 
+    <g:javascript>
+        window.appContext = '${request.contextPath}';
+    </g:javascript>
 
 <!--
 <g:javascript library="jquery-ui-1.10.3.custom/js/jquery-1.9.1" />

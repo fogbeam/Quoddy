@@ -10,6 +10,11 @@
         <link rel="stylesheet" type="text/css" href="/css/grids-min.css">
             
 
+        <g:javascript>
+            window.appContext = '${request.contextPath}';
+        </g:javascript>
+
+
 		<!-- default container look and feel -->
 		<!-- 
 		<link rel="stylesheet" href="/shindig/css/gadgets.css">

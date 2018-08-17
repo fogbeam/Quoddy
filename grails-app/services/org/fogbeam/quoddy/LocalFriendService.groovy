@@ -18,7 +18,7 @@ class LocalFriendService
 		}
 
 		iFollowCollection.addToIFollow( targetUser.uuid );
-		iFollowCollection.save();		
+		iFollowCollection.save(flush:true);		
 	}
 
 	/* note: this is a "two way" operation, so to speak.  That is, the initial
@@ -42,9 +42,9 @@ class LocalFriendService
 		friendCollectionCU.addToFriends( newFriend.uuid );
 		friendCollectionNF.addToFriends( currentUser.uuid );
 		
-		friendRequestsCU.save();
-		friendCollectionCU.save();
-		friendCollectionNF.save();
+		friendRequestsCU.save(flush:true);
+		friendCollectionCU.save(flush:true);
+		friendCollectionNF.save(flush:true);
 		
 
 	}
@@ -56,11 +56,15 @@ class LocalFriendService
 		FriendRequestCollection friendRequests = FriendRequestCollection.findByOwnerUuid( newFriend.uuid );
 		if( friendRequests == null )
 		{
+            log.error( "can't get friendRequests for user: ${destinationUser.userId}" )
 			throw new RuntimeException( "can't get friendRequests for user: ${destinationUser.userId}" );
 		}
 	
 		friendRequests.addToFriendRequests( currentUser.uuid );
-		friendRequests.save();
+		if( !friendRequests.save(flush:true) )
+		{
+            friendRequests.errors.allErrors.each {log.error(it);}
+        }
 	}
 
 	

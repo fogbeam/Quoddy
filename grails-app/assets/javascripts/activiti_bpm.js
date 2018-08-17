@@ -33,7 +33,7 @@ function activitiClaimTask()
 	
 	// make ajax call to the activitiBPM controller and to claim this task
 	var jqXhr = $j.ajax({
-			url: "/quoddy/activitiBPM/claimTask",
+			url: appContext + "/activitiBPM/claimTask",
 			type: "POST",
 			data: { id : id },
 			dataType: "json"
@@ -56,7 +56,7 @@ function activitiCompleteTask()
 	var id = $j(this).attr( "id" ).substring(20);	
 	// alert( "Completing task with id: " + id  );
 	
-	window.location.href = "/quoddy/activitiBPM/completeTaskForm/" + id;
+	window.location.href = appContext + "/activitiBPM/completeTaskForm/" + id;
 	
 }
 

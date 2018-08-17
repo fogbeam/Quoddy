@@ -57,7 +57,7 @@ class ActivityStreamEntryResource
 		remoteItem.targetUuid = targetUuid;
 		remoteItem.remoteObjectType = item.objectObjectType;
 		
-		if( ! remoteItem.save() )
+		if( ! remoteItem.save(flush:true) )
 		{
 			remoteItem.errors.allErrors.each { println it };
 			throw new RuntimeException( "could not save RemoteItem!");

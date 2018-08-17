@@ -80,7 +80,7 @@ class BootStrap
 		   {
 			   println "Creating DB entry for EventType: ${eventTypeEnum.name}";
 			   et = new EventType( name: eventTypeEnum.name, scope: eventTypeEnum.scope );
-			   et.save();
+			   et.save(flush:true);
 		   }
 		   else
 		   {
@@ -96,7 +96,7 @@ class BootStrap
 			println "Creating new ${ShareTarget.STREAM_PUBLIC} ShareTarget";
 			streamPublicTarget = new ShareTarget();
 			streamPublicTarget.name = ShareTarget.STREAM_PUBLIC;
-			streamPublicTarget.save();
+			streamPublicTarget.save(flush:true);
 		}
 		else
 		{
@@ -250,6 +250,8 @@ class BootStrap
 
 	void createSomeUsers()
 	{
+        PasswordEncoder encoder = new MessageDigestPasswordEncoder("MD5");
+        
 		println "Creating some users!";
 	
 		AccountRole userRole = userService.findAccountRoleByAuthority( "ROLE_USER" );
@@ -322,7 +324,7 @@ class BootStrap
 			userPrhodes.userId = "prhodes";
 			userPrhodes.disabled = false;
             
-            PasswordEncoder encoder = new MessageDigestPasswordEncoder("MD5");
+
             String hashedPassword = encoder.encodePassword( "secret", null );
             userPrhodes.password = hashedPassword;
 			userPrhodes.bio = "bio";
@@ -402,7 +404,9 @@ class BootStrap
 			 userSarah.lastName = "Kahn";
 			 userSarah.email = "snkahn@gmail.com";
 			 userSarah.userId = "sarah";
-			 userSarah.password = "secret";
+             
+             String hashedPassword = encoder.encodePassword( "secret", null );
+			 userSarah.password = hashedPassword;
 			 userSarah.bio = "bio";
 			   
 			 Profile profileSarah = new Profile();
@@ -473,7 +477,8 @@ class BootStrap
 							   bio:"stuff",
 							   displayName: "Test User${i}" );
 				 
-				  testUser.password = "secret";
+                  String hashedPassword = encoder.encodePassword( "secret", null );
+				  testUser.password = hashedPassword; 
 				  testUser.uuid = "test_user_${i}";
 				  Profile profile = new Profile();
 				  profile.setOwner( testUser );

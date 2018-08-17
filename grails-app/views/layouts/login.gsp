@@ -16,6 +16,11 @@
 	href="${createLinkTo(dir:'css', file:'oagis.css')}" />
 
 
+    <g:javascript>
+        window.appContext = '${request.contextPath}';
+    </g:javascript>
+
+
 <g:javascript library="jquery-1.7.1.min" />
 <g:javascript>
           var $j = jQuery.noConflict();	

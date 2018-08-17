@@ -65,8 +65,8 @@ logger( "org.jasig.cas.client", INFO )
 logger( "reactor.spring", INFO )
 logger( "asset.pipeline", INFO )
 logger( "org.fogbeam.quoddy", DEBUG )
-logger( "org.springframework.security", DEBUG )
-
+logger( "org.springframework.security", ERROR )
+logger( "grails.plugin.springsecurity.web.access", ERROR )
 
 def targetDir = BuildSettings.TARGET_DIR
 if (Environment.isDevelopmentMode() && targetDir != null) {

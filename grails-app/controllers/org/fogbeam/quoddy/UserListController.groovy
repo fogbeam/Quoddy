@@ -136,7 +136,7 @@ class UserListController
 					listToCreate.addToMembers( addMeUser );
 				}
 			
-				if( !listToCreate.save() )
+				if( !listToCreate.save(flush:true) )
 				{
 					log.error( "Saving UserList FAILED" );
 					listToCreate.errors.allErrors.each { log.debug( it ) };
@@ -224,7 +224,7 @@ class UserListController
 				 }
 				 
 				 
-				 if( !listToEdit.save() )
+				 if( !listToEdit.save(flush:true) )
 				 {
 					 log.error( "Saving UserList FAILED");
 					 listToEdit.errors.allErrors.each { log.debug( it ) };
@@ -239,7 +239,7 @@ class UserListController
 					 listToEdit.addToMembers( addMeUser );
 				 }
 			 
-				 if( !listToEdit.save() )
+				 if( !listToEdit.save(flush:true) )
 				 {
 					 log.error( "Saving UserList FAILED");
 					 listToEdit.errors.allErrors.each { log.error( it ) };

@@ -137,7 +137,7 @@ class BusinessEventSubscriptionService
 
 	public void saveSubscription( final BusinessEventSubscription subscriptionToSave ) 
 	{
-		if( !subscriptionToSave.save() )
+		if( !subscriptionToSave.save(flush:true) )
 		{
 			log.error( "Saving BusinessEventSubscription FAILED");
 			subscriptionToSave.errors.allErrors.each { log.debug( it ) };
@@ -149,7 +149,7 @@ class BusinessEventSubscriptionService
 	// take advantage of Spring's method level transaction demarcation stuff?
 	public void saveEvent( StreamItemBase event )
 	{
-		if( ! event.save() )
+		if( ! event.save(flush:true) )
 		{
 			log.error( "Saving Event FAILED");
 			event.errors.allErrors.each { log.debug(it) }

@@ -7,6 +7,7 @@ import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.util.EntityUtils
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
@@ -134,17 +135,27 @@ class LocalLoginController
             authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
             
             
-            Authentication authentication = authenticationManager.authenticate(authRequest);
+            Authentication authentication = null;
+            String urlAfterAuthentication = "/";
+            try
+            {
+                authentication = authenticationManager.authenticate(authRequest);
             
-            log.info( "got Authentication: ${authentication}");
+                log.info( "got Authentication: ${authentication}");
             
-            SecurityContext securityContext = SecurityContextHolder.getContext();
-            securityContext.setAuthentication(authentication);
+                SecurityContext securityContext = SecurityContextHolder.getContext();
+                securityContext.setAuthentication(authentication);
+            }
+            catch( BadCredentialsException bce )
+            {
+                // would we want to send the user to another page here?
+                // urlAfterAuthentication = "/"
+                
+                
+                flash.message = "Login Failed";
+            }
             
-            
-            redirect( uri: "/" );
-            
-            
+            redirect( uri: urlAfterAuthentication );
         }
 	}
 	

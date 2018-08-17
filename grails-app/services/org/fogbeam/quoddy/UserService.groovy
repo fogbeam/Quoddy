@@ -106,18 +106,18 @@ class UserService {
 			// defaultStream.includeAllUsers = true;
 			
 			
-			if( !defaultStream.save())
+			if( !defaultStream.save(flush:true))
 			{
 				defaultStream.errors.allErrors.each { log.error( it ) };
 				throw new RuntimeException( "couldn't create Default UserStream record for user: ${user.userId}" );
 			}
 			
 			FriendCollection friendCollection = new FriendCollection( ownerUuid: user.uuid );
-			friendCollection.save();
+			friendCollection.save(flush:true);
 			IFollowCollection iFollowCollection = new IFollowCollection( ownerUuid: user.uuid );
-			iFollowCollection.save();
+			iFollowCollection.save(flush:true);
 			FriendRequestCollection friendRequestCollection = new FriendRequestCollection( ownerUuid: user.uuid );
-			friendRequestCollection.save();
+			friendRequestCollection.save(flush:true);
 		
 		}
 		else
@@ -140,7 +140,7 @@ class UserService {
 			user.profile = new Profile();
 		}
 		
-		if( user.save() )
+		if( user.save(flush:true) )
 		{
 			// create system defined Stream entries for this newly created user
 			UserStreamDefinition defaultStream = new UserStreamDefinition();
@@ -151,7 +151,7 @@ class UserService {
 			// defaultStream.includeAllUsers = true;
 			
 			
-			if( !defaultStream.save())
+			if( !defaultStream.save(flush:true))
 			{
 				defaultStream.errors.allErrors.each { log.debug( it ) };
 				throw new RuntimeException( "couldn't create Default UserStream record for user: ${user.userId}" );
@@ -159,11 +159,11 @@ class UserService {
 			
 			
 			FriendCollection friendCollection = new FriendCollection( ownerUuid: user.uuid );
-			friendCollection.save();
+			friendCollection.save(flush:true);
 			IFollowCollection iFollowCollection = new IFollowCollection( ownerUuid: user.uuid );
-			iFollowCollection.save();
+			iFollowCollection.save(flush:true);
 			FriendRequestCollection friendRequestCollection = new FriendRequestCollection( ownerUuid: user.uuid );
-			friendRequestCollection.save();
+			friendRequestCollection.save(flush:true);
 			
 			
 		}

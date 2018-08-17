@@ -42,7 +42,7 @@ class SiteConfigEntryController
 		theEntry.name = params.entryName;
 		theEntry.value = params.entryValue;
 		
-		if( !theEntry.save())
+		if( !theEntry.save(flush:true))
 		{
 			flash.message = "Failed to save entry!";
 			log.error( "Failed to save entry" );
@@ -59,7 +59,7 @@ class SiteConfigEntryController
 		theEntry.name = params.entryName;
 		theEntry.value = params.entryValue;
 		
-		if( !theEntry.save())
+		if( !theEntry.save(flush:true))
 		{
 			flash.message = "Failed to save entry!";
 			log.error( "Failed to save entry" );	

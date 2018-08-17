@@ -13,7 +13,7 @@ class CalendarFeedSubscriptionService
 	
 	public CalendarFeedSubscription saveSubscription( final CalendarFeedSubscription subscription )
 	{
-		if( !subscription.save() )
+		if( !subscription.save(flush:true) )
 		{
 			log.error( "Saving CalendarFeedSubscription FAILED");
 			subscription.errors.allErrors.each { log.warn( it ) };

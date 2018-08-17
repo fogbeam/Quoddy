@@ -40,7 +40,7 @@ class LocalAccountService
 		LocalAccount account = LocalAccount.findByUsername( userId );
 		account.password = digestMd5( user.password );
 		
-		if( !account.save() )
+		if( !account.save(flush:true) )
 		{
 			log.error( "Updating LocalAccount FAILED");
 			account.errors.allErrors.each { log.debug(it) };

@@ -1,7 +1,5 @@
 package org.fogbeam.quoddy;
 
-import groovy.json.JsonBuilder
-
 import org.apache.commons.io.FilenameUtils
 import org.fogbeam.quoddy.annotation.AnnotationResource
 import org.fogbeam.quoddy.dto.UserProfileCommand
@@ -15,10 +13,14 @@ import org.fogbeam.quoddy.profile.Skill
 import org.fogbeam.quoddy.search.SearchResult
 import org.fogbeam.quoddy.social.FriendRequest
 import org.fogbeam.quoddy.stream.ActivityStreamItem
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.commons.CommonsMultipartFile
 
 import grails.plugin.springsecurity.annotation.Secured
+import groovy.json.JsonBuilder
 
 // import com.hp.hpl.jena.query.Dataset
 // import com.hp.hpl.jena.query.ReadWrite
@@ -215,9 +217,9 @@ class UserController
 					
 		builder( forJSON );
 		
-		log.debug( "JSON Output: ${builder.toString()}");
+		log.debug( "JSON Output: ${builder.toPrettyString()}");
 		
-		model.putAt( "predicatesJSON", builder.toString());
+		model.putAt( "predicatesJSON", builder.toPrettyString());
 		
 		return model;
 	}
@@ -395,45 +397,40 @@ class UserController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def addToFollow()
 	{
-		def currentUser = null;
-		if( !session.user ) 
-		{
-			flash.message = "Must be logged in before you can follow people";
-		}
-		else
-		{
-			log.debug( "follow: ${params.userId}" );
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = null;
+        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
 		
-			currentUser = userService.findUserByUserId( session.user.userId );
-			
-			def targetUser = userService.findUserByUserId( params.userId );
+		def targetUser = userService.findUserByUserId( params.userId );
+	
+		userService.addToFollow( currentUser, targetUser );		
 		
-			userService.addToFollow( currentUser, targetUser );		
-		}
-		
-		// render(view:'viewUser', model:[user:currentUser]);
 		render( "OK" );	
 	}
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def addToFriends()
 	{
-		def currentUser = null;
-		if( !session.user ) 
-		{
-			flash.message = "Must be logged in before you can add friends";
-		}
-		else
-		{
-			log.debug( "addToFriends: ${params.userId}" );
+        log.info( "addToFriends() called");
+        
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();        
+        log.info( "current Authentication: ${authentication}");
+        
+        
+        User currentUser = null;
+        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
 		
-			currentUser = userService.findUserByUserId( session.user.userId );
-			
-			def targetUser = userService.findUserByUserId( params.userId );
-		
-			userService.addToFriends( currentUser, targetUser );
-			
-		}
+        log.info( "currentUser: ${currentUser}" );
+        
+		def targetUser = userService.findUserByUserId( params.userId );
+	
+        log.info( "targetUser: ${targetUser}" );
+        
+		userService.addToFriends( currentUser, targetUser );
 		
 		// render(view:'viewUser', model:[user:currentUser]);
 		render( "OK" );
@@ -442,17 +439,16 @@ class UserController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def confirmFriend()
 	{
-		log.debug( "confirmFriend" );
-		User currentUser = null;
-		if( !session.user )
-		{
-			flash.message = "Must be logged in before you can list friends";
-		}
-		else
-		{
-			currentUser = userService.findUserByUserId( session.user.userId )
-		}
-	
+		log.info( "confirmFriend() called" );
+		
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = null;
+		currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
+        
+        
 		User newFriend = userService.findUserByUserId( params.confirmId )
 		
 		userService.confirmFriend( currentUser, newFriend );
@@ -463,17 +459,15 @@ class UserController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def listFollowers()
 	{
-		def user = null;
-		if( !session.user ) 
-		{
-			flash.message = "Must be logged in before you can list followers";
-		}
-		else
-		{
-			user = userService.findUserByUserId( session.user.userId )
-		}
+		
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = null;
+        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
 	
-		List<User> followers = userService.listFollowers( user );
+		List<User> followers = userService.listFollowers( currentUser );
 		
 		[followers:followers];
 	}
@@ -483,17 +477,14 @@ class UserController
 	def listFriends()
 	{
 
-		def user = null;
-		if( !session.user ) 
-		{
-			flash.message = "Must be logged in before you can list friends";
-		}
-		else
-		{
-			user = userService.findUserByUserId( session.user.userId )
-		}
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = null;
+        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
 	
-		List<User> friends = userService.listFriends( user );
+		List<User> friends = userService.listFriends( currentUser );
 		
 		[friends:friends];
 	}
@@ -501,17 +492,13 @@ class UserController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def listIFollow()
 	{
-		def user = null;
-		if( !session.user ) 
-		{
-			flash.message = "Must be logged in before you can list friends";
-		}
-		else
-		{
-			user = userService.findUserByUserId( session.user.userId )
-		}
-	
-		List<User> iFollow = userService.listIFollow( user );
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = null;
+        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )	
+		List<User> iFollow = userService.listIFollow( currentUser );
 		
 		[ifollow: iFollow];
 	}
@@ -604,9 +591,9 @@ class UserController
 					
 		builder( forJSON );
 		
-		log.trace( "JSON Output: ${builder.toString()}");
+		log.debug( "JSON Output: ${builder.toPrettyString()}" );
 		
-		model.putAt( "predicatesJSON", builder.toString());
+		model.putAt( "predicatesJSON", builder.toPrettyString() );
 		
 		
 		return model;
@@ -615,18 +602,14 @@ class UserController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def editProfile()
 	{
-		String userId;
-		if( session.user )
-		{
-			userId = session.user.userId;
-		}
-		else
-		{
-			// error, must be logged in to do this...	
-		}
-		
-		User user = userService.findUserByUserId( userId );
-		UserProfileCommand upc = new UserProfileCommand(user.profile, months );
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = null;
+        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
+
+		UserProfileCommand upc = new UserProfileCommand(currentUser.profile, months );
 		[profileToEdit:upc, sexOptions:sexOptions, years:years, months:months, days:days,
 			contactTypes:contactTypes];
 	}
@@ -653,7 +636,7 @@ class UserController
 				if( currentPrimaryPhone != null )
 				{
 					currentPrimaryPhone.setPrimaryInType( false );
-					currentPrimaryPhone.save();
+					currentPrimaryPhone.save(flush:true);
 				}
 				
 				ContactAddress newPrimaryPhoneCA = new ContactAddress();
@@ -714,7 +697,7 @@ class UserController
 				if( currentPrimaryEmail != null )
 				{
 					currentPrimaryEmail.setPrimaryInType( false );
-					currentPrimaryEmail.save();
+					currentPrimaryEmail.save(flush:true);
 				}
 				
 				ContactAddress newPrimaryEmailCA = new ContactAddress();
@@ -775,7 +758,7 @@ class UserController
 				if( currentPrimaryInstantMessenger != null )
 				{
 					currentPrimaryInstantMessenger.setPrimaryInType( false );
-					currentPrimaryInstantMessenger.save();
+					currentPrimaryInstantMessenger.save(flush:true);
 				}
 				
 				ContactAddress newPrimaryInstantMessengerCA = new ContactAddress();
@@ -987,7 +970,7 @@ class UserController
 			if( newTitle != null )
 			{
 				profile.title = newTitle.trim();
-				profile.save();
+				profile.save(flush:true);
 			}
 			
 			render( profile.title );
@@ -1022,7 +1005,7 @@ class UserController
 			if( newSummary != null )
 			{
 				profile.summary = newSummary.trim();
-				profile.save();
+				profile.save(flush:true);
 			}
 			
 			render( profile.summary );	
@@ -1188,7 +1171,7 @@ class UserController
 					existingHistEmp.title = emp1v.title;
 					existingHistEmp.description = emp1v.description;
 					
-					if( !existingHistEmp.save() )
+					if( !existingHistEmp.save(flush:true) )
 					{
 						log.error( "updating histemp record failed!" );	
 					}
@@ -1230,7 +1213,7 @@ class UserController
 																		yearFrom: yearFrom,
 																		title: emp1v.title,
 																		description: emp1v.description );
-					if( !emp1.save() )
+					if( !emp1.save(flush:true) )
 					{
 						log.error( "Saving new HistoricalEmployer Record failed");
 						emp1.errors.allErrors.each { log.debug( it ) };
@@ -1258,7 +1241,7 @@ class UserController
 						existingContactAddress.address = contactAddress.address;
 					}
 					
-					if( !existingContactAddress.save() )
+					if( !existingContactAddress.save(flush:true) )
 					{
 						log.error( "updating contact address record failed!");
 					}
@@ -1274,7 +1257,7 @@ class UserController
 						ContactAddress newContactAddress = new ContactAddress( serviceType: Integer.parseInt( contactAddress.serviceType ),
 																			address: contactAddress.address );
 
-						if( !newContactAddress.save() )
+						if( !newContactAddress.save(flush:true) )
 						{
 							log.error( "Saving new ContactAddress Record failed" );
 							newContactAddress.errors.allErrors.each { log.debug(it) };
@@ -1321,7 +1304,7 @@ class UserController
 																!educationalHistory.description.isEmpty() ) ? educationalHistory.description: null;
 					
 					
-					if( !existingEducationalExperience.save() )
+					if( !existingEducationalExperience.save(flush:true) )
 					{
 						log.error( "updating educational experience record failed!" );
 					}
@@ -1359,7 +1342,7 @@ class UserController
 														courseOfStudy: courseOfStudy,
 														description: description );
 
-					if( !newEducationalExperience.save() )
+					if( !newEducationalExperience.save(flush:true) )
 					{
 						log.error( "Saving new EducationalExperience Record failed" );
 						newEducationalExperience.errors.allErrors.each { log.debug( it ) };
@@ -1394,7 +1377,7 @@ class UserController
 				if( !interest )
 				{
 					interest = new Interest( name: interestLine );
-					if( !interest.save() )
+					if( !interest.save(flush:true) )
 					{
 						throw new RuntimeException( "FAIL" );
 					}
@@ -1423,7 +1406,7 @@ class UserController
 				if( !skill )
 				{
 					skill = new Skill( name: skillsLine );
-					if( !skill.save() )
+					if( !skill.save(flush:true) )
 					{
 						throw new RuntimeException( "FAIL" );
 					}
@@ -1450,7 +1433,7 @@ class UserController
 				if( !org )
 				{
 					org = new OrganizationAssociation( name: groupsOrgLine );
-					if( !org.save() )
+					if( !org.save(flush:true) )
 					{
 						throw new RuntimeException( "FAIL" );
 					}
@@ -1481,37 +1464,31 @@ class UserController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def editAccount()
 	{
-		def user = null;
-		if( !session.user ) 
-		{
-			flash.message = "Must be logged in edit your profile!";
-		}
-		else
-		{
-			user = userService.findUserByUserId( session.user.userId )
-		}
-	
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        User user = userService.findUserByUserId( ((User)authentication.principal).userId );
+        
 		[user:user];
 	}	
 
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def listOpenFriendRequests()
     {
-		def user = null;
+        log.info( "listOpenFriendRequests() called" );
+        
 		List<FriendRequest> openFriendRequests = new ArrayList<FriendRequest>();
-		if( !session.user )
-		{
-			flash.message = "Must be logged in to display pending requests!";
-		}
-		else
-		{
-			user = userService.findUserByUserId( session.user.userId );
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        User user = userService.findUserByUserId( ((User)authentication.principal).userId );
+        
+        log.info( "User: " + user );
+        		
+		List<FriendRequest> temp = userService.listOpenFriendRequests( user );
+		openFriendRequests.addAll( temp );
 		
-			List<FriendRequest> temp = userService.listOpenFriendRequests( user );
-			openFriendRequests.addAll( temp );
-			
-		}
-			
+        log.debug( "found ${openFriendRequests.size()} open friend requests" );
+        	
 		[openFriendRequests:openFriendRequests];		
 	}	
 

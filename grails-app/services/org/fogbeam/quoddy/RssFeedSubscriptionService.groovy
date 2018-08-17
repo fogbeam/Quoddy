@@ -14,7 +14,7 @@ class RssFeedSubscriptionService
 	public RssFeedSubscription saveSubscription( final RssFeedSubscription subscription )
 	{
 		
-		if( !subscription.save() )
+		if( !subscription.save(flush:true) )
 		{
 			log.error( "Saving RssFeedSubscription FAILED");
 			subscription.errors.allErrors.each { log.warn( it ) };

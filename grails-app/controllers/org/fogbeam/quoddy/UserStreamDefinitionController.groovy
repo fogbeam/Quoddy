@@ -259,7 +259,7 @@ class UserStreamDefinitionController
 				log.debug( "create using params: ${params}");
 				UserStreamDefinition streamToCreate = flow.streamToCreate;
 				
-				if( !streamToCreate.save() )
+				if( !streamToCreate.save(flush:true) )
 				{
 					log.debug( "saving UserStream FAILED");
 					streamToCreate.errors.allErrors.each { log.debug( it ) };
@@ -506,7 +506,7 @@ class UserStreamDefinitionController
 				def streamId = params.streamId;
 				UserStreamDefinition streamToEdit = flow.streamToEdit;
 				
-				if( !streamToEdit.save() )
+				if( !streamToEdit.save(flush:true) )
 				{
 					log.error( "Saving UserStream FAILED");
 					streamToEdit.errors.allErrors.each { log.debug(it) };
@@ -548,7 +548,7 @@ class UserStreamDefinitionController
 		streamToEdit = UserStreamDefinition.findById( streamId );
 		
 		streamToEdit.name = params.streamName;
-		streamToEdit.save();
+		streamToEdit.save(flush:true);
 		
 		redirect(controller:"userStreamDefinition", action:"index");
 	}

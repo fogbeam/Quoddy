@@ -34,7 +34,7 @@ class CommentController
 			newComment.text = params.addCommentTextInput;
 			newComment.creator = user;
 			newComment.event = item.streamObject;
-			newComment.save();
+			newComment.save(flush:true);
 			
 			item.streamObject.addToComments( newComment );
 			

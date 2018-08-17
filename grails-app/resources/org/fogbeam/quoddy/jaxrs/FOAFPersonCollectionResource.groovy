@@ -167,7 +167,7 @@ class FOAFPersonCollectionResource {
 					newEmail.setDateCreated(new Date());
 					newEmail.profile = newUserProfile;
 					
-					if( !newEmail.save())
+					if( !newEmail.save(flush:true))
 					{
 						newEmail.errors.allErrors.each { println it; }
 					}
@@ -258,7 +258,7 @@ class FOAFPersonCollectionResource {
 						newEmail.setPrimaryInType(true);
 						newEmail.setDateCreated(new Date());
 
-						if( !newEmail.save())
+						if( !newEmail.save(flush:true))
 						{
 							user.errors.allErrors.each { println it; }
 						}

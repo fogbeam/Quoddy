@@ -8,6 +8,10 @@
 </head>
 <body>
 	<div id="content" role="main">
+	   
+	   <g:if test="${flash.message}">
+	       <g:message code="${flash.message}" />
+	   </g:if>
 
 		<g:form controller="localLogin" action="login">
 			<input type="hidden" name="targetUri" value="${targetUri}" />

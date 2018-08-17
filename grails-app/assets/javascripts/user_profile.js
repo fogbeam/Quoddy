@@ -9,20 +9,27 @@ $j(document).ready( function()
 		}	
 	 */
 	
-	var jsonString = $j("#predicatesJSON").text();
-	var json = $j.parseJSON( jsonString );
+	try
+	{
+		var jsonString = $j("#predicatesJSON").text();
+		var json = $j.parseJSON( jsonString );
 	
-	var tahead = $j('#annotationObject').typeahead({
-		  name: 'objects',
-		  local: json
-	});
+		var tahead = $j('#annotationObject').typeahead({
+			name: 'objects',
+			local: json
+		});
 	
 	
-	tahead.on( "typeahead:selected", function( e, datum ) {
+		tahead.on( "typeahead:selected", function( e, datum ) {
 			// alert( "setting from datum.qualifiedName: " + datum.qualifiedName );
 			$j("#annotationObjectQN").val( datum.qualifiedName );
 		} );
-		
+	}
+	catch( err )
+	{
+		console.log( err );
+	}
+	
 	// create add annotation dialog
 	$j( "#annotationDialog" ).dialog(
 			{
@@ -79,14 +86,14 @@ function addToFriends()
 	// the id of the user we want to "friend"
 	
 	var jqXhr = $j.ajax({
-		url: "/quoddy/user/addToFriends",
+		url: appContext + "/user/addToFriends",
 		type: "POST",
 		data: { userId : id },
 		dataType: "text"
 	});
 
 	jqXhr.done(function(data, textStatus, jqXHR) {
-		alert( "Friend request sent." );
+		// alert( "Friend request sent." );
 	})
 	.fail(function( jqXHR, textStatus, errorThrown) {
 		alert( "error: " + errorThrown );
@@ -100,7 +107,7 @@ function addToFriends()
 function followUser()
 {
 	var id = $j(this).attr('id').substring( 14 );
-	alert("clicked for id: " + id )
+	// alert("clicked for id: " + id )
 	
 	
 	// note: on the backend we assume the initiator of this operation is the
@@ -108,7 +115,7 @@ function followUser()
 	// the id of the user we want to "follow"	
 
 	var jqXhr = $j.ajax({
-		url: "/quoddy/user/addToFollow",
+		url: appContext + "/user/addToFollow",
 		type: "POST",
 		data: { userId : id },
 		dataType: "text"

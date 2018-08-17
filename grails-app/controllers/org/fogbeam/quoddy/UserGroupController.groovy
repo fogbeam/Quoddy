@@ -84,7 +84,7 @@ class UserGroupController
 			groupToCreate.description = params.groupDescription;
 			groupToCreate.owner = user;
 			
-			if( ! groupToCreate.save() )
+			if( ! groupToCreate.save(flush:true) )
 			{
 				log.error( "Saving UserGroup FAILED");
 				groupToCreate.errors.allErrors.each { log.debug( it) };
@@ -268,7 +268,7 @@ class UserGroupController
 				/* TODO: add call to Stanbol to get our enhancement JSON */
 				newStatus.enhancementJSON = "";
 				
-				if( !newStatus.save() )
+				if( !newStatus.save(flush:true) )
 				{
 					log.error( "Save StatusUpdate FAILED!");
 					newStatus.errors.allErrors.each { log.debug( it ) };	

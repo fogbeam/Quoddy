@@ -51,7 +51,7 @@ class CalendarController
 			calFeed.url = params.calFeedUrl;
 			calFeed.name = params.calFeedName;
 			
-			if( !calFeed.save() )
+			if( !calFeed.save(flush:true) )
 			{
 				log.debug( "Saving CalendarFeedSubscription FAILED");
 				calFeed.errors.allErrors.each { log.debug( it ) };
@@ -92,7 +92,7 @@ class CalendarController
 			calFeed.url = params.calFeedUrl;
 			calFeed.name = params.calFeedName;
 			
-			if( !calFeed.save() )
+			if( !calFeed.save(flush:true) )
 			{
 				log.debug( "Saving CalendarFeedSubscription FAILED");
 				calFeed.errors.allErrors.each { log.debug( it ) };

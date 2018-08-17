@@ -467,7 +467,7 @@ class SubscriptionController
 				
 				subscriptionToEdit.xQueryExpression = params.xQueryExpression;
 				
-				if( !subscriptionToEdit.save() )
+				if( !subscriptionToEdit.save(flush:true) )
 				{
 					log.error( "Saving BusinessEventSubscription FAILED");
 					subscriptionToEdit.errors.allErrors.each { log.debug( it ) };
@@ -500,7 +500,7 @@ class SubscriptionController
 				
 				ActivitiUserTaskSubscription subscriptionToEdit = flow.subscriptionToEdit;
 				
-				if( !subscriptionToEdit.save() )
+				if( !subscriptionToEdit.save(flush:true) )
 				{
 					log.debug( "Saving BusinessEventSubscription FAILED");
 					subscriptionToEdit.errors.allErrors.each { log.debug( it ) };
@@ -527,7 +527,7 @@ class SubscriptionController
 				
 				CalendarFeedSubscription subscriptionToEdit = flow.subscriptionToEdit;
 				
-				if( !subscriptionToEdit.save() )
+				if( !subscriptionToEdit.save(flush:true) )
 				{
 					log.error( "Saving CalendarFeedSubscription FAILED");
 					subscriptionToEdit.errors.allErrors.each { log.debug( it ) };
