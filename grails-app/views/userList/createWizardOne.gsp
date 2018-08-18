@@ -10,7 +10,7 @@
 		<div class="jumbotron span6">	
 		<h2>Create List</h2>
 		<p />
-		<g:form controller="userList" action="createWizard" method="POST">
+		<g:form controller="userList" action="createWizardTwo" method="POST">
 			<label for="listName">Name:</label> <g:textField name="listName" value=""/>
 			<br />
 			<label for="listDescription">Description:</label> <g:textField name="listDescription" value=""/>

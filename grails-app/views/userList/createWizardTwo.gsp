@@ -12,7 +12,7 @@
 			
 			<h3 style="margin-left:-40px;">Edit List Membership</h3>
 	        
-	        <g:form controller="userList" action="createWizard" method="POST">
+	        <g:form controller="userList" action="createWizardFinish" method="POST">
 	            
 		        <g:select id="usersToAdd" from="" name="usersToAdd" multiple="true" style="display:none;" />
 		        <g:select id="usersToRemove" from="" name="usersToRemove" multiple="true" style="display:none;" />		

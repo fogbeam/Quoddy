@@ -2,6 +2,9 @@ package org.fogbeam.quoddy
 
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.stream.ActivityStreamItem
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
 
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -17,31 +20,22 @@ class UserListController
 	def activitiUserTaskSubscriptionService;
 	def rssFeedSubscriptionService;
 	
+    
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def index()
 	{
-		User user = null;
-		
-		if( session.user != null )
-		{
-			user = userService.findUserByUserId( session.user.userId );
-			
-			Map model = [:];
-			if( user )
-			{
-				Map sidebarCollections = populateSidebarCollections( this, user );
-				model.putAll( sidebarCollections );
-			}
-		  
-		  	return model;
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
+
+		Map model = [:];
+		Map sidebarCollections = populateSidebarCollections( this, currentUser );
+		model.putAll( sidebarCollections );
 	  
-		}
-		else
-		{
-			// TODO: not logged in, deal with this...	
-		}
+	  	return model;	  
 	}	
-	
     
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def display()
@@ -76,80 +70,70 @@ class UserListController
 	
     
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
-	def createWizardFlow()
-	{
-		start {
-			action {
-				[];
-			}
-			on("success").to("createWizardOne")
-		  }
-		
-		/* a view state to bring up our GSP */
-		createWizardOne {
-			on("stage2") {
-				
-				log.debug( "transitioning to stage2");
-			   
-				UserList listToCreate = new UserList();
-				listToCreate.name = params.listName;
-				listToCreate.description = params.listDescription;
-			   
-				def user = userService.findUserByUserId( session.user.userId );
-				listToCreate.owner = user;
-				
-				flow.listToCreate = listToCreate;
-				
-				// TODO: lookup all users who aren't already part of this UserList
-				// and return them
-				List<User> availableUsers = new ArrayList<User>();
-				def queryResults = User.findAll();
-				if( queryResults )
-				{
-					availableUsers.addAll( queryResults );
-				}
-				
-				[availableUsers:availableUsers]
-			}.to("createWizardTwo")
-		}
-		
-		createWizardTwo {
-			on("finishWizard"){
-				log.debug( "finishing Wizard");
-			   [];
-			}.to("finish")
-		}
-		
-		/* an action state to do the final save/update on the object */
-		finish {
-			action {
-				log.trace( "create using params: ${params}");
-				UserList listToCreate = flow.listToCreate;
-			
-				/* deal with usersToAdd here */
-				log.debug( "dealing with users to add" );
-				def usersToAdd = params.list( 'usersToAdd');
-				for( String userToAdd : usersToAdd )
-				{
-					log.debug( "adding user: ${userToAdd}" );
-					User addMeUser = User.findById( userToAdd );
-					listToCreate.addToMembers( addMeUser );
-				}
-			
-				if( !listToCreate.save(flush:true) )
-				{
-					log.error( "Saving UserList FAILED" );
-					listToCreate.errors.allErrors.each { log.debug( it ) };
-				}
-			}
-			on("success").to("exitWizard");
-	   }
-		
-	   exitWizard {
-			redirect(controller:"userList", action:"index");
-	   }
-		
-	}
+    def createWizardOne()
+    {
+        [:];
+    }
+
+        
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def createWizardTwo()
+    {
+        log.debug( "transitioning to stage2");
+        
+        UserList listToCreate = new UserList();
+        listToCreate.name = params.listName;
+        listToCreate.description = params.listDescription;
+        
+        // get current User from SecurityContextHolder
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
+        listToCreate.owner = currentUser;
+        
+        session.listToCreate = listToCreate;
+         
+        // TODO: lookup all users who aren't already part of this UserList
+        // and return them
+        List<User> availableUsers = new ArrayList<User>();
+        def queryResults = User.findAll();
+        if( queryResults )
+        {
+            availableUsers.addAll( queryResults );
+        }
+        
+        [availableUsers:availableUsers]
+    }
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def createWizardFinish()
+    {
+        log.trace( "create using params: ${params}");
+        UserList listToCreate = session.listToCreate;
+    
+        /* deal with usersToAdd here */
+        log.debug( "dealing with users to add" );
+        def usersToAdd = params.list( 'usersToAdd');
+        for( String userToAdd : usersToAdd )
+        {
+            log.debug( "adding user: ${userToAdd}" );
+            User addMeUser = User.findById( userToAdd );
+            listToCreate.addToMembers( addMeUser );
+        }
+    
+        if( !listToCreate.save(flush:true) )
+        {
+            log.error( "Saving UserList FAILED" );
+            listToCreate.errors.allErrors.each { log.debug( it ) };
+        }
+
+        redirect(controller:"userList", action:"index");
+    }
+    
+        
+    /* TODO: replace this */
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def editWizardFlow()

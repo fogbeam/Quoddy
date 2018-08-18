@@ -24,14 +24,14 @@
     <p>Manage existing lists and create new ones.</p>
     </div>
     <div class="span4 offset3">
-		<g:link controller="userList" action="createWizard" class="btn btn-primary btn-large">Create New List</g:link>
+		<g:link controller="userList" action="createWizardOne" class="btn btn-primary btn-large">Create New List</g:link>
     </div>
   <div class="clear"></div>
   </div>
 
 		<ul>
 			<g:each var="list" in="${userLists}">
-				<li><g:link controller="userList" action="editWizard" event="start" params="[listId:list.id]" >${list.name}</g:link> </li>
+				<li><g:link controller="userList" action="editWizardOne" event="start" params="[listId:list.id]" >${list.name}</g:link> </li>
 			</g:each>
 		</ul>		
 	</div>
