@@ -3,6 +3,9 @@ package org.fogbeam.quoddy
 // import org.apache.shiro.SecurityUtils
 import org.fogbeam.quoddy.controller.mixins.SidebarPopulatorMixin
 import org.fogbeam.quoddy.stream.ActivityStreamItem
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
 
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -28,27 +31,27 @@ class HomeController
     	User user = null;
 		List<ActivityStreamItem> activities = new ArrayList<ActivityStreamItem>();
 		
+        
+        
+        // Note: How do we handle the case where the currentUser is somebody other than
+        // the user identified by userId if a userId is supplied? We need to check authorization
+        // settings for the "target" user in this case to see if the currentUser is allowed
+
+        
 		if( userId != null )
     	{
 			log.debug( "getting User by userId: ${userId}");
     		user = userService.findUserByUserId( userId );
     	}
     	else
-    	{
-            // TODO: get the user from the SecurityContext instead of the Session object
+    	{            
+            // get the user from the SecurityContext
+            SecurityContext securityContext = SecurityContextHolder.getContext();
+            Authentication authentication = securityContext.getAuthentication();
+            log.info( "current Authentication: ${authentication}");
             
-            
-			log.debug( "Looking up User in session");
-			// user = SecurityUtils.subject.principal;
-			if( user != null )
-    		{
-				log.debug( "Found User in Session");
-    			user = userService.findUserByUserId( user.userId );
-    		}
-			else
-			{
-				log.debug( "No user in Session");
-			}
+            User currentUser = null;
+            user = userService.findUserByUserId( ((User)authentication.principal).userId );   
     	}
 		
 		Map model = [:];

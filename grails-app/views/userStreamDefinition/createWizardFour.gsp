@@ -9,7 +9,7 @@
 	<body>
 	  <div class="jumbotron span6">	
 		<h2>Select user lists to include in this stream.</h2>
-        <g:form controller="userStreamDefinition" action="createWizard" method="POST">
+        <g:form controller="userStreamDefinition" action="createWizardFive" method="POST">
 			<g:select optionKey="uuid" optionValue="name" 
         		name="userLists" 
         		from="${userLists}"

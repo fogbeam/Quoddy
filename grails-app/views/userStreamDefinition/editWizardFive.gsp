@@ -8,14 +8,14 @@
 	
 	<body>
 		<div id="bodyContent" class="span9">
-			<h3>Select user lists to include in this stream.</h3>
-	        <g:form controller="userStreamDefinition" action="editWizard" method="POST">
+			<h3>Select groups to include in this stream.</h3>
+	        <g:form controller="userStreamDefinition" action="editWizardSix" method="POST">
 				<g:select optionKey="uuid" optionValue="name" 
-	        		name="userLists" 
-	        		from="${userLists}"
-	        		value="${selectedUserLists}" 
+	        		name="userGroups" 
+	        		from="${groups}"
+	        		value="${selectedGroups}" 
 	        		multiple="true" />
-				<g:submitButton name="stage5" value="Next" />
+				<g:submitButton name="stage6" value="Next" />
 			</g:form>
 		</div>	
 	</body>

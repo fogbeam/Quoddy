@@ -10,7 +10,7 @@
 		<div id="bodyContent" class="span9">
 			<h3>Edit User Stream</h3>
 			<p />
-			<g:form controller="userStreamDefinition" action="editWizard" method="POST">
+			<g:form controller="userStreamDefinition" action="editWizardTwo" method="POST">
 				<g:hiddenField name="streamId" value="${streamToEdit.id}" />
 				<label for="streamName">Name:</label> <g:textField name="streamName" value="${streamToEdit.name}"/>
 				<br />

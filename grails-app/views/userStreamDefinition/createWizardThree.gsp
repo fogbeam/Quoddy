@@ -14,7 +14,7 @@
 	<body>
 	  <div class="jumbotron span6">	
 		<h2>Select users to include in this stream.</h2>
-        <g:form controller="userStreamDefinition" action="createWizard" method="POST">
+        <g:form controller="userStreamDefinition" action="createWizardFour" method="POST">
 			<ul id="userFilterSelections">
 				<li>
 					<g:radio name="userFilter" value="no_users" checked="true" />&nbsp;Include Nobody (self posts only)

@@ -87,6 +87,6 @@ class UserStreamDefinition implements Serializable
 	
 	public String toString()
 	{
-		return "id: ${id}, uuid: ${uuid}, name: ${name}, owner: ${owner}, dateCreated: ${dateCreated}";
+		return "id: ${id}, uuid: ${uuid}, name: ${name}, description: ${description}, owner: ${owner}, dateCreated: ${dateCreated}";
 	}
 }
