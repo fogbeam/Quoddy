@@ -143,8 +143,32 @@
 								
 								    /* TODO: add logic to stop this timer when we are logging out. */
 								    /* and don't do this if we aren't logged in / session is expired */
+								    
+								    var breakOut = false;
+								    var jqxhr = $j.get( "${ createLink( controller:'localLogin', action:'checkSession' ) }", function() {
+												  // alert( "success" );
+												})
+												.done(function(data, textStatus, jqXHR) {
+												    // alert( "second success" );
+												})
+												.fail(function(jqXHR, textStatus, errorThrown) {
+												    // alert( "error: " + textStatus + ", " + jqXHR.status );
+												    if( jqXHR.status >= 400 && jqXHR.status < 500 )
+												    {
+												        breakOut = true;
+												        window.location.replace( "${ createLink( controller:'localLogin', action:'index' ) }" );
+												    }
+												    
+												})
+												.always(function() {
+												    // alert( "finished" );
+												});
 								
-								
+								    if( breakout )
+								    {
+								        return;
+								    }
+								    
 									$j.get( "${ createLink(controller:'activityStream', action:'getQueueSize',
 															 params:['streamId':streamId ] )}", 
 											function(data) 

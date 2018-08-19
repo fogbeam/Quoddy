@@ -169,6 +169,23 @@ class LocalLoginController
 		
 	}
 	
+    def checkSession()
+    {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        
+        log.info( "detected authentication: ${authentication}");
+        
+        if( authentication != null && authentication.isAuthenticated() && authentication.principal.isEnabled())
+        {
+            render( status:200, text: "OK" );
+        }
+        else
+        {
+            render( status:405, text: "No Session");
+        }
+    }
+    
 	def logout()
 	{	
 		session.user = null;	
