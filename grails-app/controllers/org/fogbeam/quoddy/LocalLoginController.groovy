@@ -174,7 +174,7 @@ class LocalLoginController
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
         
-        log.info( "detected authentication: ${authentication}");
+        // log.info( "detected authentication: ${authentication}");
         
         if( authentication != null && authentication.isAuthenticated() && authentication.principal.isEnabled())
         {

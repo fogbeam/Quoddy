@@ -9,6 +9,9 @@ import org.fogbeam.quoddy.subscription.ActivitiUserTaskSubscription
 import org.fogbeam.quoddy.subscription.BusinessEventSubscription
 import org.fogbeam.quoddy.subscription.CalendarFeedSubscription
 import org.fogbeam.quoddy.subscription.RssFeedSubscription
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
 
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -26,9 +29,7 @@ class SubscriptionController
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def index()
-	{
-		User user = null;
-		
+	{	
 		def systemDefinedStreams = new ArrayList<UserStreamDefinition>();
 		def userDefinedStreams = new ArrayList<UserStreamDefinition>(); 
 		def userLists = new ArrayList<UserList>();
@@ -38,26 +39,18 @@ class SubscriptionController
 		def activitiUserTaskSubscriptions = new ArrayList<ActivitiUserTaskSubscription>();
 		def rssFeedSubscriptions = new ArrayList<RssFeedSubscription>();
 		
-		if( session.user != null )
-		{
-			log.debug( "got user: ${session.user}");
-			user = userService.findUserByUserId( session.user.userId );
-		
-			Map model = [:];
-			if( user )
-			{
-
-				Map sidebarCollections = this.populateSidebarCollections( this, user );
-				model.putAll( sidebarCollections );
-			}	
-			
-			return model;
-			
-		}
-		else
-		{
-			// TODO: not logged in, deal with this...	
-		}
+        
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
+    
+        Map model = [:];
+        Map sidebarCollections = this.populateSidebarCollections( this, currentUser );
+        model.putAll( sidebarCollections );        
+        
+        return model;
 	}
 
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
@@ -189,193 +182,181 @@ class SubscriptionController
 	}
 
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
-	def createWizardFlow()
-	{
-		start {
-			action {
-				[];
-			}
-			on("success").to("createWizardOne")
-		}
-		
-		createWizardOne {
-			on("stage2") {
-				
-				log.debug(  "transitioning to stage2");				
-			}.to("createWizardTemp")
-				
-		}
-		
-		createWizardTemp {
-			
-		 action {
-			 String subscriptionType = params.subscriptionType;
-			 
-			 if( subscriptionType.equals( "activitiUserTask" ) )
-			 {
-				 activitiUserTask();
-			 }
-			 else if( subscriptionType.equals( "businessEvent" ) )
-			 {
-				 businessEventSubscription();
-			 }
-			 else if( subscriptionType.equals( "calendarFeed" ) )
-			 {
-				 calendarFeed();
-			 }
-			 else if( subscriptionType.equals( "rssFeed" ) )
-			 {
-				 rssFeed();
-			 }
-			 
-		   }	
-		   on( "activitiUserTask" ).to("createActivitiUserTaskSubscriptionWizardOne")
-		   on( "businessEventSubscription" ).to("createBusinessEventSubscriptionWizardOne")
-		   on( "calendarFeed" ).to("createCalendarFeedSubscriptionWizardOne")
-		   on( "rssFeed" ).to("createRssFeedSubscriptionWizardOne")
-		}
-		
-				
-		createBusinessEventSubscriptionWizardOne {
-				
-				on( "stage2" ) {
-					log.debug( "Creating BES with params: ${params}");
-					BusinessEventSubscription subscriptionToCreate = new BusinessEventSubscription();
-					subscriptionToCreate.name = params.subscriptionName;
-					subscriptionToCreate.description = params.subscriptionDescription;
-			   
-					// UserService userService = grailsApplication.mainContext.getBean('userService');
-					def user = userService.findUserByUserId( session.user.userId );
-					subscriptionToCreate.owner = user;
-				
-					log.debug( "about to create: ${subscriptionToCreate}");
-					flow.subscriptionToCreate = subscriptionToCreate;
-			
-				}.to("createBusinessEventSubscriptionWizardTwo")
- 
-			}
-		
-		
-		
-		createBusinessEventSubscriptionWizardTwo {
-			on("finishWizard"){
-				log.debug( "finishing wizard with params ${params}");
-				
-				BusinessEventSubscription subscriptionToCreate = flow.subscriptionToCreate;
-				subscriptionToCreate.xQueryExpression = params.xQueryExpression;
-				
-			   [];
-			}.to("finishBusinessEventSubscription")
-		}
-		
-		/* an action state to do the final save/update on the object */
-		finishBusinessEventSubscription {
-			action {
-				log.debug( "create using params: ${params}");
+    def createWizardOne()
+    {
+        [:];
+    }
 
-				BusinessEventSubscription subscriptionToCreate = flow.subscriptionToCreate;
-				
-				log.debug( "about to save: ${ subscriptionToCreate.toString()}");
-				
-				businessEventSubscriptionService.saveSubscription( subscriptionToCreate );
-								
-			}
-			on("success").to("exitWizard");
-	   }
-		
-		createActivitiUserTaskSubscriptionWizardOne {
-			
-				on( "stage2" ){
-					ActivitiUserTaskSubscription subscriptionToCreate = new ActivitiUserTaskSubscription();
-					subscriptionToCreate.name = params.subscriptionName;
-					subscriptionToCreate.description = params.subscriptionDescription;
-					subscriptionToCreate.activitiServer = params.activitiServer;
-					subscriptionToCreate.candidateGroup = params.candidateGroup;
-					subscriptionToCreate.assignee = params.assignee;
-			   
-					def user = userService.findUserByUserId( session.user.userId );
-					subscriptionToCreate.owner = user;
-				
-					flow.subscriptionToCreate = subscriptionToCreate;
-				}.to( "finishActivitiUserTaskSubscription") 
-		}
-		
-		finishActivitiUserTaskSubscription {
-			action {
-				log.debug( "create using params: ${params}");
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def createWizardTwo()
+    {
 
-				ActivitiUserTaskSubscription subscriptionToCreate = flow.subscriptionToCreate;
-				
-				// save this new subscription using the activitiSubscriptionService
-				activitiUserTaskSubscriptionService.saveSubscription( subscriptionToCreate );
-				
-			}
-			on("success").to("exitWizard");
-		}
-		
-		createCalendarFeedSubscriptionWizardOne {
-			
-			on( "stage2" ){
+        String subscriptionType = params.subscriptionType;
+        
+        String nextAction = "";
+        if( subscriptionType.equals( "activitiUserTask" ) )
+        {   
+            nextAction = "createActivitiUserTaskSubscriptionWizardOne";
+        }
+        else if( subscriptionType.equals( "businessEvent" ) )
+        {
+            nextAction = "createBusinessEventSubscriptionWizardOne";
+        }
+        else if( subscriptionType.equals( "calendarFeed" ) )
+        {
+            nextAction = "createCalendarFeedSubscriptionWizardOne";
+        }
+        else if( subscriptionType.equals( "rssFeed" ) )
+        {
+            nextAction = "createRssFeedSubscriptionWizardOne";
+        } 
 
-				CalendarFeedSubscription calendarFeedToCreate = new CalendarFeedSubscription();
-				
-				calendarFeedToCreate.url = params.calFeedUrl;
-				calendarFeedToCreate.name = params.calFeedName;
-		   
-				def user = userService.findUserByUserId( session.user.userId );
-				calendarFeedToCreate.owner = user;
-			
-				flow.calendarFeedToCreate = calendarFeedToCreate;
-			
-			}.to( "finishCalendarFeedSubscription")
-		}
+        redirect( action:nextAction );
+    }
 
-		finishCalendarFeedSubscription {
-			action {
-				log.debug( "create using params: ${params}");
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def createBusinessEventSubscriptionWizardOne()
+    {
+        log.debug( "Subscription.createBusinessEventSubscription.stage1" );
+        log.trace( "Creating BES with params: ${params}");
+        BusinessEventSubscription subscriptionToCreate = new BusinessEventSubscription();
+        subscriptionToCreate.name = params.subscriptionName;
+        subscriptionToCreate.description = params.subscriptionDescription;
+   
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
+        subscriptionToCreate.owner = currentUser;
+    
+        log.debug( "about to create: ${subscriptionToCreate}");
+        session.subscriptionToCreate = subscriptionToCreate;
 
-				CalendarFeedSubscription calendarFeedToCreate = flow.calendarFeedToCreate;
+        [subscriptionToCreate:subscriptionToCreate];
+    }
 
-				calendarFeedSubscriptionService.saveSubscription( calendarFeedToCreate);
-					
-			}
-			on("success").to("exitWizard");
-	   }
 
-		
-	   createRssFeedSubscriptionWizardOne {
-		   on( "stage2" ){
-			   RssFeedSubscription subscriptionToCreate = new RssFeedSubscription();
-			   subscriptionToCreate.name = params.subscriptionName;
-			   subscriptionToCreate.url = params.subscriptionUrl;
-			   
-			   def user = userService.findUserByUserId( session.user.userId );
-			   subscriptionToCreate.owner = user;
-		   
-			   flow.subscriptionToCreate = subscriptionToCreate;
-		   }.to( "finishCreateRssFeedSubscription")
-	   }
-		
-	   
-	   finishCreateRssFeedSubscription {
-		   
-		   action {
-			   log.debug( "create using params: ${params}");
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def createBusinessEventSubscriptionWizardFinish()
+    {
+        log.debug( "Subscription.createBusinessEventSubscription.finish" );
+        log.debug( "finishing wizard with params ${params}");
+        
+        BusinessEventSubscription subscriptionToCreate = session.subscriptionToCreate;
+        subscriptionToCreate.name = params.subscriptionName;
+        subscriptionToCreate.description = params.subscriptionDescription;
+        subscriptionToCreate.xQueryExpression = params.xQueryExpression;
+        
+        log.debug( "about to save: ${ subscriptionToCreate.toString()}");
+        
+        businessEventSubscriptionService.saveSubscription( subscriptionToCreate );
+    
+        redirect(controller:"subscription", action:"index");
+    }
 
-			   RssFeedSubscription subscriptionToCreate = flow.subscriptionToCreate;
-			   
-		   	   rssFeedSubscriptionService.saveSubscription(subscriptionToCreate);
-		   }
-		   on("success").to("exitWizard");
-		   
-	   }
-	   
-	   exitWizard {
-			redirect(controller:"subscription", action:"index");
-	   }
-		
-	}
-	
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def createActivitiUserTaskSubscriptionWizardOne()
+    {
+        [:];
+    }
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def createActivitiUserTaskSubscriptionWizardFinish()
+    {
+        log.debug( "Subscription.createActivitiUserTaskSubscription.stage1" );
+        
+        ActivitiUserTaskSubscription subscriptionToCreate = new ActivitiUserTaskSubscription();
+        subscriptionToCreate.name = params.subscriptionName;
+        subscriptionToCreate.description = params.subscriptionDescription;
+        subscriptionToCreate.activitiServer = params.activitiServer;
+        subscriptionToCreate.candidateGroup = params.candidateGroup;
+        subscriptionToCreate.assignee = params.assignee;
+    
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
+
+        subscriptionToCreate.owner = currentUser;
+    
+        log.debug( "Subscription.createActivitiUserTaskSubscription.finish" );
+        log.debug( "create using params: ${params}");
+        
+                
+        // save this new subscription using the activitiSubscriptionService
+        activitiUserTaskSubscriptionService.saveSubscription( subscriptionToCreate );
+    
+        redirect(controller:"subscription", action:"index");
+        
+    }
+
+
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def createCalendarFeedSubscriptionWizardOne()
+    {
+        log.debug( "Subscription.createCalendarFeedSubscription.stage1" );
+        [:];
+    }
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def createCalendarFeedSubscriptionWizardFinish()
+    {
+        log.debug( "Subscription.createCalendarFeedSubscription.finish" );
+        
+        CalendarFeedSubscription calendarFeedToCreate = new CalendarFeedSubscription();
+        
+        calendarFeedToCreate.url = params.calFeedUrl;
+        calendarFeedToCreate.name = params.calFeedName;
+    
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
+        calendarFeedToCreate.owner = currentUser;
+    
+        session.calendarFeedToCreate = calendarFeedToCreate;
+        
+        calendarFeedSubscriptionService.saveSubscription( calendarFeedToCreate);
+
+        redirect(controller:"subscription", action:"index");
+    }
+
+
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def createRssFeedSubscriptionWizardOne()
+    {
+        log.debug( "Subscription.createRssFeedSubscription.stage1" );
+        
+        [:];
+    }
+
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def createRssFeedSubscriptionWizardFinish()
+    {
+        log.debug( "Subscription.createRssFeedSubscription.finish" );
+        log.debug( "create using params: ${params}");
+
+        RssFeedSubscription subscriptionToCreate = new RssFeedSubscription();
+        subscriptionToCreate.name = params.subscriptionName;
+        subscriptionToCreate.url = params.subscriptionUrl;
+        
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
+        subscriptionToCreate.owner = currentUser;
+                   
+        rssFeedSubscriptionService.saveSubscription(subscriptionToCreate);
+  
+        redirect(controller:"subscription", action:"index");
+    }
+
+    	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def editWizardFlow()
 	{

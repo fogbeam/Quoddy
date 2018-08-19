@@ -9,7 +9,7 @@
 	<body>
 	<div class="jumbotron span6">	
 		<h2>Create Calendar Feed Subscription</h2>
-		<g:form controller="subscription" action="createWizard" method="POST">
+		<g:form controller="subscription" action="createCalendarFeedSubscriptionWizardFinish" method="POST">
 			<label for="calFeedName">Name:</label> <g:textField name="calFeedName" value=""/>
 			<br />
 			<label for="calFeedUrl">URL:</label> <g:textField name="calFeedUrl" value=""/>

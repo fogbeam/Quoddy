@@ -401,8 +401,7 @@ class UserController
         Authentication authentication = securityContext.getAuthentication();
         log.info( "current Authentication: ${authentication}");
         
-        User currentUser = null;
-        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
 		
 		def targetUser = userService.findUserByUserId( params.userId );
 	
@@ -419,8 +418,7 @@ class UserController
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();        
         log.info( "current Authentication: ${authentication}");
-        
-        
+                
         User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
 		
         log.info( "currentUser: ${currentUser}" );
@@ -431,7 +429,6 @@ class UserController
         
 		userService.addToFriends( currentUser, targetUser );
 		
-		// render(view:'viewUser', model:[user:currentUser]);
 		render( "OK" );
 	}
 

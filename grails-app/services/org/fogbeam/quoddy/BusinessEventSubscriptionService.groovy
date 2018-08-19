@@ -140,7 +140,7 @@ class BusinessEventSubscriptionService
 		if( !subscriptionToSave.save(flush:true) )
 		{
 			log.error( "Saving BusinessEventSubscription FAILED");
-			subscriptionToSave.errors.allErrors.each { log.debug( it ) };
+			subscriptionToSave.errors.allErrors.each { log.debug( it.toString() ) };
 		}
 
 	}
@@ -152,7 +152,7 @@ class BusinessEventSubscriptionService
 		if( ! event.save(flush:true) )
 		{
 			log.error( "Saving Event FAILED");
-			event.errors.allErrors.each { log.debug(it) }
+			event.errors.allErrors.each { log.debug( it.toString() ) }
 		}
 	}
 	

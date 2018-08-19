@@ -9,7 +9,7 @@
 	<body>
 	<div class="jumbotron span6">	
 		<h2>Create RSS Feed Subscription</h2>
-		<g:form controller="subscription" action="createWizard" method="POST">
+		<g:form controller="subscription" action="createRssFeedSubscriptionWizardFinish" method="POST">
 			<label for="subscriptionName">Name:</label> <g:textField name="subscriptionName" value=""/>
 			<br />
 			<label for="subscriptionUrl">URL:</label> <g:textField name="subscriptionUrl" value=""/>
