@@ -356,188 +356,201 @@ class SubscriptionController
         redirect(controller:"subscription", action:"index");
     }
 
-    	
+
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
-	def editWizardFlow()
-	{
-		start {
-			action {
-				def subscriptionId = params.subscriptionId;
-				log.debug( "Editing Subscription with id: ${subscriptionId}");
-				
-				def subscriptionType = params.subscriptionType;
-				log.debug( "subscriptionType: ${subscriptionType}");
-				
-				
-				switch( subscriptionType )
-				{
-					case "ActivitiUserTaskSubscription":
-					
-						ActivitiUserTaskSubscription subscriptionToEdit = null;
-						subscriptionToEdit = ActivitiUserTaskSubscription.findById( subscriptionId );
-						flow.subscriptionToEdit = subscriptionToEdit;
-	
-						activitiUserTaskSubscription();
-						break;
-						
-					case "BusinessEventSubscription":
-	
-						BusinessEventSubscription subscriptionToEdit = null;
-						subscriptionToEdit = BusinessEventSubscription.findById( subscriptionId );
-						flow.subscriptionToEdit = subscriptionToEdit;
-	
-						businessEventSubscription();
-						break;
-						
-					case "CalendarFeedSubscription":
-						
-						CalendarFeedSubscription subscriptionToEdit = null;
-						subscriptionToEdit = CalendarFeedSubscription.findById( subscriptionId );
-						flow.subscriptionToEdit = subscriptionToEdit;
-	
-						calendarFeedSubscription();
-						break;
-						
-					case "RssFeedSubscription":
-					
-						RssFeedSubscription subscriptionToEdit = null;
-						subscriptionToEdit = RssFeedSubscription.findById( subscriptionId );
-						flow.subscriptionToEdit = subscriptionToEdit;
-	
-						rssFeedSubscription();
-						break;
-					default:
-						break;
-					
-				}
-				
-			}
-			on( "activitiUserTaskSubscription" ).to("editActivitiUserTaskSubscriptionWizardOne")
-			on( "businessEventSubscription" ).to("editBusinessEventSubscriptionWizardOne")
-			on( "calendarFeedSubscription" ).to("editCalendarFeedSubscriptionWizardOne")
-			on( "rssFeedSubscription" ).to("editRssFeedSubscriptionWizardOne")
-		}
-		
-		editBusinessEventSubscriptionWizardOne {
-			on("stage2") {
-				
-				log.debug( "transitioning to stage2");
-				
-				BusinessEventSubscription subscriptionToEdit = flow.subscriptionToEdit;
-				subscriptionToEdit.name = params.subscriptionName;
-				subscriptionToEdit.description = params.subscriptionDescription;
-					
-			}.to( "editBusinessEventSubscriptionWizardTwo" );
-			
-		}
-		
-		editBusinessEventSubscriptionWizardTwo {
-			on( "finishWizard" ) {
-				log.debug( "finishing wizard");
-				[];	
-			}.to( "finishBusinessEventSubscriptionWizard" );	
-		}
-		
-		/* an action state to do the final save/update on the object */
-		finishBusinessEventSubscriptionWizard {
-			action {
-				log.debug( "update using params: ${params}");
-				
-				def subscriptionId = params.subscriptionId;
-				BusinessEventSubscription subscriptionToEdit = flow.subscriptionToEdit;
-				
-				subscriptionToEdit.xQueryExpression = params.xQueryExpression;
-				
-				if( !subscriptionToEdit.save(flush:true) )
-				{
-					log.error( "Saving BusinessEventSubscription FAILED");
-					subscriptionToEdit.errors.allErrors.each { log.debug( it ) };
-				}
-				
-			}
-			on("success").to("exitWizard");
-		}
-			
-		/* activiti user task */
-		editActivitiUserTaskSubscriptionWizardOne {
-			on("finish") {
-				
-				ActivitiUserTaskSubscription subscriptionToEdit = flow.subscriptionToEdit;
-				subscriptionToEdit.name = params.subscriptionName;
-				subscriptionToEdit.description = params.subscriptionDescription;
-				subscriptionToEdit.activitiServer = params.activitiServer;
-				subscriptionToEdit.candidateGroup = params.candidateGroup;
-				subscriptionToEdit.assignee = params.assignee;
-				
-				
-			}.to( "finishActivitiUserTaskSubscriptionWizardOne" )
-		}
-		
-		finishActivitiUserTaskSubscriptionWizardOne 
-		{
-			action {
-				
-				log.debug( "update using params: ${params}");
-				
-				ActivitiUserTaskSubscription subscriptionToEdit = flow.subscriptionToEdit;
-				
-				if( !subscriptionToEdit.save(flush:true) )
-				{
-					log.debug( "Saving BusinessEventSubscription FAILED");
-					subscriptionToEdit.errors.allErrors.each { log.debug( it ) };
-				}
-				
-			}
-			on( "success").to("exitWizard");
-		}
-		
-		/* calendar feed */
-		editCalendarFeedSubscriptionWizardOne {
-			on("finish") {
-				CalendarFeedSubscription subscriptionToEdit = flow.subscriptionToEdit;
-				subscriptionToEdit.name = params.calFeedName;
-				subscriptionToEdit.url = params.calFeedUrl;
-			}.to( "finishCalendarFeedSubscriptionWizardOne" )
-		}
-		
-		finishCalendarFeedSubscriptionWizardOne
-		{
-			action {
-				
-				log.debug( "update using params: ${params}" );
-				
-				CalendarFeedSubscription subscriptionToEdit = flow.subscriptionToEdit;
-				
-				if( !subscriptionToEdit.save(flush:true) )
-				{
-					log.error( "Saving CalendarFeedSubscription FAILED");
-					subscriptionToEdit.errors.allErrors.each { log.debug( it ) };
-				}
-				
-			}
-			on( "success").to("exitWizard");
-		}
+    def editWizardOne()
+    {
+        def subscriptionId = params.subscriptionId;
+        log.debug( "Editing Subscription with id: ${subscriptionId}");
+        
+        def subscriptionType = params.subscriptionType;
+        log.debug( "subscriptionType: ${subscriptionType}");
+                
+        String nextAction = "";
+        switch( subscriptionType )
+        {
+            case "ActivitiUserTaskSubscription":
+                
+                ActivitiUserTaskSubscription subscriptionToEdit = null;
+                subscriptionToEdit = ActivitiUserTaskSubscription.findById( subscriptionId );
+                session.subscriptionToEdit = subscriptionToEdit;
+                nextAction = "editActivitiUserTaskSubscriptionWizardOne";
+                
+                break;
+                
+            case "BusinessEventSubscription":
 
-	
-		/* rss feed */
-		editRssFeedSubscriptionWizardOne {
-			on("finish") {
-				
-			}.to( "finishRssFeedSubscriptionWizardOne" )
-		}
-		
-		finishRssFeedSubscriptionWizardOne
-		{
-			action {
-				
-				log.debug( "update using params: ${params}");
-			}
-			on( "success").to("exitWizard");
-		}
+                BusinessEventSubscription subscriptionToEdit = null;
+                subscriptionToEdit = BusinessEventSubscription.findById( subscriptionId );
+                session.subscriptionToEdit = subscriptionToEdit;
+                nextAction = "editBusinessEventSubscriptionWizardOne";
+                
+                break;
+                
+            case "CalendarFeedSubscription":
+                
+                CalendarFeedSubscription subscriptionToEdit = null;
+                subscriptionToEdit = CalendarFeedSubscription.findById( subscriptionId );
+                session.subscriptionToEdit = subscriptionToEdit;
+                nextAction = "editCalendarFeedSubscriptionWizardOne";
+                
+                break;
+                
+            case "RssFeedSubscription":
+            
+                RssFeedSubscription subscriptionToEdit = null;
+                subscriptionToEdit = RssFeedSubscription.findById( subscriptionId );
+                session.subscriptionToEdit = subscriptionToEdit;
+                nextAction = "editRssFeedSubscriptionWizardOne";
+                
+                break;
+            default:
+                break;
 
+        }
+        
+        redirect(controller:"subscription", action:nextAction);
+    }
 
-		exitWizard {
-			redirect(controller:"subscription", action:"index");
-		}			
-	}
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def editBusinessEventSubscriptionWizardOne()
+    {
+        BusinessEventSubscription subscriptionToEdit = session.subscriptionToEdit;
+        subscriptionToEdit.discard();
+        
+        [subscriptionToEdit:subscriptionToEdit];
+    }
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def editBusinessEventSubscriptionWizardFinish()
+    {
+        log.debug( "update using params: ${params}");
+
+        BusinessEventSubscription subscriptionToEdit = session.subscriptionToEdit;
+
+        subscriptionToEdit.name = params.subscriptionName;
+        subscriptionToEdit.description = params.subscriptionDescription;                
+        subscriptionToEdit.xQueryExpression = params.xQueryExpression;
+
+        // re-attach to Hibernate session        
+        if( !subscriptionToEdit.isAttached())
+        {
+            subscriptionToEdit.attach();
+        }
+
+        if( !subscriptionToEdit.save(flush:true) )
+        {
+            log.error( "Saving BusinessEventSubscription FAILED");
+            subscriptionToEdit.errors.allErrors.each { log.debug( it.toString() ) };
+        }
+
+        // redirect
+        redirect( controller: "subscription", action:"index" );
+    }
+        
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def editActivitiUserTaskSubscriptionWizardOne()
+    {
+        ActivitiUserTaskSubscription subscriptionToEdit = session.subscriptionToEdit;
+        subscriptionToEdit.discard();
+        
+        [subscriptionToEdit:subscriptionToEdit];
+    }
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def editActivitiUserTaskSubscriptionWizardFinish()
+    {
+        log.debug( "update using params: ${params}");
+        
+        ActivitiUserTaskSubscription subscriptionToEdit = session.subscriptionToEdit;
+        subscriptionToEdit.name = params.subscriptionName;
+        subscriptionToEdit.description = params.subscriptionDescription;
+        subscriptionToEdit.activitiServer = params.activitiServer;
+        subscriptionToEdit.candidateGroup = params.candidateGroup;
+        subscriptionToEdit.assignee = params.assignee;
+        
+        // re-attach to Hibernate session
+        if( !subscriptionToEdit.isAttached())
+        {
+            subscriptionToEdit.attach();
+        }
+
+        if( !subscriptionToEdit.save(flush:true) )
+        {
+            log.debug( "Saving BusinessEventSubscription FAILED");
+            subscriptionToEdit.errors.allErrors.each { log.debug( it.toString() ) };
+        }
+
+        redirect( controller:"subscription", action:"index");
+    }
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def editCalendarFeedSubscriptionWizardOne()
+    {
+        CalendarFeedSubscription subscriptionToEdit = session.subscriptionToEdit;
+        subscriptionToEdit.discard();
+        
+        [subscriptionToEdit:subscriptionToEdit];
+
+    }
+    
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def editCalendarFeedSubscriptionWizardFinish()
+    {
+        log.debug( "update using params: ${params}" );
+        
+        CalendarFeedSubscription subscriptionToEdit = session.subscriptionToEdit;
+        subscriptionToEdit.name = params.calFeedName;
+        subscriptionToEdit.url = params.calFeedUrl;
+
+        // re-attach to Hibernate session
+        if( !subscriptionToEdit.isAttached())
+        {
+            subscriptionToEdit.attach();
+        }
+    
+        if( !subscriptionToEdit.save(flush:true) )
+        {
+            log.error( "Saving CalendarFeedSubscription FAILED");
+            subscriptionToEdit.errors.allErrors.each { log.debug( it.toString() ) };
+        }
+
+        redirect(controller:"subscription", action:"index");
+    }
+
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def editRssFeedSubscriptionWizardOne()
+    {
+        RssFeedSubscription subscriptionToEdit = session.subscriptionToEdit;
+        subscriptionToEdit.discard();
+        
+        [subscriptionToEdit:subscriptionToEdit];
+
+    }
+
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
+    def editRssFeedSubscriptionWizardFinish()
+    {        
+        log.debug( "update using params: ${params}");
+
+        RssFeedSubscription subscriptionToEdit = session.subscriptionToEdit;
+
+        // update params
+        subscriptionToEdit.name = params.subscriptionName;
+        subscriptionToEdit.url = params.subscriptionUrl;
+        
+        // re-attach to Hibernate session
+        if( !subscriptionToEdit.isAttached())
+        {
+            subscriptionToEdit.attach();
+        }
+                
+        if( !subscriptionToEdit.save(flush:true) )
+        {
+            log.error( "Saving RssFeedSubscription FAILED");
+            subscriptionToEdit.errors.allErrors.each { log.debug( it.toString() ) };
+        }
+
+        redirect(controller:"subscription", action:"index");
+    }        
 }

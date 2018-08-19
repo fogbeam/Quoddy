@@ -9,12 +9,12 @@
 	<body>
 	<div class="jumbotron span6">	
 		<h2>Edit Calendar Feed Subscription</h2>
-		<g:form controller="subscription" action="editWizard" method="POST">
-			<label for="calFeedName">Name:</label> <g:textField name="calFeedName" 
-													value="${subscriptionToEdit.name}"/>
+		<g:form controller="subscription" action="editCalendarFeedSubscriptionWizardFinish" method="POST">
+			<label for="calFeedName">Name:</label> 
+			<g:textField name="calFeedName" value="${subscriptionToEdit.name}"/>
 			<br />
-			<label for="calFeedUrl">URL:</label> <g:textField name="calFeedUrl" 
-													value="${subscriptionToEdit.url}"/>
+			<label for="calFeedUrl">URL:</label> 
+			<g:textField name="calFeedUrl" value="${subscriptionToEdit.url}"/>
 			<br />
 			<g:submitButton name="finish" class="btn btn-large" value="Save" />
 		</g:form>
