@@ -3,14 +3,16 @@
 	<head>
 		<title>Quoddy: Edit LIST</title>
 		<meta name="layout" content="main" />
-	     <nav:resources />
-	     <g:javascript src="userListWizard.js"/>		
+
+        <script type="text/javascript"
+                src="${resource(dir:'javascripts', file:'userListWizard.js')}"></script>
+		
 	</head>
 	
 	<body>
 	  	<div class="jumbotron span6">
 		
-        	<g:form controller="userList" action="editWizard" method="POST">
+        	<g:form controller="userList" action="editWizardFinish" method="POST">
             
 	        	<g:select id="usersToAdd" from="" name="usersToAdd" multiple="true" style="display:none;" />
 	        	<g:select id="usersToRemove" from="" name="usersToRemove" multiple="true" style="display:none;" />		

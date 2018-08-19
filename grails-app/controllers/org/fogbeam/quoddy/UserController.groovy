@@ -480,8 +480,7 @@ class UserController
         Authentication authentication = securityContext.getAuthentication();
         log.info( "current Authentication: ${authentication}");
         
-        User currentUser = null;
-        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
 	
 		List<User> friends = userService.listFriends( currentUser );
 		

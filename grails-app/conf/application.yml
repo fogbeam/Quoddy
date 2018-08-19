@@ -104,11 +104,11 @@ dataSource:
 environments:
     development:
         dataSource:
-            dbCreate: create
-            url: jdbc:postgresql:quoddy
+            dbCreate: update
+            url: jdbc:postgresql:quoddy_dev
     test:
         dataSource:
-            dbCreate: update
+            dbCreate: create_test
             url: jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
     production:
         dataSource:

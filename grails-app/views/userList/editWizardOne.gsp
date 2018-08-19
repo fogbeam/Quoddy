@@ -11,7 +11,7 @@
 <div class="hero span6">
 		<h2>Edit LIST</h2>
 		<p />
-		<g:form controller="userList" action="editWizard" method="POST">
+		<g:form controller="userList" action="editWizardTwo" method="POST">
 			<g:hiddenField name="listId" value="${listToEdit.id}" />
 			<label for="listName">Name:</label> <g:textField name="listName" value="${listToEdit.name}"/>
 			<br />

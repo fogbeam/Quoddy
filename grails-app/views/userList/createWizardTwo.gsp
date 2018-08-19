@@ -3,8 +3,10 @@
 	<head>
 		<title>Quoddy: Create User List</title>
 		<meta name="layout" content="main" />
-	     <nav:resources />
-	     <g:javascript src="userListWizard.js"/>		
+		
+	    <script type="text/javascript"
+                src="${resource(dir:'javascripts', file:'userListWizard.js')}"></script>
+		
 	</head>
 	
 	<body>
