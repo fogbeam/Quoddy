@@ -159,6 +159,7 @@ class UserController
 		{
 			// lookup this specific user by params and put in the model for display	
 			user = userService.findUserByUserId( userId );
+            log.info( "Looked up User: ${user}");
 		}
 		else 
 		{
@@ -172,10 +173,8 @@ class UserController
 		if( user )
 		{		
 			activities = eventStreamService.getStatusUpdatesForUser( user );
+            log.info( "adding user, activities to model");
 			model.putAll( [user:user, activities:activities] );
-			
-			// Map sidebarCollections = populateSidebarCollections( this, user );
-			// model.putAll( sidebarCollections );
 			
 		}
 		

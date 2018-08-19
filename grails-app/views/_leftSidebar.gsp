@@ -3,7 +3,7 @@
 
 	<img src="${createLink(controller:'profilePic',action:'thumbnail',id:sec.loggedInUserInfo(field: 'userId'))}" />
 	<p />
-	<a href="${createLink(controller:'user', action:'viewUser')}">
+	<a href="${createLink(controller:'user', action:'viewUser', params: [userId:sec.loggedInUserInfo(field: 'userId') ] ) }">
 		<sec:loggedInUserInfo field='fullName'/>
 	</a>
 	<p>
