@@ -52,54 +52,69 @@ class StatusController
         
 		if( enhancementEnabled )
 		{
-			log.debug( "content submitted to Stanbol: ${params.statusText}");
-			/* HttpResponseDecorator */ def restResponse = restClient.post(	path:'enhancer',
-										body: params.statusText,
-										requestContentType : TEXT );
-									
-			// log.debug( "restResponse.class: ${restResponse.class}");
-			// log.debug( "restResponse.status: ${restResponse.status}");
-			// log.trace( "restResponse.statusLine: ${restResponse.statusLine}");
-			// log.debug( "restResponse.success: ${restResponse.isSuccess()}");
-
-			Object restResponseData = restResponse.getData();
-		
-			if( restResponseData instanceof InputStream )
-			{
-		
-				log.debug( "restResponseData.class: ${restResponseData.class}");
-		
-				java.util.Scanner s = new java.util.Scanner((InputStream)restResponseData).useDelimiter("\\A");
-
-				String restResponseText = s.next();
-		
-				log.debug( "using Scanner: ${restResponseText}");		
-                log.info( "got InputStream, using Scanner to extract" );
-				log.info( "restResponseText:\n\n ${restResponseText}\n\n");
-		
-				newStatus.enhancementJSON = restResponseText;
-		
-			}
-			else if( restResponseData instanceof net.sf.json.JSONObject )
-			{
-                String restResponseText = restResponseData.toString();
-                log.info( "got JSONObject, using toString() to extract" );
-                log.info( "restResponseText:\n\n ${restResponseText}\n\n");
-				newStatus.enhancementJSON = restResponseText;
-			}
-			else if( restResponseData instanceof java.lang.String )
-			{
-                log.info( "got String, no extraction required" );
-                log.info( "restResponseData:\n\n ${restResponseData}\n\n");
-				newStatus.enhancementJSON = new String( restResponseData );
-			}
-			else
-			{
-                log.info( "got Other (${restResponseData.getClass().getName()}), using toString() to extract" );
-                String restResponseText = new JsonBuilder(restResponseData).toPrettyString();
-                log.info( "restResponseText:\n\n ${restResponseText}\n\n");
-				newStatus.enhancementJSON = restResponseText;
-			}
+            // TODO: move this to a Service instead of using restClient directly in this Controller
+            
+            try
+            {
+    			log.debug( "content submitted to Stanbol: ${params.statusText}");
+    			def restResponse = restClient.post(	path:'enhancer',
+    										body: params.statusText,
+    										requestContentType : TEXT );
+    									
+    			// log.debug( "restResponse.class: ${restResponse.class}");
+    			// log.debug( "restResponse.status: ${restResponse.status}");
+    			// log.trace( "restResponse.statusLine: ${restResponse.statusLine}");
+    			// log.debug( "restResponse.success: ${restResponse.isSuccess()}");
+    
+    			Object restResponseData = restResponse.getData();
+    		
+    			if( restResponseData instanceof InputStream )
+    			{
+    		
+    				log.debug( "restResponseData.class: ${restResponseData.class}");
+    		
+    				java.util.Scanner s = new java.util.Scanner((InputStream)restResponseData).useDelimiter("\\A");
+    
+    				String restResponseText = s.next();
+    		
+    				log.debug( "using Scanner: ${restResponseText}");		
+                    log.info( "got InputStream, using Scanner to extract" );
+    				log.info( "restResponseText:\n\n ${restResponseText}\n\n");
+    		
+    				newStatus.enhancementJSON = restResponseText;
+    		
+    			}
+    			else if( restResponseData instanceof net.sf.json.JSONObject )
+    			{
+                    String restResponseText = restResponseData.toString();
+                    log.info( "got JSONObject, using toString() to extract" );
+                    log.info( "restResponseText:\n\n ${restResponseText}\n\n");
+    				newStatus.enhancementJSON = restResponseText;
+    			}
+    			else if( restResponseData instanceof java.lang.String )
+    			{
+                    log.info( "got String, no extraction required" );
+                    log.info( "restResponseData:\n\n ${restResponseData}\n\n");
+    				newStatus.enhancementJSON = new String( restResponseData );
+    			}
+    			else
+    			{
+                    log.info( "got Other (${restResponseData.getClass().getName()}), using toString() to extract" );
+                    String restResponseText = new JsonBuilder(restResponseData).toPrettyString();
+                    log.info( "restResponseText:\n\n ${restResponseText}\n\n");
+    				newStatus.enhancementJSON = restResponseText;
+    			}
+            }
+            catch( ConnectException ce )
+            {
+                log.error( "Could not connect to Stanbol server: ", ce );
+                newStatus.enhancementJSON = "";
+            }
+            catch( Exception e )
+            {
+                log.error( "Error doing semantic enhancement: ", e );
+                newStatus.enhancementJSON = "";
+            }
 		}
 		else
 		{
