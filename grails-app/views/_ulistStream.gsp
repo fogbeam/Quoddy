@@ -3,10 +3,10 @@
 	<div class="aseWrapper">
 		
 		<div class="aseAvatarBlock">
-			<img src="${createLink(controller:'profilePic',action:'thumbnail',id:activity.userActor.userId)}" />
+			<img src="${createLink(controller:'profilePic',action:'thumbnail',id:activity.owner.userId)}" />
 		</div>
 		<div class="aseTitleBar">
-			<a href="${createLink(controller:'user', action:'viewUser', params:[userId:activity.userActor.userId])}">${activity.userActor.fullName}</a>
+			<a href="${createLink(controller:'user', action:'viewUser', params:[userId:activity.owner.userId])}">${activity.owner.fullName}</a>
 		</div>
 		<div class="activityStreamEntry ulistStreamActivity"> 
 			${activity.content}

@@ -88,7 +88,7 @@ class EventStreamService {
 		 right here *is* the "intermediate queue" and everything is just magically in the right order.
 		 "no problem in computer science that you can't solve by adding a layer of abstraction" right?
 		
-		 Also, for now let's pretend that the queue we're reading from has aleady been filtered so that
+		 Also, for now let's pretend that the queue we're reading from has already been filtered so that
 		 it only contains messages that we are interested in; including expiring messages for age, etc.
 	
 		  Additional NOTE: now that we are making the event queue stuff "stream aware", we have more
@@ -126,7 +126,9 @@ class EventStreamService {
 		// as part of this call.  But it'll mean wrapping this stuff up into an object of some
 		// sort, or returning a Map of Maps instead of a List of Maps
 		List<ActivityStreamItem> messages = eventQueueService.getMessagesForUser( user.userId, msgsToRead, userStream );
-		for( ActivityStreamItem msg : messages )
+		log.debug( "read ${messages?.size()} messages from the queue for user: ${user.userId}");
+        
+        for( ActivityStreamItem msg : messages )
 		{
 			log.debug( "msg.originTime: ${msg.originTime}");
 			if( msg.published.time < oldestOriginTime )
@@ -166,12 +168,13 @@ class EventStreamService {
 		 * showing the same event twice.
 		 */
 				
+        log.info( "About to read activity stream items from the DB" );
 		// now, do we need to go to the DB to get some more activities?
 		if( maxCount > msgsToRead )
 		{
 				
 			int recordsToRetrieve = maxCount - msgsToRead;
-			log.debug( "retrieving up to ${recordsToRetrieve} records from the database");
+			log.info( "retrieving up to ${recordsToRetrieve} records from the database");
 			
 			// NOTE: get up to recordsToRetrieve records, but don't retrieve anything that
 			// would already be in our working set.
@@ -208,7 +211,9 @@ class EventStreamService {
 			 * can check for membership in.
 			 */
 			List<UserGroup> groupsForUser = userGroupService.getAllGroupsForUser(user);
-			Set<User> validOwners = new HashSet<User>();
+			List<String> includedGroups = new ArrayList<String>(); // to hold the UUID's of the groups that are valid
+                                                                   // values for the targetUuid of items to be included via group
+            Set<User> validOwners = new HashSet<User>();
 			User dummyUser = User.findById( -1 );
             validOwners.add( dummyUser ); // a dummy item that can't match anything, needed
                                                 // because Postgresql chokes on "in" queries with an empty collection passed as a parameter
@@ -223,6 +228,7 @@ class EventStreamService {
 				{
 					log.debug( "adding group members for group ${groupForUser}");
 					validOwners.addAll( groupForUser.groupMembers );
+                    includedGroups.add( groupForUser.uuid );
 				}	
 			}			
 			else
@@ -247,7 +253,7 @@ class EventStreamService {
 			
 			// NOTE: could we drop the idea of having both a "friends" list AND a "validOwners"
 			// list, and collapse those into one thing, to make this query simpler?  The fundamental
-			// idea is the same:  generate a list of people who's posts we are willng to accept,
+			// idea is the same:  generate a list of people who's posts we are willing to accept,
 			// regardless of the reason *why* we're willing to accept them.  
 			
 			
@@ -290,13 +296,9 @@ class EventStreamService {
 				// include any posts to groups this user is a member of, or owns
 				// TODO: this should always only include StatusUpdates, but we should add that to the
 				// query here to make it explicit, in case something changes in the future.
-				
-				// NOTE: this isn't right.  This is saying "include anything owned by a user who's in any
-				// group the user is in.  This should be "include anything with a targetUuid that is the
-				// uuid of any group the user is in. 
-				query = query +
-					"( item.owner in (:validOwners) )";
-								
+                   query = query + 
+                       "( item.targetUuid in (:includedGroups) )";
+                    				
 				// NOTE: no need to deal with userlists here, since you can only add
 				// a user to a UserList if you are friends with them anyway? (For now).
 				// if you could create userlists without friending first, that would effectively
@@ -335,7 +337,7 @@ class EventStreamService {
 						 'targetUuid':streamPublic.uuid,
 						 // 'streamId':userStream.id,
 						 'userUuid': user.uuid,
-						 'validOwners':validOwners]
+                         'includedGroups':includedGroups]
 			
 						log.debug( "Using parameters map: ${parameters}");
 				if( !userStream.includeSelfOnly )
