@@ -270,6 +270,10 @@ class ActivityStreamItem implements Serializable
 	{
 		if( streamObject != null )
 		{
+            log.info( "streamObject: ${streamObject.class.name}");
+            log.info( "streamObject: ${streamObject.toString()}");
+            
+            
 			// println "returning streamObject.getTemplateName() value";
 			return streamObject.getTemplateName();
 		}

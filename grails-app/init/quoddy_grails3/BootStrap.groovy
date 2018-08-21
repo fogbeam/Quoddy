@@ -40,6 +40,7 @@ class BootStrap
 				createRoles();
 				createSomeUsers();
 				createSystemUser();
+                createDummyUser();
 				createShareTargets();
 				createEventTypes();
                 rebuildIndexes();
@@ -49,7 +50,8 @@ class BootStrap
 				createRoles();
 				// createSomeUsers();
 				createSystemUser();
-				createShareTargets();
+                createDummyUser();
+                createShareTargets();
 				createEventTypes();
 				break;
 		}
@@ -155,9 +157,99 @@ class BootStrap
 				println "adminRole already exists!";
 			}
 		}
+
+                
+        AccountRole anonRole = null;
+        AccountRole.withTransaction
+        {
+            
+            anonRole = AccountRole.findByAuthority( "ROLE_ANONYMOUS" );
+            if( !anonRole )
+            {
+                anonRole = new AccountRole(authority: 'ROLE_ANONYMOUS');
+            
+                if( !anonRole.save(flush:true) )
+                {
+                    anonRole.errors.allErrors.each { println it.toString() };
+                }
+                else
+                {
+                    println "anonRole created!";
+                }
+            }
+            else
+            {
+                println "anonRole already exists!";
+            }
+        }
+
 	}
 
-	
+
+    void createDummyUser()
+    {
+
+        AccountRole anonRole = userService.findAccountRoleByAuthority( "ROLE_ANONYMOUS" );
+        if( anonRole == null )
+        {
+                println "did not locate anon role!";
+        }
+
+        User dummyUser = userService.findUserByUserId( "SYS_dummy_user" );
+       
+        if( dummyUser != null )
+        {
+            println "Found existing SYS_dummy_user!";
+        }
+        else
+        {
+            println "Could not find SYS_dummy_user";
+            println "Creating new SYS_dummy_user user";
+            dummyUser = new User();
+            dummyUser.id = -1;
+            dummyUser.uuid = "-1";
+            dummyUser.displayName = "Dummy User";
+            dummyUser.firstName = "System";
+            dummyUser.lastName = "Dummy User";
+            dummyUser.email = "SYS_dummy_user@example.com";
+            dummyUser.userId = "SYS_dummy_user";
+            dummyUser.password = "notused";
+            dummyUser.bio = "notused";
+            dummyUser.disabled = true;
+            
+            Profile profileDummy = new Profile();
+             
+            profileDummy.setOwner( dummyUser );
+            dummyUser.profile = profileDummy;
+             
+            dummyUser = userService.createUser( dummyUser );
+            
+            UserAccountRoleMapping dummyUser_AnonRole = null;
+            UserAccountRoleMapping.withSession
+            {
+                dummyUser_AnonRole = UserAccountRoleMapping.findByUserAndRole( dummyUser, anonRole );
+                if( !dummyUser_AnonRole )
+                {
+                    dummyUser_AnonRole = new UserAccountRoleMapping( dummyUser, anonRole );
+                    if( ! dummyUser_AnonRole.save( flush: true ) )
+                    {
+                        dummyUser_AnonRole.errors.allErrors.each { println it.toString() };
+                        throw new RuntimeException( "Failed to create dummyUser_AnonRole" );
+                    }
+                    else
+                    {
+                        println "dummyUser_AnonRole created!";
+                    }
+                }
+                else
+                {
+                    println "dummyUser_AnonRole already exists!";
+                }
+            }
+        }
+    }
+    	
+    
 	void createSystemUser()
 	{
 		AccountRole userRole = userService.findAccountRoleByAuthority( "ROLE_USER" );

@@ -119,7 +119,10 @@ class UserGroupService
 			log.debug( "adding ${queryResults.size()} activities read from DB");
 			recentActivities.addAll( queryResults );	
 		}
-		
+		else
+		{
+            log.debug( "no Activities read from DB!");
+        }
 		
 		return recentActivities;
 				

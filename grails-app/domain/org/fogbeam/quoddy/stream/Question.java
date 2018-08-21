@@ -1,8 +1,9 @@
 package org.fogbeam.quoddy.stream;
 
-import java.io.Serializable;
-
 public class Question extends StreamItemBase
 {
-	
+    public String getTemplateName()
+    {
+        return "/renderQuestion";
+    }
 }

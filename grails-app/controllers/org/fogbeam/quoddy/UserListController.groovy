@@ -28,7 +28,7 @@ class UserListController
         Authentication authentication = securityContext.getAuthentication();
         log.info( "current Authentication: ${authentication}");
         
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId );
 
 		Map model = [:];
 		Map sidebarCollections = populateSidebarCollections( this, currentUser );

@@ -3,7 +3,7 @@ package org.fogbeam.quoddy.stream
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.subscription.BaseSubscription
 
-public class StreamItemBase implements Serializable
+public abstract class StreamItemBase implements Serializable
 {
 	
 	public StreamItemBase()
@@ -41,5 +41,6 @@ public class StreamItemBase implements Serializable
 						// be used any differently?
 	
 	BaseSubscription owningSubscription; 
-		
+	
+    abstract String getTemplateName();
 }

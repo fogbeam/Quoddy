@@ -209,7 +209,11 @@ class EventStreamService {
 			 */
 			List<UserGroup> groupsForUser = userGroupService.getAllGroupsForUser(user);
 			Set<User> validOwners = new HashSet<User>();
-			
+			User dummyUser = User.findById( -1 );
+            validOwners.add( dummyUser ); // a dummy item that can't match anything, needed
+                                                // because Postgresql chokes on "in" queries with an empty collection passed as a parameter
+            
+            
 			log.debug( "found: ${groupsForUser?.size()} groups for user ${user}");
 			
 			if( groupsForUser != null && groupsForUser.size() > 0 )
@@ -460,7 +464,7 @@ class EventStreamService {
 				// query = query + " and stream.id = :streamId " 
 				query = query + ") order by item.published desc";
 							
-				log.debug( "executing query: $query" );
+				log.info( "executing query: $query" );
 				
 				log.debug( "Found ${friends.size()} friends");
 				List<Integer> friendIds = new ArrayList<Integer>();

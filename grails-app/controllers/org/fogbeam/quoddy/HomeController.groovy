@@ -48,12 +48,13 @@ class HomeController
             // get the user from the SecurityContext
             SecurityContext securityContext = SecurityContextHolder.getContext();
             Authentication authentication = securityContext.getAuthentication();
-            log.info( "current Authentication: ${authentication}");
+            log.trace( "current Authentication: ${authentication}");
             
-            User currentUser = null;
             user = userService.findUserByUserId( ((User)authentication.principal).userId );   
     	}
 		
+        log.trace( "got currentUser as ${user}" );
+        
 		Map model = [:];
 		if( user )
 		{
