@@ -146,6 +146,14 @@ dependencies {
     compile group: 'com.github.jsonld-java', name: 'jsonld-java', version: '0.12.0'
     
 
+    // https://mvnrepository.com/artifact/com.rometools/rome
+    compile group: 'com.rometools', name: 'rome', version: '1.11.0'
+    
+    // https://mvnrepository.com/artifact/org.mnode.ical4j/ical4j
+    compile group: 'org.mnode.ical4j', name: 'ical4j', version: '3.0.1'
+    
+    
+    
 	/* JBoss dependencies for JMS */
 	// compile fileTree(include: ['*.jar'], dir: 'jbossclientlibs')
 

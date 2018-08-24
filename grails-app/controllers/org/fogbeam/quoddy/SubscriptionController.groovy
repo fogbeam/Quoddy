@@ -56,131 +56,80 @@ class SubscriptionController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def displayBusinessEventSubscription()
 	{	
-		if( session.user != null )
-		{
-			def user = userService.findUserByUserId( session.user.userId );
-			log.debug( "Doing display with params: ${params}");
-			def subEvents = new ArrayList<BusinessEventSubscriptionItem>();
-								
-			
-			BusinessEventSubscription subscription = BusinessEventSubscription.findById( params.subscriptionId );
-			
-			Map model = [:];
-			if( user )
-			{
-				subEvents = businessEventSubscriptionService.getRecentEventsForSubscription( subscription, 25 );
-				model.putAll( [ activities:subEvents ] );
-				
-				Map sidebarCollections = this.populateSidebarCollections( this, user );
-				model.putAll( sidebarCollections );
-				
-			}
-			
-			return model;
-		}
-		else
-		{
-			redirect( controller:"home", action:"index");
-		}
-		
+        def subEvents = new ArrayList<BusinessEventSubscriptionItem>();
+        
+
+        BusinessEventSubscription subscription = BusinessEventSubscription.findById( params.subscriptionId );
+        
+        Map model = [:];
+        subEvents = businessEventSubscriptionService.getRecentEventsForSubscription( subscription, 25 );
+        model.putAll( [ activities:subEvents ] );
+        
+        Map sidebarCollections = this.populateSidebarCollections( this, user );
+        model.putAll( sidebarCollections );
+        
+        return model;
 	}
 
+    
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def displayCalendarFeedSubscription()
 	{
-		if( session.user != null )
-		{
-			def user = userService.findUserByUserId( session.user.userId );
-			log.debug( "Doing display with params: ${params}");
-			def subEvents = new ArrayList<CalendarFeedItem>();
-								
-			
-			CalendarFeedSubscription subscription = CalendarFeedSubscription.findById( params.subscriptionId );
-			
-			Map model = [:];
-			if( user )
-			{
-				subEvents = calendarFeedSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
-				model.putAll( [ activities:subEvents ] );
-				
-				Map sidebarCollections = this.populateSidebarCollections( this, user );
-				model.putAll( sidebarCollections );
-				
-			}
-			
-			return model;
-		}
-		else
-		{
-			redirect( controller:"home", action:"index");
-		}
-		
+        
+        
+        def subEvents = new ArrayList<CalendarFeedItem>();
+        
+        CalendarFeedSubscription subscription = CalendarFeedSubscription.findById( params.subscriptionId );
+        
+        Map model = [:];
+        subEvents = calendarFeedSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
+        model.putAll( [ activities:subEvents ] );
+        
+        Map sidebarCollections = this.populateSidebarCollections( this, user );
+        model.putAll( sidebarCollections );
+                
+        return model;
+
 	}
 
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def displayActivitiUserTaskSubscription()
 	{
-		if( session.user != null )
-		{
-			def user = userService.findUserByUserId( session.user.userId );
-			log.debug( "Doing display with params: ${params}");
-			def subEvents = new ArrayList<ActivitiUserTask>();
-								
-			
-			ActivitiUserTaskSubscription subscription = ActivitiUserTaskSubscription.findById( params.subscriptionId );
-			
-			Map model = [:];
-			if( user )
-			{
-				subEvents = activitiUserTaskSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
-				model.putAll( [ activities:subEvents ] );
-				
-				Map sidebarCollections = this.populateSidebarCollections( this, user );
-				model.putAll( sidebarCollections );
-				
-			}
-			
-			return model;
-		}
-		else
-		{
-			redirect( controller:"home", action:"index");
-		}
-		
+        
+        
+        def subEvents = new ArrayList<ActivitiUserTask>();
+
+        ActivitiUserTaskSubscription subscription = ActivitiUserTaskSubscription.findById( params.subscriptionId );
+        
+        Map model = [:];
+        subEvents = activitiUserTaskSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
+        model.putAll( [ activities:subEvents ] );
+        
+        Map sidebarCollections = this.populateSidebarCollections( this, user );
+        model.putAll( sidebarCollections );
+                
+        return model;
+
 	}
 		
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def displayRssFeedSubscription()
 	{	
-		if( session.user != null )
-		{
-			def user = userService.findUserByUserId( session.user.userId );
-			log.debug(  "Doing display with params: ${params}");
-			def subEvents = new ArrayList<RssFeedItem>();
-								
-			
-			RssFeedSubscription subscription = RssFeedSubscription.findById( params.subscriptionId );
-			
-			Map model = [:];
-			if( user )
-			{
-				subEvents = rssFeedSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
-				model.putAll( [ activities:subEvents ] );
-				
-				Map sidebarCollections = this.populateSidebarCollections( this, user );
-				model.putAll( sidebarCollections );
-				
-			}
-			
-			return model;
-		}
-		else
-		{
-			redirect( controller:"home", action:"index");
-		}
-		
+        def subEvents = new ArrayList<RssFeedItem>();
+        
+
+        RssFeedSubscription subscription = RssFeedSubscription.findById( params.subscriptionId );
+        
+        Map model = [:];
+        subEvents = rssFeedSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
+        model.putAll( [ activities:subEvents ] );
+    
+        Map sidebarCollections = this.populateSidebarCollections( this, user );
+        model.putAll( sidebarCollections );
+        return model;
 	}
 
+    
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
     def createWizardOne()
     {
