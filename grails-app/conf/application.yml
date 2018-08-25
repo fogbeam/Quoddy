@@ -25,10 +25,6 @@ spring:
     groovy:
         template:
             check-template-location: false
-#    activemq:
-#        brokerUrl: vm://localhost
-#        in-memory: true
-
 # Spring Actuator Endpoints are Disabled by Default
 endpoints:
     enabled: false

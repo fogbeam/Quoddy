@@ -3,11 +3,15 @@ package org.fogbeam.quoddy
 import grails.plugin.springsecurity.annotation.Secured
 
 class SpecialController
-{
+{   
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def index()
-	{
-		
+	{   
+        println( "BrokerUrl: ${grailsApplication.config.spring.activemq.brokerUrl}" );
+        println( "InMemory: ${grailsApplication.config.spring.activemq.'in-memory'}");        
+        println( "EmailServiceBackend: ${grailsApplication.config.emailservice.backend}");
+        
+        
 		switch( request.method )
 		{
 			case "POST":

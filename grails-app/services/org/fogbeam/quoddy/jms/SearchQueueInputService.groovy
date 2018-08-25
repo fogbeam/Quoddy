@@ -168,7 +168,7 @@ public class SearchQueueInputService
 			else if( msgType.equals( "NEW_STATUS_UPDATE" )) // TODO: rename this to STREAM_POST or something?
     		{
 		    	// add document to index
-		    	log.info( "adding document to index: ${mapMessage.getString('activityUuid')}" );			
+		    	log.info( "adding document to index: ${mapMessage.get('activityUuid')}" );			
 			newStatusUpdate( msg );
 
     		}
@@ -229,7 +229,7 @@ public class SearchQueueInputService
 		// extractAndIndexContent( genericActivityStreamItem.streamObject );
 		
 		
-		ActivityStreamItem activityStreamItem = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
+		ActivityStreamItem activityStreamItem = eventStreamService.getActivityStreamItemById( (Long)msg.get("activityId") );
 		ActivitiUserTask userTask = ActivitiUserTask.findById( activityStreamItem.streamObject.id );
 		
 		
