@@ -10,6 +10,8 @@ class DummyJob
 	def group = "MyGroup";
 	def volatility = false;
 	
+    static concurrent = false;
+    
 	static triggers = {
 	}
 	

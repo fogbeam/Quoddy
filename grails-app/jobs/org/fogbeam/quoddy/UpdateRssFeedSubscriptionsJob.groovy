@@ -42,6 +42,9 @@ import net.fortuna.ical4j.model.component.*
 // "outside" we probably want to cache it, since the link could die at some arbitrary time.  Otherwise, we
 // can just point to the original link. 
 
+// TODO: finish fixing Quartz
+// See: https://stackoverflow.com/questions/41331255/how-to-configure-quartz-plugin-in-grails-3
+
 
 @DisallowConcurrentExecution
 class UpdateRssFeedSubscriptionsJob 
@@ -53,30 +56,35 @@ class UpdateRssFeedSubscriptionsJob
 	def jmsService;
 	def eventStreamService;
 	def rssFeedItemService;
-	def concurrent = false;
+	static concurrent = false;
 	
 	static triggers = {
 		def volatility = false;	
 	}
 	
+    private String getThreadId()
+    {
+        return Thread.currentThread().getId();
+    }
+    
     def execute( def context ) 
 	{
 		
 		Scheduler sched = context.getScheduler();
 		JobDetail existingJobDetail = context.getJobDetail();
-		log.warn( "Beginning execution of UpdateRssFeedSubscriptionsJob");
-		log.info( "existingJobDetail: " + existingJobDetail.toString());
+		log.warn( "[${getThreadId()}] - Beginning execution of UpdateRssFeedSubscriptionsJob");
+		log.info( "[${getThreadId()}] - existingJobDetail: " + existingJobDetail.toString());
 		
 		if (existingJobDetail != null) 
 		{
 			List<JobExecutionContext> currentlyExecutingJobs = (List<JobExecutionContext>) sched.getCurrentlyExecutingJobs();
 			for (JobExecutionContext jec : currentlyExecutingJobs) 
 			{
-				log.info( "evaluating jec.jobDetail: " + jec.jobDetail.toString());
+				log.info( "[${getThreadId()}] - evaluating jec.jobDetail: " + jec.jobDetail.toString());
 				
 				if(jec.jobDetail.key.equals(existingJobDetail.key) && (!(jec.jobDetail == existingJobDetail))) 
 				{
-					String message = "another instance for " + existingJobDetail.toString() + " is already running.";
+					String message = "[${getThreadId()}] - another instance for " + existingJobDetail.toString() + " is already running.";
 					log.warn(message);
 					
 					// throw new JobExecutionException(message,false);
@@ -84,20 +92,20 @@ class UpdateRssFeedSubscriptionsJob
 				}
 				else 
 				{
-					log.info( "not a match, proceed.");
+					log.info( "[${getThreadId()}] - not a match, proceed.");
 				}
 			}
 		}
 		else 
 		{
-			log.info( "existingJobDetail is NULL");
+			log.info( "[${getThreadId()}] - existingJobDetail is NULL");
 		}
 		
 		
 		ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 		
 		
-		println "executing UpdateRssFeedSubscriptionsJob";
+		log.info( "[${getThreadId()}] - executing UpdateRssFeedSubscriptionsJob" );
 		
 		// TODO: switch this to a service call
      	// get a list of all the active CalendarFeedSubscription objects
@@ -106,7 +114,7 @@ class UpdateRssFeedSubscriptionsJob
 		allSubscriptions.each {
 			RssFeedSubscription sub = it;
 			
-			println "processing subscription for url: ${sub.url}";
+			log.info(  "[${getThreadId()}] - processing subscription for url: ${sub.url}");
 			
 			URL feedUrl = new URL(sub.url);
 			SyndFeedInput input = new SyndFeedInput();
@@ -118,11 +126,11 @@ class UpdateRssFeedSubscriptionsJob
 			{
 				reader = new XmlReader(feedUrl)
 				feed = input.build(reader);
-				log.info( "Feed: ${feed.getTitle()}" );
+				log.info( "[${getThreadId()}] - Feed: ${feed.getTitle()}" );
 				
 				List<SyndEntry> entries = feed.getEntries();
 				
-				println( "processing ${entries.size()} entries!" );
+				log.info( "[${getThreadId()}] - processing ${entries.size()} entries!" );
 				int good = 0;
 				int bad = 0;
 				
@@ -130,23 +138,23 @@ class UpdateRssFeedSubscriptionsJob
 				{
 
 					String linkUrl = entry.getLink().trim();
-					log.info( "linkUrl: ${linkUrl}")
+					log.info( "[${getThreadId()}] - linkUrl: ${linkUrl}")
 					String linkTitle = entry.getTitle().trim();
-					log.info( "linkTitle: ${linkTitle}")
+					log.info( "[${getThreadId()}] - linkTitle: ${linkTitle}")
 					
-					log.info( "Testing for possible duplicate.  linkurl: ${linkUrl}, subscription: ${sub.toString()}");
+					log.info( "[${getThreadId()}] - Testing for possible duplicate.  linkurl: ${linkUrl}, subscription: ${sub.toString()}");
 					
 					
 					RssFeedItem testForExisting = rssFeedItemService.findRssFeedItemByUrlAndSubscription( linkUrl, sub );
 					if( testForExisting != null )
 					{
-						log.info( "An RssFeedItem entry for this link (${linkUrl}) already exists. Skipping" );							
+						log.info( "[${getThreadId()}] - An RssFeedItem entry for this link (${linkUrl}) already exists. Skipping" );							
 						continue;
 					}
 					else
 					{	
 						
-						log.info( "creating and adding entry for link: ${linkUrl} with title: ${linkTitle}" );
+						log.info( "[${getThreadId()}] - creating and adding entry for link: ${linkUrl} with title: ${linkTitle}" );
 			
 						// Entry newEntry = new Entry( url: linkUrl, title: linkTitle, submitter: anonymous );
 						RssFeedItem rssFeedItem = new RssFeedItem();
@@ -169,13 +177,13 @@ class UpdateRssFeedSubscriptionsJob
 							
 						} 
 						catch ( HttpException he) {
-						   log.error("Http error connecting to '" + linkUrl + "'", he );
+						   log.error("[${getThreadId()}] - Http error connecting to '" + linkUrl + "'", he );
 						   log.error(he.message);
 						   continue;
 						} 
 						catch (IOException ioe){
 						   // ioe.printStackTrace();
-						   log.error("Unable to connect to '" + linkUrl + "'", ioe);
+						   log.error("[${getThreadId()}] - Unable to connect to '" + linkUrl + "'", ioe);
 						   log.error( ioe.message );
 						   continue;
 						}
@@ -210,18 +218,15 @@ class UpdateRssFeedSubscriptionsJob
 						}
 						catch( Exception e )
 						{
-							log.error( "error extracing text from link", e );
+							log.error( "[${getThreadId()}] - error extracing text from link", e );
 							e.printStackTrace();
 							rssFeedItem = null;
 						}
 						
-
-						
-						
 						if( rssFeedItem )
 						{
 							good++;
-							log.info( "saved new RssFeedItem entry with id: ${rssFeedItem.id}" );
+							log.info( "[${getThreadId()}] - saved new RssFeedItem entry with id: ${rssFeedItem.id}" );
 							
 							
 							ActivityStreamItem activity = new ActivityStreamItem(content:"RSSFeedItem");
@@ -257,19 +262,15 @@ class UpdateRssFeedSubscriptionsJob
 							
 							// send message to request search indexing
 							jmsService.send( queue: 'quoddySearchQueue', newContentMsg, 'standard', null );
-							
-			
 
 							// TODO: send a JMS message for UI update notification
 							// sendJMSMessage("uiNotificationQueue", newEntryMessage );
-	
-						
 						}
 						else
 						{
 							bad++;
 							// failed to save newEntry
-							log.error( "Failed processing RssFeedItem!" );
+							log.error( "[${getThreadId()}] - Failed processing RssFeedItem!" );
 						}
 						
 					}
@@ -280,11 +281,11 @@ class UpdateRssFeedSubscriptionsJob
 			}
 			catch( Exception e )
 			{
-				log.error( "Caught Exception in RssFeedSubscription Processing Loop!", e);
+				log.error( "[${getThreadId()}] - Caught Exception in RssFeedSubscription Processing Loop!", e);
 				
 				e.printStackTrace();
 				
-				println "Continuing to next RssFeedSubscription";
+				println "[${getThreadId()}] - Continuing to next RssFeedSubscription";
 			}
 			finally 
 			{
@@ -293,9 +294,6 @@ class UpdateRssFeedSubscriptionsJob
 					reader.close();	
 				}	
 			}
-			
-			
 		}
-		
 	}
 }

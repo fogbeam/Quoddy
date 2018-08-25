@@ -23,10 +23,11 @@ class UpdateCalendarFeedsJob
 	def group = "MyGroup";
 	def volatility = false;
 	def jmsService;
-	
 	def eventStreamService;
+    
+    static concurrent = false;
 	
-	static triggers = {
+    static triggers = {
 	}
 	
     def execute() 

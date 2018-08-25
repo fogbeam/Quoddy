@@ -122,3 +122,34 @@ groups:
 created:
   accounts:
     backingStore: "localdb"
+    
+quartz:
+  autoStartup: true
+  jdbcStore: true
+  scheduler:
+    instanceName: 'quoddy_scheduler'
+    instanceId: 'AUTO'
+  threadPool:
+    class: 'org.quartz.simpl.SimpleThreadPool'
+    threadCount: 25
+    threadPriority: 5
+  jobStore:
+    misfireThreshold: 60000
+    class: 'org.quartz.impl.jdbcjobstore.JobStoreTX'
+    driverDelegateClass: 'org.quartz.impl.jdbcjobstore.PostgreSQLDelegate'    
+    useProperties: false
+    dataSource: 'development'
+    tablePrefix: 'qrtz_'
+    isClustered: true
+    clusterCheckinInterval: 20000
+  dataSource:
+    development:
+      driver: 'org.postgresql.Driver'
+      URL: 'jdbc:postgresql:quoddy_dev'
+      user: 'postgres'
+      password: ''
+      maxConnections: 10
+#      validationQuery: 'select 1'    
+    
+    
+    

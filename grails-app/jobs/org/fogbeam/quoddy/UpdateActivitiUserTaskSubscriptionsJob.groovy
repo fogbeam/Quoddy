@@ -23,6 +23,8 @@ class UpdateActivitiUserTaskSubscriptionsJob
 	def jmsService;
 	def eventStreamService;
 	
+    static concurrent = false;
+    
 	static triggers = {
 	}
 	

@@ -43,4 +43,18 @@ public abstract class StreamItemBase implements Serializable
 	BaseSubscription owningSubscription; 
 	
     abstract String getTemplateName();
+    
+    public void setName( final String nameVal )
+    {
+        if( nameVal?.length() > 255 )
+        {
+            log.error( "Attempt to set NAME field with overlong value. Truncating." );
+            this.name = nameVal.substring(0, 255 );
+        }
+        else
+        {
+            this.name = nameVal;
+        }
+    }
+    
 }

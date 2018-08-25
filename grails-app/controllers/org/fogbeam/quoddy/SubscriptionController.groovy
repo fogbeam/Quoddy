@@ -39,12 +39,11 @@ class SubscriptionController
 		def activitiUserTaskSubscriptions = new ArrayList<ActivitiUserTaskSubscription>();
 		def rssFeedSubscriptions = new ArrayList<RssFeedSubscription>();
 		
-        
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
         log.info( "current Authentication: ${authentication}");
         
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ); 
     
         Map model = [:];
         Map sidebarCollections = this.populateSidebarCollections( this, currentUser );
@@ -58,6 +57,13 @@ class SubscriptionController
 	{	
         def subEvents = new ArrayList<BusinessEventSubscriptionItem>();
         
+        
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
+        
 
         BusinessEventSubscription subscription = BusinessEventSubscription.findById( params.subscriptionId );
         
@@ -65,7 +71,7 @@ class SubscriptionController
         subEvents = businessEventSubscriptionService.getRecentEventsForSubscription( subscription, 25 );
         model.putAll( [ activities:subEvents ] );
         
-        Map sidebarCollections = this.populateSidebarCollections( this, user );
+        Map sidebarCollections = this.populateSidebarCollections( this, currentUser );
         model.putAll( sidebarCollections );
         
         return model;
@@ -75,17 +81,23 @@ class SubscriptionController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def displayCalendarFeedSubscription()
 	{
-        
-        
         def subEvents = new ArrayList<CalendarFeedItem>();
+     
         
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
+        
+           
         CalendarFeedSubscription subscription = CalendarFeedSubscription.findById( params.subscriptionId );
         
         Map model = [:];
         subEvents = calendarFeedSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
         model.putAll( [ activities:subEvents ] );
         
-        Map sidebarCollections = this.populateSidebarCollections( this, user );
+        Map sidebarCollections = this.populateSidebarCollections( this, currentUser );
         model.putAll( sidebarCollections );
                 
         return model;
@@ -95,17 +107,22 @@ class SubscriptionController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def displayActivitiUserTaskSubscription()
 	{
-        
-        
         def subEvents = new ArrayList<ActivitiUserTask>();
 
+        
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
+        
         ActivitiUserTaskSubscription subscription = ActivitiUserTaskSubscription.findById( params.subscriptionId );
         
         Map model = [:];
         subEvents = activitiUserTaskSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
         model.putAll( [ activities:subEvents ] );
         
-        Map sidebarCollections = this.populateSidebarCollections( this, user );
+        Map sidebarCollections = this.populateSidebarCollections( this, currentUser );
         model.putAll( sidebarCollections );
                 
         return model;
@@ -117,6 +134,12 @@ class SubscriptionController
 	{	
         def subEvents = new ArrayList<RssFeedItem>();
         
+        
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info( "current Authentication: ${authentication}");
+        
+        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
 
         RssFeedSubscription subscription = RssFeedSubscription.findById( params.subscriptionId );
         
@@ -124,7 +147,7 @@ class SubscriptionController
         subEvents = rssFeedSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
         model.putAll( [ activities:subEvents ] );
     
-        Map sidebarCollections = this.populateSidebarCollections( this, user );
+        Map sidebarCollections = this.populateSidebarCollections( this, currentUser );
         model.putAll( sidebarCollections );
         return model;
 	}
@@ -241,8 +264,6 @@ class SubscriptionController
         
     }
 
-
-    
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
     def createCalendarFeedSubscriptionWizardOne()
     {
