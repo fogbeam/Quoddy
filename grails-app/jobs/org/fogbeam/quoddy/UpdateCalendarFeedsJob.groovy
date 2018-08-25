@@ -59,6 +59,11 @@ class UpdateCalendarFeedsJob
 					ComponentList aList = calendar.getComponents("VEVENT");
 					println "got ComponentList";
 					
+                    // TODO: if event is in the past, don't save it? 
+                    
+                    // TODO: expand recurring events into individual entries?
+                    
+                    
 					for( VEvent comp : aList )
 					{
 						// for each VEVENT create a CalendarFeedItem instance with the CalendarFeedSubscription owner

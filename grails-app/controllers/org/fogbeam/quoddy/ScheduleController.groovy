@@ -42,7 +42,7 @@ class ScheduleController
     @Secured('ROLE_ADMIN')
 	def editSchedule()
 	{
-		log.debug( "editSchedule received id: ${params.id}" );
+		log.debug( "editSchedule received id: ${params.jobId}" );
 	
 		List<String> jobGroups = jobManagerService.quartzScheduler.getJobGroupNames();
 		def triggers = null;
@@ -58,7 +58,7 @@ class ScheduleController
 				
 				log.debug( "detail: ${detail}");
 				
-				if( detail.key.name.contains( params.id ))
+				if( detail.key.name.contains( params.jobId ))
 				{
 					log.debug( "found a match for ${detail.fullName}");			
 					triggers = jobManagerService.quartzScheduler.getTriggersOfJob(aJobKey);
@@ -96,9 +96,9 @@ class ScheduleController
 				JobDetail detail = jobManagerService.quartzScheduler.getJobDetail(aJobKey);
 					
 				log.debug( "jobDetail: ${detail}");
-				log.debug( "params.id = ${params.id}");
+				log.debug( "params.jobId = ${params.jobId}");
 				
-				if( detail?.key?.name?.contains( params.id ))
+				if( detail?.key?.name?.contains( params.jobId ))
 				{						
 					triggers = jobManagerService.quartzScheduler.getTriggersOfJob(aJobKey);
 					jobName = aJobKey.name;

@@ -5,9 +5,12 @@
        	       	
     </head>
 	<body>
+	
+	
 		<div class="row">
-			<div id="bodyContent" class="span8" style="min-height:300px;">	
-			
+		
+			<div class="col-md-8">	
+			    <div style="min-height:200px;background-color:rgb(245, 245, 245)">
 				<!-- 
 				
 				[id:reason, name:Reason, value:null, type:string, required:false, readable:true, writable:true]
@@ -27,46 +30,58 @@
 					</ul>
 					<g:submitButton class="btn-primary" name="Complete"/>
 				</g:form>
-				
+				</div>
 			</div>
-			<div class="span4" style="margin:0px;background-color:rgb(245, 245, 245);min-height:200px;">
-				<h4>Related Documents</h4>
+			
+			<div class="col-md-4">
+			     <div style="margin:0px;background-color:rgb(245, 245, 245);min-height:200px;">
+				    <h4>Related Documents</h4>
+				</div>
 			</div>
 		</div>
+	
 		<div class="row" style="margin-top:25px;">
-			<div class="span4" style="min-height:200px;margin-left:11px;margin-right:15px;background-color:rgb(245, 245, 245);">
+			
+			<div class="col-md-4">
+			     <div style="min-height:200px;padding-left:4px;background-color:rgb(245, 245, 245)">
 				<h4>Related People</h4>
-				<ul>
-					<g:each in="${people}" var="person">
-						<li>
-							<g:link controller="user" action="viewUserProfile" params="${[userId:person.userId]}" >
-								${person.fullName}
-							</g:link>
-						</li>
-					</g:each>
-				</ul>
+					<ul>
+						<g:each in="${people}" var="person">
+							<li>
+								<g:link controller="user" action="viewUserProfile" params="${[userId:person.userId]}" >
+									${person.fullName}
+								</g:link>
+							</li>
+						</g:each>
+					</ul>
+				</div>
 			</div>
 			
-			<div class="span4" style="margin-left:0px;margin-right:15px;background-color:rgb(245, 245, 245);min-height:200px;">
-				<h4>Related Updates</h4>
-				<ul>
-					<g:each in="${statusUpdates}" var="update">
-						<li><g:link controller="permalink" action="index" params="${[uuid:update.uuid]}">
-						${update.owner.userId} @ <g:formatDate date="${update.dateCreated}" type="datetime" style="SHORT" timeStyle="SHORT" /></g:link></li>
-					</g:each>
-				</ul>
+			<div class="col-md-4">
+				<div style="min-height:200px;padding-left:4px;background-color:rgb(245, 245, 245)">
+					<h4>Related Updates</h4>
+					<ul>
+						<g:each in="${statusUpdates}" var="update">
+							<li><g:link controller="permalink" action="index" params="${[uuid:update.uuid]}">
+							${update.owner.userId} @ <g:formatDate date="${update.dateCreated}" type="datetime" style="SHORT" timeStyle="SHORT" /></g:link></li>
+						</g:each>
+					</ul>
+				</div>
 			</div>
 			
 			
-			<div class="span4" style="margin-left:0px;margin-right:15px;background-color:rgb(245, 245, 245);min-height:200px;">
-				<h4>Related Entities</h4>
-				<ul>
-					<g:each in="${links}" var="link">
-						<li><a href="${link.href}">${link.name}</a></li>
-					</g:each>
-				</ul>
+			<div class="col-md-4">
+				<div style="min-height:200px;padding-left:4px;background-color:rgb(245, 245, 245)">
+					<h4>Related Entities</h4>
+					<ul>
+						<g:each in="${links}" var="link">
+							<li><a href="${link.href}">${link.name}</a></li>
+						</g:each>
+					</ul>
+				</div>
 			</div>
 			
 		</div>
+		
 	</body>
 </html>

@@ -620,7 +620,7 @@ class SearchService
 	
 	public void rebuildGeneralIndex()
 	{
-		// note: this should probably involve writing out a whole new index, then doing
+		// TODO: this should probably involve writing out a whole new index, then doing
 		// a quick "switch" at the end, so the main index isn't offline (or bogged down) the
 		// whole time we are re-indexing
 		String indexDirLocation = null;
@@ -635,6 +635,15 @@ class SearchService
 				indexDirLocation = quoddyHome + "/index";
 			}
 			
+            File indexDirFile = new File( indexDirLocation );
+            if( indexDirFile.exists())
+            {
+                indexDirFile.deleteDir();
+            }
+            
+            indexDirFile = new File( indexDirLocation );
+            indexDirFile.mkdirs();
+            
 			
 			log.debug( "rebuildGeneralIndex" );
 			log.debug( "indexDirLocation: ${indexDirLocation}");
@@ -1000,6 +1009,15 @@ class SearchService
 			indexDirLocation = quoddyHome + "/index";
 		}
 		
+        File indexDirFile = new File( indexDirLocation );
+        if( indexDirFile.exists())
+        {
+            indexDirFile.deleteDir();
+        }
+        
+        indexDirFile = new File( indexDirLocation );
+        indexDirFile.mkdirs();
+        
 		log.debug( "rebuildPersonIndex");
 		log.debug( "indexDirLocation: ${indexDirLocation}");
 		

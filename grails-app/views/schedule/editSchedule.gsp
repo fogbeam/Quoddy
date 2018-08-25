@@ -42,7 +42,7 @@
             	</g:each> 
             </table>
 			<div style="margin-top:8px;">  <!-- params="[jobName:jobName,jobGroup:jobGroup]" -->
-				<g:link controller="schedule" id="${jobFullName}" action="createTrigger">add new trigger</g:link>
+				<g:link controller="schedule" params='[jobId:"${jobFullName}"]' action="createTrigger">add new trigger</g:link>
 			</div>
         </div>
     </body>

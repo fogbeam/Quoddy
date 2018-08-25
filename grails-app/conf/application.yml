@@ -25,6 +25,9 @@ spring:
     groovy:
         template:
             check-template-location: false
+#    activemq:
+#        brokerUrl: vm://localhost
+#        in-memory: true
 
 # Spring Actuator Endpoints are Disabled by Default
 endpoints:
@@ -101,8 +104,11 @@ dataSource:
     username: postgres
     password: ''
     logSql: false
+
 environments:
     development:
+        quartz:
+            autoStartup: false
         dataSource:
             dbCreate: update
             url: jdbc:postgresql:quoddy_dev
@@ -124,7 +130,7 @@ created:
     backingStore: "localdb"
     
 quartz:
-  autoStartup: true
+  autoStartup: false
   jdbcStore: true
   scheduler:
     instanceName: 'quoddy_scheduler'

@@ -21,7 +21,8 @@ class BootStrap
 	def searchService;
 	def environment;
 	def grailsApplication;
-	
+    def quartzScheduler;
+    	
     def init = 
 	{ servletContext ->
     
@@ -43,7 +44,18 @@ class BootStrap
                 createDummyUser();
 				createShareTargets();
 				createEventTypes();
-                rebuildIndexes();
+                
+                if( Boolean.parseBoolean( System.getProperty( "rebuild.indexes" ) ) )
+                {
+                    log.warn( "rebuild.indexes is TRUE, rebuilding indexes now");
+                    rebuildIndexes();
+                }
+                else
+                {
+                    log.warn( "rebuild.indexes is FALSE, not rebuilding indexes");
+                }
+                
+                startQuartz();
 				break;
 			case Environment.PRODUCTION:
 				println "No special configuration required";
@@ -64,6 +76,42 @@ class BootStrap
 	{
 	}
 	
+    def startQuartz()
+    {
+        log.info( "startQuartz() called" );
+        final scheduler = quartzScheduler;
+        
+        String quartzStartupDelay = System.getProperty( "quartz.startup.delay" );
+        
+        int delay = 0;
+        if( quartzStartupDelay != null )
+        {
+            delay = Integer.parseInt( quartzStartupDelay );
+        }
+        else
+        {
+            delay = 180000;    
+        }
+        
+        final int quartzDelay = delay;
+        
+        Thread quartzStarterThread = new Thread( new Runnable() {
+            
+            public void run()
+            {
+                log.warn( "delaying ${quartzDelay} milliseconds before starting Quartz" );
+                Thread.sleep( quartzDelay );
+                
+                log.warn( "Starting Quartz now");
+                scheduler.start();
+            }
+        });
+        
+    
+        quartzStarterThread.start();
+    
+    }
+    
     void rebuildIndexes()
     {
         searchService.rebuildGeneralIndex();

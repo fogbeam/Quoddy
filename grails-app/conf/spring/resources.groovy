@@ -1,14 +1,14 @@
 package spring;
 
 import org.fogbeam.quoddy.security.UserDetailsService;
+import org.fogbeam.quoddy.spring.factorybean.CustomBeanPostProcessor
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
-
-import grails.plugin.springsecurity.SpringSecurityUtils
 
 // Place your Spring DSL code here
 beans = {
     
-
+    customBeanPostProcessor(CustomBeanPostProcessor)
+    
     userDetailsService( UserDetailsService )
     {
         userService = ref('userService')

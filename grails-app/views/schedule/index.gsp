@@ -10,7 +10,7 @@
             <h2 style="margin-top:10px;font-size:13pt;font-weight:bold;">Available Jobs:</h2>
             <ul>
                 <g:each var="job" in="${artefacts}">
-                    <li style="padding-top:8px;"><g:link controller="schedule" action="editSchedule" id="${job.fullName}">${job.shortName}</g:link> </li>
+                    <li style="padding-top:8px;"><g:link controller="schedule" action="editSchedule" params='[jobId:"${job.fullName}"]'>${job.shortName}</g:link> </li>
                 </g:each>
             </ul>            
         </div>

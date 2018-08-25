@@ -75,8 +75,8 @@ public class SearchQueueInputService
         println( "in onMessage()" );
         println( "GOT MESSAGE: ${msg}" );
         
-    	log.debug("in onMessage");
-	    log.debug( "msg: " + msg);
+    	log.info("in onMessage");
+	    log.info( "msg: " + msg);
         
     	/* note: what we would ordinarily do where is turn around and copy this message
     	 * to other queue's, topics, etc., or otherwise route it as needed.  But for
@@ -91,8 +91,8 @@ public class SearchQueueInputService
     	}
     	else
     	{
-			// MapMessage mapMessage = (MapMessage)msg;
-    		String msgType = ""; // mapMessage.getString( "msgType" );
+			Map mapMessage = (Map)msg;
+    		String msgType = (String)mapMessage.get( "msgType" );
 			
 			//begin get the contents of the update
 			//var msgContents to store the update contents

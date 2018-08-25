@@ -27,17 +27,25 @@ import com.hp.hpl.jena.rdf.model.Model
 import com.hp.hpl.jena.rdf.model.RDFNode
 import com.hp.hpl.jena.tdb.TDBFactory
 
+import grails.plugin.springsecurity.annotation.Secured
+
 class ActivitiBPMController
 {
-	def claimTask =
+    @Secured(['ROLE_USER', 'ROLE_ADMIN'])
+	def claimTask()
 	{
+        
+        // TODO: implement me...
+        
 		println "claimTask() - params: ${params}";
 		
 		
 		render(text: """{"msg":"OK"}""", contentType: "application/json", encoding: "UTF-8")
 	}
 	
-	def completeTask = {
+    @Secured(['ROLE_USER', 'ROLE_ADMIN'])
+	def completeTask()
+    {
 		
 		// make the REST call back to the Activiti server to complete this task
 		// using the supplied form values
@@ -94,8 +102,9 @@ class ActivitiBPMController
 		redirect( controller:'dummy' );
 	}
 	
-	def completeTaskForm = {
-		
+    @Secured(['ROLE_USER', 'ROLE_ADMIN'])
+	def completeTaskForm()
+    {	
 		println "completeTaskForm() - params: ${params}";
 		log.info( "completeTaskForm() - params: ${params}" );
 		
@@ -302,9 +311,7 @@ class ActivitiBPMController
 			dataset.commit();
 			dataset.end();
 		}
-		
-		
-		
+			
 		String activitiServer = owningSubscription.activitiServer;
 		
 		// get Form from Activiti Server
