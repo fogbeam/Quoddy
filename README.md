@@ -60,14 +60,23 @@ will allow a Quoddy instance to host any valid OpenSocial application.
 How to build & run Quoddy?
 ----------------------------
 
-Instructions for deploying the latest release can be found at
+This has all recently changed, after the upgrade from Grails 2.2.3 to Grails 3.3.6.  New detailed instructions will be coming
+soon, but the quick version for development mode is as follows:
 
-https://github.com/fogbeam/Quoddy/releases/edit/v0.0.0-tpr1
+1. clone this repo on the machine / vm where you want to run Quoddy. We recommend you use a Linux OS.  Any modern mainstream distribution should work, but "Red Hat flavored" distributions like RHEL, Fedora, or CentOS are the most tested and best supported options. 
 
-Once Quoddy is installed and running, browse to http://localhost:8080 and you should get the Quoddy homepage.  
+2. create a Postgresql database named "quoddy_dev" on the machine where you cloned the repo. Make sure the postgres user can
+connect via tcp. If you have a password set, edit the application.yml file and set the password before starting Quoddy.
 
-You can login as testuser1 with a password of 'secret', or you can modify Bootstrap.groovy to create
-different default users.
+3. Create a directory for Quoddy to store configuration files, search indexes, etc.  Something like /opt/fogcutter/quoddy would work well.
+
+4. Edit runquoddy.sh and set the quoddy.home property to match the directory you just created. You can also change the server port and a few other settings here.
+
+5. Create an application-development.properties file in your quoddy.home dir and override any properties that need to be customized.
+
+6. run ./runquoddy.sh
+
+The Bootstrap will create a few test users that you can use to login and experiment with the system.  To login using local password mode, select 'useLocal' from the dropdown menu on the login page.  The other option is to use CAS, but that requires installing and configuring a CAS server, which is more work.  Local mode is fine for development use, but the current password hash function is not suitable for production use.  
 
 For help, see the fogcutter-dev Google Group, or check #fogcutter on Freenode.net IRC.	
 
