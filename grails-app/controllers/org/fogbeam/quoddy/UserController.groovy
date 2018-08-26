@@ -395,12 +395,9 @@ class UserController
 
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def addToFollow()
-	{
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
+	{ 
+	
+		User currentUser = userService.getLoggedInUser();
 		
 		def targetUser = userService.findUserByUserId( params.userId );
 	
@@ -414,12 +411,8 @@ class UserController
 	{
         log.info( "addToFriends() called");
         
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();        
-        log.info( "current Authentication: ${authentication}");
-                
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
-		
+		User currentUser = userService.getLoggedInUser();
+				
         log.info( "currentUser: ${currentUser}" );
         
 		def targetUser = userService.findUserByUserId( params.userId );
@@ -436,13 +429,7 @@ class UserController
 	{
 		log.info( "confirmFriend() called" );
 		
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = null;
-		currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-        
+		User currentUser = userService.getLoggedInUser();
         
 		User newFriend = userService.findUserByUserId( params.confirmId )
 		
@@ -453,14 +440,8 @@ class UserController
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def listFollowers()
-	{
-		
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = null;
-        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
+	{	
+		User currentUser = userService.getLoggedInUser();
 	
 		List<User> followers = userService.listFollowers( currentUser );
 		
@@ -472,12 +453,8 @@ class UserController
 	def listFriends()
 	{
 
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-	
+		User currentUser = userService.getLoggedInUser();
+		
 		List<User> friends = userService.listFriends( currentUser );
 		
 		[friends:friends];
@@ -486,12 +463,8 @@ class UserController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def listIFollow()
 	{
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = null;
-        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )	
+		User currentUser = userService.getLoggedInUser();
+				
 		List<User> iFollow = userService.listIFollow( currentUser );
 		
 		[ifollow: iFollow];
@@ -596,13 +569,8 @@ class UserController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def editProfile()
 	{
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = null;
-        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
-
+		User currentUser = userService.getLoggedInUser();
+		
 		UserProfileCommand upc = new UserProfileCommand(currentUser.profile, months );
 		[profileToEdit:upc, sexOptions:sexOptions, years:years, months:months, days:days,
 			contactTypes:contactTypes];
@@ -1458,10 +1426,8 @@ class UserController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def editAccount()
 	{
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        User user = userService.findUserByUserId( ((User)authentication.principal).userId );
-        
+		User user = userService.getLoggedInUser();
+		
 		[user:user];
 	}	
 
@@ -1472,10 +1438,8 @@ class UserController
         
 		List<FriendRequest> openFriendRequests = new ArrayList<FriendRequest>();
 
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        User user = userService.findUserByUserId( ((User)authentication.principal).userId );
-        
+		User user = userService.getLoggedInUser();
+		
         log.info( "User: " + user );
         		
 		List<FriendRequest> temp = userService.listOpenFriendRequests( user );

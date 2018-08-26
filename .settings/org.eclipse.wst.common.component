@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-modules id="moduleCoreId" project-version="2.0">
-	<wb-module deploy-name="quoddy_grails3">
-		<property name="context-root" value="quoddy_grails3"/>
+	<wb-module deploy-name="quoddy">
+		<property name="context-root" value="quoddy"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/resources"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/views"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/i18n"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/conf"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/java"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/resources"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/src"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/controllers"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/domain"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/jobs"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/services"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/init"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/taglib"/>
-		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/resources"/>
-		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/services"/>
-		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/jobs"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/groovy"/>
 	</wb-module>
 </project-modules>

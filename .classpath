@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="grails-app/views"/>
 	<classpathentry kind="src" path="grails-app/i18n"/>
 	<classpathentry kind="src" path="grails-app/conf"/>
-	<classpathentry kind="src" path="grails-app/init"/>
+	<classpathentry kind="src" path="grails-app/src"/>
 	<classpathentry kind="src" path="grails-app/controllers"/>
 	<classpathentry kind="src" path="grails-app/domain"/>
-	<classpathentry kind="src" path="src/main/groovy"/>
-	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="grails-app/taglib"/>
-	<classpathentry kind="src" path="grails-app/services"/>
-	<classpathentry kind="src" path="grails-app/resources"/>
-	<classpathentry kind="src" path="src/test/groovy"/>
 	<classpathentry kind="src" path="grails-app/jobs"/>
+	<classpathentry kind="src" path="grails-app/services"/>
+	<classpathentry kind="src" path="grails-app/init"/>
+	<classpathentry kind="src" path="grails-app/taglib"/>
+	<classpathentry kind="src" path="src/main/groovy"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" path="grails-app/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer">

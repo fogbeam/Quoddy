@@ -32,12 +32,7 @@ class UserGroupController
 		def userOwnedGroups = new ArrayList<UserGroup>();
 		def userMembershipGroups = new ArrayList<UserGroup>();
 		
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId );
-        
+		User currentUser = userService.getLoggedInUser();        
         
         Map model = [:];
         
@@ -75,12 +70,8 @@ class UserGroupController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def save()
 	{
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId );
-
+		User currentUser = userService.getLoggedInUser();
+		
 		log.debug( "save using params: ${params}");
 
         UserGroup groupToCreate = new UserGroup();
@@ -144,12 +135,8 @@ class UserGroupController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def display()
 	{        
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-        	
+		User currentUser = userService.getLoggedInUser();        	
+		
         log.debug( "Doing display with params: ${params}");
         
         // def items = new ArrayList<StreamItemBase>();
@@ -197,13 +184,7 @@ class UserGroupController
 		// and add user to group OR add pending group request
 		// for the group owner / admin
 
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-
-        
+		User currentUser = userService.getLoggedInUser();
         		
 		// TODO: create group Membership
 		String groupId = params.groupId;
@@ -237,12 +218,8 @@ class UserGroupController
 		log.info( "Posting to group: ${params.groupId}, with statusText: ${params.statusText}");		
 		def groupId = params.groupId;
 
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-
+		User currentUser = userService.getLoggedInUser();
+		
         // get our UserGroup
         UserGroup group = userGroupService.findByGroupId( Integer.parseInt( groupId ) );
                 

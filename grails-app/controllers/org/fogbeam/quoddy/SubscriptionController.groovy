@@ -39,13 +39,9 @@ class SubscriptionController
 		def activitiUserTaskSubscriptions = new ArrayList<ActivitiUserTaskSubscription>();
 		def rssFeedSubscriptions = new ArrayList<RssFeedSubscription>();
 		
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
+		User currentUser = userService.getLoggedInUser();    
         
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ); 
-    
-        Map model = [:];
+		Map model = [:];
         Map sidebarCollections = this.populateSidebarCollections( this, currentUser );
         model.putAll( sidebarCollections );        
         
@@ -58,11 +54,7 @@ class SubscriptionController
         def subEvents = new ArrayList<BusinessEventSubscriptionItem>();
         
         
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
+		User currentUser = userService.getLoggedInUser();
         
 
         BusinessEventSubscription subscription = BusinessEventSubscription.findById( params.subscriptionId );
@@ -84,12 +76,7 @@ class SubscriptionController
         def subEvents = new ArrayList<CalendarFeedItem>();
      
         
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-        
+		User currentUser = userService.getLoggedInUser();        
            
         CalendarFeedSubscription subscription = CalendarFeedSubscription.findById( params.subscriptionId );
         
@@ -110,11 +97,7 @@ class SubscriptionController
         def subEvents = new ArrayList<ActivitiUserTask>();
 
         
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
+		User currentUser = userService.getLoggedInUser();
         
         ActivitiUserTaskSubscription subscription = ActivitiUserTaskSubscription.findById( params.subscriptionId );
         
@@ -135,11 +118,7 @@ class SubscriptionController
         def subEvents = new ArrayList<RssFeedItem>();
         
         
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
+		User currentUser = userService.getLoggedInUser();
 
         RssFeedSubscription subscription = RssFeedSubscription.findById( params.subscriptionId );
         
@@ -195,11 +174,8 @@ class SubscriptionController
         subscriptionToCreate.name = params.subscriptionName;
         subscriptionToCreate.description = params.subscriptionDescription;
    
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
+		User currentUser = userService.getLoggedInUser();
+		
         subscriptionToCreate.owner = currentUser;
     
         log.debug( "about to create: ${subscriptionToCreate}");
@@ -245,12 +221,7 @@ class SubscriptionController
         subscriptionToCreate.candidateGroup = params.candidateGroup;
         subscriptionToCreate.assignee = params.assignee;
     
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
-
+		User currentUser = userService.getLoggedInUser();
         subscriptionToCreate.owner = currentUser;
     
         log.debug( "Subscription.createActivitiUserTaskSubscription.finish" );
@@ -280,12 +251,9 @@ class SubscriptionController
         
         calendarFeedToCreate.url = params.calFeedUrl;
         calendarFeedToCreate.name = params.calFeedName;
-    
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
+
+		User currentUser = userService.getLoggedInUser();
+
         calendarFeedToCreate.owner = currentUser;
     
         session.calendarFeedToCreate = calendarFeedToCreate;
@@ -314,12 +282,8 @@ class SubscriptionController
         subscriptionToCreate.name = params.subscriptionName;
         subscriptionToCreate.url = params.subscriptionUrl;
         
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-        subscriptionToCreate.owner = currentUser;
+		User currentUser = userService.getLoggedInUser();
+		subscriptionToCreate.owner = currentUser;
                    
         rssFeedSubscriptionService.saveSubscription(subscriptionToCreate);
   

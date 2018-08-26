@@ -36,13 +36,8 @@ class UserStreamDefinitionController
 		def userLists = new ArrayList<UserList>();
 		def userGroups = new ArrayList<UserGroup>();
 		
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();        
-        log.info( "current Authentication: ${authentication}");
-        
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId ) 
-        
+		User currentUser = userService.getLoggedInUser();
+		
         Map model = [:];
         Map sidebarCollections = populateSidebarCollections( this, currentUser );
         model.putAll( sidebarCollections );
@@ -64,13 +59,7 @@ class UserStreamDefinitionController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
     def createWizardTwo()
     {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = null;
-        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-        
+		User currentUser = userService.getLoggedInUser();        
         log.debug( "UserStreamDefinition.createWizard.stage2");
        
         UserStreamDefinition streamToCreate = new UserStreamDefinition();
@@ -102,12 +91,8 @@ class UserStreamDefinitionController
             streamToCreate.addToEventTypesIncluded( eventType );
         }
 
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-                
+		User currentUser = userService.getLoggedInUser();
+		                
         /* load user list */
         log.debug( "getting eligible users: ");
         List<User> eligibleUsers = userService.findEligibleUsersForUser( currentUser );
@@ -160,13 +145,7 @@ class UserStreamDefinitionController
         }
                         
         
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = null;
-        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-
+		User currentUser = userService.getLoggedInUser();
         
         /* load userList list */
         List<UserList> userLists = userListService.getListsForUser( currentUser );
@@ -197,13 +176,7 @@ class UserStreamDefinitionController
             streamToCreate.addToUserListUuidsIncluded( userListUuid );
         }
                                         
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = null;
-        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-
+		User currentUser = userService.getLoggedInUser();
         
         /* load group list */
         List<UserGroup> groups = userGroupService.getAllGroupsForUser( currentUser );
@@ -234,13 +207,7 @@ class UserStreamDefinitionController
         }
         
         
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = null;
-        currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-
+		User currentUser = userService.getLoggedInUser();
                                 
         /* load subscription list */
         List<BusinessEventSubscription> eventSubscriptions =
@@ -375,12 +342,8 @@ class UserStreamDefinitionController
         
         /* load user list */
         
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-        
+		User currentUser = userService.getLoggedInUser();
+		
         List<User> allusers = userService.findAllUsers();
         List<User> eligibleUsers = userService.findEligibleUsersForUser( currentUser );
         
@@ -425,13 +388,8 @@ class UserStreamDefinitionController
         streamToEdit.includeSelf = includeSelf;
         
         /* load userList list */
-        
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-
+        	
+		User currentUser = userService.getLoggedInUser();
         
         List<UserList> userLists = userListService.getListsForUser( currentUser );
         
@@ -463,12 +421,7 @@ class UserStreamDefinitionController
         }
                                         
         /* load group list */
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-
+		User currentUser = userService.getLoggedInUser();
         List<UserGroup> groups = userGroupService.getAllGroupsForUser( currentUser );
         
         log.debug( "found ${groups.size()} groups");
@@ -497,12 +450,8 @@ class UserStreamDefinitionController
             streamToEdit.addToUserGroupUuidsIncluded( userGroupUuid );
         }
         
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-                                
+		User currentUser = userService.getLoggedInUser();
+		
         /* load subscription list */
         List<BaseSubscription> eventSubscriptions =
             eventSubscriptionService.getAllSubscriptionsForUser( currentUser );

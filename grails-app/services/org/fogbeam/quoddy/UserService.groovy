@@ -9,6 +9,9 @@ import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.StatusUpdate
 import org.fogbeam.quoddy.stream.StreamItemBase
 import org.fogbeam.quoddy.subscription.BaseSubscription
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
 
 class UserService {
 
@@ -513,5 +516,18 @@ class UserService {
 		user.disabled = false;
 		user.save( flush:true);
 		
-	}	
+	}
+	
+	public User getLoggedInUser()
+	{
+		// get the user from the SecurityContext
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+		Authentication authentication = securityContext.getAuthentication();
+		log.trace( "current Authentication: ${authentication}");
+		
+		User user = this.findUserByUserId( ((User)authentication.principal).userId );
+		
+		return user;
+	}
+		
 }

@@ -24,12 +24,8 @@ class UserListController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def index()
 	{
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId );
-
+		User currentUser = userService.getLoggedInUser();
+		
 		Map model = [:];
 		Map sidebarCollections = populateSidebarCollections( this, currentUser );
 		model.putAll( sidebarCollections );
@@ -40,15 +36,10 @@ class UserListController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def display()
 	{
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
-        
+		User currentUser = userService.getLoggedInUser();
+		        
         // log.debug( "Doing display with params: ${params}");
-        def activities = new ArrayList<ActivityStreamItem>();
-                            
+        def activities = new ArrayList<ActivityStreamItem>();                    
         
         UserList list = UserList.findById( params.listId );
         
@@ -78,12 +69,7 @@ class UserListController
         listToCreate.name = params.listName;
         listToCreate.description = params.listDescription;
         
-        // get current User from SecurityContextHolder
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        log.info( "current Authentication: ${authentication}");
-        
-        User currentUser = userService.findUserByUserId( ((User)authentication.principal).userId )
+		User currentUser = userService.getLoggedInUser();
         listToCreate.owner = currentUser;
         
         session.listToCreate = listToCreate;
