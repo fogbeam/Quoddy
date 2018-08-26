@@ -1,5 +1,8 @@
 package org.fogbeam.quoddy
 
+
+import javax.jms.Message
+
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.BusinessEventSubscriptionItem
 import org.fogbeam.quoddy.stream.ShareTarget
@@ -7,27 +10,26 @@ import org.fogbeam.quoddy.stream.StreamItemBase
 import org.fogbeam.quoddy.stream.constants.EventTypes
 import org.fogbeam.quoddy.subscription.BusinessEventSubscription
 
+
 class BusinessEventSubscriptionService
 {
 	
 	static expose = ['jms']
 	static destination = "eventSubscriptionInQueue";
 	
-	
 	def userService;
 	def jmsService;
 	def existDBService;
 	def eventStreamService;
 	
-	def onMessage( msg ) 
+	def onMessage( Message msg ) 
 	{
-		
+		println( "msg: " + msg );
+        println( "msg.class = " + msg.getClass().getName() );
+        
 		// TODO: run this content through Stanbol, and insert any relevant
 		// triples into the Jena KB.  We especially want to make sure things like
 		// customer numbers, part numbers, and the like get recorded. 
-		
-		
-		
 		
 		// create an event for this, and store all the attributes needed
 		// to pull this into the user event stream when retrieved later.

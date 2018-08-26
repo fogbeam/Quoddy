@@ -25,6 +25,9 @@ class EventSubscriptionResource
 	
 	@GET
 	Response read() {
+        
+        println( "EventSubscriptionResource read()" );
+        
 		def obj = BusinessEventSubscription.get(id)
 		if (!obj) {
 			throw new DomainObjectNotFoundException(Person.class, id)

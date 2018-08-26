@@ -8,7 +8,7 @@
 		</div>
 		
 		<span class="aseTitleBarUserLink">
-			<a href="${createLink(controller:'eventSubscription', action:'display', params:[subscriptionId:item.streamObject.owningSubscription.id])}">${item.streamObject.owningSubscription.name}</a>
+			<a href="${createLink(controller:'subscription', action:'displayBusinessEventSubscription', params:[subscriptionId:item.streamObject.owningSubscription.id])}">${item.streamObject.owningSubscription.name}</a>
 		</span>
 		
 		<span class="aseTitleBarPermalink">
@@ -55,7 +55,7 @@
 		<h2>Business Subscription Event</h2>
 		<p>
 			<g:if test="${item.streamObject.xmlDoc != null}">
-				<g:transform stylesheet="oagis3" source="${item.streamObject.xmlDoc}" factory="org.apache.xalan.processor.TransformerFactoryImpl" />
+				<fogcutter:transform stylesheet="oagis3" source="${item.streamObject.xmlDoc}" factory="org.apache.xalan.processor.TransformerFactoryImpl" />
 			</g:if>
 			<g:else>
 				<h3>Error rendering Subscription Event: Please Contact Your System Administrator</h3>

@@ -21,13 +21,15 @@ class EventSubscriptionCollectionResource
 	@GET
 	Response readAll() {
 		
-		// println "readAll";
+		println "EventSubscriptionCollectionResource readAll()";
+        
 		List all = BusinessEventSubscription.findAll();
 	
 		EventSubscriptionCollection collection = new EventSubscriptionCollection();
 		
 		collection.addAll( all );
 		
+        println( "Returning OK");
 		ok( collection );
 	}
 	

@@ -1,5 +1,6 @@
 package spring;
 
+import org.fogbeam.quoddy.jms.NoOpMessageConverter
 import org.fogbeam.quoddy.security.UserDetailsService;
 import org.fogbeam.quoddy.spring.factorybean.CustomBeanPostProcessor
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
@@ -16,6 +17,7 @@ beans = {
     
 	authenticationEntryPoint( LoginUrlAuthenticationEntryPoint, "/localLogin/index" );
 
+    myConverter( NoOpMessageConverter )
 	
 	contextSource(org.springframework.ldap.core.support.LdapContextSource){
 		url="ldap://localhost:10389"

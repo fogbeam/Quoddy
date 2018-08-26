@@ -151,7 +151,11 @@ quartz:
       user: 'postgres'
       password: ''
       maxConnections: 10
-#      validationQuery: 'select 1'    
-    
-    
-    
+jms:
+    converters:
+        standard:
+             meta:
+               clazz: org.fogbeam.quoddy.jms.NoOpMessageConverter
+    adapters:
+        standard:
+           messageConverterBean: "myConverter"

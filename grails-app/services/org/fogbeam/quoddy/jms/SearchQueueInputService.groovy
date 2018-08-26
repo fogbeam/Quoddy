@@ -91,8 +91,8 @@ public class SearchQueueInputService
     	}
     	else
     	{
-			Map mapMessage = (Map)msg;
-    		String msgType = (String)mapMessage.get( "msgType" );
+			MapMessage mapMessage = (MapMessage)msg;
+    		String msgType = mapMessage.getString( "msgType" );
 			
 			//begin get the contents of the update
 			//var msgContents to store the update contents
@@ -228,8 +228,7 @@ public class SearchQueueInputService
 		// TODO: implement call to do content extraction and Lucene indexing...
 		// extractAndIndexContent( genericActivityStreamItem.streamObject );
 		
-		
-		ActivityStreamItem activityStreamItem = eventStreamService.getActivityStreamItemById( (Long)msg.get("activityId") );
+		ActivityStreamItem activityStreamItem = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
 		ActivitiUserTask userTask = ActivitiUserTask.findById( activityStreamItem.streamObject.id );
 		
 		
@@ -1286,6 +1285,7 @@ public class SearchQueueInputService
 
 	private void doSemanticEnhancement( BusinessEventSubscriptionItem item )
 	{
+        
 		// tokenize the XML content and send it to Stanbol for enhancement
 	
 		// Hit Stanbol to get enrichmentData
