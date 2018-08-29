@@ -28,8 +28,8 @@ class EventQueueService
         println( "Received message from JMS: ${msg}" );
 
         
-		log.debug( "Message class: ${msg.class}" );
-		log.debug( "Received message from JMS: ${msg}" );
+		log.info( "Message class: ${msg.class}" );
+		log.info( "Received message from JMS: ${msg}" );
 		
 		
 		// now, figure out which user(s) are interested in this message, and put it on
@@ -38,8 +38,8 @@ class EventQueueService
 		log.debug( "got entrySet from eventQueues object: ${entries}" );
 		for( Map.Entry<String, Deque<ActivityStreamItem>> entry : entries )
 		{
-			log.debug( "entry: ${entry}");
-			log.debug( "key: ${entry.getKey()}" );
+			log.info( "entry: ${entry}");
+			log.info( "key: ${entry.getKey()}" );
 			
 			String key = entry.getKey();
 			
@@ -63,11 +63,11 @@ class EventQueueService
 			User msgCreator = userService.findUserByUserId( event.owner.userId );
 			if( msgCreator )
 			{
-				log.debug( "found User object for ${msgCreator.userId}");
+				log.info( "found User object for ${msgCreator.userId}");
 			}
 			else
 			{
-				log.debug( "No User for ${event.owner.userId}");	
+				log.info( "No User for ${event.owner.userId}");	
 			}
 			
 			FriendCollection friendCollection = FriendCollection.findByOwnerUuid( msgCreator.uuid );
@@ -93,18 +93,16 @@ class EventQueueService
 				log.debug( "match found, offering message" );
 				Deque<Map> userQueue = entry.getValue();
 				
-				/* 
 				if( msg instanceof Message )
 				{
-					log.debug( "Message being offered" );					
+					log.info( "Message being offered" );					
 					log.debug( "putting message on user queue for user ${key}");
 					userQueue.offerFirst( event );
 				}
 				else
 				{
-					log.debug( "WTF is this? ${msg}");
+					log.error( "WTF is this? ${msg}");
 				}
-				*/
 			}			
 		}
 		
@@ -357,7 +355,7 @@ class EventQueueService
 	
 	public void registerEventQueueForUser( final String userId )
 	{
-		log.debug( "registering eventqueue for user: ${userId}" );
+		log.info( "registering eventqueue for user: ${userId}" );
 		
 		if( eventQueues.containsKey( userId ))
 		{
@@ -369,9 +367,9 @@ class EventQueueService
 		
 	}
 
+	
 	public void unRegisterEventQueueForUser( final String userId )
 	{
-		// TODO: implement me
-		throw new UnsupportedOperationException( "Not implemented yet!" );
+		eventQueues.remove( userId );
 	}
 }

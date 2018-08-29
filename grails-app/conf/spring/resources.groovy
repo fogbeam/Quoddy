@@ -3,18 +3,33 @@ package spring;
 import org.fogbeam.quoddy.jms.NoOpMessageConverter
 import org.fogbeam.quoddy.security.UserDetailsService;
 import org.fogbeam.quoddy.spring.factorybean.CustomBeanPostProcessor
+import org.fogbeam.quoddy.spring.listeners.HttpSessionServletListener
+import org.fogbeam.quoddy.spring.listeners.LogoutEventListener
+import org.fogbeam.quoddy.spring.listeners.SuccessfulLoginListener
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 
 // Place your Spring DSL code here
 beans = {
-    
+
+	httpSessionServletListener(ServletListenerRegistrationBean) {
+		listener = bean(HttpSessionServletListener)
+	}
+	    
     customBeanPostProcessor(CustomBeanPostProcessor)
-    
+
+	successfulLoginListener(SuccessfulLoginListener)
+	
+	logoutEventListener( LogoutEventListener )
+	    
     userDetailsService( UserDetailsService )
     {
         userService = ref('userService')
     }
     
+	authenticationEventPublisher( DefaultAuthenticationEventPublisher )
+	
 	authenticationEntryPoint( LoginUrlAuthenticationEntryPoint, "/localLogin/index" );
 
     myConverter( NoOpMessageConverter )

@@ -38,6 +38,9 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 	[pattern: '/**',             filters: 'JOINED_FILTERS']
 ]
 
+grails.plugin.springsecurity.logout.handlerNames =[ 'rememberMeServices', 'securityContextLogoutHandler', 'logoutEventListener']
+
 spring.autoconfigure.exclude = "org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration"
 
+server.session.timeout = 30
 

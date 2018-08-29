@@ -1,9 +1,25 @@
 package org.fogbeam.quoddy
 
+import org.fogbeam.quoddy.stream.ActivityStreamItem
+
 import grails.plugin.springsecurity.annotation.Secured
 
 class SpecialController
 {   
+	
+	def eventQueueService;
+	
+	@Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def queues()
+	{
+		Map<String, Deque<ActivityStreamItem>> eventQueues = eventQueueService.eventQueues;
+		
+		
+		Set<String> queueKeys = eventQueues.keySet();
+		
+		[queueKeys : queueKeys ];
+	}
+	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def index()
 	{   
