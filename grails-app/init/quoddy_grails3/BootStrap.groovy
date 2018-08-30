@@ -3,12 +3,13 @@ package quoddy_grails3
 import org.fogbeam.quoddy.AccountRole
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.UserAccountRoleMapping
+import org.fogbeam.quoddy.UserGroup
 import org.fogbeam.quoddy.profile.Profile
 import org.fogbeam.quoddy.stream.EventType
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.constants.EventTypes
-import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
-import org.springframework.security.authentication.encoding.PasswordEncoder
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 
 import grails.util.Environment
 
@@ -17,6 +18,7 @@ class BootStrap
 {
 	def ldapTemplate;
 	def userService;
+	def userGroupService;
 	def siteConfigService;
 	def searchService;
 	def environment;
@@ -42,6 +44,7 @@ class BootStrap
 				createSomeUsers();
 				createSystemUser();
                 createDummyUser();
+				createDummyGroup();
 				createShareTargets();
 				createEventTypes();
                 
@@ -63,6 +66,7 @@ class BootStrap
 				// createSomeUsers();
 				createSystemUser();
                 createDummyUser();
+				createDummyGroup();
                 createShareTargets();
 				createEventTypes();
 				break;
@@ -234,6 +238,23 @@ class BootStrap
 	}
 
 
+	void createDummyGroup()
+	{
+		UserGroup dummyGroup = userGroupService.findByGroupId( -1 );
+		if( dummyGroup == null )
+		{
+			
+			dummyGroup = new UserGroup();
+			dummyGroup.uuid = "notused";
+			dummyGroup.id = -1;
+			dummyGroup.name = "SYS_dummy_group";
+			dummyGroup.description = "Dummy Group";
+			dummyGroup.owner = User.findById(-1);
+			
+			userGroupService.save( dummyGroup );
+		}
+	}
+	
     void createDummyUser()
     {
 
@@ -390,7 +411,7 @@ class BootStrap
 
 	void createSomeUsers()
 	{
-        PasswordEncoder encoder = new MessageDigestPasswordEncoder("MD5");
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
         
 		println "Creating some users!";
 	
@@ -465,7 +486,7 @@ class BootStrap
 			userPrhodes.disabled = false;
             
 
-            String hashedPassword = encoder.encodePassword( "secret", null );
+            String hashedPassword = encoder.encode( "secret" );
             userPrhodes.password = hashedPassword;
 			userPrhodes.bio = "bio";
 			 
@@ -545,7 +566,7 @@ class BootStrap
 			 userSarah.email = "snkahn@gmail.com";
 			 userSarah.userId = "sarah";
              
-             String hashedPassword = encoder.encodePassword( "secret", null );
+             String hashedPassword = encoder.encode( "secret" );
 			 userSarah.password = hashedPassword;
 			 userSarah.bio = "bio";
 			   
@@ -617,7 +638,7 @@ class BootStrap
 							   bio:"stuff",
 							   displayName: "Test User${i}" );
 				 
-                  String hashedPassword = encoder.encodePassword( "secret", null );
+                  String hashedPassword = encoder.encode( "secret" );
 				  testUser.password = hashedPassword; 
 				  testUser.uuid = "test_user_${i}";
 				  Profile profile = new Profile();

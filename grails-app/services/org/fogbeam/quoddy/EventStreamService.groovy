@@ -203,6 +203,11 @@ class EventStreamService {
 			 *  new, empty list.  Likewise, if we get back an empty list, we don't have to do
 			 *  anything special, as we're going to add the user to it manually anyway. 
 			 */
+			
+			
+			User dummyUser = User.findById( -1 );
+			UserGroup dummyGroup = UserGroup.findById( -1 );
+			
 								
 
 			/* do a separate query to find any UserGroups for this User.  That means
@@ -214,10 +219,12 @@ class EventStreamService {
 			List<String> includedGroups = new ArrayList<String>(); // to hold the UUID's of the groups that are valid
                                                                    // values for the targetUuid of items to be included via group
             Set<User> validOwners = new HashSet<User>();
-			User dummyUser = User.findById( -1 );
+			
             validOwners.add( dummyUser ); // a dummy item that can't match anything, needed
                                                 // because Postgresql chokes on "in" queries with an empty collection passed as a parameter
             
+			includedGroups.add( dummyGroup ); // again, a dummy item since queries break on empty collections
+			
             
 			log.debug( "found: ${groupsForUser?.size()} groups for user ${user}");
 			
@@ -535,8 +542,7 @@ class EventStreamService {
 							includedUserListUsers.add( it.uuid );
 						}
 						
-					}
-					
+					}					
 					
 					parameters << ['includedUserListUsers': includedUserListUsers ];
 				}
@@ -550,6 +556,11 @@ class EventStreamService {
 
 			
 						
+			
+			log.info( "Query to be executed:\n\n\n" + query + "\n\n\n" );
+			
+			log.info( "Using parameters map:\n\n\n" + parameters + "\n\n\n" );
+			
 			List<ActivityStreamItem> queryResults =
 				ActivityStreamItem.executeQuery( query, parameters, ['max': maxCount ]);
 		

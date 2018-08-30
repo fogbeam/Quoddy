@@ -139,6 +139,7 @@ class LocalLoginController
             String urlAfterAuthentication = "/";
             try
             {
+				log.info( "Trying authentication" );
                 authentication = authenticationManager.authenticate(authRequest);
             
                 log.info( "got Authentication: ${authentication}");
@@ -150,11 +151,15 @@ class LocalLoginController
             {
                 // would we want to send the user to another page here?
                 // urlAfterAuthentication = "/"
-                
+                log.error( "Exception doing Login: ", bce );
                 
                 flash.message = "Login Failed";
             }
-            
+            catch( Exception e )
+            {
+				log.error( "Exception doing Login: ", bce );
+			}
+			
             redirect( uri: urlAfterAuthentication );
         }
 	}

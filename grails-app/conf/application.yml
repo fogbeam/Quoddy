@@ -109,7 +109,7 @@ environments:
         quartz:
             autoStartup: false
         dataSource:
-            dbCreate: update
+            dbCreate: create
             url: jdbc:postgresql:quoddy_dev
     test:
         dataSource:

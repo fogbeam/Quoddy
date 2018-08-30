@@ -21,6 +21,16 @@ class UserGroupService
 		
 		return group;
 	}
+	
+	public UserGroup save( UserGroup userGroup )
+	{
+		if( !userGroup.save(flush:true) )
+		{
+			log.error( "Failed to save UserGroup" );
+		}		
+		
+		return userGroup;
+	}
 		
 	public List<UserGroup> getGroupsOwnedByUser( final User user )
 	{
