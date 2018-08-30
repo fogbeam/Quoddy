@@ -6,7 +6,6 @@ import org.fogbeam.quoddy.social.FriendCollection
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 import org.fogbeam.quoddy.stream.EventType
 import org.fogbeam.quoddy.stream.ShareTarget
-import org.fogbeam.quoddy.stream.StreamItemBase
 import org.fogbeam.quoddy.stream.constants.EventTypes
 
 class EventQueueService 
@@ -15,13 +14,15 @@ class EventQueueService
 	
 	def userService;
 	def eventTypeService;
+	def eventStreamService;
+	
 	
 	Map<String, Deque<ActivityStreamItem>> eventQueues = new HashMap<String, Deque<ActivityStreamItem>>();
 	
 	static expose = ['jms']
 	static destination = "uitestActivityQueue"; // TODO: rename this to something more meaningful
 	
-	def onMessage(msg)
+	def onMessage(Message msg)
 	{
         
         println( "Message class: ${msg.class}" );
@@ -51,8 +52,15 @@ class EventQueueService
 			// messages that were to the public stream.  We'll come back to deal with
 			// common group membership and other scenarios later.
 			def streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC);
-			ActivityStreamItem event = (ActivityStreamItem)msg.getObject();
-			if( ! event.targetUuid.equals( streamPublic.uuid ))
+			
+			String activityUuid = msg.getString( "activityUuid" );
+			log.info( "got activityUuid: ${activityUuid}");
+			
+			ActivityStreamItem event = eventStreamService.getActivityStreamItemByUuid( activityUuid );
+			
+			log.info( "got event: ${event}");
+			
+			if( !event.targetUuid.equals( streamPublic.uuid ))
 			{
 				return;
 			}
@@ -60,6 +68,10 @@ class EventQueueService
 			
 			// TODO: don't offer message unless the owner of this queue
 			// and the event creator, are friends (or the owner *is* the creator)
+			
+			// NOTE: shouldn't this also include if event comes from a subscription owned
+			// by the user? 
+			
 			User msgCreator = userService.findUserByUserId( event.owner.userId );
 			if( msgCreator )
 			{

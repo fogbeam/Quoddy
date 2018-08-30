@@ -32,7 +32,7 @@ beans = {
 	
 	authenticationEntryPoint( LoginUrlAuthenticationEntryPoint, "/localLogin/index" );
 
-    myConverter( NoOpMessageConverter )
+    messageConverter( NoOpMessageConverter )
 	
 	contextSource(org.springframework.ldap.core.support.LdapContextSource){
 		url="ldap://localhost:10389"

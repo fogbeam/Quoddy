@@ -83,12 +83,20 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-text', version: '1.2'
 
     compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.1'
-    compile group: 'org.apache.jena', name: 'jena-core', version: '2.13.0'
-    compile group: 'org.apache.jena', name: 'jena-arq', version: '2.13.0'
+    
+	
+//     compile group: 'org.apache.jena', name: 'jena-core', version: '2.13.0'
+//     compile group: 'org.apache.jena', name: 'jena-arq', version: '2.13.0'
+//     compile group: 'org.apache.jena', name: 'jena-tdb', version: '1.1.2'
+	compile group: 'org.apache.jena', name: 'jena-core', version: '3.5.0'
+	compile group: 'org.apache.jena', name: 'jena-arq', version: '3.5.0'
+	compile group: 'org.apache.jena', name: 'jena-tdb', version: '3.5.0'
+	// https://mvnrepository.com/artifact/com.github.jsonld-java/jsonld-java
+	runtime group: 'com.github.jsonld-java', name: 'jsonld-java', version: '0.12.0'
 
-    // https://mvnrepository.com/artifact/org.apache.jena/jena-tdb
-    compile group: 'org.apache.jena', name: 'jena-tdb', version: '1.1.2'
-    compile group: 'org.fogbeam', name:'jFriendOfAFriend', version:'1.0-SNAPSHOT'
+	
+	
+	compile group: 'org.fogbeam', name:'jFriendOfAFriend', version:'1.0-SNAPSHOT'
     // https://mvnrepository.com/artifact/net.sf.json-lib/json-lib
     compile group: 'net.sf.json-lib', name: 'json-lib', version: '2.4', classifier: 'jdk15'
     compile "org.grails.plugins.fogbeam:jaxrs-jersey1:3.0.4"
@@ -149,11 +157,7 @@ dependencies {
     compile name: 'xmlrpc-common-3.1.2'
     compile name: 'xmlrpc-server-3.1.2'
     compile name: 'mxquery'
-    compile name: 'jena-jsonld'
-
-
-    // https://mvnrepository.com/artifact/com.github.jsonld-java/jsonld-java
-    compile group: 'com.github.jsonld-java', name: 'jsonld-java', version: '0.12.0'
+//     compile name: 'jena-jsonld'
     
 
     // https://mvnrepository.com/artifact/com.rometools/rome

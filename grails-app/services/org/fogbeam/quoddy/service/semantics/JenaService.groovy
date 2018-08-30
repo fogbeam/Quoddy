@@ -1,32 +1,35 @@
 package org.fogbeam.quoddy.service.semantics
 
+import java.sql.ResultSet
+
+import org.apache.jena.ontology.OntClass
+import org.apache.jena.ontology.OntModel
+import org.apache.jena.ontology.OntModelSpec
+import org.apache.jena.ontology.OntProperty
+import org.apache.jena.ontology.OntResource
+import org.apache.jena.query.Dataset
+import org.apache.jena.query.Query
+import org.apache.jena.query.QueryExecution
+import org.apache.jena.query.QueryExecutionFactory
+import org.apache.jena.query.QueryFactory
+import org.apache.jena.query.QuerySolution
+import org.apache.jena.query.ReadWrite
+import org.apache.jena.rdf.model.InfModel
+import org.apache.jena.rdf.model.Model
+import org.apache.jena.rdf.model.ModelFactory
+import org.apache.jena.rdf.model.Property
+import org.apache.jena.rdf.model.Statement
+import org.apache.jena.rdf.model.StmtIterator
+import org.apache.jena.reasoner.Reasoner
+import org.apache.jena.reasoner.ReasonerRegistry
 import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.semantics.Entity
 import org.fogbeam.quoddy.semantics.Property as SemanticProperty
 
-import com.hp.hpl.jena.ontology.OntClass
-import com.hp.hpl.jena.ontology.OntModel
-import com.hp.hpl.jena.ontology.OntModelSpec
-import com.hp.hpl.jena.ontology.OntProperty
-import com.hp.hpl.jena.ontology.OntResource
-import com.hp.hpl.jena.query.Dataset
-import com.hp.hpl.jena.query.Query
-import com.hp.hpl.jena.query.QueryExecution
-import com.hp.hpl.jena.query.QueryExecutionFactory
-import com.hp.hpl.jena.query.QueryFactory
-import com.hp.hpl.jena.query.QuerySolution
-import com.hp.hpl.jena.query.ReadWrite
-import com.hp.hpl.jena.query.ResultSet
-import com.hp.hpl.jena.rdf.model.InfModel
-import com.hp.hpl.jena.rdf.model.Literal
-import com.hp.hpl.jena.rdf.model.Model
-import com.hp.hpl.jena.rdf.model.ModelFactory
-import com.hp.hpl.jena.rdf.model.Property
-import com.hp.hpl.jena.rdf.model.Resource
-import com.hp.hpl.jena.rdf.model.Statement
-import com.hp.hpl.jena.rdf.model.StmtIterator
-import com.hp.hpl.jena.reasoner.Reasoner
-import com.hp.hpl.jena.reasoner.ReasonerRegistry
+import com.sun.research.ws.wadl.Resource
+
+import ch.ethz.mxquery.opt.expr.Literal
+
 /* import org.fogbeam.quoddy.semantics.Property as SemanticProperty */
 
 class JenaService 

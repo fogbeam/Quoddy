@@ -1,7 +1,5 @@
 package org.fogbeam.quoddy
 
-import com.hp.hpl.jena.rdf.model.Statement
-
 import grails.plugin.springsecurity.annotation.Secured
 
 class SemanticAssertionController 

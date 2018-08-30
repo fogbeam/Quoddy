@@ -1,10 +1,9 @@
 package org.fogbeam.quoddy.jms
 
 import static groovyx.net.http.ContentType.TEXT
-import static groovyx.net.http.ContentType.URLENC
-import groovyx.net.http.RESTClient
 
 import javax.jms.MapMessage
+import javax.jms.Message
 import javax.xml.transform.OutputKeys
 import javax.xml.transform.Transformer
 import javax.xml.transform.TransformerException
@@ -12,15 +11,20 @@ import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 
-import jenajsonld.JenaJSONLD
-
 import org.apache.http.HttpEntity
 import org.apache.http.HttpException
 import org.apache.http.HttpResponse
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.DefaultHttpClient
+import org.apache.jena.query.Dataset
+import org.apache.jena.query.ReadWrite
+import org.apache.jena.rdf.model.Model
+import org.apache.jena.rdf.model.ModelFactory
+import org.apache.jena.rdf.model.ResIterator
 import org.apache.jena.riot.RDFDataMgr
+import org.apache.jena.tdb.TDBFactory
+import org.apache.jena.vocabulary.DCTerms
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.DateTools
 import org.apache.lucene.document.Document
@@ -45,17 +49,10 @@ import org.fogbeam.quoddy.stream.CalendarFeedItem
 import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.StatusUpdate
 
-import com.hp.hpl.jena.query.Dataset
-import com.hp.hpl.jena.query.ReadWrite
-import com.hp.hpl.jena.rdf.model.Model
-import com.hp.hpl.jena.rdf.model.ModelFactory
-import com.hp.hpl.jena.rdf.model.ResIterator
-import com.hp.hpl.jena.rdf.model.Resource
-import com.hp.hpl.jena.tdb.TDBFactory
-import com.hp.hpl.jena.vocabulary.DCTerms
-import com.hp.hpl.jena.vocabulary.OWL
-import com.hp.hpl.jena.vocabulary.RDF
+import com.sun.research.ws.wadl.Resource
 
+import groovyx.net.http.RESTClient
+import static org.apache.jena.riot.RDFLanguages.JSONLD;
 
 public class SearchQueueInputService
 {
@@ -70,7 +67,7 @@ public class SearchQueueInputService
 	static expose = ['jms']
     static destination = "quoddySearchQueue"                 
 	
-    def onMessage(msg)
+    def onMessage(Message msg)
     { 
         println( "in onMessage()" );
         println( "GOT MESSAGE: ${msg}" );
@@ -93,56 +90,7 @@ public class SearchQueueInputService
     	{
 			MapMessage mapMessage = (MapMessage)msg;
     		String msgType = mapMessage.getString( "msgType" );
-			
-			//begin get the contents of the update
-			//var msgContents to store the update contents
-			/* 
-			def msgContents = null
-			String msgUUID = null
-			ActivityStreamItem statusUpdateActivity = null
-
-			try
-			{
-				statusUpdateActivity = eventStreamService.getActivityStreamItemById( msg.getLong("activityId") );
-			}
-			catch(Exception e)
-			{
-				log.error('Unable to get statusUpdateActivity', e );
-				msgContents = "This sentance is about New York City by default.";
-			}
-
-			try
-			{
-				msgContents = statusUpdateActivity.content;
-				msgUUID = statusUpdateActivity.uuid;
-				log.debug("::: msgUUID -> ${msgUUID}");
-			}
-			catch(Exception e)
-			{
-				log.error('Unable to get update contents', e );
-				msgContents = "This sentance is about New York City by default."
-			}
-			*/
-			//end get the contents of the update
-
-			//Begin Submitting the message to Stanbol
-			// try{
-			//	println ":::Submitting to Stanbol -> ${msgContents}"
-			//	println ":::UUID to Stanbol -> ${msgUUID}"
-			//	def sem = new SemanticEnhancement()
-			//	sem.submitData(msgContents,msgUUID)
-				//processStanbolOutput(submitToStanbol(msgContents, msg.getLong("activityId")))
-			// }catch(Exception e){
-				//TODO:cache requests for later processing
-				// println "::::>Unable to query Stanbol"
-				// e.printStackTrace()
-				// log.error(":::>Unable to query Stanbol")
-				// log.error(e)
-				// log.error("<r:::")
-			// }
-			//End Submitting the message to Stanbol
-				
-			
+						
     		if( msgType == null || msgType.isEmpty())
 			{
 				log.warn( "No msgType received!" );
@@ -168,7 +116,7 @@ public class SearchQueueInputService
 			else if( msgType.equals( "NEW_STATUS_UPDATE" )) // TODO: rename this to STREAM_POST or something?
     		{
 		    	// add document to index
-		    	log.info( "adding document to index: ${mapMessage.get('activityUuid')}" );			
+		    	log.info( "adding document to index: ${mapMessage.getString('activityUuid')}" );			
 			newStatusUpdate( msg );
 
     		}
@@ -333,57 +281,66 @@ public class SearchQueueInputService
 		}
 
 		String enhancementJSON = statusUpdateActivity.streamObject.enhancementJSON;
-		// create an empty Model
-		Model tempModel = ModelFactory.createDefaultModel();
 		
-		StringReader reader = new StringReader( enhancementJSON );
-	
-		RDFDataMgr.read(tempModel, reader, "http://www.example.com", JenaJSONLD.JSONLD);
+		log.trace( "EnhancementJSON: ${enhancementJSON}");
 		
-
-		// Make a TDB-backed dataset
-		String quoddyHome = System.getProperty( "quoddy.home" );
-		String directory = "${quoddyHome}/jenastore/triples" ;
-		log.debug( "Opening TDB triplestore at: ${directory}");
-		Dataset dataset = TDBFactory.createDataset(directory) ;
-		try
+		if( enhancementJSON != null &&  !enhancementJSON.isEmpty()) 
 		{
-			dataset.begin(ReadWrite.WRITE);
-			// Get model inside the transaction
-			Model model = dataset.getDefaultModel() ;
-		
-			// find all the "entity" entries in our graph and then associate each
-			// one with our "DocumentID"
-			ResIterator iter = tempModel.listSubjectsWithProperty( RDF.type, OWL.Thing );
-		
-			while( iter.hasNext() )
-			{
-				Resource anEntity = iter.nextResource();
-		
-				// do we have the "type" (rdf:type) triples that we need for "anEntity"			
-				log.debug( "adding resource \"quoddy:${statusUpdateActivity.uuid}\" dcterm:references entity: ${anEntity.toString()}");
+			// create an empty Model
+			Model tempModel = ModelFactory.createDefaultModel();
 			
-				Resource newResource = model.createResource( "quoddy:${statusUpdateActivity.uuid}" );
-				newResource.addProperty( DCTerms.references, anEntity);
-
-			}
-
-			// now add all the triples from the Stanbol response to our canonical Model
-			model.add( tempModel );
+			StringReader reader = new StringReader( enhancementJSON );
+		
+			
+			RDFDataMgr.read(tempModel, reader, "http://www.example.com", JSONLD);
+			
+	
+			// Make a TDB-backed dataset
+			String quoddyHome = System.getProperty( "quoddy.home" );
+			String directory = "${quoddyHome}/jenastore/triples" ;
+			log.debug( "Opening TDB triplestore at: ${directory}");
+			Dataset dataset = TDBFactory.createDataset(directory) ;
+			try
+			{
+				dataset.begin(ReadWrite.WRITE);
+				// Get model inside the transaction
+				Model model = dataset.getDefaultModel() ;
+			
+				// find all the "entity" entries in our graph and then associate each
+				// one with our "DocumentID"
+				ResIterator iter = tempModel.listSubjectsWithProperty( RDF.type, OWL.Thing );
+			
+				while( iter.hasNext() )
+				{
+					Resource anEntity = iter.nextResource();
+			
+					// do we have the "type" (rdf:type) triples that we need for "anEntity"
+					log.debug( "adding resource \"quoddy:${statusUpdateActivity.uuid}\" dcterm:references entity: ${anEntity.toString()}");
 				
-			dataset.commit();
+					Resource newResource = model.createResource( "quoddy:${statusUpdateActivity.uuid}" );
+					newResource.addProperty( DCTerms.references, anEntity);
+	
+				}
+	
+				// now add all the triples from the Stanbol response to our canonical Model
+				model.add( tempModel );
+					
+				dataset.commit();
+			}
+			catch( Exception e )
+			{
+				dataset.abort();
+			}
+			finally
+			{
+				dataset.end();
+			}
+	
 		}
-		catch( Exception e )
+		else
 		{
-			dataset.abort();	
+			log.info( "NO enhancementJSON found!" );
 		}
-		finally
-		{
-			dataset.end();
-		}
-		
-		
-		
 		
 		// TODO: extract all of the above into a method call
 		// extractAndIndexContent( genericActivityStreamItem.streamObject );
@@ -1338,7 +1295,7 @@ public class SearchQueueInputService
 			
 			StringReader reader = new StringReader( restResponseText.toString() );
 		
-			RDFDataMgr.read(tempModel, reader, "http://www.example.com", JenaJSONLD.JSONLD);
+			RDFDataMgr.read(tempModel, reader, "http://www.example.com", JSONLD);
 			
 	
 			// Make a TDB-backed dataset

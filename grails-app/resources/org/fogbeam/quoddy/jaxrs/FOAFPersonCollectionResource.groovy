@@ -12,6 +12,11 @@ import javax.ws.rs.Produces
 import javax.ws.rs.core.Response
 
 import org.apache.commons.io.input.ReaderInputStream
+import org.apache.jena.rdf.model.Model
+import org.apache.jena.rdf.model.Property
+import org.apache.jena.rdf.model.ResIterator
+import org.apache.jena.rdf.model.Resource
+import org.apache.jena.vocabulary.DCTerms
 import org.fogbeam.foaf.api.FoafOnlineAccount
 import org.fogbeam.foaf.api.FoafPerson
 import org.fogbeam.foaf.model.FoafOnlineAccountImpl
@@ -21,15 +26,8 @@ import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.jaxrs.collection.FOAFPersonCollection
 import org.fogbeam.quoddy.profile.ContactAddress
 import org.fogbeam.quoddy.profile.Profile
+import org.springframework.web.method.annotation.ModelFactory
 
-import com.hp.hpl.jena.rdf.model.Model
-import com.hp.hpl.jena.rdf.model.ModelFactory
-import com.hp.hpl.jena.rdf.model.Property
-import com.hp.hpl.jena.rdf.model.ResIterator
-import com.hp.hpl.jena.rdf.model.Resource
-import com.hp.hpl.jena.sparql.vocabulary.FOAF
-import com.hp.hpl.jena.vocabulary.DCTerms
-import com.hp.hpl.jena.vocabulary.RDF
 
 
 @Path('/api/foaf/user')

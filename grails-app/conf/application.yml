@@ -155,10 +155,16 @@ quartz:
       password: ''
       maxConnections: 10
 jms:
-    converters:
+    templates:
         standard:
-             meta:
-               clazz: org.fogbeam.quoddy.jms.NoOpMessageConverter
+           messageConverterBean: "messageConverter"
     adapters:
         standard:
-           messageConverterBean: "myConverter"
+           messageConverterBean: "messageConverter"
+    converters:
+        standard:
+           meta:
+              clazz: org.fogbeam.quoddy.jms.NoOpMessageConverter
+    containers:
+        standard:
+           messageConverter: null

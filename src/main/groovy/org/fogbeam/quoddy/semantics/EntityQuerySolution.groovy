@@ -1,6 +1,6 @@
 package org.fogbeam.quoddy.semantics
 
-import com.hp.hpl.jena.query.QuerySolution
+import org.apache.jena.query.QuerySolution
 
 class EntityQuerySolution 
 {

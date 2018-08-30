@@ -1,19 +1,18 @@
 package org.fogbeam.quoddy
 
+import org.apache.jena.query.Dataset
+import org.apache.jena.query.Query
+import org.apache.jena.query.QueryExecution
+import org.apache.jena.query.QueryExecutionFactory
+import org.apache.jena.query.QueryFactory
+import org.apache.jena.query.QuerySolution
+import org.apache.jena.query.ReadWrite
+import org.apache.jena.query.ResultSet
+import org.apache.jena.rdf.model.Model
+import org.apache.jena.rdf.model.RDFNode
+import org.apache.jena.tdb.TDBFactory
 import org.fogbeam.quoddy.search.SearchResult
 import org.fogbeam.quoddy.stream.ActivityStreamItem
-
-import com.hp.hpl.jena.query.Dataset
-import com.hp.hpl.jena.query.Query
-import com.hp.hpl.jena.query.QueryExecution
-import com.hp.hpl.jena.query.QueryExecutionFactory
-import com.hp.hpl.jena.query.QueryFactory
-import com.hp.hpl.jena.query.QuerySolution
-import com.hp.hpl.jena.query.ReadWrite
-import com.hp.hpl.jena.query.ResultSet
-import com.hp.hpl.jena.rdf.model.Model
-import com.hp.hpl.jena.rdf.model.RDFNode
-import com.hp.hpl.jena.tdb.TDBFactory
 
 import grails.plugin.springsecurity.annotation.Secured
 

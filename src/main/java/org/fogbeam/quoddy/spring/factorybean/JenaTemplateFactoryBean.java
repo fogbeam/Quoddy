@@ -2,12 +2,11 @@ package org.fogbeam.quoddy.spring.factorybean;
 
 import java.io.File;
 
+import org.apache.jena.query.Dataset;
+import org.apache.jena.tdb.TDB;
+import org.apache.jena.tdb.TDBFactory;
 import org.fogbeam.quoddy.spring.template.JenaTemplate;
 import org.springframework.beans.factory.FactoryBean;
-
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.tdb.TDB;
-import com.hp.hpl.jena.tdb.TDBFactory;
 
 public class JenaTemplateFactoryBean implements FactoryBean<JenaTemplate> 
 {
