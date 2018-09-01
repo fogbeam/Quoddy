@@ -37,6 +37,7 @@ class EventQueueService
 		// all the appropriate queues
 		Set<Map.Entry<String, Deque<ActivityStreamItem>>> entries = eventQueues.entrySet();
 		log.debug( "got entrySet from eventQueues object: ${entries}" );
+		
 		for( Map.Entry<String, Deque<ActivityStreamItem>> entry : entries )
 		{
 			log.info( "entry: ${entry}");
@@ -51,7 +52,7 @@ class EventQueueService
 			// BUT, for now, let's just implement it so that we only offer
 			// messages that were to the public stream.  We'll come back to deal with
 			// common group membership and other scenarios later.
-			def streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC);
+			def streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 			
 			String activityUuid = msg.getString( "activityUuid" );
 			log.info( "got activityUuid: ${activityUuid}");
@@ -97,18 +98,19 @@ class EventQueueService
 					log.debug( "friend: ${friend}");
 				}
 			}
+			
 			User targetUser = userService.findUserByUserId( key );
 			if( friends.contains( targetUser.uuid ) || 
 				( msgCreator.uuid.equals( targetUser.uuid ) && 
 						!event.objectClass.equals(EventTypes.STATUS_UPDATE.name ) ) )
 			{
-				log.debug( "match found, offering message" );
+				log.info( "match found, offering message" );
 				Deque<Map> userQueue = entry.getValue();
 				
 				if( msg instanceof Message )
 				{
 					log.info( "Message being offered" );					
-					log.debug( "putting message on user queue for user ${key}");
+					log.info( "putting message on user queue for user ${key}");
 					userQueue.offerFirst( event );
 				}
 				else
@@ -118,7 +120,7 @@ class EventQueueService
 			}			
 		}
 		
-		log.debug( "done processing eventQueue instances" );
+		log.info( "done processing eventQueue instances" );
 	}
 	
 	def userStreamAwareQueueFilter =
@@ -126,7 +128,7 @@ class EventQueueService
 		userStream, it ->
 		
 		
-		log.debug( "invoking userStreamAwareQueueFilter for userStream" );
+		log.info( "invoking userStreamAwareQueueFilter for userStream" );
 		
 		// "it" is an ActivityStreamItem reference now that we've gone
 		// to the revamped domain model
@@ -151,21 +153,21 @@ class EventQueueService
 		{
 			case "User":
 			
-				log.debug( "this was submitted directly by a User" );
+				log.info( "actorObjectType = 'User' --> this was submitted directly by a User" );
 				
 				// check to see if the target is stream_public
 				// if it is, we just need to see if the owner's uuid
 				// is in the included list
 				if( it.targetObjectType.equals( "STREAM_PUBLIC" ))
 				{
-					log.debug( "targetObjectType == STREAM_PUBLIC");
+					log.info( "targetObjectType == STREAM_PUBLIC");
 					
 					// is includeAllUsers set to TRUE? If so, we don't have
 					// to do any explicit checking against the actorUuid
 					
-					if( userStream.includeAllUsers )
+					if( userStream.includeAllUsers || userStream.includeEverything )
 					{
-						log.debug( "includeallUsers is on!" );
+						log.info( "includeallUsers OR includeEverything is on!" );
 						// tentatively set this to true (this may be overridden further down)
 						countThisOne = true;
 					}
@@ -173,6 +175,7 @@ class EventQueueService
 					{
 						// we do have to check to see if the user is in the included users
 						// list
+						log.info( "neither includeAllUsers nor includeEverything is on for stream" );
 						if( userStream.userUuidsIncluded.contains( it.actorUuid ) )
 						{
 							log.debug( "actorUuid was in included list" );
@@ -234,10 +237,7 @@ class EventQueueService
 					// what if it was shared straight to a User as the target?  We wouldn't do anything
 					// special here, but just leave it down to a combination of "is user (actor) included"
 					// and "is event type included"
-					
-					
 				}
-				
 									
 				break;
 				
@@ -270,7 +270,7 @@ class EventQueueService
 				
 			default:
 				// right now there really isn't any other possibility for this
-				log.debug( "INVALID" );
+				log.warn( "INVALID" );
 				break;
 		}
 			
@@ -297,11 +297,14 @@ class EventQueueService
 			EventType eventType = eventTypeService.findEventTypeByName( it.objectClass );
 			if( ! userStream.eventTypesIncluded.contains( eventType ))
 			{
+				log.info( "Negating countThisOne based on EventType" );
 				countThisOne = false;
 			}
 		}
 		
-		log.debug( "returning countThisOne: ${countThisOne}" );
+		
+		log.info( "returning countThisOne: ${countThisOne}" );
+		
 		return countThisOne;
 	}
 	
@@ -320,13 +323,17 @@ class EventQueueService
 		Deque<ActivityStreamItem> userQueue = eventQueues.get( userId ); 
 		if( userQueue != null )
 		{
+			log.info( "Found a valid eventQueue for userId: ${userId}");
+			
 			// look at each message on the queue, without removing it
 			// and evaluate it against the UserStream object we were passed.
 			def filter = userStreamAwareQueueFilter.curry( userStream );
+			
 			queueSize = userQueue.count(filter); 
 		}
 		else
 		{
+			log.info( "No eventQueue for userId: ${userId}");
 			// NOP
 		}
 		
@@ -376,7 +383,6 @@ class EventQueueService
 
 		Deque<String> userQueue = new ArrayDeque<String>();
 		eventQueues.put( userId, userQueue );
-		
 	}
 
 	

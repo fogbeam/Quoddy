@@ -42,24 +42,30 @@ class ActivityStreamController
 		// XXX more recent updates waiting
 		// or something along those lines...
 		long queueSize = 0;
-		if( session.user != null )
+
+		UserStreamDefinition userStream = null;
+		
+		User currentUser = userService.getLoggedInUser();
+
+		log.info( "getQueueSize for user: ${currentUser}");
+				
+		// use supplied streamId, or default if no user streamId is provided.
+		if( params.streamId )
 		{
-			UserStreamDefinition userStream = null;
-			// TODO: Include UserStream.  Use default if no userStreamId is provided.
-			if( params.streamId )
-			{
-				userStream = userStreamDefinitionService.findStreamById( Long.parseLong( params.streamId  ) );
-			}
-			else 
-			{
-				userStream = userStreamDefinitionService.getStreamForUser( session.user, UserStreamDefinition.DEFAULT_STREAM  );	
-			}
-			
-			// log.trace( "checking queueSize for user: ${session.user.userId}" );
-			queueSize = eventQueueService.getQueueSizeForUser( session.user.userId, userStream );
+			log.info( "StreamId: ${params.streamId}");
+			userStream = userStreamDefinitionService.findStreamById( Long.parseLong( params.streamId  ) );
+		}
+		else
+		{
+			log.info( "Using default stream for user: ${currentUser}");
+			userStream = userStreamDefinitionService.getStreamForUser( currentUser, UserStreamDefinition.DEFAULT_STREAM  );
 		}
 		
-		// log.trace( "got queueSize as ${queueSize}" ); 
+		log.trace( "checking queueSize for user: ${currentUser.userId}" );
+		
+		queueSize = eventQueueService.getQueueSizeForUser( currentUser.userId, userStream );
+		
+		log.info( "got queueSize as ${queueSize}" ); 
 		
 		render( queueSize );
 	}
@@ -70,20 +76,21 @@ class ActivityStreamController
 	// or something if we want a "click here to load more" button that just keeps pulling
 	// in more messages on each click.
     @Secured(['ROLE_USER', 'ROLE_ADMIN'])
-    public void getContentHtml() 
+    def getContentHtml() 
 	{
-		
 		// NOTE: this should be receiving a streamId parameter.  If there isn't one
 		// we can assume the default stream for the user in question.  And since this is the
 		// only place we call this variation of eventStreamService.getRecentActivitiesForUser,
 		// we should be able to delete it (or force it to default to the default user stream
 		// and then call the other version)
 		
+		log.info( "getContentHtml() called" );
 		
 		// also, if this stuff is really supposed to be paginated, we need to fix this to include
 		// an offset parameter for the call to eventStreamService.getRecentActivitiesForUser
 		
-		def user = session.user;
+		User currentUser = userService.getLoggedInUser();
+		
 		def page = params.page;
 		if( !page ) 
 		{
@@ -91,33 +98,27 @@ class ActivityStreamController
 		}
 		
 		log.trace( "getContentHtml requested page: ${page}" );
+		
 		def items = new ArrayList<StreamItemBase>();
-		if( user != null )
+		
+		UserStreamDefinition selectedStream = null;
+		if( params.streamId )
 		{
-			user = userService.findUserByUserId( session.user.userId );
-			
-			UserStreamDefinition selectedStream = null;
-			if( params.streamId )
-			{
-				Long streamId = Long.valueOf( params.streamId );
-				selectedStream = userStreamDefinitionService.findStreamById( streamId );
-			}
-			else
-			{
-				selectedStream = userStreamDefinitionService.getStreamForUser( user, UserStreamDefinition.DEFAULT_STREAM );
-			}
-			
-			
-			items = eventStreamService.getRecentActivitiesForUser( user, 25 * Integer.parseInt( page ), selectedStream );
+			Long streamId = Long.valueOf( params.streamId );
+			selectedStream = userStreamDefinitionService.findStreamById( streamId );
 		}
 		else
 		{
-			// don't do anything if we don't have a user
+			selectedStream = userStreamDefinitionService.getStreamForUser( currentUser, UserStreamDefinition.DEFAULT_STREAM );
 		}
 		
-		render(template:"/activityStream",model:[activities:items]);
+		log.info( "selectedStream: ${selectedStream.toString()}");
 		
+		items = eventStreamService.getRecentActivitiesForUser( currentUser, 25 * Integer.parseInt( page ), selectedStream );
+
+		log.info( "about to render template /activityStream" );
 		
+		render(template:"/activityStream",model:[activities:items]);		
 	}
 	
 
@@ -125,12 +126,15 @@ class ActivityStreamController
 	public Object viewUserStream()
     {
 		log.trace( "viewUserStream: " );
-		User user = session.user;
 		
-		
+		User currentUser = userService.getLoggedInUser();
+				
 		String userId = params.userId;
+		
 		log.trace( "userId: ${userId}" );
+		
 		def page = params.page;
+		
 		if( !page )
 		{
 			page = "1";
@@ -159,12 +163,11 @@ class ActivityStreamController
 		
 		Map model = [:];
 		
-		model.putAll( [user:user, statusUpdatesForUser:statusUpdatesForUser] );
-		Map sidebarCollections = populateSidebarCollections( this, user );
+		model.putAll( [user:currentUser, statusUpdatesForUser:statusUpdatesForUser] );
+		Map sidebarCollections = populateSidebarCollections( this, currentUser );
 		model.putAll( sidebarCollections );
 		
 		return model;
-				
 	}
 	
     
@@ -173,6 +176,8 @@ class ActivityStreamController
 	{
 		log.trace( "ActivityStreamController.discussItem invoked:" );
 		log.trace( "params: ${params}" );
+		
+		User currentUser = userService.getLoggedInUser();
 		
 		/*  So, what data should we be receiving?  At a minimum, the id (or uuid) of the thing being
 		 *  discussed, the id (or uuid) of the person starting the discussion, and one or more discussTarget id's.  
@@ -270,7 +275,7 @@ class ActivityStreamController
 				Set<ContactAddress> targetContactAddresses = targetProfile.contactAddresses;
 				ContactAddress toEmail = targetContactAddresses.find { it.serviceType == ContactAddress.EMAIL && it.primaryInType == true };
 				
-				User creatingUser = userService.findUserByUserId( session.user.userId );
+				User creatingUser = userService.findUserByUserId( currentUser.userId );
 				Profile creatingUserProfile = creatingUser.profile;
 				Set<ContactAddress> creatingUserContactAddresses = creatingUserProfile.contactAddresses;
 				ContactAddress senderEmail = creatingUserContactAddresses.find { it.serviceType == ContactAddress.EMAIL && it.primaryInType == true };
@@ -320,6 +325,8 @@ class ActivityStreamController
 		log.debug(  "ActivityStreamController.shareItem invoked:");
 		log.trace( "params: ${params}" );
 		
+		User currentUser = userService.getLoggedInuser();
+		
 		/*  So, what data should we be receiving?  At a minimum, the id (or uuid) of the thing being
 		 *  shared, the id (or uuid) of the person sharing it, and one or more shareTarget id's.  Optionally
 		 *  there could be a comment associated with the sharing activity.
@@ -352,9 +359,9 @@ class ActivityStreamController
 		newStreamItem.verb = "quoddy_item_reshare";
 		newStreamItem.actorObjectType = "User";
 		newStreamItem.targetObjectType = "User";
-		newStreamItem.actorUuid = session.user.uuid;
+		newStreamItem.actorUuid = currentUser.uuid;
 		newStreamItem.targetUuid = shareTargetUser.uuid;
-		newStreamItem.owner = session.user;
+		newStreamItem.owner = currentUser;
 		newStreamItem.objectClass = originalItem.objectClass;
 		newStreamItem.streamObject = originalItem.streamObject;
 		newStreamItem.published = new Date(); // set published to "now"

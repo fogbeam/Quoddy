@@ -22,17 +22,13 @@ class StatusController
 	def updateStatus() 
     {
 		
-		User user = springSecurityService.currentUser;
-	
-
-		log.debug( "logged in; so proceeding...");
-		
-		// get our user
-		// user = userService.findUserByUserId( session.user.userId );
+		User user = userService.getLoggedInUser();
 		
 		log.debug( "constructing our new StatusUpdate object...");
+		
 		// construct a status object
 		log.debug( "statusText: ${params.statusText}");
+		
 		StatusUpdate newStatus = new StatusUpdate( text:params.statusText,creator : user);
 		newStatus.effectiveDate = new Date(); // now
 		newStatus.targetUuid = "ABC123";
@@ -141,6 +137,7 @@ class StatusController
 		// set the current status
 		log.debug( "setting currentStatus");
 		user.currentStatus = newStatus;
+		
 		if( !user.save(flush:true) )
 		{
 			log.debug( "Saving user FAILED");
@@ -150,8 +147,6 @@ class StatusController
 		{
 			// handle failure to update User
 		}
-		
-		session.user = user;
 		
 		// TODO: if the user update was successful
 		ActivityStreamItem activity = new ActivityStreamItem(content:newStatus.text);
@@ -194,15 +189,11 @@ class StatusController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def listUpdates()
 	{
-		User user = null;
 		List<StatusUpdate> updates = new ArrayList<StatusUpdate>();
 
-			
-		// get our user
-		user = userService.findUserByUserId( session.user.userId );
-		
+		User user = userService.getLoggedInUser();
+				
 		updates.addAll( user.oldStatusUpdates.sort { it.dateCreated }.reverse() );
-
 		
 		[updates:updates]
 	}

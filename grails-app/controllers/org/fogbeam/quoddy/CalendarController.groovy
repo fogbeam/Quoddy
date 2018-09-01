@@ -15,19 +15,10 @@ class CalendarController
 	def index()
 	{
 		List<CalendarFeedSubscription> calFeeds = new ArrayList<CalendarFeedSubscription>();
-		User user = null;
-		if( session.user != null )
-		{
-			log.debug( "Found User in Session");
-			user = userService.findUserByUserId( session.user.userId );
-			def queryResults = CalendarFeedSubscription.executeQuery( "select calfeed from CalendarFeedSubscription as calfeed where calfeed.owner = :owner", [owner:user] );
-			
-			calFeeds.addAll( queryResults ); 
-		}
-		else
-		{
-			log.info( "No user in Session");
-		}
+		User currentUser = userService.getLoggedInUser();
+		def queryResults = CalendarFeedSubscription.executeQuery( "select calfeed from CalendarFeedSubscription as calfeed where calfeed.owner = :owner", [owner:currentUser] );
+		
+		calFeeds.addAll( queryResults );
 		
 		[calFeeds:calFeeds];
 	}
@@ -41,26 +32,20 @@ class CalendarController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def saveFeed()
 	{
+		CalendarFeedSubscription calFeed = new CalendarFeedSubscription();
 		
-		if( session.user != null )
+		User currentUser = userService.getLoggedInUser();
+		
+		calFeed.owner = currentUser;
+		calFeed.url = params.calFeedUrl;
+		calFeed.name = params.calFeedName;
+		
+		if( !calFeed.save(flush:true) )
 		{
-			CalendarFeedSubscription calFeed = new CalendarFeedSubscription();
-			
-			User user = userService.findUserByUserId( session.user.userId );
-			calFeed.owner = user;
-			calFeed.url = params.calFeedUrl;
-			calFeed.name = params.calFeedName;
-			
-			if( !calFeed.save(flush:true) )
-			{
-				log.debug( "Saving CalendarFeedSubscription FAILED");
-				calFeed.errors.allErrors.each { log.debug( it ) };
-			}
+			log.debug( "Saving CalendarFeedSubscription FAILED");
+			calFeed.errors.allErrors.each { log.debug( it ) };
 		}
-		else
-		{
-			log.debug( "No user in Session");
-		}
+
 		
 		redirect( controller:"calendar", action:"index");
 	}
@@ -69,40 +54,28 @@ class CalendarController
 	def editFeed()
 	{
 		CalendarFeedSubscription calFeedToEdit = null;
-		if( session.user != null )
-		{
-			def calFeedId = params.calFeedId;
-			calFeedToEdit = CalendarFeedSubscription.findById( params.calFeedId);
-		}
-		else
-		{
-			log.debug( "No user in Session");
-		}		
 		
+		def calFeedId = params.calFeedId;
+		
+		calFeedToEdit = CalendarFeedSubscription.findById( params.calFeedId);
+
 		[calFeedToEdit:calFeedToEdit];
 	}
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def updateFeed()
 	{
-		if( session.user != null )
-		{
-			CalendarFeedSubscription calFeed = CalendarFeedSubscription.findById( params.calFeedId);
-			
-			calFeed.url = params.calFeedUrl;
-			calFeed.name = params.calFeedName;
-			
-			if( !calFeed.save(flush:true) )
-			{
-				log.debug( "Saving CalendarFeedSubscription FAILED");
-				calFeed.errors.allErrors.each { log.debug( it ) };
-			}
-		}
-		else
-		{
-			log.debug( "No user in Session" );
-		}
+		CalendarFeedSubscription calFeed = CalendarFeedSubscription.findById( params.calFeedId);
 		
+		calFeed.url = params.calFeedUrl;
+		calFeed.name = params.calFeedName;
+		
+		if( !calFeed.save(flush:true) )
+		{
+			log.debug( "Saving CalendarFeedSubscription FAILED");
+			calFeed.errors.allErrors.each { log.debug( it ) };
+		}
+
 		redirect( controller:"calendar", action:"index");
 	}
 	

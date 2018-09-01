@@ -11,6 +11,16 @@
 		
 	}    
     
+    function updateQueueSize() {
+		$j.get( "${ createLink(controller:'activityStream', action:'getQueueSize', params:['streamId':streamId ] )}", 
+			function(data) 
+			{
+				// alert( "queue size: " + data );
+				$j('#refreshMessagesLink').html( data + " messages pending" );
+				return false;
+			} );
+       }
+    
     function initHandlers() {
     
 				$j( "#discussDialog" ).dialog(
@@ -137,7 +147,7 @@
 
 
 				// setup timer to refresh our "pending messages" link
-				$j(this).everyTime( 2000, 
+				$j(this).everyTime( 30000, 
 								function() 
 								{
 								
@@ -164,18 +174,13 @@
 												    // alert( "finished" );
 												});
 								
-								    if( breakout )
+								    if( breakOut )
 								    {
 								        return;
 								    }
 								    
-									$j.get( "${ createLink(controller:'activityStream', action:'getQueueSize',
-															 params:['streamId':streamId ] )}", 
-											function(data) 
-											{
-												$j('#refreshMessagesLink').html( data + " messages pending" );
-												return false;
-											} );
+								    // alert( "Checking Queue size now!" );
+									updateQueueSize();								    
 								}, 
 							0 );
 
@@ -183,6 +188,8 @@
 				$j('#refreshMessagesLink').bind( 'click', function() {
 
 					$j('#activityStream').load( "${ createLink(controller:'activityStream', action:'getContentHtml', params:['streamId':streamId ] )}" );
+					updateQueueSize();
+					updateQueueSize();
 					return false;
 				});    
     	}

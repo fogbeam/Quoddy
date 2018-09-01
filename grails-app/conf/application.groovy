@@ -42,7 +42,7 @@ grails.plugin.springsecurity.logout.handlerNames =[ 'rememberMeServices', 'secur
 
 spring.autoconfigure.exclude = "org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration"
 
-server.session.timeout = 30
+server.session.timeout = 600
 
 oauth.server.introspect.url="https://localhost:8443/cas/oidc/introspect"
 oauth.client.id = "test_client"

@@ -1,5 +1,7 @@
 package org.fogbeam.quoddy
 
+import java.util.Map.Entry
+
 import org.fogbeam.quoddy.stream.ActivityStreamItem
 
 import grails.plugin.springsecurity.annotation.Secured
@@ -14,10 +16,23 @@ class SpecialController
 	{
 		Map<String, Deque<ActivityStreamItem>> eventQueues = eventQueueService.eventQueues;
 		
+		log.info( "eventQueues: ${eventQueues.size()}");
 		
-		Set<String> queueKeys = eventQueues.keySet();
+		Set<Entry<String, Deque<ActivityStreamItem>>> entries = eventQueues.entrySet();
 		
-		[queueKeys : queueKeys ];
+		List<Tuple> entryKeysAndSizes = new ArrayList<Tuple>();
+		
+		for( Entry<String, Deque<ActivityStreamItem>> entry : entries )
+		{
+			log.info( "found entry: ${entry}");
+			
+			Tuple entryTuple = new Tuple( entry.key, entry.value.size() );
+			entryKeysAndSizes.add( entryTuple );	
+		}
+		
+		log.info( "returning entryKeysAndSizes with size = " + entryKeysAndSizes.size() );
+		
+		[entryKeysAndSizes:entryKeysAndSizes ];
 	}
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])

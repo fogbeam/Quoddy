@@ -16,7 +16,7 @@ grails:
             events: false
 server:
    session:
-      timeout: 30
+      timeout: 600
 info:
     app:
         name: '@info.app.name@'
@@ -109,7 +109,7 @@ environments:
         quartz:
             autoStartup: false
         dataSource:
-            dbCreate: create
+            dbCreate: update
             url: jdbc:postgresql:quoddy_dev
     test:
         dataSource:

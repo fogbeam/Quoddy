@@ -6,8 +6,8 @@
     <body>
     	<div id="bodyContent" style="height:600px;margin-left:100px;">
 			<ul>
-                <g:each var="queueKey" in="${queueKeys}">
-                    <li style="padding-top:8px;">${queueKey}</li>
+                <g:each var="entryKeyAndSize" in="${entryKeysAndSizes}">
+                    <li style="padding-top:8px;">${entryKeyAndSize[0]} &nbsp; -- &nbsp; ${entryKeyAndSize[1]}</li>
                 </g:each>
             </ul>            
         </div>

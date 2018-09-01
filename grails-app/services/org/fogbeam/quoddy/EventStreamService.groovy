@@ -130,7 +130,7 @@ class EventStreamService {
         
         for( ActivityStreamItem msg : messages )
 		{
-			log.debug( "msg.originTime: ${msg.originTime}");
+			log.debug( "msg.published.time: ${msg.published.time}");
 			if( msg.published.time < oldestOriginTime )
 			{
 				oldestOriginTime = msg.published.time;
@@ -138,7 +138,7 @@ class EventStreamService {
 		}
 		
 		log.debug( "oldestOriginTime: ${oldestOriginTime}");
-		log.debug( "as date: " + new Date( oldestOriginTime) );
+		log.debug( "as date: " + new Date( oldestOriginTime ) );
 		
 		List<ActivityStreamItem> recentActivityStreamItems = new ArrayList<ActivityStreamItem>();
 		
@@ -154,6 +154,11 @@ class EventStreamService {
 		for( int i = 0; i < messages.size(); i++ )
 		{
 			ActivityStreamItem activityStreamItem = messages.get(i);
+			if (!activityStreamItem.isAttached())
+			{
+				activityStreamItem.attach()
+			}
+			
 			// log.debug("got message: ${msg} off of queue");
 	
 			activityStreamItem.streamObject = existDBService.populateSubscriptionEventWithXmlDoc( activityStreamItem.streamObject );

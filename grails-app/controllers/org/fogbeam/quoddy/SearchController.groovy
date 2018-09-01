@@ -23,6 +23,10 @@ class SearchController
     @Secured(['ROLE_USER','ROLE_ADMIN'])
 	def doSearch()
 	{
+		
+		User currentUser = userService.getLoggedInUser();
+		
+		
 		log.info( "Searching using queryString: ${params.queryString}");
 		String queryString = params.queryString;
 
@@ -105,7 +109,7 @@ class SearchController
 		if( bSearchFriends )
 		{
 			log.debug( "searching friends");
-			List<SearchResult> tempResults = searchService.doFriendSearch( queryString, session.user );
+			List<SearchResult> tempResults = searchService.doFriendSearch( queryString, currentUser );
 			log.debug( "SearchFriends returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
 			log.debug( "searchResults.size() = " + searchResults.size());
@@ -117,6 +121,9 @@ class SearchController
     @Secured(['ROLE_USER','ROLE_ADMIN'])
 	def doAdvancedSearch()
 	{
+		
+		User currentUser = userService.getLoggedInUser();
+		
 		// search using supplied parameters and return the
 		// model for rendering...
 		String queryString = params.queryString;
@@ -263,7 +270,7 @@ class SearchController
 		if( bSearchFriends )
 		{
 			log.debug( "searching friends");
-			List<SearchResult> tempResults = searchService.doFriendSearch( queryString, session.user );
+			List<SearchResult> tempResults = searchService.doFriendSearch( queryString, currentUser );
 			log.debug( "SearchFriends returned " + tempResults.size() + " results");
 			searchResults.addAll( tempResults );
 			log.debug( "searchResults.size() = " + searchResults.size());		
@@ -325,7 +332,7 @@ class SearchController
 	{
 		log.debug( "Searching IFollow");
 		
-		User user = session.user;
+		User user = userService.getLoggedInUser();
 		
 
 		// search users using supplied parameters and return the
@@ -358,8 +365,7 @@ class SearchController
     {
 		log.debug( "Searching Friends");	
 		
-		User user = session.user;
-
+		User user = userService.getLoggedInUser();
 
 		// search users using supplied parameters and return the
 		// model for rendering...

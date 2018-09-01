@@ -25,17 +25,7 @@ class SparqlController
     @Secured(['ROLE_USER','ROLE_ADMIN'])
 	def index()
 	{
-		User user = null;
-		if( session.user )
-		{
-			user = userService.findUserByUserId( session.user.userId);
-
-		}
-		else
-		{
-			user = userService.findUserByUserId( "anonymous" );
-		}
-		
+		User currentUser = userService.getLoggedInUser();
 		
 		def model = [:];
 
@@ -46,17 +36,7 @@ class SparqlController
 	def doSearch()
 	{
 		
-		User user = null;
-		if( session.user )
-		{
-			user = userService.findUserByUserId( session.user.userId);
-
-		}
-		else
-		{
-			user = userService.findUserByUserId( "anonymous" );
-		}
-		
+		User currentUser = userService.getLoggedInUser();
 
 		List<SearchResult> searchResults = new ArrayList<SearchResult>();
 		String baseQueryString = "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " +
