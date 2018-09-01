@@ -21,13 +21,24 @@ class UserGroupService
 		
 		return group;
 	}
-	
+
+	public UserGroup findUserGroupByName( final String name )
+	{
+		UserGroup group = UserGroup.findByName( name );
+		
+		return group;
+	}
+		
 	public UserGroup save( UserGroup userGroup )
 	{
 		if( !userGroup.save(flush:true) )
 		{
 			log.error( "Failed to save UserGroup" );
+			
+			userGroup.errors.allErrors.each { log.error( it.toString() ) }
+			
 		}		
+		
 		
 		return userGroup;
 	}

@@ -44,3 +44,6 @@ spring.autoconfigure.exclude = "org.springframework.boot.autoconfigure.jms.JmsAu
 
 server.session.timeout = 30
 
+oauth.server.introspect.url="https://localhost:8443/cas/oidc/introspect"
+oauth.client.id = "test_client"
+

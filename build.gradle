@@ -96,7 +96,7 @@ dependencies {
 
 	
 	
-	compile group: 'org.fogbeam', name:'jFriendOfAFriend', version:'1.0-SNAPSHOT'
+	compile group: 'org.fogbeam', name:'jFriendOfAFriend', version:'1.1-SNAPSHOT'
     // https://mvnrepository.com/artifact/net.sf.json-lib/json-lib
     compile group: 'net.sf.json-lib', name: 'json-lib', version: '2.4', classifier: 'jdk15'
     compile "org.grails.plugins.fogbeam:jaxrs-jersey1:3.0.4"

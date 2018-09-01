@@ -246,10 +246,16 @@ class BootStrap
 			
 			dummyGroup = new UserGroup();
 			dummyGroup.uuid = "notused";
-			dummyGroup.id = -1;
 			dummyGroup.name = "SYS_dummy_group";
 			dummyGroup.description = "Dummy Group";
-			dummyGroup.owner = User.findById(-1);
+			User dummyUser = userService.findUserByUserId( "SYS_dummy_user" );
+			
+			if( dummyUser == null )
+			{
+				log.error( "failed to locate DummyUser by userId 'SYS_dummy_user'");
+			}
+			
+			dummyGroup.owner = dummyUser;
 			
 			userGroupService.save( dummyGroup );
 		}
@@ -275,8 +281,7 @@ class BootStrap
             println "Could not find SYS_dummy_user";
             println "Creating new SYS_dummy_user user";
             dummyUser = new User();
-            dummyUser.id = -1;
-            dummyUser.uuid = "-1";
+            dummyUser.uuid = "dummy_user";
             dummyUser.displayName = "Dummy User";
             dummyUser.firstName = "System";
             dummyUser.lastName = "Dummy User";

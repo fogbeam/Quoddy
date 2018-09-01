@@ -15,6 +15,7 @@
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/services"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/init"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/taglib"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="grails-app/providers"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/groovy"/>
 	</wb-module>
 </project-modules>

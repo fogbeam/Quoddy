@@ -94,6 +94,8 @@ class UserService {
 			user.dateCreated = new Date();
 		}
 		
+		log.info( "saving user with id = " + user.id );
+		
 		if( user.save(flush:true) )
 		{
 			log.info( "Saving User object.");

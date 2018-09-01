@@ -205,10 +205,8 @@ class EventStreamService {
 			 */
 			
 			
-			User dummyUser = User.findById( -1 );
-			UserGroup dummyGroup = UserGroup.findById( -1 );
-			
-								
+			User dummyUser = userService.findUserByUserId( "SYS_dummy_user" );
+			UserGroup dummyGroup = userGroupService.findUserGroupByName( "SYS_dummy_group" );
 
 			/* do a separate query to find any UserGroups for this User.  That means
 			 * any group the user owns, OR is a member of.  Then compile the list of
@@ -223,7 +221,7 @@ class EventStreamService {
             validOwners.add( dummyUser ); // a dummy item that can't match anything, needed
                                                 // because Postgresql chokes on "in" queries with an empty collection passed as a parameter
             
-			includedGroups.add( dummyGroup ); // again, a dummy item since queries break on empty collections
+			includedGroups.add( dummyGroup.uuid ); // again, a dummy item since queries break on empty collections
 			
             
 			log.debug( "found: ${groupsForUser?.size()} groups for user ${user}");

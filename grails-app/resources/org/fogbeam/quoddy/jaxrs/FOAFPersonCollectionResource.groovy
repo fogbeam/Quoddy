@@ -33,7 +33,8 @@ import org.springframework.web.method.annotation.ModelFactory
 @Path('/api/foaf/user')
 @Consumes(['application/rdf+xml', 'application/xml'])
 @Produces(['application/rdf+xml','application/xml', 'text/xml'])
-class FOAFPersonCollectionResource {
+class FOAFPersonCollectionResource 
+{
 
 	def profileService;
 	def userService;

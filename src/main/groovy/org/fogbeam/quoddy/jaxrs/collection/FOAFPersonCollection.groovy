@@ -1,11 +1,10 @@
 package org.fogbeam.quoddy.jaxrs.collection
 
-import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement
 
 import org.fogbeam.foaf.api.FoafPerson
-import org.fogbeam.quoddy.subscription.BusinessEventSubscription;
 
-class FOAFPersonCollection
+public class FOAFPersonCollection
 {
 	private List<FoafPerson> foafPersons = new ArrayList<FoafPerson>();
 	
