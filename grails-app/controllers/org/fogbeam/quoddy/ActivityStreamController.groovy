@@ -217,13 +217,13 @@ class ActivityStreamController
 		
 	
     @Secured(['ROLE_USER', 'ROLE_ADMIN'])
-	public void shareItem()
+	def shareItem()
 	{
 		
 		log.debug(  "ActivityStreamController.shareItem invoked:");
 		log.trace( "params: ${params}" );
 		
-		User currentUser = userService.getLoggedInuser();
+		User currentUser = userService.getLoggedInUser();
 		
 		/*  So, what data should we be receiving?  At a minimum, the id (or uuid) of the thing being
 		 *  shared, the id (or uuid) of the person sharing it, and one or more shareTarget id's.  Optionally
@@ -278,6 +278,7 @@ class ActivityStreamController
 		
 		eventStreamService.saveActivity( newStreamItem );		
 		
+		render( "OK" );
 	}
 	
 }

@@ -32,22 +32,14 @@
     href="${resource(dir:'css', file:'yamm.css')}" />
 
 
-<link rel="stylesheet" type="text/css"
-    href="${resource(dir:'javascripts', file:'jquery-ui-1.10.3.custom/css/vader/jquery-ui-1.10.3.custom.css') }" />
 
 
-    <g:javascript>
-        window.appContext = '${request.contextPath}';
-    </g:javascript>
+<g:javascript>
+    window.appContext = '${request.contextPath}';
+</g:javascript>
 
-
-<!--
-<g:javascript library="jquery-ui-1.10.3.custom/js/jquery-1.9.1" />
--->
-<script type="text/javascript"
-    src="${resource(dir:'javascripts', file:'jquery-ui-1.10.3.custom/js/jquery-1.9.1.js')}"></script>
-
-
+<script type="text/javascript" 
+		src="${resource(dir:'javascripts', file:'jquery.min-1.12.4.js')}"></script>
 
 
 <g:javascript>
@@ -61,8 +53,7 @@
     src="${resource(dir:'javascripts', file:'quoddy_intro_tour.js')}"></script>
 <script type="text/javascript"
     src="${resource(dir:'javascripts', file:'activiti_bpm.js')}"></script>
-<script type="text/javascript"
-    src="${resource(dir:'javascripts', file:'jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js')}"></script>
+
 
 <script type="text/javascript"
     src="${resource(dir:'javascripts', file:'bootstrap.js')}"></script>
@@ -70,6 +61,8 @@
     src="${resource(dir:'javascripts', file:'bootstrap-dropdown-multilevel.js')}"></script>
 <script type="text/javascript"
     src="${resource(dir:'javascripts', file:'jquery.timers-1.2.js')}"></script>
+<script type="text/javascript"
+    src="${resource(dir:'javascripts', file:'typeahead.js')}"></script>
 <script type="text/javascript"
     src="${resource(dir:'javascripts', file:'user_profile.js')}"></script>
 

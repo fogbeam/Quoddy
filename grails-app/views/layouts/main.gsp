@@ -31,27 +31,16 @@
 <link rel="stylesheet" type="text/css"
 	href="${resource(dir:'css', file:'yamm.css')}" />
 
-
-<link rel="stylesheet" type="text/css"
-	href="${resource(dir:'javascripts', file:'jquery-ui-1.10.3.custom/css/vader/jquery-ui-1.10.3.custom.css') }" />
-
-
-    <g:javascript>
+<g:javascript>
         window.appContext = '${request.contextPath}';
-    </g:javascript>
+</g:javascript>
 
-
-<!--
-<g:javascript library="jquery-ui-1.10.3.custom/js/jquery-1.9.1" />
--->
-<script type="text/javascript"
-	src="${resource(dir:'javascripts', file:'jquery-ui-1.10.3.custom/js/jquery-1.9.1.js')}"></script>
-
-
+<script type="text/javascript" 
+		src="${resource(dir:'javascripts', file:'jquery.min-1.12.4.js')}"></script>
 
 
 <g:javascript>
-	var $j = jQuery.noConflict();	
+	var $j = jQuery.noConflict();
 </g:javascript>
 
 
@@ -61,9 +50,6 @@
 	src="${resource(dir:'javascripts', file:'quoddy_intro_tour.js')}"></script>
 <script type="text/javascript"
 	src="${resource(dir:'javascripts', file:'activiti_bpm.js')}"></script>
-<script type="text/javascript"
-	src="${resource(dir:'javascripts', file:'jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js')}"></script>
-
 <script type="text/javascript"
 	src="${resource(dir:'javascripts', file:'bootstrap.js')}"></script>
 <script type="text/javascript"
@@ -77,11 +63,11 @@
 	<g:render template="/javascript/application.js"/>
 </script>
 
+
 <script type="text/javascript">
 	$j(document)
 			.ready(
 					function() {
-
 						$j('#queryString')
 								.bind(
 										"keyup keypress",

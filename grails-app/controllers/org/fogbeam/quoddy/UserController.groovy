@@ -562,7 +562,6 @@ class UserController
 		
 		model.putAt( "predicatesJSON", builder.toPrettyString() );
 		
-		
 		return model;
 	}
 	
@@ -1456,14 +1455,14 @@ class UserController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
     def addAnnotation()
 	{
-		log.debug( "addAnnotation" );
+		log.info( "addAnnotation()" );
 		
 		// add an annotation, possibly about a skill, or maybe a reference to
 		// a Customer or Account or Product or other entity, to the targeted
 		// user...
 		
 		String userId = params.userId;
-		log.debug( "adding annotation for User: ${userId}");
+		log.info( "adding annotation for User: ${userId}");
 		User user = userService.findUserByUserId( userId );
 		
 		String annotationPredicate = params.annotationPredicate;

@@ -1,4 +1,4 @@
-    function openShareDialog(entryId) {
+    function openImportDialog(entryId) {
        window.open( "/admin/importUsers/", "Quoddy - Import Users", 
             "status = 1, height = 300, width = 300, resizable = 0"  )
     }
@@ -25,36 +25,6 @@
     
     function initHandlers() {
     	 	
-				// alert( "JQuery ready for action!" );
-				$j( "#shareDialog" ).dialog(
-				{
-					autoOpen: false,
-					show: {
-					effect: "blind",
-					duration: 200
-					},
-					hide: {
-					effect: "explode",
-					duration: 1500
-					},
-					buttons: [ { text: "Cancel", click: function() { $j( this ).dialog( "close" ); } },
-							   { text: "Submit", click: function() 
-				   					{ 
-				   						
-				   						var shareItemUuid = $j(this).data('shareItemUuid');
-				   							
-				   						// find our form object and submit it...
-				   						$j('#shareItemUuid').val( shareItemUuid );
-				   						$j('#shareItemForm').submit();
-				   						// alert("submitting...");
-				   						$j( this ).dialog( "close" );
-				   					
-				   					} 
-							 	} 
-							 ]
-				});
-
-
 				$j( ".discussButton" ).click(function() {
 				
 					var name = $j(this).attr('name');
@@ -67,30 +37,44 @@
 						$j( '#discussItemForm').submit();
 						
 						// do we need to do this explicitly? 
-						// $j( '#myModal').modal('dispose');
+						$j( '#discussItemModal').modal('toggle');
 					});
 				
 					$j( '#discussItemUuid' ).val(discussItemUuid);
 		
-					// TODO: launch Bootstrap Modal here to launch the Discuss flow
-					$j('#myModal').data( 'discussItemUuid', discussItemUuid ).modal(
+					// launch Bootstrap Modal here to launch the Discuss flow
+					$j('#discussItemModal').data( 'discussItemUuid', discussItemUuid ).modal(
 										  { keyboard: false }
 									   );
 				    
 					
-			      });
+			    });
 				
-				
+
 				$j( ".shareButton" ).click(function( event) {
-				
-					event.preventDefault();
+
 					var name = $j(this).attr('name');
 					var shareItemUuid = name.split( "." )[1];
-					$j( "#shareDialog" ).css( "display", "" );
-					$j( "#shareDialog" ).data('shareItemUuid', shareItemUuid).dialog( "open" );
 					
-					return false;
+					// alert( "Launch the Share dialog here!  Yeeeeeaaaah, boy!" );
+				
+					$j( '#submitShareItem' ).click( function() {
+					
+						$j( '#shareItemForm').submit();
+						
+						// do we need to do this explicitly? 
+						$j( '#shareItemModal').modal('toggle');
+					});
+				
+					$j( '#shareItemUuid' ).val(shareItemUuid);
+		
+					// launch Bootstrap Modal here to launch the Share flow
+					$j('#shareItemModal').data( 'shareItemUuid', shareItemUuid ).modal(
+										  { keyboard: false }
+									   );
+				
 				});
+
 
 				$j( ".xButton").click( function() {
 					// alert( "deleting this one...");
@@ -187,8 +171,7 @@
 		$j(document).ready( 
 		 		
 			function()
-		 	{
-		 	
+		 	{	
 		 	    initHandlers();
 		 						
 				$j('#loadMoreLink').bind( 'click', function(event) {

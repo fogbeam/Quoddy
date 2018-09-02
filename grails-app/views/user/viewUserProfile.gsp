@@ -320,32 +320,9 @@
 
 
 		<!-- hidden dialog for adding annotations -->
-		<div id="annotationDialog" name="annotationDialog"
-			style="display: none;" title="Add Annotation">
-			<script id="predicatesJSON" name="predicatesJSON">
-				${predicatesJSON}
-			</script>
-			<g:formRemote name="addAnnotationForm"
-				url="[controller: 'user', action:'addAnnotation']">
-
-				<select name="annotationPredicate">
-					<g:each in="${predicates}" var="predicate">
-						<option value="${predicate.qualifiedName}">
-							${predicate.label}
-						</option>
-					</g:each>
-				</select>
-
-				<!--  text of an (optional) comment -->
-				<input id="annotationObject" name="annotationObject" type="text"
-					value="" />
-
-				<input id="userId" name="userId" type="hidden" value="" />
-				<input id="annotationObjectQN" name="annotationObjectQN"
-					type="hidden" value="" />
-				<br />
-			</g:formRemote>
-		</div>
+		
+		
+		
 </body>
 
 </html>

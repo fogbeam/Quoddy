@@ -31,54 +31,37 @@
 <link rel="stylesheet" type="text/css"
     href="${resource(dir:'css', file:'yamm.css')}" />
 
-
+<!-- TODO: delete this once confirmed it's no longer needed
 <link rel="stylesheet" type="text/css"
     href="${resource(dir:'javascripts', file:'jquery-ui-1.10.3.custom/css/vader/jquery-ui-1.10.3.custom.css') }" />
+-->
+
+
 
     <g:javascript>
         window.appContext = '${request.contextPath}';
     </g:javascript>
 
-<!--
-<g:javascript library="jquery-ui-1.10.3.custom/js/jquery-1.9.1" />
--->
-<script type="text/javascript"
-    src="${resource(dir:'javascripts', file:'jquery-ui-1.10.3.custom/js/jquery-1.9.1.js')}"></script>
 
-
+<script type="text/javascript" 
+		src="${resource(dir:'javascripts', file:'jquery.min-1.12.4.js')}"></script>
 
 
 <g:javascript>
     var $j = jQuery.noConflict();   
 </g:javascript>
 
-<!--
-<g:javascript library="hopscotch" />
--->
+
 <script type="text/javascript"
     src="${resource(dir:'javascripts', file:'hopscotch.js')}"></script>
 
-<!-- 
-<g:javascript library="quoddy_intro_tour" />
--->
+
 <script type="text/javascript"
     src="${resource(dir:'javascripts', file:'quoddy_intro_tour.js')}"></script>
 
-<!--
-<g:javascript library="activiti_bpm" />
--->
+
 <script type="text/javascript"
     src="${resource(dir:'javascripts', file:'activiti_bpm.js')}"></script>
-
-
-
-<!--
-<g:javascript
-    library="jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom" />
--->
-<script type="text/javascript"
-    src="${resource(dir:'javascripts', file:'jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js')}"></script>
-
 
 
 
@@ -88,9 +71,6 @@
 <script type="text/javascript"
     src="${resource(dir:'javascripts', file:'bootstrap-dropdown-multilevel.js')}"></script>
 
-<!--
-<g:javascript library="jquery.timers-1.2" />
--->
 <script type="text/javascript"
     src="${resource(dir:'javascripts', file:'jquery.timers-1.2.js')}"></script>
 

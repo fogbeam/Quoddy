@@ -15,9 +15,11 @@ import org.apache.jena.query.QueryFactory
 import org.apache.jena.query.QuerySolution
 import org.apache.jena.query.ReadWrite
 import org.apache.jena.rdf.model.InfModel
+import org.apache.jena.rdf.model.Literal
 import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.Property
+import org.apache.jena.rdf.model.Resource
 import org.apache.jena.rdf.model.Statement
 import org.apache.jena.rdf.model.StmtIterator
 import org.apache.jena.reasoner.Reasoner
@@ -26,9 +28,6 @@ import org.fogbeam.quoddy.User
 import org.fogbeam.quoddy.semantics.Entity
 import org.fogbeam.quoddy.semantics.Property as SemanticProperty
 
-import com.sun.research.ws.wadl.Resource
-
-import ch.ethz.mxquery.opt.expr.Literal
 
 /* import org.fogbeam.quoddy.semantics.Property as SemanticProperty */
 
@@ -62,7 +61,7 @@ class JenaService
 		}
 		catch( Exception e )
 		{
-			e.printStackTrace();
+			log.error( "Error adding annotation,", e );
 			dataset.abort();
 		}
 		finally
