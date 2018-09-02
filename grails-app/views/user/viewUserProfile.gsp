@@ -1,11 +1,9 @@
 <html>
 
 <head>
-<title>Quoddy: View User</title>
+<title>Quoddy: View User Profile</title>
 <meta name="layout" content="user_profile" />
 
-<g:javascript library="typeahead" />
-<g:javascript library="user_profile" />
 
 </head>
 
@@ -320,6 +318,50 @@
 
 		<!-- hidden dialog for adding annotations -->
 		
+		<!-- hidden dialog for adding annotations -->
+		<!-- Modal -->
+		<div class="modal fade" id="addAnnotationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+    		<div class="modal-content">
+      			<div class="modal-header">
+        			<h5 class="modal-title" id="exampleModalLabel">Add Annotation</h5>
+        			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          				<span aria-hidden="true">&times;</span>
+        			</button>
+      			</div>
+      			
+      		    <script id="predicatesJSON" name="predicatesJSON">
+				   ${raw(predicatesJSON)}
+				</script>
+      			
+      			<div class="modal-body">
+					
+					<g:formRemote name="addAnnotationForm" url="[controller: 'user', action:'addAnnotation']">
+
+						<select name="annotationPredicate">
+							<g:each in="${predicates}" var="predicate">
+								<option value="${predicate.qualifiedName}">
+									${predicate.label}
+								</option>
+							</g:each>
+						</select>
+	
+						<!--  text of an (optional) comment -->
+						<input id="annotationObject" name="annotationObject" type="text" value="" />
+	
+						<input id="userId" name="userId" type="hidden" value="" />
+						<input id="annotationObjectQN" name="annotationObjectQN" type="hidden" value="" />
+					
+					</g:formRemote>
+					
+      			</div>
+      			<div class="modal-footer">
+        			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        			<button id="submitAddAnnotation" name="submitAddAnnotation" type="button" class="btn btn-primary">Submit</button>
+      			</div>
+    		</div>
+  		   </div>
+	     </div>		
 		
 		
 </body>

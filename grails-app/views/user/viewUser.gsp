@@ -38,7 +38,9 @@
 			</g:if>			
 		</div>
 		
-		<!-- hidden dialog for adding annotations --><!-- Modal -->
+		
+		<!-- hidden dialog for adding annotations -->
+		<!-- Modal -->
 		<div class="modal fade" id="addAnnotationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		  <div class="modal-dialog" role="document">
     		<div class="modal-content">
