@@ -13,7 +13,6 @@ class ExploreController
     @Secured(['ROLE_USER', 'ROLE_ADMIN'])
 	def index()
 	{
-		
 		return [];
 	}
 	
@@ -56,8 +55,6 @@ class ExploreController
 		else
 		{
 			render(view:"normal",model:[content:content]);
-		}
-		
-	}
-		
+		}	
+	}	
 }

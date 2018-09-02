@@ -6,11 +6,13 @@ import grails.plugin.springsecurity.annotation.Secured
 
 class PermalinkController
 {
+	def eventStreamService;
+	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def index()
 	{
 		String uuid = params.uuid;
-		ActivityStreamItem item = ActivityStreamItem.findByUuid( uuid );
+		ActivityStreamItem item = eventStreamService.getActivityStreamItemByUuid( uuid );
 		
 		[item:item];
 	}

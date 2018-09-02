@@ -9,7 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import grails.plugin.springsecurity.annotation.Secured
 
 @Mixin(SidebarPopulatorMixin)
-class UserListController
+public class UserListController
 {
 	def userService;
 	def userStreamDefinitionService;

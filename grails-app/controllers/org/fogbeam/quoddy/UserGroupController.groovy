@@ -12,7 +12,7 @@ import grails.plugin.springsecurity.annotation.Secured
 
 
 @Mixin(SidebarPopulatorMixin)
-class UserGroupController
+public class UserGroupController
 {
 	def eventStreamService;
 	def userService;

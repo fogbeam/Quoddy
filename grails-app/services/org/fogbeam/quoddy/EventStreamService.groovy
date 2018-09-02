@@ -1,13 +1,12 @@
 package org.fogbeam.quoddy;
 
 import org.fogbeam.quoddy.stream.ActivityStreamItem
-import org.fogbeam.quoddy.stream.EventType
 import org.fogbeam.quoddy.stream.ShareTarget
 import org.fogbeam.quoddy.stream.StreamItemBase
 import org.fogbeam.quoddy.stream.constants.EventTypes
 
-class EventStreamService {
-
+class EventStreamService 
+{
 	def userService;
 	def jmsService;
 	def eventQueueService;
@@ -615,10 +614,23 @@ class EventStreamService {
 		return item;
 	}
 
-	
-	
-	
-	
+	public void deleteActivityStreamItemByUuid( final String delItemUuid )
+	{
+		// TODO: lookup item, then delete it.
+		ActivityStreamItem itemToDelete = ActivityStreamItem.findByUuid( delItemUuid );
+		
+		
+		if( itemToDelete != null )
+		{
+			log.debug( "found it!" );
+			itemToDelete.delete();
+			
+		}
+		else
+		{
+			log.warn( "ActivityStreamItem with uuid ${delItemUuid} not found" );
+		}
+	}
 		
 	// NOTE: we will probably need a version of this that supports
 	// chunking, since returning *every* item in the stream will consume

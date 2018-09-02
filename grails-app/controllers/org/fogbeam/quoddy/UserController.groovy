@@ -22,16 +22,8 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile
 import grails.plugin.springsecurity.annotation.Secured
 import groovy.json.JsonBuilder
 
-// import com.hp.hpl.jena.query.Dataset
-// import com.hp.hpl.jena.query.ReadWrite
-// import com.hp.hpl.jena.rdf.model.Model
-// import com.hp.hpl.jena.rdf.model.Property
-// import com.hp.hpl.jena.rdf.model.Resource
-// import com.hp.hpl.jena.rdf.model.Statement
-// import com.hp.hpl.jena.tdb.TDBFactory
 
-
-class UserController 
+public class UserController 
 {	
 	def userService;
 	def profileService;

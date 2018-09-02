@@ -11,8 +11,7 @@ class SemanticAssertionController
 	def index()
 	{
 		
-		Map model = [:];
-		
+		Map model = [:];	
 		
 		return model;
 	}

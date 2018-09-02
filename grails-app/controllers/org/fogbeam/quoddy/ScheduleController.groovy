@@ -24,7 +24,6 @@ class ScheduleController
 		// get all the "Job" Artefacts
 		GrailsClass[] artefacts = grailsApplication.getArtefacts( "Job" );
 		
-		
 		ArtefactHandler[] handlers = grailsApplication.getArtefactHandlers();
 		
 		Class[] artefacts2 = grailsApplication.getAllArtefacts();

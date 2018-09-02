@@ -17,9 +17,8 @@ import org.fogbeam.quoddy.stream.ActivityStreamItem
 import grails.plugin.springsecurity.annotation.Secured
 
 
-class SparqlController
+public class SparqlController
 {
-	
 	def userService;
 
     @Secured(['ROLE_USER','ROLE_ADMIN'])

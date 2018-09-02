@@ -23,9 +23,7 @@ class SearchController
     @Secured(['ROLE_USER','ROLE_ADMIN'])
 	def doSearch()
 	{
-		
-		User currentUser = userService.getLoggedInUser();
-		
+		User currentUser = userService.getLoggedInUser();	
 		
 		log.info( "Searching using queryString: ${params.queryString}");
 		String queryString = params.queryString;
@@ -291,7 +289,6 @@ class SearchController
     @Secured(['ROLE_USER','ROLE_ADMIN'])
 	def searchUsers()
 	{
-	
 		// search users using supplied parameters and return the
 		// model for rendering...				
 		String queryString = params.queryString;
@@ -316,15 +313,12 @@ class SearchController
 		// search users using supplied parameters and return the
 		// model for rendering...
 		String queryString = params.queryString;
-		log.debug( "searching People, queryString: ${queryString}");
-				
-		
+		log.debug( "searching People, queryString: ${queryString}");	
 		
 		List<SearchResult> results = searchService.doPeopleSearch( queryString );
 		log.debug( "found some users: ${results.size()}");
 		
 		render( view:'peopleSearchResults', model:[allUsers:results]);
-		
 	}
 	
     @Secured(['ROLE_USER','ROLE_ADMIN'])
@@ -334,7 +328,6 @@ class SearchController
 		
 		User user = userService.getLoggedInUser();
 		
-
 		// search users using supplied parameters and return the
 		// model for rendering...
 		String queryString = params.queryString;

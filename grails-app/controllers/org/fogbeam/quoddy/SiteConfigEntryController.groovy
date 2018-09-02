@@ -6,7 +6,8 @@ import grails.plugin.springsecurity.annotation.Secured
 
 class SiteConfigEntryController 
 {
-    
+	def siteConfigService;
+	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def index()
 	{
@@ -16,14 +17,14 @@ class SiteConfigEntryController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def list()
 	{
-		List<SiteConfigEntry> allEntries = SiteConfigEntry.findAll();
+		List<SiteConfigEntry> allEntries = siteConfigService.listAll();
 		[allEntries:allEntries];	
 	}
 
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def edit()
 	{
-		SiteConfigEntry theEntry = SiteConfigEntry.findById( params.id );
+		SiteConfigEntry theEntry = siteConfigService.findById( Long.parseLong( params.id ) );
 		
 		[ theEntry: theEntry ];	
 	}
@@ -41,13 +42,8 @@ class SiteConfigEntryController
 		SiteConfigEntry theEntry = new SiteConfigEntry();
 		theEntry.name = params.entryName;
 		theEntry.value = params.entryValue;
-		
-		if( !theEntry.save(flush:true))
-		{
-			flash.message = "Failed to save entry!";
-			log.error( "Failed to save entry" );
-			// theEntry.errors.allErrors.each { p rintln it };
-		}
+
+		siteConfigService.save( theEntry );		
 		
 		redirect( controller:"siteConfigEntry", action:"list" );
 	}
@@ -55,16 +51,11 @@ class SiteConfigEntryController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def update()
 	{	
-		SiteConfigEntry theEntry = SiteConfigEntry.findById( params.entryId );
+		SiteConfigEntry theEntry = siteConfigService.findById( Long.parseLong( params.entryId ) );
 		theEntry.name = params.entryName;
 		theEntry.value = params.entryValue;
 		
-		if( !theEntry.save(flush:true))
-		{
-			flash.message = "Failed to save entry!";
-			log.error( "Failed to save entry" );	
-			// theEntry.errors.allErrors.each { p rintln it };
-		}
+		siteConfigService.save( theEntry );
 
 		redirect( controller:"siteConfigEntry", action:"list" );	
 	}
@@ -72,9 +63,8 @@ class SiteConfigEntryController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def delete()
 	{
-		SiteConfigEntry theEntry = SiteConfigEntry.findById( params.entryId );
-		theEntry.delete();
-		
+		siteConfigService.deleteById( Long.parseLong( params.entryId ) );
+				
 		redirect( controller:"siteConfigEntry", action:"list" );
 	}
 }
