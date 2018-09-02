@@ -145,7 +145,7 @@ class ActivityStreamController
 		if( userId == null || userId.isEmpty() )
 		{
 			flash.message = "No UserId sent!";	
-			return [];
+			return [:];
 		}
 		
 		User requestedUser = userService.findUserByUserId( userId );

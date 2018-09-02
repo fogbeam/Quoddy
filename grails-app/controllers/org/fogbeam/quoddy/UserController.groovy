@@ -97,8 +97,9 @@ public class UserController
 						new ContactTypeOption( id: ContactAddress.EMAIL, text: "Email" )
 			];	
 
-	def sampleForm = {
-		[]	
+	def sampleForm = 
+	{
+		[:]	
 	}	
 				   
 
@@ -229,7 +230,7 @@ public class UserController
 	def adminAddUser()
 	{
 		
-		[];
+		[:];
 	}
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])

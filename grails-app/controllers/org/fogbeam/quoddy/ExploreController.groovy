@@ -13,7 +13,7 @@ class ExploreController
     @Secured(['ROLE_USER', 'ROLE_ADMIN'])
 	def index()
 	{
-		return [];
+		return [:];
 	}
 	
     @Secured(['ROLE_USER', 'ROLE_ADMIN'])

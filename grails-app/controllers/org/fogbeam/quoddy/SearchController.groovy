@@ -17,7 +17,7 @@ class SearchController
     @Secured(['ROLE_USER','ROLE_ADMIN'])
 	def index() 
 	{	
-		[]		
+		[:]		
 	}
 	
     @Secured(['ROLE_USER','ROLE_ADMIN'])
@@ -283,7 +283,7 @@ class SearchController
     @Secured(['ROLE_USER','ROLE_ADMIN'])
 	def showAdvanced()
 	{
-		[]	
+		[:]	
 	}
 	
     @Secured(['ROLE_USER','ROLE_ADMIN'])

@@ -4,6 +4,6 @@ public class InstallerController
 {
 	def index()
 	{
-		[]	
+		[:]	
 	}
 }

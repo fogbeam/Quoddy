@@ -7,6 +7,6 @@ class OpensocialController
     @Secured(['ROLE_USER', 'ROLE_ADMIN'])
 	def index()
 	{
-		[]	
+		[:]	
 	}
 }

@@ -26,7 +26,10 @@ public class SiteConfigService
 	public void deleteById( final Long id )
 	{
 		SiteConfigEntry theEntry = SiteConfigEntry.findById( id );
-		theEntry.delete();
+		
+		log.info( "found entryToDelete: ${theEntry}");
+		
+		theEntry.delete(flush: true);
 	}
 	
 	public void save( final SiteConfigEntry entryToSave )
@@ -49,9 +52,15 @@ public class SiteConfigService
 	{
 		List<SiteConfigEntry> allEntries = new ArrayList<SiteConfigEntry>();
 		
-		Collection queryResults = SiteConfigEntry.findAll();
+		Collection<SiteConfigEntry> queryResults = SiteConfigEntry.findAll();
 		
-		allEntries.add( queryResults );
+		log.info( "queryResults.class: ${queryResults.getClass().getName()}")
+		log.info( "queryResults: ${queryResults}")
+		
+		if( queryResults != null && !queryResults.isEmpty())
+		{
+			allEntries.addAll( queryResults );
+		}
 		
 		return allEntries;
 	}

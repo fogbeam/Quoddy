@@ -9,7 +9,8 @@ class ProfilePicController
 	{
 		if( !params.id ) 
 		{
-			[]	
+			// TODO: better handling for this case
+			[:]	
 		}
 		else 
 		{
@@ -37,7 +38,8 @@ class ProfilePicController
 	{
 		if( !params.id )
 		{
-			[]
+			// TODO: better handling for this case
+			[:]
 		}
 		else
 		{

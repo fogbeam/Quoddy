@@ -26,7 +26,7 @@
                     </thead> 
                     <tbody>
                     
-                         <g:each in="${allEntries}" var="entry" status="oddEven">
+                         <g:each in="${allEntries}" var="entry">
                               <tr> 
                                    <td style="padding-top:8px;">
                                         <g:link controller="siteConfigEntry" action="edit" id="${entry.id}">${entry.id}</g:link>

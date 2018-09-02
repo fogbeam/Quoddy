@@ -291,7 +291,7 @@
 								<li><a href="${createLink(controller:'admin', action:'index')}">Admin Home</a></li>
 								<li class="divider"></li>
 								<li><a href="${createLink(controller:'user', action:'manageUsers')}">Manage Users</a></li>
-								<li><a href="#">Manage Site Config</a></li>
+								<li><a href="${createLink(controller:'siteConfigEntry', action:'list')}">Manage Site Config</a></li>
 								<li><a href="${createLink(controller:'schedule', action:'index')}">Manage Scheduled Jobs</a></li>
 								<li><a href="#">More goes here...</a></li>
 								<li class="divider"></li>

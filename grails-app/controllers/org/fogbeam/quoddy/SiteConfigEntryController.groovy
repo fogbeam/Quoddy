@@ -18,13 +18,16 @@ class SiteConfigEntryController
 	def list()
 	{
 		List<SiteConfigEntry> allEntries = siteConfigService.listAll();
+		
+		log.info( "Found ${allEntries?.size()} siteConfigEntry records" );
+		
 		[allEntries:allEntries];	
 	}
 
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def edit()
 	{
-		SiteConfigEntry theEntry = siteConfigService.findById( Long.parseLong( params.id ) );
+		SiteConfigEntry theEntry = siteConfigService.getById( Long.parseLong( params.id ) );
 		
 		[ theEntry: theEntry ];	
 	}
@@ -33,7 +36,7 @@ class SiteConfigEntryController
 	def create() 
 	{
 		
-		[];	
+		[:];	
 	}
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
@@ -51,7 +54,7 @@ class SiteConfigEntryController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def update()
 	{	
-		SiteConfigEntry theEntry = siteConfigService.findById( Long.parseLong( params.entryId ) );
+		SiteConfigEntry theEntry = siteConfigService.getById( Long.parseLong( params.entryId ) );
 		theEntry.name = params.entryName;
 		theEntry.value = params.entryValue;
 		
@@ -63,6 +66,8 @@ class SiteConfigEntryController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def delete()
 	{
+		log.info( "SiteConfigEntryController.delete() called. ${params.entryId}");
+		
 		siteConfigService.deleteById( Long.parseLong( params.entryId ) );
 				
 		redirect( controller:"siteConfigEntry", action:"list" );

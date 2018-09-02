@@ -20,7 +20,8 @@
                </div>
                <g:submitButton name="Save" style="margin-top:10px;" />
            </g:form>
-           <g:form style="margin-left:50px;margin-top:-19px;" controller="siteConfigEntry" action="delete" >
+           
+           <g:form style="margin-left:60px;margin-top:-26px;" controller="siteConfigEntry" action="delete" >
                <g:hiddenField name="entryId" value="${theEntry.id}" />
                <g:submitButton name="Delete" />
            </g:form>

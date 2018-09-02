@@ -24,7 +24,7 @@ class CalendarController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def createFeed()
 	{
-		[];
+		[:];
 	}
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])

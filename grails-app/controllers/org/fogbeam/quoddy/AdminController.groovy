@@ -22,7 +22,7 @@ public class AdminController
 	{
 		log.debug( "importUsers" );
 		
-		[];
+		[:];
 	}
 		
 }
