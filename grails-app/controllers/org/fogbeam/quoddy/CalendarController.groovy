@@ -13,12 +13,10 @@ class CalendarController
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def index()
-	{
-		List<CalendarFeedSubscription> calFeeds = new ArrayList<CalendarFeedSubscription>();
+	{		
 		User currentUser = userService.getLoggedInUser();
-		def queryResults = CalendarFeedSubscription.executeQuery( "select calfeed from CalendarFeedSubscription as calfeed where calfeed.owner = :owner", [owner:currentUser] );
 		
-		calFeeds.addAll( queryResults );
+		List<CalendarFeedSubscription> calFeeds = calendarFeedSubscriptionService.getAllSubscriptionsForUser( currentUser );
 		
 		[calFeeds:calFeeds];
 	}
@@ -40,12 +38,7 @@ class CalendarController
 		calFeed.url = params.calFeedUrl;
 		calFeed.name = params.calFeedName;
 		
-		if( !calFeed.save(flush:true) )
-		{
-			log.debug( "Saving CalendarFeedSubscription FAILED");
-			calFeed.errors.allErrors.each { log.debug( it ) };
-		}
-
+		calendarFeedSubscriptionService.saveSubscription(calFeed);
 		
 		redirect( controller:"calendar", action:"index");
 	}
@@ -55,9 +48,9 @@ class CalendarController
 	{
 		CalendarFeedSubscription calFeedToEdit = null;
 		
-		def calFeedId = params.calFeedId;
+		Long calFeedId = Long.parseLong( params.calFeedId );
 		
-		calFeedToEdit = CalendarFeedSubscription.findById( params.calFeedId);
+		calFeedToEdit = calendarFeedSubscriptionService.findById( calFeedId);
 
 		[calFeedToEdit:calFeedToEdit];
 	}
@@ -65,23 +58,22 @@ class CalendarController
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def updateFeed()
 	{
-		CalendarFeedSubscription calFeed = CalendarFeedSubscription.findById( params.calFeedId);
+		Long calFeedId = Long.parseLong( params.calFeedId );		
 		
+		CalendarFeedSubscription calFeed = calendarFeedSubscriptionService.findById( calFeedId);
+
 		calFeed.url = params.calFeedUrl;
 		calFeed.name = params.calFeedName;
 		
-		if( !calFeed.save(flush:true) )
-		{
-			log.debug( "Saving CalendarFeedSubscription FAILED");
-			calFeed.errors.allErrors.each { log.debug( it ) };
-		}
-
+		calendarFeedSubscriptionService.saveSubscription( calFeed );
+		
 		redirect( controller:"calendar", action:"index");
 	}
+	
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def display()
 	{
-		[];	
+		[:];	
 	}
 }

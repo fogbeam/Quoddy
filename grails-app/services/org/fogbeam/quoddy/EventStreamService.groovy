@@ -668,30 +668,5 @@ class EventStreamService {
 		
 		
 		return statusUpdatesForUser;
-	}
-	
-
-	/*
-	public List<ActivityStreamItem> getUserTimeline( final User user, final int maxCount )
-	{
-		
-		List<ActivityStreamItem> userTimeline = new ArrayList<ActivityStreamItem>();
-		
-		
-		String query = "";
-		
-		List<ActivityStreamItem> queryResults =
-				ActivityStreamItem.executeQuery( query, [user:user], ['max': maxCount ]);
-		
-		if( queryResults != null )
-		{
-			userTimeline.addAll( queryResults );
-		}
-		
-		return userTimeline;
-		
-	}
-	*/
-	
-				
+	}				
 }

@@ -157,7 +157,7 @@ class LocalLoginController
             }
             catch( Exception e )
             {
-				log.error( "Exception doing Login: ", bce );
+				log.error( "Exception doing Login: ", e );
 			}
 			
             redirect( uri: urlAfterAuthentication );

@@ -12,46 +12,30 @@ class CommentController
 {	
     def jmsService;
 	def eventStreamService;
-	// def entryService;
+	def userService;
+	def commentService;
+	
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def addComment()
-    {
+    {	
+		User currentUser = userService.getLoggedInUser();
+		
 		log.debug("addComment params: ${params}");
 		
 		// lookup the Event by id
 		log.debug( "eventId: ${params.eventId}" );
 		ActivityStreamItem item = eventStreamService.getActivityStreamItemById( Integer.parseInt( params.eventId) );
 			
-
 		log.debug( "item: ${item}" );
 		
-		User currentUser = userService.getLoggedInUser();
-	
 		StreamItemComment newComment = new StreamItemComment();
 		newComment.text = params.addCommentTextInput;
 		newComment.creator = currentUser;
 		newComment.event = item.streamObject;
-		newComment.save(flush:true);
-		
-		item.streamObject.addToComments( newComment );
-		
-		eventStreamService.saveActivity( item );
-		
-		// send JMS message saying "new comment added"
-		def newCommentMessage = [msgType:"NEW_STREAM_ENTRY_COMMENT",
-								  activityId:item.id, activityUuid:item.uuid,
-									 entry_id:item.streamObject.id, entry_uuid:item.streamObject.uuid,
-								  comment_id:newComment.id, comment_uuid:newComment.uuid,
-								  comment_text:newComment.text ];
-		
-		// send a JMS message to our testQueue
-		jmsService.send("quoddySearchQueue", newCommentMessage );
-		
-		log.debug( "saved StreamItemComment for user ${currentUser.userId}, item ${item.id}" );
-
-		
-			
+	
+		commentService.addComment( item, newComment, currentUser );
+				
 		// render using template, so we can ajaxify the loading of the comments...
 		render( template:"/renderComments", model:[comments:item.streamObject.comments]);
 		

@@ -6,9 +6,19 @@ import org.fogbeam.quoddy.subscription.CalendarFeedSubscription
 class CalendarFeedSubscriptionService
 {
 	
+	public CalendarFeedSubscription findById( final Long id )
+	{
+		CalendarFeedSubscription subscription = CalendarFeedSubscription.findById( id );
+		
+		return subscription;
+	}
+	
 	public CalendarFeedSubscription findByUuid( final String uuid )
 	{
-		throw new RuntimeException( "not implemented yet...");
+		CalendarFeedSubscription subscription = CalendarFeedSubscription.findByUuid( uuid );
+		
+		return subscription;
+
 	}
 	
 	public CalendarFeedSubscription saveSubscription( final CalendarFeedSubscription subscription )
@@ -16,7 +26,7 @@ class CalendarFeedSubscriptionService
 		if( !subscription.save(flush:true) )
 		{
 			log.error( "Saving CalendarFeedSubscription FAILED");
-			subscription.errors.allErrors.each { log.warn( it ) };
+			subscription.errors.allErrors.each { log.error( it.toString() ) };
 		}
 		
 		

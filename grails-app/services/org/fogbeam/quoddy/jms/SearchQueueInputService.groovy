@@ -942,16 +942,18 @@ public class SearchQueueInputService
 	{
 		
 		log.debug( "adding NEW_STREAM_ENTRY_COMMENT to index!" );
-		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
-		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
-		IndexWriter writer = null;
 		
-		if( indexDirLocation == null || indexDirLocation.isEmpty()) 
+		String indexDirLocation = siteConfigService.getSiteConfigEntry( "indexDirLocation" );
+		
+		if( indexDirLocation == null || indexDirLocation.isEmpty())
 		{
 			String quoddyHome = System.getProperty( "quoddy.home" );
 			indexDirLocation = quoddyHome + "/index";
 		}
 		
+		
+		Directory indexDir = new NIOFSDirectory( new java.io.File( indexDirLocation + "/general_index" ) );
+		IndexWriter writer = null;
 		
 		// TODO: fix this so it will eventually give up, to deal with the pathological case
 		// where we never do get the required lock.
