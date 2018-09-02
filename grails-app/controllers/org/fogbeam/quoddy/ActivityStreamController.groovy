@@ -24,7 +24,6 @@ class ActivityStreamController
 	def activityStreamTransformerService;
 	def userService;
 	def jmsService;
-	def emailService;
 	def eventQueueService;
 	def userStreamDefinitionService;
 	def userListService;
@@ -33,6 +32,8 @@ class ActivityStreamController
 	def calendarFeedSubscriptionService;
 	def activitiUserTaskSubscriptionService;
 	def rssFeedSubscriptionService;
+	def openMeetingsService;
+	
 	
     @Secured(['ROLE_USER', 'ROLE_ADMIN'])
 	def getQueueSize()
@@ -172,7 +173,7 @@ class ActivityStreamController
 	
     
     @Secured(['ROLE_USER', 'ROLE_ADMIN'])
-	public void discussItem() 
+	def discussItem() 
 	{
 		log.trace( "ActivityStreamController.discussItem invoked:" );
 		log.trace( "params: ${params}" );
@@ -200,123 +201,20 @@ class ActivityStreamController
 		 */
 		
 		log.info( "Invoking OpenMeetings integration here...");
-		
-		// prereq... instantiate a RESTClient and generate OM session ID and login
-		String openMeetingsEndpoint = grailsApplication.config.urls.openmeetings.endpoint;
-		def client = new RESTClient( openMeetingsEndpoint )
-		
-		// call getSession
-		def resp = client.get( path : 'openmeetings/services/UserService/getSession', contentType:XML );
-		String sid = resp.data.return.session_id;
-		log.info( "sessionId: $sid");
 
-		// TODO: deal with this username/password properly...
-		// call login using the SID from getSession
-		String omUsername = grailsApplication.config.credentials.om.username;
-		String omPassword = grailsApplication.config.credentials.om.password;
-		resp = client.get( path : 'openmeetings/services/UserService/loginUser', contentType:XML, query: [ SID:sid, username:omUsername, userpass:omPassword ] );
+		def openMeetingsSession = openMeetingsService.launchOpenMeetingsSession( currentUser, discussItemUuid, discussItemComment, discussTargetUserId, discussItem );
+		log.info( "openMeetingsSession: ${openMeetingsSession}");
 		
-		/**
-		 
-		    NOTE: We need to decide how to deal with the user creating the discussion.  Do we create the room using that
-		    user's credentials? Or do we create the room using a single "system" OM account?  If the latter, how
-		    do we make sure we set the creating user as the room moderator? Or does the room in question even
-		    need moderation?  And how does the room get deleted after we're done with it?   And should we give
-		    the user the option to either pick an existing room OR create a temporary room?  
-		 */
-																											
-		/****	first step:  Create a new demo room */
-																											
-		resp = client.get( path : 'openmeetings/services/RoomService/addRoomWithModeration', contentType: XML,
-			query:[ SID:sid, name: "Test Room", roomtypes_id: 1, comment: "", numberOfPartizipants:25, ispublic:true, appointment:false, isDemoRoom:false, demoTime:0, isModeratedRoom:false ] );
-		
-		int newRoomID = -1;
-		String roomURL = "${openMeetingsEndpoint}openmeetings/#room/";
-		
-		if( !( resp.status == 200 )) // HTTP response code; 404 means not found, etc.
-		{
-			throw new Exception( "Not 200 HTTP Response!   ${resp.status}" );
-		}
-		else
-		{
-			String strNewRoomID = resp.data.return;
-			log.info( "newRoomID: $strNewRoomID");
-			newRoomID = Integer.parseInt( strNewRoomID );
-			roomURL = roomURL + newRoomID;
-			 
-			// then generate invitation hashes for all of the invited users
-			
-			resp = client.get( path : 'openmeetings/services/RoomService/getInvitationHash', contentType: XML,
-				query:[ SID:sid, username:discussTargetUserId, room_id:newRoomID, isPasswordProtected:false, invitationpass:"", valid:1, validFromDate:"", validFromTime:"",
-												validToDate:"", validToTime:"" ] );
-			
-			log.trace( "response from getInvitationHash: ${resp.data}");
-			
-			if( !( resp.status == 200 )) // HTTP response code; 404 means not found, etc.
-			{
-				throw new Exception( "Not 200 HTTP Response!   ${resp.status}" );
-			}
-			else
-			{
-				
-				def hash = resp.data.return;
-				log.info( "Invitation Hash: $hash" );
-				
-				def inviteUrl = "${openMeetingsEndpoint}openmeetings/?invitationHash=$hash";
-				
-				log.info( "URL: $inviteUrl");
-				
-				// After creating has, and then what... ???  email the hashes to the usesr?  IM them?  Post to their Quoddy
-				// stream? What??  Should the incoming request tell us which contact mechanism to use?  
-				
-				// for now we're just going to hardcode this to use email, based on the user's primary email address.
-				User targetUser = userService.findUserByUserId( discussTargetUserId );
-				Profile targetProfile = targetUser.profile;
-				Set<ContactAddress> targetContactAddresses = targetProfile.contactAddresses;
-				ContactAddress toEmail = targetContactAddresses.find { it.serviceType == ContactAddress.EMAIL && it.primaryInType == true };
-				
-				User creatingUser = userService.findUserByUserId( currentUser.userId );
-				Profile creatingUserProfile = creatingUser.profile;
-				Set<ContactAddress> creatingUserContactAddresses = creatingUserProfile.contactAddresses;
-				ContactAddress senderEmail = creatingUserContactAddresses.find { it.serviceType == ContactAddress.EMAIL && it.primaryInType == true };
-
-				
-				// email this invitation to the user.
-				StringBuffer emailBodyBuffer = new StringBuffer();
-				
-				
-				emailBodyBuffer.append( "${creatingUser.displayName} is inviting you to join a video conference.\n\n" );
-				emailBodyBuffer.append( "Invitation comment: ${discussItemComment}\n\n");
-				emailBodyBuffer.append( "This conference pertains to the following item: ${discussItemUuid}\n\n");
-				emailBodyBuffer.append( "To join the conference open this link:   ${inviteUrl}\n\n\n" );
-				emailBodyBuffer.append( "---------------------------------------------------------------------------" );
-				String emailBody = emailBodyBuffer.toString();
-				
-				try 
-				{
-					log.info( "about to send invitation email!")
-
-					emailService.deliverEmail( toEmail, senderEmail, "Video conference invitation from ${creatingUser.displayName}", emailBody );
-				}
-				catch( Exception e )
-				{
-				   // TODO: turn this into a notification to the user
-				   e.printStackTrace();
-				   log.error( "Error sending invitation email", e );
-				}
-				
-			}			
-		}
-				
 		// return the generated room number to the user who created the room so the client-side
 		// code can put the user in the conference
 		// render( );	
-		log.info( "calling render()" );
-		render(contentType: 'text/json') {[
-			newRoomID: newRoomID, 
-			roomURL:roomURL
-		]}
+		log.info( "calling respond()" );
+		respond( [
+			"newRoomID": openMeetingsSession.newRoomID, 
+			"roomURL": openMeetingsSession.roomURL
+		], formats: ['json']);
 	}
+		
 	
     @Secured(['ROLE_USER', 'ROLE_ADMIN'])
 	public void shareItem()

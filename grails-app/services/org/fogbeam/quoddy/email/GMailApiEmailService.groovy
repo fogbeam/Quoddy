@@ -1,47 +1,32 @@
 package org.fogbeam.quoddy.email
 
-import org.apache.log4j.Logger;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
-
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.fogbeam.quoddy.profile.ContactAddress
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
-import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.Message;
 
-import org.springframework.beans.factory.InitializingBean;
+import grails.core.GrailsApplication
 
+// NOTE: make sure we inject the grailsApplication since we define this bean manually...
 class GMailApiEmailService implements EmailService, InitializingBean 
 {
-	def grailsApplication;
-	
-	// private static final Logger log = Logger.getLogger( GMailApiEmailService.class);
+	@Autowired
+	GrailsApplication grailsApplication;
 	
 	/** Application name. */
 	private static final String APPLICATION_NAME = "Gmail API Java Quickstart";
@@ -97,42 +82,52 @@ class GMailApiEmailService implements EmailService, InitializingBean
 		
 	}
 	
-	
 	/**
 	 * Creates an authorized Credential object.
 	 *
 	 * @return an authorized Credential object.
 	 * @throws IOException
 	 */
-	public Credential authorize() throws Exception {
-
+	public Credential authorize() throws Exception 
+	{
+		String privateKeyPath = grailsApplication.config.gmailapi.serviceaccount.privateKey; 
+		log.info( "privateKeyPath: ${privateKeyPath}" );
+		
+		File p12File = new File( privateKeyPath );
+		
+		if( !p12File.exists())
+		{
+			log.error( "File at ${privateKeyPath} does not exist!" );
+		}
+		
 		GoogleCredential credential = new GoogleCredential.Builder()
 		.setTransport(HTTP_TRANSPORT)
 		.setJsonFactory(JSON_FACTORY)
 		.setServiceAccountId( grailsApplication.config.gmailapi.serviceaccount.accountId ) /*  */
-		.setServiceAccountPrivateKeyFromP12File(new File( grailsApplication.config.gmailapi.serviceaccount.privateKey ))
+		.setServiceAccountPrivateKeyFromP12File(p12File)
 		.setServiceAccountScopes(SCOPES)
 		.setServiceAccountUser( grailsApplication.config.gmailapi.serviceaccount.user )
 		.build();
 
 		return credential;
-
 	}
 
+	
 	/**
 	 * Build and return an authorized Gmail client service.
 	 *
 	 * @return an authorized Gmail client service
 	 * @throws IOException
 	 */
-	public static Gmail getGmailService() throws IOException {
+	public Gmail getGmailService() throws IOException 
+	{
 		Credential credential = authorize();
 		return new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
 				.setApplicationName(APPLICATION_NAME).build();
 	}
 
-	public static MimeMessage createEmail(String to, String from,
-			String subject, String bodyText) throws MessagingException {
+	public MimeMessage createEmail(String to, String from, String subject, String bodyText) throws MessagingException 
+	{
 		Properties props = new Properties();
 		Session session = Session.getDefaultInstance(props, null);
 
@@ -146,14 +141,15 @@ class GMailApiEmailService implements EmailService, InitializingBean
 		return email;
 	}
 
-	public static Message createMessageWithEmail(MimeMessage emailContent)
-			throws MessagingException, IOException {
+	public Message createMessageWithEmail(MimeMessage emailContent) throws MessagingException, IOException 
+	{
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		emailContent.writeTo(buffer);
 		byte[] bytes = buffer.toByteArray();
 		String encodedEmail = Base64.encodeBase64URLSafeString(bytes);
 		Message message = new Message();
 		message.setRaw(encodedEmail);
+
 		return message;
 	}
 }

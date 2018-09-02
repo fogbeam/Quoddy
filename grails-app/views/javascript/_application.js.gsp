@@ -3,9 +3,11 @@
             "status = 1, height = 300, width = 300, resizable = 0"  )
     }
     
-	function openDiscussion( data ) {
-		// alert( "openDiscussion: " + data );
-		// alert( "roomURL: " + data.roomURL );
+	function openDiscussion( data, textStatus) {
+		alert( "textStatus: " + textStatus );
+		alert( "openDiscussion: " + data );
+		
+		alert( "roomURL: " + data.roomURL + ", newRoomID: " + data.newRoomID);
 		var win = window.open(data.roomURL, '_blank');
 	 	win.focus();
 		
@@ -22,38 +24,7 @@
        }
     
     function initHandlers() {
-    
-				$j( "#discussDialog" ).dialog(
-					{
-						autoOpen: false,
-						show: {
-						effect: "blind",
-						duration: 200
-						},
-						hide: {
-						effect: "explode",
-						duration: 1500
-						},
-						buttons: [ { text: "Cancel", click: function() { $j( this ).dialog( "close" ); } },
-							   { text: "Submit", click: function() 
-				   					{ 			
-				   						var discussItemUuid = $j(this).data('discussItemUuid');
-				   							
-				   						// find our form object and submit it...
-				   						$j('#discussItemUuid').val( discussItemUuid );
-				   						
-				   						$j('#discussItemForm').submit();
-				   						
-				   						// alert("submitting...");
-				   						$j( this ).dialog( "close" );
-				   					
-				   					} 
-							 	} 
-							 ]
-						});
-		 	
-		 	
-		 	
+    	 	
 				// alert( "JQuery ready for action!" );
 				$j( "#shareDialog" ).dialog(
 				{
@@ -88,9 +59,27 @@
 				
 					var name = $j(this).attr('name');
 					var discussItemUuid = name.split( "." )[1];
+					
 					// alert( "Launch the Discuss dialog here!  Yeeeeeaaaah, boy!" );
-					$j( "#discussDialog" ).data('discussItemUuid', discussItemUuid).dialog( "open" );
-				});
+				
+					$j( '#submitDiscussionLaunch' ).click( function() {
+					
+						$j( '#discussItemForm').submit();
+						
+						// do we need to do this explicitly? 
+						// $j( '#myModal').modal('dispose');
+					});
+				
+					$j( '#discussItemUuid' ).val(discussItemUuid);
+		
+					// TODO: launch Bootstrap Modal here to launch the Discuss flow
+					$j('#myModal').data( 'discussItemUuid', discussItemUuid ).modal(
+										  { keyboard: false }
+									   );
+				    
+					
+			      });
+				
 				
 				$j( ".shareButton" ).click(function( event) {
 				

@@ -3,27 +3,53 @@
 </g:each>
 
 
-<div id="discussDialog" title="" style="display:none;">
-	
-		<g:formRemote name="discussItemForm" url="[controller: 'activityStream', action:'discussItem']" onSuccess="openDiscussion(data)" >
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Start OpenMeetings Discussion</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+		<g:formRemote name="discussItemForm" url="[controller: 'activityStream', action:'discussItem']" onSuccess="openDiscussion(data,textStatus)" >
+
+			
+			<!--  the uuid of the thing being shared -->
+			<input id="discussItemUuid" name="discussItemUuid" type="hidden" value="" />
+
+
+			<!--  a target userId  -->
+			<!--  TODO: need a picker of some sort to select users to invite to the conference -->
+			<div style="margin-bottom:15px;">
+				<input name="discussTargetUserId" type="text" placeholder="Select User(s)" />
+			</div>
 	
 			<!--  what data do we need to pass here? -->
 			
-			<!--  text of an (optional) comment -->
-			<input name="discussItemComment" type="text" value="Add A Comment" />
+			<div style="margin-bottom:15px;">
+				<!--  text of an (optional) comment -->
+				<input name="discussItemComment" type="text" placeholder="Add A Comment" />
+			</div>
 	
-			<!--  the uuid of the thing being shared -->
-			<input id="discussItemUuid" name="discussItemUuid" type="hidden" value="" />
-	
-			<!--  a target userId  -->
-			<!--  TODO: need a picker of some sort to select users to invite to the conference -->
-			<input name="discussTargetUserId" type="text" value="" />
-			<br />
-			
-			<!-- TODO: deal with the return from the server with our URL  -->
-			
+
 		</g:formRemote>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button id="submitDiscussionLaunch" name="submitDiscussionLaunch" type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
 
 
 <div id="shareDialog" title="Share this Item" style="display:none;">
