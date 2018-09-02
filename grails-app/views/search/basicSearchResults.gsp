@@ -3,7 +3,6 @@
 <head>
 <title>Quoddy: Search Results</title>
 <meta name="layout" content="main" />
-<nav:resources />
 </head>
 
 <body>

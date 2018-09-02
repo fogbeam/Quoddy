@@ -3,7 +3,6 @@
 	<head>
 		<title>Quoddy: Admin</title>
 		<meta name="layout" content="admin" />
-	     <nav:resources />
 	</head>
 	<body>
 		<h2>Administration</h2>

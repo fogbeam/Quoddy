@@ -2,7 +2,6 @@
 <head>
 <title>Quoddy: Edit Profile</title>
 <meta name="layout" content="user_profile" />
-<nav:resources />
 <g:render template="/userProfileJS"></g:render>
 </head>
 <body>

@@ -2,7 +2,6 @@
     <head>
 		<title>Quoddy: Installer</title>
        	<meta name="layout" content="main" />
-       	<nav:resources />
     </head>
 	<body>
 		<h1>Quoddy: Installer</h1>

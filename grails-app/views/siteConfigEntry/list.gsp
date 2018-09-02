@@ -2,7 +2,6 @@
     <head>
         <title>Welcome to Neddick</title>
           <meta name="layout" content="main" />
-          <nav:resources />
     </head>
     <body>
           <g:if test="${flash.message}">

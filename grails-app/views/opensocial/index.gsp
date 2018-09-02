@@ -5,7 +5,6 @@
 	<head>
 		<title>Quoddy: Test OpenSocial Container</title>
 		<meta name="layout" content="opensocial" />
-	    <nav:resources />
 	</head>
 	<body>
   		<h2>Quoddy: Test OpenSocial Container</h2>

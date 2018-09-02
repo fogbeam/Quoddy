@@ -2,7 +2,6 @@
     <head>
         <title>Quoddy: Edit Profile</title>
         <meta name="layout" content="user_profile" />
-        <nav:resources />
     	<script type="text/javascript">
 
 			var educationHistoryBlocks = 0;

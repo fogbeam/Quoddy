@@ -2,8 +2,7 @@
 	
 	<head>
 		<title>Quoddy: OmniCommand Results</title>
-		<meta name="layout" content="main" />
-	     <nav:resources />		
+		<meta name="layout" content="main" />	
 	</head>
 	
 	<body>

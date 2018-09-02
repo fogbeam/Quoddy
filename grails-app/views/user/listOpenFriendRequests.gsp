@@ -3,7 +3,6 @@
 	<head>
 		<title>Quoddy: Open Friend Requests</title>
         <meta name="layout" content="main"/>
-        <nav:resources />
 	</head>
 	
 	<body>

@@ -2,7 +2,6 @@
     <head>
         <title>Welcome to Quoddy - SPARQL Search Results</title>
           <meta name="layout" content="main" />
-          <nav:resources />
     </head>
     <body>
     

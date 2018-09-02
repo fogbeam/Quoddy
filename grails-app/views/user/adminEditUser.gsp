@@ -2,7 +2,6 @@
     <head>
         <title>Quoddy: Edit Account</title>
         <meta name="layout" content="main"/>
-        <nav:resources />
     </head>
     <body>
            <div class="jumbotron span6">

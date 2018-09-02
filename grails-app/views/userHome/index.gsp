@@ -3,7 +3,6 @@
 	<head>
 		<title>Quoddy: User Home</title>
         <meta name="layout" content="main"/>
-        <nav:resources />
 	</head>
 	
 	<body>

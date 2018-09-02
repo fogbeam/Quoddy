@@ -3,7 +3,6 @@
 <head>
 <title>Quoddy: View User</title>
 <meta name="layout" content="user_profile" />
-<nav:resources />
 
 <g:javascript library="typeahead" />
 <g:javascript library="user_profile" />

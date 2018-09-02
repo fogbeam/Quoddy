@@ -2,7 +2,6 @@
     <head>
         <title>Welcome to Quoddy - SPARQL Search</title>
           <meta name="layout" content="basic" />
-          <nav:resources />
     </head>
     <body>
           <g:if test="${flash.message}">

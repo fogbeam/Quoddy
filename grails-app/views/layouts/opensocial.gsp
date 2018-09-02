@@ -3,7 +3,6 @@
         <title>
           <g:layoutTitle default="Quoddy" />
         </title>
-        <nav:resources />
         <link rel="stylesheet" type="text/css" href="/css/main.css">
         <link rel="stylesheet" type="text/css" href="/css/reset-min.css">
         <link rel="stylesheet" type="text/css" href="/css/fonts-min.css">             

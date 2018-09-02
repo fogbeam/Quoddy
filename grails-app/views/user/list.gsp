@@ -3,7 +3,6 @@
 	<head>
 		<title>Quoddy: List Users</title>
 		<meta name="layout" content="main"/>
-        <nav:resources />
 	</head>
 	
 	<body>

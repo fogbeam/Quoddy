@@ -2,8 +2,7 @@
 	
 	<head>
 		<title>Quoddy: The page for managing LISTS</title>
-		<meta name="layout" content="main" />
-	     <nav:resources />		
+		<meta name="layout" content="main" />	
 	</head>
 	
 	<body>

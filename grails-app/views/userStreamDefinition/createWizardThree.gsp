@@ -3,7 +3,6 @@
 	<head>
 		<title>Quoddy: Edit User Stream</title>
 		<meta name="layout" content="main" />
-	     <nav:resources />	
 	     <style type="text/css">
 	     	#userFilterSelections li {
 	     		list-style-type:none;
