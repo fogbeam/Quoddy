@@ -21,6 +21,17 @@ class CalendarFeedSubscriptionService
 
 	}
 	
+	public void attachAndSave( final CalendarFeedSubscription subscriptionToSave )
+	{
+		// re-attach to Hibernate session
+		if( !subscriptionToSave.isAttached())
+		{
+			subscriptionToSave.attach();
+		}
+		
+		saveSubscription( subscriptionToSave );
+	}
+	
 	public CalendarFeedSubscription saveSubscription( final CalendarFeedSubscription subscription )
 	{
 		if( !subscription.save(flush:true) )

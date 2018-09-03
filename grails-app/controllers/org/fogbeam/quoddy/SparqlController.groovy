@@ -33,8 +33,7 @@ public class SparqlController
 	
     @Secured(['ROLE_USER','ROLE_ADMIN'])
 	def doSearch()
-	{
-		
+	{		
 		User currentUser = userService.getLoggedInUser();
 
 		List<SearchResult> searchResults = new ArrayList<SearchResult>();
@@ -50,8 +49,6 @@ public class SparqlController
 		// a sample query
 		// final queryString = "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> SELECT distinct ?entity ?y WHERE { ?entity <http://purl.org/dc/terms/references> ?y . ?y <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/MusicalArtist> . ?y <http://dbpedia.org/ontology/birthDate> ?birthDate . FILTER ( ?birthDate  < "1950-01-01T00:00:00Z"^^xsd:dateTime) }";
 
-		
-		
 		// Make a TDB-backed dataset
 		String quoddyHome = System.getProperty( "quoddy.home" );
 		String directory = "${quoddyHome}/jenastore/triples" ;
@@ -87,8 +84,7 @@ public class SparqlController
 				log.debug( "subject: " + subject);
 				
 				List<ActivityStreamItem> asiResults = ActivityStreamItem.executeQuery( "select asi from ActivityStreamItem as asi where asi.uuid = ?", [subject] );
-				
-				
+							
 				if( asiResults != null && !asiResults.isEmpty() )
 				{
 					log.debug( "found valid ActivityStreamItem for SPARQL query");

@@ -29,7 +29,13 @@ public class UserController
 	def profileService;
 	def searchService;
 	def jenaService;
-
+	def contactAddressService;
+	def historicalEmployerService;
+	def educationalExperienceService;
+	def organizationAssociationService;
+	def interestService;
+	def skillService;
+	
 	def eventStreamService;
 	
 	
@@ -568,7 +574,8 @@ public class UserController
 			contactTypes:contactTypes];
 	}
 	
-
+	/* TODO: from here down --> get rid of direct GORM calls and use a Service */
+	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def saveProfilePrimaryPhone()
     {
@@ -590,7 +597,7 @@ public class UserController
 				if( currentPrimaryPhone != null )
 				{
 					currentPrimaryPhone.setPrimaryInType( false );
-					currentPrimaryPhone.save(flush:true);
+					contactAddressService.save( currentPrimaryPhone );
 				}
 				
 				ContactAddress newPrimaryPhoneCA = new ContactAddress();
@@ -599,31 +606,12 @@ public class UserController
 				newPrimaryPhoneCA.profile = profile;
 				newPrimaryPhoneCA.serviceType = ContactAddress.PHONE;
 				
-				
-				if( !newPrimaryPhoneCA.save(flush:true) )
-				{
-					log.error( "Error saving newPrimaryPhoneCA!");
-					newPrimaryPhoneCA.error.allErrors.each { log.debug(it);}
-				}
-				else
-				{
-					log.debug( "newPrimaryPhoneCA saved OK" );
-				}
-				
+				contactAddressService.save( newPrimaryPhoneCA );
 				
 				profile.addToContactAddresses( newPrimaryPhoneCA );
 				
-				if( !profile.save(flush:true) )
-				{
-					log.error( "Error saving profile..." );
-					profile.errors.allErrors.each { log.debug(it); }
-				}
-				else
-				{
-					log.debug( "profile saved OK" );
-				}
+				profileService.updateProfile( profile );
 			}
-			
 		}
 				
 		render( profile.primaryPhoneNumber.address );
@@ -651,7 +639,8 @@ public class UserController
 				if( currentPrimaryEmail != null )
 				{
 					currentPrimaryEmail.setPrimaryInType( false );
-					currentPrimaryEmail.save(flush:true);
+					
+					contactAddressService.save(currentPrimaryEmail);
 				}
 				
 				ContactAddress newPrimaryEmailCA = new ContactAddress();
@@ -660,31 +649,12 @@ public class UserController
 				newPrimaryEmailCA.profile = profile;
 				newPrimaryEmailCA.serviceType = ContactAddress.EMAIL;
 				
-				
-				if( !newPrimaryEmailCA.save(flush:true) )
-				{
-					log.error( "Error saving newPrimaryEmailCA!");
-					newPrimaryEmailCA.error.allErrors.each { log.debug(it);}
-				}
-				else
-				{
-					log.debug( "newPrimaryEmailCA saved OK");
-				}
-				
+				contactAddressService.save( newPrimaryEmailCA );				
 				
 				profile.addToContactAddresses( newPrimaryEmailCA );
 				
-				if( !profile.save(flush:true) )
-				{
-					log.error( "Error saving profile...");
-					profile.errors.allErrors.each { log.debug(it); } 
-				}
-				else
-				{
-					log.debug( "profile saved OK" );
-				}
+				profileService.updateProfile( profile );
 			}
-			
 		}
 				
 		render( profile.primaryEmailAddress.address );
@@ -712,7 +682,8 @@ public class UserController
 				if( currentPrimaryInstantMessenger != null )
 				{
 					currentPrimaryInstantMessenger.setPrimaryInType( false );
-					currentPrimaryInstantMessenger.save(flush:true);
+					
+					contactAddressService.save( currentPrimaryInstantMessenger);
 				}
 				
 				ContactAddress newPrimaryInstantMessengerCA = new ContactAddress();
@@ -721,29 +692,12 @@ public class UserController
 				newPrimaryInstantMessengerCA.profile = profile;
 				newPrimaryInstantMessengerCA.serviceType = ContactAddress.JABBER_IM;
 				
-				
-				if( !newPrimaryInstantMessengerCA.save(flush:true) )
-				{
-					log.error( "Error saving newPrimaryInstantMessengerCA!");
-					newPrimaryInstantMessengerCA.error.allErrors.each { log.debug(it);}
-				}
-				else
-				{
-					log.debug( "newPrimaryInstantMessengerCA saved OK");
-				}
-				
+				contactAddressService.save( newPrimaryInstantMessengerCA );				
 				
 				profile.addToContactAddresses( newPrimaryInstantMessengerCA );
 				
-				if( !profile.save(flush:true) )
-				{
-					log.error( "Error saving profile...");
-					profile.errors.allErrors.each { log.debug(it); } 
-				}
-				else
-				{
-					log.debug( "profile saved OK");
-				}
+				profileService.updateProfile( profile );
+				
 			}
 			
 			render( profile.primaryInstantMessenger.address );
@@ -776,14 +730,12 @@ public class UserController
 				title: params.title,
 				description: "description" );
 			
-			if( !emp1.save(flush:true) )
-			{
-				log.error( "Saving new HistoricalEmployer Record failed");
-				emp1.errors.allErrors.each { log.debug(it) };
-			}
+			historicalEmployerService.save( emp1 );
+			
 
 			profile.addToEmploymentHistory( emp1 );
-			profile.save(flush:true);
+			
+			profileService.updateProfile( profile );
 			
 			render( "OK" );
 		}
@@ -820,20 +772,13 @@ public class UserController
 									courseOfStudy: params.major,
 									description: "description" );
 
-			if( !newEducationalExperience.save(flush:true) )
-			{
-				log.error( "Saving new EducationalExperience Record failed");
-				newEducationalExperience.errors.allErrors.each { log.debug(it) };
-			}
-			else
-			{
-				log.debug( "newEducationalExperience saved");
-			}
-
+								
+			educationalExperienceService.save( newEducationalExperience );
 		
 			profile.addToEducationHistory( newEducationalExperience );
 			log.debug( "added newEducationalExperience to profile");
-			profile.save(flush:true);
+			
+			profileService.updateProfile( profile );
 		
 			render( "OK" );
 		}
@@ -862,7 +807,7 @@ public class UserController
 			if( newLocation != null )
 			{
 				profile.location = newLocation.trim();
-				profile.save(flush:true);
+				profileService.updateProfile( profile );
 			}
 			
 			render( profile.location );
@@ -871,7 +816,6 @@ public class UserController
 		{
 			render(status: 503, text: 'User not found')
 		}
-
 	}
 	
     
@@ -893,7 +837,8 @@ public class UserController
 			if( newDotPlan != null )
 			{
 				profile.dotPlan = newDotPlan.trim();
-				profile.save(flush:true);
+				
+				profileService.updateProfile( profile );
 			}
 			
 			render( profile.dotPlan );
@@ -924,7 +869,8 @@ public class UserController
 			if( newTitle != null )
 			{
 				profile.title = newTitle.trim();
-				profile.save(flush:true);
+				
+				profileService.updateProfile( profile );
 			}
 			
 			render( profile.title );
@@ -943,7 +889,6 @@ public class UserController
 		log.debug( "params:\n ${params}" );
 		
 		// TODO: update summary and return... 
-		// summaryInput:Phil is a rad dude, id:prhodes
 		log.debug("Saving Summary!");
 		
 		String userId = params.id;
@@ -959,7 +904,8 @@ public class UserController
 			if( newSummary != null )
 			{
 				profile.summary = newSummary.trim();
-				profile.save(flush:true);
+				
+				profileService.updateProfile( profile );
 			}
 			
 			render( profile.summary );	
@@ -968,7 +914,6 @@ public class UserController
 		{
 			render(status: 503, text: 'User not found')
 		}
-		
 	}
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
@@ -987,53 +932,49 @@ public class UserController
 			log.debug( "is multipart");
 			MultipartHttpServletRequest mpr = (MultipartHttpServletRequest)request;
 		  	CommonsMultipartFile f = (CommonsMultipartFile) mpr.getFile("your_photo");
-		  	/* def f = request.getFile('myFile')*/
+		  	
 		  	if( f != null && !f.empty) 
 			{
 				log.debug( "uploading photo file...");
-				
-				  // f.transferTo( new File("/tmp/myfile.png") );
-		  	
-				  /* copy image to a known location for user profile pictures, and
-				   * resize to thumbnails, etc. as appropriate
-				   */
+						  	
+				/* copy image to a known location for user profile pictures, and
+				   resize to thumbnails, etc. as appropriate
+				*/
 				  
-				  // use quoddy.home variable here
-				  String quoddyHome = System.getProperty( "quoddy.home" );
+				// use quoddy.home variable here
+				String quoddyHome = System.getProperty( "quoddy.home" );
 				  
-				  File profilePicFile = new File("${quoddyHome}/profilepics/${user.userId}/${user.userId}_profile.jpg");
-				  if( !profilePicFile.exists() )
-				  {
-					  	File parentDir = profilePicFile.getParentFile();
-						if( !parentDir.exists() )
-						{
-							parentDir.mkdirs();
-						}
-						profilePicFile.createNewFile();  
-				  }
+				File profilePicFile = new File("${quoddyHome}/profilepics/${user.userId}/${user.userId}_profile.jpg");
+				if( !profilePicFile.exists() )
+				{
+				  	File parentDir = profilePicFile.getParentFile();
+					if( !parentDir.exists() )
+					{
+						parentDir.mkdirs();
+					}
+					profilePicFile.createNewFile();  
+				}
 
-				  f.transferTo( profilePicFile  );
+				f.transferTo( profilePicFile  );
 				  
-				  def convert = ["/usr/bin/convert","/opt/local/bin/convert"].find( { new File(it as String).exists() });
-				  File thumbnail = new File( profilePicFile.getParentFile(), FilenameUtils.getBaseName(profilePicFile.getName()) + "_thumbnail48x48.jpg" );
-				  ProcessBuilder pb = new ProcessBuilder()
+				def convert = ["/usr/bin/convert","/opt/local/bin/convert"].find( { new File(it as String).exists() });
+				File thumbnail = new File( profilePicFile.getParentFile(), FilenameUtils.getBaseName(profilePicFile.getName()) + "_thumbnail48x48.jpg" );
+				ProcessBuilder pb = new ProcessBuilder()
 						  .command(convert, profilePicFile.getName(), "-thumbnail", "48x48!", thumbnail.getName()).directory(profilePicFile.getParentFile());
 				  
-				  int result = pb.start().waitFor()
+				int result = pb.start().waitFor()
 				  
-				  if( result != 0 ){
+				if( result != 0 )
+				{
 					throw new RuntimeException("thumbnail generation failured, return code:" + result);
-				  }
-			  }
-			  else
-			  {
-				log.error( "ERROR: did not find file in upload!");
-				
-			  }
-			  
-			  
-			  render( "OK" );
-			  
+				}
+			}
+			else
+			{
+				log.error( "ERROR: did not find file in upload!");	
+			}
+			
+			render( "OK" );  
 		}
 		else
 		{
@@ -1125,11 +1066,8 @@ public class UserController
 					existingHistEmp.title = emp1v.title;
 					existingHistEmp.description = emp1v.description;
 					
-					if( !existingHistEmp.save(flush:true) )
-					{
-						log.error( "updating histemp record failed!" );	
-					}
 					
+					historicalEmployerService.save( existingHistEmp );
 					
 				}
 				// else, create new record and attach to profile
@@ -1167,11 +1105,7 @@ public class UserController
 																		yearFrom: yearFrom,
 																		title: emp1v.title,
 																		description: emp1v.description );
-					if( !emp1.save(flush:true) )
-					{
-						log.error( "Saving new HistoricalEmployer Record failed");
-						emp1.errors.allErrors.each { log.debug( it ) };
-					}
+					historicalEmployerService.save( emp1 );
 					
 					profile.addToEmploymentHistory( emp1 );
 				}
@@ -1188,19 +1122,15 @@ public class UserController
 				if( contactAddressId > 0 )
 				{
 					// TODO: use a service for this?
-					ContactAddress existingContactAddress = ContactAddress.findById( contactAddressId );
+					ContactAddress existingContactAddress = contactAddressService.findById( contactAddressId );
+					
 					if( contactAddress.serviceType != null )
 					{
 						existingContactAddress.serviceType = Integer.parseInt( contactAddress.serviceType );
 						existingContactAddress.address = contactAddress.address;
 					}
 					
-					if( !existingContactAddress.save(flush:true) )
-					{
-						log.error( "updating contact address record failed!");
-					}
-					
-					
+					contactAddressService.save( existingContactAddress );
 				}
 				// else, create new record and attach to profile
 				else
@@ -1211,17 +1141,10 @@ public class UserController
 						ContactAddress newContactAddress = new ContactAddress( serviceType: Integer.parseInt( contactAddress.serviceType ),
 																			address: contactAddress.address );
 
-						if( !newContactAddress.save(flush:true) )
-						{
-							log.error( "Saving new ContactAddress Record failed" );
-							newContactAddress.errors.allErrors.each { log.debug(it) };
-						}
-					    else
-					    {
-							log.debug( "newContactAddress saved" );	
-					    }
+						contactAddressService.save( newContactAddress );
 					
 						profile.addToContactAddresses( newContactAddress );
+						
 					}
 				}
 			}
@@ -1257,13 +1180,8 @@ public class UserController
 					existingEducationalExperience.description = ( educationalHistory.description != null &&
 																!educationalHistory.description.isEmpty() ) ? educationalHistory.description: null;
 					
-					
-					if( !existingEducationalExperience.save(flush:true) )
-					{
-						log.error( "updating educational experience record failed!" );
-					}
-					
-					
+					educationalExperienceService.save( existingEducationalExperience );
+										
 				}
 				// else, create new record and attach to profile
 				else
@@ -1296,19 +1214,9 @@ public class UserController
 														courseOfStudy: courseOfStudy,
 														description: description );
 
-					if( !newEducationalExperience.save(flush:true) )
-					{
-						log.error( "Saving new EducationalExperience Record failed" );
-						newEducationalExperience.errors.allErrors.each { log.debug( it ) };
-					}
-					else
-					{
-						log.debug( "newEducationalExperience saved" );
-					}
-					
-					
+					educationalExperienceService.save( newEducationalExperience );
+										
 					profile.addToEducationHistory( newEducationalExperience );
-					
 				}
 			}
 		};
@@ -1326,16 +1234,12 @@ public class UserController
 			}
 			else
 			{
-				
-				Interest interest = Interest.findByName( interestLine );
+				Interest interest = interestService.findByName( interestLine );
 				if( !interest )
 				{
 					interest = new Interest( name: interestLine );
-					if( !interest.save(flush:true) )
-					{
-						throw new RuntimeException( "FAIL" );
-					}
-						
+					
+					interestService.save( interest );
 				}
 				
 				profile.addToInterests( interest );
@@ -1350,27 +1254,20 @@ public class UserController
 		{
 			if( skillsLine.contains("," ))
 			{
-				// TODO: deal with comma separted values
+				// TODO: deal with comma separated values
 			}
 			else
 			{
-				
-				
-				Skill skill = Skill.findByName( skillsLine );
+				Skill skill = skillService.findByName( skillsLine );
 				if( !skill )
 				{
 					skill = new Skill( name: skillsLine );
-					if( !skill.save(flush:true) )
-					{
-						throw new RuntimeException( "FAIL" );
-					}
-						
+					skillService.save( skill );
 				}
 				
 				profile.addToSkills( skill );
 			}
 		}
-		
 		
 		// upc.groupsOrgs
 		log.debug( "GroupsOrgs: " + upc.groupsOrgs );
@@ -1383,15 +1280,11 @@ public class UserController
 			}
 			else
 			{
-				OrganizationAssociation org = OrganizationAssociation.findByName( groupsOrgLine );
+				OrganizationAssociation org = organizationAssociationService.findByName( groupsOrgLine );
 				if( !org )
 				{
 					org = new OrganizationAssociation( name: groupsOrgLine );
-					if( !org.save(flush:true) )
-					{
-						throw new RuntimeException( "FAIL" );
-					}
-						
+					organizationAssociationService.save( org );
 				}
 				
 				profile.addToOrganizations( org );

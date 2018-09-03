@@ -17,6 +17,14 @@ class StatusUpdateService
 	def userService;
 	def jmsService;
 	
+	public StatusUpdate save( final StatusUpdate statusToSave )
+	{
+		if( !statusToSave.save(flush:true) )
+		{
+			log.error( "Save StatusUpdate FAILED!");
+			statusToSave.errors.allErrors.each { log.error( it.toString() ) };
+		}
+	}
 	
 	public void save( final StatusUpdate newStatusUpdate, final User currentUser )
 	{
@@ -25,7 +33,7 @@ class StatusUpdateService
 		if( !newStatusUpdate.save(flush:true) )
 		{
 			log.error(( "Saving newStatus FAILED"));
-			newStatusUpdate.errors.allErrors.each { log.error( it ) };
+			newStatusUpdate.errors.allErrors.each { log.error( it.toString() ) };
 		}
 		
 		// put the old "currentStatus" in the oldStatusUpdates collection
@@ -45,7 +53,7 @@ class StatusUpdateService
 		if( !currentUser.save(flush:true) )
 		{
 			log.debug( "Saving user FAILED");
-			user.errors.allErrors.each { log.debug( it ) };
+			user.errors.allErrors.each { log.error( it.toString() ) };
 		}
 		else
 		{

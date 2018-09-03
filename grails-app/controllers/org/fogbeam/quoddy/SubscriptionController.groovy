@@ -55,9 +55,8 @@ class SubscriptionController
         
         
 		User currentUser = userService.getLoggedInUser();
-        
 
-        BusinessEventSubscription subscription = BusinessEventSubscription.findById( params.subscriptionId );
+        BusinessEventSubscription subscription = businessEventSubscriptionService.findById( Long.parseLong( params.subscriptionId ) );
         
         Map model = [:];
         subEvents = businessEventSubscriptionService.getRecentEventsForSubscription( subscription, 25 );
@@ -74,11 +73,10 @@ class SubscriptionController
 	def displayCalendarFeedSubscription()
 	{
         def subEvents = new ArrayList<CalendarFeedItem>();
-     
         
 		User currentUser = userService.getLoggedInUser();        
            
-        CalendarFeedSubscription subscription = CalendarFeedSubscription.findById( params.subscriptionId );
+        CalendarFeedSubscription subscription = calendarFeedSubscriptionService.findById( Long.parseLong( params.subscriptionId ) );
         
         Map model = [:];
         subEvents = calendarFeedSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
@@ -99,7 +97,7 @@ class SubscriptionController
         
 		User currentUser = userService.getLoggedInUser();
         
-        ActivitiUserTaskSubscription subscription = ActivitiUserTaskSubscription.findById( params.subscriptionId );
+        ActivitiUserTaskSubscription subscription = activitiUserTaskSubscriptionService.findById( Long.parseLong( params.subscriptionId ) );
         
         Map model = [:];
         subEvents = activitiUserTaskSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
@@ -120,7 +118,7 @@ class SubscriptionController
         
 		User currentUser = userService.getLoggedInUser();
 
-        RssFeedSubscription subscription = RssFeedSubscription.findById( params.subscriptionId );
+        RssFeedSubscription subscription = rssFeedSubscriptionService.findById( Long.parseLong( params.subscriptionId ) );
         
         Map model = [:];
         subEvents = rssFeedSubscriptionService.getRecentItemsForSubscription( subscription, 25 );
@@ -366,18 +364,8 @@ class SubscriptionController
         subscriptionToEdit.description = params.subscriptionDescription;                
         subscriptionToEdit.xQueryExpression = params.xQueryExpression;
 
-        // re-attach to Hibernate session        
-        if( !subscriptionToEdit.isAttached())
-        {
-            subscriptionToEdit.attach();
-        }
-
-        if( !subscriptionToEdit.save(flush:true) )
-        {
-            log.error( "Saving BusinessEventSubscription FAILED");
-            subscriptionToEdit.errors.allErrors.each { log.debug( it.toString() ) };
-        }
-
+		businessEventSubscriptionService.attachAndSave( subscriptionToEdit );
+		
         // redirect
         redirect( controller: "subscription", action:"index" );
     }
@@ -403,17 +391,7 @@ class SubscriptionController
         subscriptionToEdit.candidateGroup = params.candidateGroup;
         subscriptionToEdit.assignee = params.assignee;
         
-        // re-attach to Hibernate session
-        if( !subscriptionToEdit.isAttached())
-        {
-            subscriptionToEdit.attach();
-        }
-
-        if( !subscriptionToEdit.save(flush:true) )
-        {
-            log.debug( "Saving BusinessEventSubscription FAILED");
-            subscriptionToEdit.errors.allErrors.each { log.debug( it.toString() ) };
-        }
+		activitiUserTaskSubscriptionService.attachAndSave( subscriptionToEdit );
 
         redirect( controller:"subscription", action:"index");
     }
@@ -437,18 +415,8 @@ class SubscriptionController
         subscriptionToEdit.name = params.calFeedName;
         subscriptionToEdit.url = params.calFeedUrl;
 
-        // re-attach to Hibernate session
-        if( !subscriptionToEdit.isAttached())
-        {
-            subscriptionToEdit.attach();
-        }
-    
-        if( !subscriptionToEdit.save(flush:true) )
-        {
-            log.error( "Saving CalendarFeedSubscription FAILED");
-            subscriptionToEdit.errors.allErrors.each { log.debug( it.toString() ) };
-        }
-
+		calendarFeedSubscriptionService.attachAndSave( subscriptionToEdit );
+		
         redirect(controller:"subscription", action:"index");
     }
 
@@ -459,7 +427,6 @@ class SubscriptionController
         subscriptionToEdit.discard();
         
         [subscriptionToEdit:subscriptionToEdit];
-
     }
 
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
@@ -473,18 +440,8 @@ class SubscriptionController
         subscriptionToEdit.name = params.subscriptionName;
         subscriptionToEdit.url = params.subscriptionUrl;
         
-        // re-attach to Hibernate session
-        if( !subscriptionToEdit.isAttached())
-        {
-            subscriptionToEdit.attach();
-        }
-                
-        if( !subscriptionToEdit.save(flush:true) )
-        {
-            log.error( "Saving RssFeedSubscription FAILED");
-            subscriptionToEdit.errors.allErrors.each { log.debug( it.toString() ) };
-        }
-
+		rssFeedSubscriptionService.attachAndSave( subscriptionToEdit );
+		
         redirect(controller:"subscription", action:"index");
     }        
 }

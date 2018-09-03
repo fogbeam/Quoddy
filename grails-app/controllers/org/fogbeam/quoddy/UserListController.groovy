@@ -20,7 +20,7 @@ public class UserListController
 	def activitiUserTaskSubscriptionService;
 	def rssFeedSubscriptionService;
 	
-    
+	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def index()
 	{
@@ -102,17 +102,12 @@ public class UserListController
             User addMeUser = User.findById( userToAdd );
             listToCreate.addToMembers( addMeUser );
         }
-    
-        if( !listToCreate.save(flush:true) )
-        {
-            log.error( "Saving UserList FAILED" );
-            listToCreate.errors.allErrors.each { log.debug( it.toString() ) };
-        }
-
+   
+		userListService.save( listToCreate );
+		
         redirect(controller:"userList", action:"index");
     }
-    
-    
+     
     
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
     def editWizardOne()
@@ -123,8 +118,8 @@ public class UserListController
         
         log.info( "Editing UserList with id: ${listId}");
         
-        UserList listToEdit = UserList.findById( listId, [fetch:[members:"eager"]] );
-
+		UserList listToEdit = userListService.findById( Long.parseLong(listId), true );
+		
         log.debug( "found listToEdit: ${listToEdit}" );
         
         // detach from the Hibernate session until the end of the Wizard
@@ -162,12 +157,9 @@ public class UserListController
         log.debug( "UserList.editWizard.finish" );
         log.debug( "update using params: ${params}");
         def listId = params.listId;
-        UserList listToEdit = session.listToEdit;
-    
-        if( !listToEdit.isAttached())
-        {
-            listToEdit.attach();
-        }
+        UserList listToEdit = session.listToEdit;    
+		
+		userListService.attachAndSave( listToEdit );
     
         /* deal with usersToRemove and usersToAdd here */
         log.debug( "dealing with usersToRemove");
@@ -197,11 +189,7 @@ public class UserListController
             listToEdit.addToMembers( addMeUser );
         }
     
-        if( !listToEdit.save(flush:true) )
-        {
-            log.error( "Saving UserList FAILED");
-            listToEdit.errors.allErrors.each { log.error( it.toString() ) };
-        }
+		userListService.save( listToEdit );
         
         redirect(controller:"userList", action:"index");
     }	

@@ -23,6 +23,8 @@ public class UserGroupController
 	def calendarFeedSubscriptionService;
 	def activitiUserTaskSubscriptionService;
 	def rssFeedSubscriptionService;
+	def statusUpdateService;
+	
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def index()
@@ -79,16 +81,10 @@ public class UserGroupController
         groupToCreate.name = params.groupName;
         groupToCreate.description = params.groupDescription;
         groupToCreate.owner = currentUser;
-        
-        if( ! groupToCreate.save(flush:true) )
-        {
-            log.error( "Saving UserGroup FAILED");
-            groupToCreate.errors.allErrors.each { log.error( it.toString() ) };
-        }
-    
-        redirect(controller:"userGroup", action:"index");
 
-        
+		userGroupService.save( groupToCreate );
+    
+        redirect(controller:"userGroup", action:"index");        
 	}
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
@@ -98,9 +94,8 @@ public class UserGroupController
 		log.debug( "Editing UserGroup with id: ${groupId}");
 		UserGroup groupToEdit = null;
 		
-		groupToEdit = UserGroup.findById( groupId );
-		
-		
+		groupToEdit = userGroupService.findByGroupId( Long.parseLong( groupId ) );
+				
 		[groupToEdit:groupToEdit];	
 	}
 	
@@ -111,7 +106,7 @@ public class UserGroupController
 		def groupId = params.groupId;
 		UserGroup groupToEdit = null;
 		
-		groupToEdit = UserGroup.findById( groupId );
+		groupToEdit = userGroupService.findByGroupId( Long.parseLong( groupId ) );
 		
 		groupToEdit.name = params.groupName;
 		groupToEdit.description = params.groupDescription;
@@ -119,14 +114,10 @@ public class UserGroupController
 		{
 			groupToEdit.requireJoinConfirmation = false;
 		}
-		if( ! groupToEdit.save(flush:true) )
-		{
-			log.error( "saving UserGroup FAILED");
-			groupToEdit.errors.allErrors.each { log.error( it.toString() ) };
-		}
+		
+		userGroupService.save( groupToEdit );
 		
 		// TODO: deal with requireJoinConfirmation
-		
 		
 		redirect(controller:"userGroup", action:"index");
 	}
@@ -142,7 +133,7 @@ public class UserGroupController
         // def items = new ArrayList<StreamItemBase>();
         List<ActivityStreamItem> activities = new ArrayList<ActivityStreamItem>();
 
-        UserGroup group = UserGroup.findById( params.groupId );
+        UserGroup group = userGroupService.findByGroupId( Long.parseLong( params.groupId ) );
     
         // check that this group is not one of the ones that the user either
         // owns or is a member of
@@ -159,9 +150,6 @@ public class UserGroupController
         activities = userGroupService.getRecentActivitiesForGroup( group, 25 );
         
         log.info( "activities: ${activities}");
-        
-        
-        // items = userGroupService.getRecentEventsForGroup( group, 25 );
                 
         Map model = [:];
         
@@ -174,7 +162,6 @@ public class UserGroupController
         model.putAll( sidebarCollections );
 
         return model;
-
 	}	
 
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
@@ -190,15 +177,12 @@ public class UserGroupController
 		String groupId = params.groupId;
 		
 		log.info( "doing joinGroup with groupId = ${groupId} and userId = ${currentUser.userId}");
-		UserGroup group = UserGroup.findById( groupId );
+		
+		UserGroup group = userGroupService.findByGroupId( Long.parseLong( groupId ) );
 		
 		group.addToGroupMembers( currentUser );
 		
-        if( !group.save(flush:true) )
-        {
-            group.errors.allErrors.each { log.error( it.toString() ) }
-        }
-        
+		usergroupService.save( group );        
         
 		redirect( controller:"userGroup", action:"display", params:['groupId':groupId]);	
 	}
@@ -258,11 +242,10 @@ public class UserGroupController
             /* TODO: add call to Stanbol to get our enhancement JSON */
             newStatus.enhancementJSON = "";
             
-            if( !newStatus.save(flush:true) )
-            {
-                log.error( "Save StatusUpdate FAILED!");
-                newStatus.errors.allErrors.each { log.debug( it ) };
-            }
+			// TODO: rework this to do the ActivityStreamItem bit in the
+			// service call, same way we do it for a regular StatusUpdate creation
+			
+			statusUpdateService.save( newStatus );
             
             ActivityStreamItem activity = new ActivityStreamItem(content:newStatus.text);
             activity.title = "Internal Activity";
@@ -296,7 +279,6 @@ public class UserGroupController
             // log.debug( "sending message to JMS" );
             // jmsService.send( queue: 'uitestActivityQueue', msg, 'standard', null );
         }
-
         				
 		redirect( controller:"userGroup", action:"display", params:['groupId':groupId]);
 	}		

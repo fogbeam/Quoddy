@@ -131,12 +131,30 @@ class BusinessEventSubscriptionService
 	}
 	
 	
+	public BusinessEventSubscription findById( final Long id )
+	{
+		BusinessEventSubscription subscription = BusinessEventSubscription.findById( id );
+		return subscription;
+	}
+	
 	public BusinessEventSubscription findByUuid( final String uuid )
 	{
 		BusinessEventSubscription subscription = BusinessEventSubscription.findByUuid( uuid );
 		return subscription;	
 	}
 
+	public void attachAndSave( final BusinessEventSubscription subscriptionToSave )
+	{
+		// re-attach to Hibernate session
+		if( !subscriptionToSave.isAttached())
+		{
+			subscriptionToSave.attach();
+		}
+
+		saveSubscription( subscriptionToSave );
+
+	}
+	
 	public void saveSubscription( final BusinessEventSubscription subscriptionToSave ) 
 	{
 		if( !subscriptionToSave.save(flush:true) )

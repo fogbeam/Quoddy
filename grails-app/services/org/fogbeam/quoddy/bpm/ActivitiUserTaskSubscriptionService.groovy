@@ -6,9 +6,30 @@ import org.fogbeam.quoddy.subscription.ActivitiUserTaskSubscription
 
 class ActivitiUserTaskSubscriptionService
 {
+	
+	public ActivitiUserTaskSubscription findById( final Long id )
+	{
+		ActivitiUserTaskSubscription subscription = ActivitiUserTaskSubscription.findById( id );
+		
+		return subscription;
+	}
+	
 	public ActivitiUserTaskSubscription findByUuid( final String uuid )
 	{
-		throw new RuntimeException( "not implemented yet...");
+		ActivitiUserTaskSubscription subscription = ActivitiUserTaskSubscription.findByUuid( uuid );
+		
+		return subscription;
+	}
+	
+	public void attachAndSave( final ActivitiUserTaskSubscription subscriptionToSave )
+	{
+		// re-attach to Hibernate session
+		if( !subscriptionToSave.isAttached())
+		{
+			subscriptionToSave.attach();
+		}
+
+		saveSubscription( subscriptionToSave );
 	}
 	
 	public ActivitiUserTaskSubscription saveSubscription( final ActivitiUserTaskSubscription subscription )

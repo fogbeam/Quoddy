@@ -13,6 +13,22 @@ class UserListService
 		return userList;	
 	}
 	
+	public UserList findById( final Long id, boolean membersEager )
+	{
+		UserList list = null;
+		
+		if( membersEager )
+		{
+			list = UserList.findById( id, [fetch:[members:"eager"]] );
+		}
+		else
+		{
+			list = UserList.findById( id );
+		}
+		
+		return list;
+	}  
+	
 	public List<UserList> getListsForUser( final User user )
 	{
 		List<UserList> lists = new ArrayList<UserList>();
@@ -81,5 +97,27 @@ class UserListService
 		}
 	
 		return recentActivities;
+	}
+	
+	public UserList save( final UserList listToSave )
+	{
+		
+		if( !listToSave.save(flush:true) )
+		{
+			log.error( "Saving UserList FAILED" );
+			listToSave.errors.allErrors.each { log.error( it.toString() ) };
+		}
+	
+		return listToSave;
+	}
+	
+	public UserList attachAndSave( final UserList listToSave )
+	{
+		if( !listToSave.isAttached())
+		{
+			listToSave.attach();
+		}
+	
+		return save( listToSave );
 	}
 }

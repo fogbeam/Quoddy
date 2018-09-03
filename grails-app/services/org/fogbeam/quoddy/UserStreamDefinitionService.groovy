@@ -81,5 +81,25 @@ class UserStreamDefinitionService
 		
 		return streams;
 	}
+
+	public UserStreamDefinition save( final UserStreamDefinition streamDefinitionToSave )
+	{
+		if( !streamDefinitionToSave.save(flush:true) )
+		{
+			log.error( "saving UserStream FAILED");
+			streamDefinitionToSave.errors.allErrors.each { log.error( it.toString() ) };
+		}
 		
+		return streamDefinitionToSave;
+	}
+
+	public UserStreamDefinition attachAndSave( final UserStreamDefinition streamDefinitionToSave )
+	{
+		if( !streamDefinitionToSave.isAttached() )
+		{
+			streamDefinitionToSave.attach();
+		}
+		
+		return save( streamDefinitionToSave );
+	}
 }

@@ -8,7 +8,7 @@ import org.fogbeam.quoddy.stream.StreamItemBase;
 class UserGroupService
 {
 	
-	public UserGroup findByGroupId( final Integer groupId )
+	public UserGroup findByGroupId( final Long groupId )
 	{
 		UserGroup group = UserGroup.findById( groupId );
 		

@@ -6,9 +6,32 @@ import org.fogbeam.quoddy.subscription.RssFeedSubscription
 
 class RssFeedSubscriptionService
 {
+	
+	public RssFeedSubscription findById( final Long id )
+	{
+		RssFeedSubscription subscription = RssFeedSubscription.findById( id );
+		
+		return subscription;
+	}
+
+	
 	public RssFeedSubscription findByUuid( final String uuid )
 	{
-		throw new RuntimeException( "not implemented yet...");
+		RssFeedSubscription subscription = RssFeedSubscription.findByUuid( uuid );
+		
+		return subscription;
+	}
+	
+	
+	public void attachAndSave( final RssFeedSubscription subscriptionToSave )
+	{
+		// re-attach to Hibernate session
+		if( !subscriptionToSave.isAttached())
+		{
+			subscriptionToSave.attach();
+		}
+				
+		saveSubscription( subscriptionToSave );
 	}
 	
 	public RssFeedSubscription saveSubscription( final RssFeedSubscription subscription )

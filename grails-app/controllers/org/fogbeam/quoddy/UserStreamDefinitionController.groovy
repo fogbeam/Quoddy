@@ -42,16 +42,14 @@ class UserStreamDefinitionController
         Map sidebarCollections = populateSidebarCollections( this, currentUser );
         model.putAll( sidebarCollections );
         
-        
-        return model;
-        
+        return model;    
 	}
 
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
     def createWizardOne()
     {
         log.debug( "UserStreamDefinition.createWizard.stage1");
-        // just render the initial view
+        
         [:];    
     }
     
@@ -240,12 +238,9 @@ class UserStreamDefinitionController
         }
 
         log.debug( "create using params: ${params}");
-                
-        if( !streamToCreate.save(flush:true) )
-        {
-            log.debug( "saving UserStream FAILED");
-            streamToCreate.errors.allErrors.each { log.debug( it ) };
-        }
+        
+		
+		userStreamDefinitionService.save( streamToCreate );
         
         redirect( controller: "userStreamDefinition", action:"index");
         
@@ -259,6 +254,11 @@ class UserStreamDefinitionController
 	 * of the real object, and then merge it only in the final state.  This also ensures we don't persist a change
 	 * that the user intended to abandon (by not finshing the wizard). See Bugzilla bug #125. 
 	 */
+	
+	/* NOTE to NOTE above. That is fixed now, since we detach the instance and reattach it
+	 * at the end, intermediate operations are done on what is effectively just a DTO.
+	 * Update Bugzilla #125 to reflect this
+	 */
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
     def editWizardOne()
     {
@@ -267,15 +267,6 @@ class UserStreamDefinitionController
         def streamId = params.streamId;
         log.debug( "Editing UserStream with id: ${streamId}");
         
-        // TODO: use UserStreamDefinitionService instead of using GORM directly here
-        
-        /*
-            userUuidsIncluded:String, 
-            userListUuidsIncluded:String, 
-            userGroupUuidsIncluded:String,
-            subscriptionUuidsIncluded:String,
-            eventTypesIncluded:EventType]
-        */
         UserStreamDefinition streamToEdit = UserStreamDefinition.findById( streamId, 
             [ fetch:[eventTypesIncluded:"eager", subscriptionUuidsIncluded:"eager",  userGroupUuidsIncluded:"eager", userListUuidsIncluded:"eager",
               userUuidsIncluded:"eager"]]);
@@ -484,20 +475,9 @@ class UserStreamDefinitionController
             
             streamToEdit.addToSubscriptionUuidsIncluded( eventSubscriptionUuid );
         }
-             
-        if( !streamToEdit.isAttached())
-        {
-            streamToEdit.attach();
-        }
         
-        log.info( "about to save streamToEdit: ${streamToEdit}");
-        
-        if( !streamToEdit.save(flush:true) )
-        {
-            log.error( "Saving UserStream FAILED");
-            streamToEdit.errors.allErrors.each { log.error(it) };
-        }
-        
+		userStreamDefinitionService.attachAndSave( streamToEdit );
+		
         redirect(controller:"userStreamDefinition", action:"index");
     }
     	
@@ -508,8 +488,7 @@ class UserStreamDefinitionController
 		log.debug( "Editing UserStream with id: ${streamId}");
 		UserStreamDefinition streamToEdit = null;
 		
-		streamToEdit = UserStreamDefinition.findById( streamId );
-		
+		streamToEdit = userStreamDefinitionService.findStreamById( Long.parseLong( streamId ) );
 		
 		[streamToEdit:streamToEdit];	
 	}
