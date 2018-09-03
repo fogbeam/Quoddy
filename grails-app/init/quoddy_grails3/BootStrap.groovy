@@ -240,7 +240,7 @@ class BootStrap
 
 	void createDummyGroup()
 	{
-		UserGroup dummyGroup = userGroupService.findByGroupId( -1 );
+		UserGroup dummyGroup = userGroupService.findUserGroupByUuid( "notused" );
 		if( dummyGroup == null )
 		{
 			
@@ -258,6 +258,10 @@ class BootStrap
 			dummyGroup.owner = dummyUser;
 			
 			userGroupService.save( dummyGroup );
+		}
+		else
+		{
+			log.info( "existing SYS_dummy_group found" );
 		}
 	}
 	
