@@ -127,6 +127,11 @@
 				<g:render template="/activityStream" />
 
 			</div>
+			
+			<div class="activityStreamFooter" style="clear:both;">
+				<center><a href="#" id="loadMoreLink">Get More Events</a></center>
+			</div>
+			
 		</g:if>
 
 	</div>

@@ -1,5 +1,11 @@
-<g:each in="${activities}" var="activity">
+<g:each in="${activities}" var="activity" status="i">
+	
+	<g:if test="${grailsApplication.config.fogbeam.devmode}">
+	${i}
+	</g:if>
+	
 	<g:render template="${activity.templateName}" var="item" bean="${activity}" />
+	
 </g:each>
 
 
@@ -85,10 +91,4 @@
       </div>
     </div>
   </div>
-</div>
-
-<div class="activityStreamFooter" style="clear:both;">
-	<sec:ifLoggedIn>
-		<center><a href="#" id="loadMoreLink">Get More Events</a></center>
-	</sec:ifLoggedIn>
 </div>

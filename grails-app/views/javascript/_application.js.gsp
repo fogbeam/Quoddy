@@ -89,7 +89,15 @@
 						  function() { location.reload(true); } );
 				});
 
-				$j('#loadMoreLink').data("page", 1 );
+				// init this to 1 if there's no existing value
+				if( ! $j('#loadMoreLink').data("page") )
+				{
+					$j('#loadMoreLink').data("page", 1 );
+				}
+				else
+				{
+					//	alert( "page already set");
+				}
 				
 				// setup an onclick handler for the status submit button
 				// and serialize the associated form along with it...
@@ -175,11 +183,12 @@
 		 	    initHandlers();
 		 						
 				$j('#loadMoreLink').bind( 'click', function(event) {
-					
+
+					// alert( "Loading more events" );					
 					event.preventDefault();
 					
 					var page = $j('#loadMoreLink').data("page");
-					page = page +1;
+					page = page + 1;
 					$j('#loadMoreLink').data("page", page );
 					
 					if( page > 1 )
@@ -192,6 +201,10 @@
 							initHandlers();
 						} );
 					    	
+					}
+					else
+					{
+						// do nothing in this case
 					}
 					
 					return false;
