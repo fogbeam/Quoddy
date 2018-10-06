@@ -121,7 +121,7 @@ class ScheduleController
 		String jobName = params.jobName;
 		String recurrenceInterval = params.recurrenceInterval;
 		
-		log.debug( "adding Trigger for jobName: ${jobName}" );
+		log.info( "adding Trigger for jobName: ${jobName}" );
 		
 		GrailsClass jobClass = grailsApplication.getArtefact( "Job", jobName );
 		
