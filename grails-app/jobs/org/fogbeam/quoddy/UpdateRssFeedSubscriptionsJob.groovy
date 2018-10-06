@@ -58,9 +58,7 @@ class UpdateRssFeedSubscriptionsJob
 	def rssFeedItemService;
 	static concurrent = false;
 	
-	static triggers = {
-		def volatility = false;	
-	}
+	static triggers = {}
 	
     private String getThreadId()
     {
