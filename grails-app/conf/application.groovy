@@ -2,7 +2,7 @@ grails.plugin.springsecurity.cas.key = 'cas01.example.org'
 grails.plugin.springsecurity.cas.loginUri = '/login'
 grails.plugin.springsecurity.cas.serviceUrl = 'http://localhost:8080/login/cas'
 grails.plugin.springsecurity.cas.serverUrlPrefix = 'https://sso.fogbeam.com/cas'
-
+grails.plugin.springsecurity.sch.strategyName="MODE_INHERITABLETHREADLOCAL"
 
 grails.plugin.springsecurity.auth.loginFormUrl="/localLogin/index"
 grails.plugin.springsecurity.failureHandler.defaultFailureUrl="/localLogin/index?login_error=1"
@@ -17,6 +17,7 @@ grails.plugin.springsecurity.authority.className = 'org.fogbeam.quoddy.AccountRo
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/',               access: ['permitAll']],
 	[pattern: '/localLogin/**',  access: ['permitAll']],
+	[pattern: '/api/**',         access: ['permitAll']],
 	[pattern: '/error',          access: ['permitAll']],
 	[pattern: '/index',          access: ['permitAll']],
 	[pattern: '/index.gsp',      access: ['permitAll']],
@@ -44,6 +45,4 @@ spring.autoconfigure.exclude = "org.springframework.boot.autoconfigure.jms.JmsAu
 
 server.session.timeout = 600
 
-oauth.server.introspect.url="https://localhost:8443/cas/oidc/introspect"
-oauth.client.id = "test_client"
 
