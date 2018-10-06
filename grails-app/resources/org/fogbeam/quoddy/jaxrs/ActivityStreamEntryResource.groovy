@@ -25,7 +25,7 @@ class ActivityStreamEntryResource
 	@POST
 	ActivityStreamEntry insert( ActivityStreamEntry entry )
 	{
-		println "Creating new entry: ${entry.content}";
+		log.info "Creating new entry: ${entry.content}";
 		
 		// convert our remote object to our internal representation
 		ActivityStreamItem item = activityStreamTransformerService.transform( entry );
