@@ -25,6 +25,7 @@ class BootStrap
 	def grailsApplication;
     def quartzScheduler;
     	
+	
     def init = 
 	{ servletContext ->
     
@@ -69,6 +70,7 @@ class BootStrap
 				createDummyGroup();
                 createShareTargets();
 				createEventTypes();
+				startQuartz();
 				break;
 		}
 	
