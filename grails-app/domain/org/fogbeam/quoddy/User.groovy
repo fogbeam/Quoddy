@@ -88,7 +88,7 @@ class User implements Serializable, UserDetails
 	
 	static fetchMode = [roles: 'eager', permissions:'eager'];
 	
-    static hasMany = [oldStatusUpdates:StatusUpdate, roles: AccountRole, permissions: String, streams:UserStreamDefinition];
+    static hasMany = [oldStatusUpdates:StatusUpdate, roles: AccountRole, streams:UserStreamDefinition];
 	static mappedBy = [oldStatusUpdates:'creator']
 
     
