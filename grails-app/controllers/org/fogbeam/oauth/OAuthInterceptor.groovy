@@ -1,4 +1,4 @@
-package com.fogbeam.oauth
+package org.fogbeam.oauth
 
 import static javax.servlet.http.HttpServletResponseWrapper.SC_UNAUTHORIZED;
 
@@ -21,10 +21,18 @@ import org.apache.http.message.BasicNameValuePair
 import org.apache.http.ssl.SSLContextBuilder
 import org.apache.http.ssl.TrustStrategy
 import org.apache.http.util.EntityUtils
+import org.springframework.security.core.Authentication
+
+import org.fogbeam.common.oauth.client.Insecure
+
 import groovy.json.JsonSlurper
 
 public class OAuthInterceptor 
 {
+	int order = Integer.MAX_VALUE;
+	
+	def userService;
+	
 	public OAuthInterceptor()
 	{
 		match( uri: "/api/**" )
@@ -32,12 +40,40 @@ public class OAuthInterceptor
 	
     boolean before() 
 	{ 
+		// if fogbeam.devmode is enabled, then allow access to the API's based on 
+		// a normal user session login
+		if( Boolean.parseBoolean( grailsApplication.config.fogbeam.devmode ))
+		{	
+			log.warn( "fogbeam.devmode IS enabled!!" );
+			
+			Authentication authentication = session.authentication;
+			if( authentication != null )
+			{
+				return true;
+			}
+		}
+		
+		
 		
 		log.info( "OAuthInterceptor fired!");
 		
-		HttpClient httpClient = getInsecureHttpClient();
-		String clientId = "test_client";
-		String clientSecret = "clientSecret";
+		
+		HttpClient httpClient = null;
+		
+		String insecureHttpClientFlag = grailsApplication.config.rest.oauth.httpclient.insecure;
+		if( Boolean.parseBoolean( insecureHttpClientFlag ) )
+		{
+			httpClient = Insecure.getInsecureHttpClient();
+		}
+		else
+		{
+			httpClient = HttpClients.createDefault();
+		}
+		
+		String clientId =  grailsApplication.config.rest.oauth.incoming.client.clientId; // "test_client";
+		String clientSecret = grailsApplication.config.rest.oauth.incoming.client.clientSecret; // "clientSecret";
+		
+		
 		String authorizationHeader = "Basic " + new String( Base64.getEncoder().encode( ( clientId + ":"+clientSecret).getBytes() ) );
 
 		// introspect our token to see if it's good
@@ -77,7 +113,7 @@ public class OAuthInterceptor
 		}
 		
 		// get oauth server host from config
-		String oauthServerIntrospectUrl = grailsApplication.config.oauth.server.introspect.url;
+		String oauthServerIntrospectUrl = grailsApplication.config.rest.oauth.incoming.server.introspect.url;
 		log.info( "got oauthServerIntrospectUrl: ${oauthServerIntrospectUrl}");
 		
 		HttpPost httpPost = new HttpPost( oauthServerIntrospectUrl );
@@ -85,11 +121,8 @@ public class OAuthInterceptor
 		
 		List params = new ArrayList<NameValuePair>();
 		params.add( new BasicNameValuePair( "token", oauthToken ));
-		
-		// get client_id from config
-		String oauthClientId = grailsApplication.config.oauth.client.id
-		log.info( "got oauthClientId: ${oauthClientId}");
-		params.add( new BasicNameValuePair( "client_id", oauthClientId ));
+				
+		params.add( new BasicNameValuePair( "client_id", clientId ));
 		
 		httpPost.setEntity( new UrlEncodedFormEntity(params));
 		
