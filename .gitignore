@@ -22,4 +22,6 @@ help/docs/*
 .gradle/
 build/
 jbossclientlibs/
-
+TODO*
+activemq-data
+client_id.json
