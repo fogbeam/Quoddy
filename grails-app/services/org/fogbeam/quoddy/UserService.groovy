@@ -78,8 +78,6 @@ class UserService {
 	
 	public User createUser( User user ) 
 	{
-		
-		
 		log.debug( "UserService.createUser() - about to create user: ${user.toString()}");
 		/* save the user into the uzer table, we need that for associations with other
 		* "system things"
@@ -127,7 +125,7 @@ class UserService {
 		}
 		else
 		{
-			user.errors.allErrors.each { log.error( it ) };
+			user.errors.allErrors.each { log.error( it.toString() ) };
 			throw new RuntimeException( "couldn't create User record for user: ${user.userId}" );
 			
 		}
@@ -522,10 +520,23 @@ class UserService {
 	
 	public User getLoggedInUser()
 	{
+		log.info( "called getLoggedInUser()" );
+		
 		// get the user from the SecurityContext
 		SecurityContext securityContext = SecurityContextHolder.getContext();
+		
+		log.info( "got securityContext: ${securityContext}" );
+		
 		Authentication authentication = securityContext.getAuthentication();
-		log.trace( "current Authentication: ${authentication}");
+	
+		log.info( "current Authentication: ${authentication}");
+				
+		if( authentication == null )
+		{
+			log.warn( "No logged in user found!" );
+			return null;
+		}
+
 		
 		User user = this.findUserByUserId( ((User)authentication.principal).userId );
 		
