@@ -145,6 +145,9 @@ dependencies {
 
     compile 'org.grails.plugins:quartz:2.0.13'
 
+    // https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-mapper-asl
+    compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'
+
 
     // from locallibs
     compile name: 'exist'
@@ -172,7 +175,10 @@ dependencies {
     
     // https://mvnrepository.com/artifact/xalan/xalan
     compile group: 'xalan', name: 'xalan', version: '2.7.2'
-    
+
+	
+	// doesn't work with this version of Grails / Jax-RS
+	// compile 'org.grails.plugins:spring-security-jaxrs:3.0.1'
     
     
     /* JBoss dependencies for JMS */
