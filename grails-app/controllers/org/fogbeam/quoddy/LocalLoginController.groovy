@@ -146,6 +146,7 @@ class LocalLoginController
             
                 SecurityContext securityContext = SecurityContextHolder.getContext();
                 securityContext.setAuthentication(authentication);
+				session.authentication = authentication;
             }
             catch( BadCredentialsException bce )
             {
