@@ -44,7 +44,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-autoconfigure"
     compile "org.grails:grails-core"
     compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.boot:spring-boot-starter-tomcat"
+    provided "org.springframework.boot:spring-boot-starter-tomcat"
     compile "org.grails:grails-web-boot"
     compile "org.grails:grails-logging"
     compile "org.grails:grails-plugin-rest"
@@ -68,10 +68,6 @@ dependencies {
     runtime "com.bertramlabs.plugins:asset-pipeline-grails:2.14.8"
 
 
-
-
-
-
     // This should be temporary until we can replace all the formRemote and remoteLink stuff
     // with pure Javascript 
     compile 'org.grails.plugins:ajax-tags:1.0.0'
@@ -84,17 +80,12 @@ dependencies {
 
     compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.1'
     
-	
-//     compile group: 'org.apache.jena', name: 'jena-core', version: '2.13.0'
-//     compile group: 'org.apache.jena', name: 'jena-arq', version: '2.13.0'
-//     compile group: 'org.apache.jena', name: 'jena-tdb', version: '1.1.2'
 	compile group: 'org.apache.jena', name: 'jena-core', version: '3.5.0'
 	compile group: 'org.apache.jena', name: 'jena-arq', version: '3.5.0'
 	compile group: 'org.apache.jena', name: 'jena-tdb', version: '3.5.0'
 	// https://mvnrepository.com/artifact/com.github.jsonld-java/jsonld-java
 	runtime group: 'com.github.jsonld-java', name: 'jsonld-java', version: '0.12.0'
 
-	
 	
 	compile group: 'org.fogbeam', name:'jFriendOfAFriend', version:'1.1-SNAPSHOT'
     // https://mvnrepository.com/artifact/net.sf.json-lib/json-lib
@@ -190,10 +181,7 @@ dependencies {
     testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:2.47.1"
     testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
-
-
-
-    
+   
 }
 
 bootRun {
