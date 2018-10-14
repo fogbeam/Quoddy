@@ -542,5 +542,22 @@ class UserService {
 		
 		return user;
 	}
+
+	
+	public void addUserRole( User user, String roleName )
+	{
+		log.info( "addUserRole: ${user}, ${roleName}")
 		
+		AccountRole role = AccountRole.findByAuthority( roleName );
+		
+		log.info( "role: ${role}");
+		
+		UserAccountRoleMapping mapping = new UserAccountRoleMapping( user, role );
+		
+		if( !mapping.save( flush:true ) )
+		{
+			log.error( "Error saving UserAccountRoleMapping" );
+			mapping.errors.allErrors.each { log.error( it.toString() ) }
+		}
+	}		
 }

@@ -2,10 +2,18 @@ package org.fogbeam.quoddy.jaxrs
 
 import static org.grails.plugins.jaxrs.response.Responses.*;
 
-import groovy.json.JsonSlurper
 import javax.ws.rs.POST
 import javax.ws.rs.Path
+
+import org.fogbeam.quoddy.AccountRole
 import org.fogbeam.quoddy.User
+import org.fogbeam.quoddy.UserAccountRoleMapping
+
+import groovy.json.JsonSlurper
+
+
+// TODO: add ability to add authorities in these REST requests...
+
 
 @Path( "/api/user" )
 class UserResource 
@@ -56,5 +64,13 @@ class UserResource
 											 // one-time-use password and send it to the user
 		
 		userService.createUser( user );
+		
+		// get user roles from input object
+		String[] roles = jsonObject.roles;
+		
+		for( String roleName : roles )
+		{
+			userService.addUserRole( user, roleName );
+		}
 	}
 }
