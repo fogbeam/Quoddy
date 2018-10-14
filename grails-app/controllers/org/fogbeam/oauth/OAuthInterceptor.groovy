@@ -42,7 +42,8 @@ public class OAuthInterceptor
 	{ 
 		// if fogbeam.devmode is enabled, then allow access to the API's based on 
 		// a normal user session login
-		if( Boolean.parseBoolean( grailsApplication.config.fogbeam.devmode ))
+		String devMode = grailsApplication.config.fogbeam.devmode;
+		if( ( devMode != null ) && Boolean.parseBoolean( devMode ))
 		{	
 			log.warn( "fogbeam.devmode IS enabled!!" );
 			
