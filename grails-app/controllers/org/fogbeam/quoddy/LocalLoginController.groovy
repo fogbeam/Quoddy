@@ -124,9 +124,17 @@ class LocalLoginController
         else
         {
             
+			// don't do any of this unless fogbeam.devmode is turned on.  localMode is not for
+			// production use.
+			String devMode = grailsApplication.config.fogbeam.devmode;
+			if( ( devMode == null ) || !Boolean.parseBoolean( devMode ))
+			{
+				throw new RuntimeException( "Attempt to use localMode for login when fogbeam.devmode is disabled!");
+			}
+			
             log.warn( "Doing LOCAL login!" );
             
-            log.info( "username: \"${username}\", password: \"${password}\"");
+            log.info( "username: \"${username}\"");
             
             
              // no CAS, do purely local login by calling the authenticationManager

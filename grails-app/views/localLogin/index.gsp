@@ -32,14 +32,19 @@
 						<td><g:checkBox name="rememberMe" value="${rememberMe}" /></td>
 					</tr>
 					-->
-					<tr>
-					   <td>
-					       <select name="useLocal">
-					           <option value="false">---</option>
-                                <option value="true">UseLocal</option>
-					       </select>
-					   </td>
-					</tr>
+					
+					<!--  only display this if fogbeam.devmode is on -->
+					<g:if test="${grailsApplication.config.fogbeam.devmode}">
+						<tr>
+						   <td>
+						       <select name="useLocal">
+						           <option value="false">---</option>
+	                                <option value="true">UseLocal</option>
+						       </select>
+						   </td>
+						</tr>
+					</g:if>
+					
 					<tr>
 						<td />
 						<td><input type="submit" value="Sign in" /></td>
