@@ -25,3 +25,5 @@ jbossclientlibs/
 TODO*
 activemq-data
 client_id.json
+build_publish.sh
+delete_administrator.sql
