@@ -53,7 +53,7 @@ Fogbeam projects use Bugzilla for tracking issues.  You can find the Bugzilla in
 
 To browse Quoddy issues by component, click here:  http://bugzilla.dev.fogbeam.org/describecomponents.cgi?product=Quoddy
 
-For a list of all open Quoddy bugs, click here:  http://bugzilla.dev.fogbeam.org/buglist.cgi?cmdtype=dorem&remaction=run&namedcmd=quoddy_all&sharer_id=2&list_id=27
+For a list of all open Quoddy bugs, click here:  https://bugzilla.dev.fogbeam.org/buglist.cgi?query_format=specific&order=relevance%20desc&no_redirect=1&bug_status=__open__&product=Quoddy&content=
 
 
 What about OpenSocial?
