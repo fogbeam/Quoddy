@@ -49,11 +49,11 @@ to provide a rich, tightly integrated platform for knowledge discovery, navigati
 Where's the issue tracker?
 --------------------
 
-Fogbeam projects use Bugzilla for tracking issues.  You can find the Bugzilla instance at http://dev.fogbeam.org/bugzilla
+Fogbeam projects use Bugzilla for tracking issues.  You can find the Bugzilla instance at http://bugzilla.dev.fogbeam.org/
 
-To browse Quoddy issues by component, click here:  http://dev.fogbeam.org/bugzilla/describecomponents.cgi?product=Quoddy
+To browse Quoddy issues by component, click here:  http://bugzilla.dev.fogbeam.org/describecomponents.cgi?product=Quoddy
 
-For a list of all open Quoddy bugs, click here:  http://dev.fogbeam.org/bugzilla/buglist.cgi?cmdtype=dorem&remaction=run&namedcmd=quoddy_all&sharer_id=2&list_id=27
+For a list of all open Quoddy bugs, click here:  http://bugzilla.dev.fogbeam.org/buglist.cgi?cmdtype=dorem&remaction=run&namedcmd=quoddy_all&sharer_id=2&list_id=27
 
 
 What about OpenSocial?
