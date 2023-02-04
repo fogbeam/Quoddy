@@ -18,9 +18,10 @@ Ok, but what does it do?
 
 Quoddy is an Open Source Enterprise Social Network, based on Groovy & Grails, and making up one component of 
 the [Fogcutter Suite](http://code.google.com/p/fogcutter).   Quoddy shares a common "look and feel", and 
-substantial functionality, with consumer facing Social Networks like [Facebook](http://www.facebook.com) or 
-[Google+](http://plus.google.com) as well as proprietary Enterprise Social Network products like the products 
-from [Jive Software](http://www.jivesoftware.com) and [Yammer](http://www.yammer.com) among others.   
+substantial functionality, with consumer facing Social Networks like [Facebook](http://www.facebook.com) or the former 
+[Google+](http://plus.google.com) - as well as proprietary Enterprise Social Network products like the offerings 
+from [Jive Software](http://www.jivesoftware.com) and [Yammer](http://www.yammer.com) among others.
+
 You could call Quoddy "Facebook for the Enterprise" but that would be oversimplifying a bit.  Quoddy is intended 
 mainly for organizational use and therefore has capabilities which make it uniquely suited to provide the social 
 fabric to support organizational knowledge sharing, knowledge transfer, collaboration and decision support.
