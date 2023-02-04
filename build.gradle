@@ -29,7 +29,7 @@ repositories {
     maven { url "https://repo.grails.org/grails/core" }
     maven { url "https://maven.springframework.org/release" }			
     maven { url "https://maven.restlet.com" }
-    maven { url "http://dev.fogbeam.org:8082/artifactory/fogbeam-main/"}
+    maven { url "https://artifactory.dev.fogbeam.org:443/artifactory/libs-release/"}
     maven { url "https://repository.jboss.org/nexus/content/repositories/releases/" }
     flatDir {
         dirs 'locallibs'
@@ -87,10 +87,19 @@ dependencies {
 	runtime group: 'com.github.jsonld-java', name: 'jsonld-java', version: '0.12.0'
 
 	
-	compile group: 'org.fogbeam', name:'jFriendOfAFriend', version:'1.1-SNAPSHOT'
+    compile group: 'org.fogbeam', name:'jFriendOfAFriend', version:'1.1'
     // https://mvnrepository.com/artifact/net.sf.json-lib/json-lib
     compile group: 'net.sf.json-lib', name: 'json-lib', version: '2.4', classifier: 'jdk15'
     compile "org.grails.plugins.fogbeam:jaxrs-jersey1:3.0.4"
+    compile "org.grails.plugins.fogbeam:jaxrs-core:3.0.4"
+    // https://mvnrepository.com/artifact/com.sun.jersey/jersey-bundle
+    implementation group: 'com.sun.jersey', name: 'jersey-bundle', version: '1.19.4'
+    // https://mvnrepository.com/artifact/com.sun.jersey/jersey-servlet
+    runtime group: 'com.sun.jersey', name: 'jersey-servlet', version: '1.19.4'
+    // https://mvnrepository.com/artifact/com.sun.jersey.contribs/jersey-spring
+    implementation group: 'com.sun.jersey.contribs', name: 'jersey-spring', version: '1.19.4'
+
+
 
     // https://mvnrepository.com/artifact/org.apache.lucene/lucene-core
     compile group: 'org.apache.lucene', name: 'lucene-core', version: '3.0.3'
@@ -112,7 +121,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-jetty
     compile group: 'com.google.oauth-client', name: 'google-oauth-client-jetty', version: '1.24.1'
 
-    compile group: 'org.fogbeam', name:'groovy-activity-streams', version: '1.0-SNAPSHOT'
+    compile group: 'org.fogbeam', name:'groovy-activity-streams', version: '1.0'
 
     // https://mvnrepository.com/artifact/org.codehaus.groovy/http-builder
     // compile group: 'org.codehaus.groovy', name: 'http-builder', version: '0.4.1'

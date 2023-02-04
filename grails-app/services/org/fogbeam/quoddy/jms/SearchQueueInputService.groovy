@@ -17,6 +17,7 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.DefaultHttpClient
+import org.apache.jena.rdf.model.Resource
 import org.apache.jena.query.Dataset
 import org.apache.jena.query.ReadWrite
 import org.apache.jena.rdf.model.Model
@@ -49,7 +50,7 @@ import org.fogbeam.quoddy.stream.CalendarFeedItem
 import org.fogbeam.quoddy.stream.RssFeedItem
 import org.fogbeam.quoddy.stream.StatusUpdate
 
-import com.sun.research.ws.wadl.Resource
+// import com.sun.research.ws.wadl.Resource
 
 import groovyx.net.http.RESTClient
 import static org.apache.jena.riot.RDFLanguages.JSONLD;
