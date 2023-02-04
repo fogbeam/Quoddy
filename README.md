@@ -1,6 +1,11 @@
 Quoddy
 ========
 
+NOTE: work is underway to upgrade Quoddy (and the other Fogcutter projects) to the latest versions of Grails, Groovy, JDK, and so
+on. Look for those changes to become available sometime in Q2 of 2023.
+
+
+
 Quoddy - an Open Source Enterprise Social Network - is part of the Fogcutter suite of tools for building intelligent applications.
 
 Why "Quoddy?"
