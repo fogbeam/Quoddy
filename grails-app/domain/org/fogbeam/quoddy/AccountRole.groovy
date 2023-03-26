@@ -6,7 +6,7 @@ import grails.compiler.GrailsCompileStatic
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
-@GrailsCompileStatic
+// @GrailsCompileStatic
 @EqualsAndHashCode(includes='authority')
 @ToString(includes='authority', includeNames=true, includePackage=false)
 class AccountRole implements GrantedAuthority
