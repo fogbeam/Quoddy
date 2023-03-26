@@ -21,6 +21,9 @@ function installTest {
     # apply the Quartz db ddl scripts
     psql -U postgres -h localhost -d quoddy_test -f sql/quartz_sql.sql    
     psql -U postgres -h localhost -d quoddy_test -f sql/quartz_sql_new.sql
+
+    # copy the current application.yml file to the config location specified in the run script
+    cp grails-app/conf/application.yml /opt/fogcutter/quoddy/application.yml
     
     echo "Done"
     exit
