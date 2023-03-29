@@ -47,7 +47,7 @@
 					
 					<tr>
 						<td />
-						<td><input type="submit" value="Sign in" /></td>
+						<td><input id="loginButton" type="submit" value="Sign in" /></td>
 					</tr>
 				</tbody>
 			</table>
