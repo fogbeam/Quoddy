@@ -27,3 +27,14 @@ activemq-data
 client_id.json
 build_publish.sh
 delete_administrator.sql
+RemoteSystemsTempFiles/
+bak/
+foobar.js
+initial_triples.txt
+old_google_code_content.md
+pidfile
+prototype.zip
+screenshots_for_bugs/
+sparql.txt
+temp.js
+tmpNotes.txt

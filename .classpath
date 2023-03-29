@@ -4,23 +4,1764 @@
 	<classpathentry kind="src" path="grails-app/views"/>
 	<classpathentry kind="src" path="grails-app/i18n"/>
 	<classpathentry kind="src" path="grails-app/conf"/>
+	<classpathentry kind="src" path="grails-app/jobs"/>
+	<classpathentry kind="src" path="grails-app/taglib"/>
 	<classpathentry kind="src" path="grails-app/src"/>
+	<classpathentry kind="src" path="grails-app/init"/>
 	<classpathentry kind="src" path="grails-app/controllers"/>
 	<classpathentry kind="src" path="grails-app/domain"/>
-	<classpathentry kind="src" path="grails-app/jobs"/>
+	<classpathentry kind="src" path="grails-app/providers"/>
 	<classpathentry kind="src" path="grails-app/services"/>
-	<classpathentry kind="src" path="grails-app/init"/>
-	<classpathentry kind="src" path="grails-app/taglib"/>
 	<classpathentry kind="src" path="src/main/groovy"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" path="grails-app/resources"/>
-	<classpathentry kind="src" path="grails-app/providers"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer">
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-logging/1.5.14.RELEASE/970e7424050d1d1179640ec53b24953fa29fdcbd/spring-boot-starter-logging-1.5.14.RELEASE.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-logging/1.5.14.RELEASE/863ab2c21cabd342bed57eb339d6726a7a824c97/spring-boot-starter-logging-1.5.14.RELEASE-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/1.5.14.RELEASE/spring-boot-autoconfigure-1.5.14.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-core/3.3.6/4e108aaae7ce13bfb2aaa054deeed91c96d5926d/grails-core-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-core/3.3.6/d439bc57e4b5115331a1931b91ec51fcdaa011e3/grails-core-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/boot/spring-boot-starter-actuator/1.5.14.RELEASE/spring-boot-starter-actuator-1.5.14.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-boot/3.3.6/2de31a5d93f470fba29f84e150dae4d728604db8/grails-web-boot-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-boot/3.3.6/95303e6ebae236267b2e0492a93f812109ff479/grails-web-boot-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-logging/3.3.6/9ee745dc28866ad5c9460a85c068f25889bf300f/grails-logging-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-logging/3.3.6/f03da5ba909afc738e933872b306347ab82d2abd/grails-logging-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-rest/3.3.6/76b5c665d761a3c49d0b9b0d5f6fb1a91990ba6b/grails-plugin-rest-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-rest/3.3.6/dec890d11e0081e20a57680973c1dbdb2afe4502/grails-plugin-rest-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-databinding/3.3.6/f8b87062ae1998ea692ff35efb20fbae516a284e/grails-plugin-databinding-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-databinding/3.3.6/11ccaa98e4bb41b498986b26ff0d3a0b5caa6126/grails-plugin-databinding-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-i18n/3.3.6/99209cc89f097ba7c2e57e012639c89bc42dcf25/grails-plugin-i18n-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-i18n/3.3.6/590d926a7aa7ced0593efdcd9bcc1ef232d88583/grails-plugin-i18n-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-services/3.3.6/4113c50ad833808b199b5ffb2dbaf25d89900ad5/grails-plugin-services-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-services/3.3.6/a15720d88b6a2a187e7357350e997093bb2aeb91/grails-plugin-services-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-url-mappings/3.3.6/2e7b161f04b8bdfd949c2aefa459f500d684e836/grails-plugin-url-mappings-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-url-mappings/3.3.6/5f2a5e802134cfa5acd0ecd0c5cf399f1820f881/grails-plugin-url-mappings-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-interceptors/3.3.6/3479d25f18ce9b2e8cb4014bb7d30580c6fa2175/grails-plugin-interceptors-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-interceptors/3.3.6/4d28551dab06a8fc60bf1119584c8ee1cc7917cd/grails-plugin-interceptors-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/cache/4.0.0/72be24e2f8b3e5407048f5cc5186dcd32e8de841/cache-4.0.0.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/cache/4.0.0/1acda5e4fe7786da472838231b3a0e5931a1032e/cache-4.0.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/async/3.3.2/849be6dcabfba176078915404451c4b4479c6d49/async-3.3.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/async/3.3.2/ac6d45b1427c8d27f4945e7977a172f63dffca90/async-3.3.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/scaffolding/3.4.1/3794a2154aa473fd2281e1e36de398815a63e740/scaffolding-3.4.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/scaffolding/3.4.1/a6f6ceda78998c3293c7bda1d905a71e7abbea92/scaffolding-3.4.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/events/3.3.2/c43aed0886464bc62b8ef2c4963ea1bedeb19e6/events-3.3.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/events/3.3.2/ee79d627ea48a716cecd3c96e669b1f924ca272e/events-3.3.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/hibernate5/6.1.10.BUILD-SNAPSHOT/bd2669d4e4a0e711491c197c09cc151b830b9dfd/hibernate5-6.1.10.BUILD-SNAPSHOT.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/hibernate5/6.1.10.BUILD-SNAPSHOT/ce729eed82e20559a8383ae6d461ad5fda9cf36f/hibernate5-6.1.10.BUILD-SNAPSHOT-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-core/5.1.5.Final/28366d161d448e82370e5bbd871eb2835ba0fb7b/hibernate-core-5.1.5.Final.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-core/5.1.5.Final/78817fcb44516902446df26e6190c3f285c08652/hibernate-core-5.1.5.Final-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/gsp/3.3.1/7b40598abe73d8535b2dd4503467d5c0c415b7b5/gsp-3.3.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/gsp/3.3.1/d6866193081adac386b0596a79fa732608175dc0/gsp-3.3.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/ajax-tags/1.0.0/244768825b7a388347bb3ae9c4d2b3a34bc02631/ajax-tags-1.0.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/spring-security-core/3.2.2/ccbfcf6f3c0a623e16f8d8760c5b6047cfc7dbb/spring-security-core-3.2.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/spring-security-core/3.2.2/b9fcb22a32c937f630f34247ea0abd0f043d288a/spring-security-core-3.2.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/spring-security-cas/3.1.0/126e0315d0661d14eefa217fbc443bd46d9ecbe0/spring-security-cas-3.1.0.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/spring-security-cas/3.1.0/825eeba0cde26fe18ff145899e5ded6370fd1a7d/spring-security-cas-3.1.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/httpcomponents/httpcore/4.4.10/httpcore-4.4.10.jar" sourcepath="/home/prhodes/.m2/repository/org/apache/httpcomponents/httpcore/4.4.10/httpcore-4.4.10-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/httpcomponents/httpclient/4.5.6/httpclient-4.5.6.jar" sourcepath="/home/prhodes/.m2/repository/org/apache/httpcomponents/httpclient/4.5.6/httpclient-4.5.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/commons/commons-text/1.2/commons-text-1.2.jar" sourcepath="/home/prhodes/.m2/repository/org/apache/commons/commons-text/1.2/commons-text-1.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/commons-fileupload/commons-fileupload/1.3.1/c621b54583719ac0310404463d6d99db27e1052c/commons-fileupload-1.3.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/commons-fileupload/commons-fileupload/1.3.1/a1fa20f7f3ad210f4b2eb51b63be3f0273be263a/commons-fileupload-1.3.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/jena/jena-core/3.5.0/jena-core-3.5.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/jena/jena-arq/3.5.0/jena-arq-3.5.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/jena/jena-tdb/3.5.0/jena-tdb-3.5.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/fogbeam/jFriendOfAFriend/1.1/jFriendOfAFriend-1.1.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sf.json-lib/json-lib/2.4/136743e0d12df4e785e62b48618cee169b2ae546/json-lib-2.4-jdk15.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins.fogbeam/jaxrs-jersey1/3.0.4/48e59a0f75f689fe1a4e7e3f95254da651e47f9b/jaxrs-jersey1-3.0.4.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins.fogbeam/jaxrs-core/3.0.4/996d9fb04efb0f6181585c014997ef76371e4921/jaxrs-core-3.0.4.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.lucene/lucene-core/3.0.3/335f7ea0e28a4a1358aa745f4bd2037e8afe44fc/lucene-core-3.0.3.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.lucene/lucene-core/3.0.3/d3b608052205d068ddccbffd9fd5e24fdd438060/lucene-core-3.0.3-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tika/tika-core/1.18/69556697de96cf0b22df846e970dafd29866eee0/tika-core-1.18.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tika/tika-core/1.18/d52e325aa65e44d91a468d5eafbdab6c3034ebcd/tika-core-1.18-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tika/tika-parsers/1.18/7d9b6dea91d783165f3313d320d3aaaa9a4dfc13/tika-parsers-1.18.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tika/tika-parsers/1.18/38cae13f445e0e18184b6f00a85cb779b258e876/tika-parsers-1.18-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.postgresql/postgresql/42.2.4/dff98730c28a4b3a3263f0cf4abb9a3392f815a7/postgresql-42.2.4.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.postgresql/postgresql/42.2.4/37e255da4175df5656b08e132bb2af5c51d024a2/postgresql-42.2.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.apis/google-api-services-gmail/v1-rev92-1.24.1/717ec44cad90c34aef4270bea5ebf1712cb28622/google-api-services-gmail-v1-rev92-1.24.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.apis/google-api-services-gmail/v1-rev92-1.24.1/98297c4d2e601f425c4eb6d103349b09dae11b8d/google-api-services-gmail-v1-rev92-1.24.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.mail/javax.mail-api/1.6.1/8cababdc2a9caae6e1641aae6671c24394227651/javax.mail-api-1.6.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.mail/javax.mail-api/1.6.1/376260de584f54ef531ac6be0631288b64b79d88/javax.mail-api-1.6.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.sun.mail/javax.mail/1.6.1/757ba4630692bb2a1ec2d9d57a616b63f15e947e/javax.mail-1.6.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.sun.mail/javax.mail/1.6.1/ce7825b8dafa3660bbb6d4b33f4f91fc1e93fe38/javax.mail-1.6.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.oauth-client/google-oauth-client-jetty/1.24.1/3e114573caffc8ec6f0b74487c6d7322ef454d14/google-oauth-client-jetty-1.24.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.oauth-client/google-oauth-client-jetty/1.24.1/31a03063fca1eae61e1840a542a703617de6557a/google-oauth-client-jetty-1.24.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/fogbeam/groovy-activity-streams/1.0/groovy-activity-streams-1.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy.modules.http-builder/http-builder/0.7.1/a21771ae3da5ce9f5c4d7a60c1e716666aa2acf9/http-builder-0.7.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy.modules.http-builder/http-builder/0.7.1/a7396f0103337835621526d95021afc06c65c7b2/http-builder-0.7.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/jms/2.0.0.RC2/f5f93af871a64216fc849615ca23a3f32bff0890/jms-2.0.0.RC2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/jms/2.0.0.RC2/591ba4b7f5e909acba62e0fb24263be58987d8fe/jms-2.0.0.RC2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework.ldap/spring-ldap-core/2.3.2.RELEASE/8bd3457711b1746af93daa0aa04c9fc886569b1/spring-ldap-core-2.3.2.RELEASE.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework.ldap/spring-ldap-core/2.3.2.RELEASE/24620a276fe7313f7dad29a01abe56792cfe9a4b/spring-ldap-core-2.3.2.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/quartz/2.0.13/9e0009792644c894ad8070d42dd53670018f98a6/quartz-2.0.13.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/quartz/2.0.13/a3d2b870869418990e7ca3edb77ffe2d69bba3ae/quartz-2.0.13-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.codehaus.jackson/jackson-mapper-asl/1.9.13/1ee2f2bed0e5dd29d1cb155a166e6f8d50bbddb7/jackson-mapper-asl-1.9.13.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.codehaus.jackson/jackson-mapper-asl/1.9.13/83113901bc2a377d698ccea35ad842786f37c6ad/jackson-mapper-asl-1.9.13-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/extradrive1/development/projects/fogbeam/fogcutter/quoddy/quoddy/locallibs/exist.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/extradrive1/development/projects/fogbeam/fogcutter/quoddy/quoddy/locallibs/exist-fluent.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/extradrive1/development/projects/fogbeam/fogcutter/quoddy/quoddy/locallibs/exist-optional.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/extradrive1/development/projects/fogbeam/fogcutter/quoddy/quoddy/locallibs/xmldb.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/extradrive1/development/projects/fogbeam/fogcutter/quoddy/quoddy/locallibs/sunxacml-1.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/extradrive1/development/projects/fogbeam/fogcutter/quoddy/quoddy/locallibs/ws-commons-util-1.0.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/extradrive1/development/projects/fogbeam/fogcutter/quoddy/quoddy/locallibs/xmlrpc-client-3.1.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/extradrive1/development/projects/fogbeam/fogcutter/quoddy/quoddy/locallibs/xmlrpc-common-3.1.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/extradrive1/development/projects/fogbeam/fogcutter/quoddy/quoddy/locallibs/xmlrpc-server-3.1.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/extradrive1/development/projects/fogbeam/fogcutter/quoddy/quoddy/locallibs/mxquery.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.rometools/rome/1.11.0/245e0d8e5b3461b2842fa739b2693b0e7a4f0a46/rome-1.11.0.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.rometools/rome/1.11.0/77c6cb39cfd14bd0b02ccbc6bbb23a13e7300d48/rome-1.11.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.mnode.ical4j/ical4j/3.0.1/d58906a5da24647405a7f076f4d13dbf7ffe22f4/ical4j-3.0.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.mnode.ical4j/ical4j/3.0.1/e6046d53269ff757754bce4bd4a359c51162dc6b/ical4j-3.0.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.cache/cache-api/1.1.0/77bdcff7814076dfa61611b0db88487c515150b6/cache-api-1.1.0.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.cache/cache-api/1.1.0/9d6d3bebb224dcc1fbdd37381105153a961085ab/cache-api-1.1.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.ehcache/jcache/1.0.1/3a818cba6d97e9767a34b4eb7b940707b9487cc2/jcache-1.0.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.ehcache/jcache/1.0.1/34a8c103ce8beaee3be3af438509c8075926773e/jcache-1.0.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/xalan/xalan/2.7.2/xalan-2.7.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.sun.jersey/jersey-bundle/1.19.4/7c94e9f63ad044c1c7d459b3d9b6c9a63b77bd4a/jersey-bundle-1.19.4.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.sun.jersey/jersey-bundle/1.19.4/251d93d778acfe366923f2d97d4b759959ed8082/jersey-bundle-1.19.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.sun.jersey.contribs/jersey-spring/1.19.4/657830ffef2f893beca443b984d8b14de8ff388b/jersey-spring-1.19.4.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.sun.jersey.contribs/jersey-spring/1.19.4/26d78f1b640bd2b83c686cdfc0b4726621aab68/jersey-spring-1.19.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-tomcat/1.5.14.RELEASE/ec97b1bdac6feee248116a79c537023894950e4c/spring-boot-starter-tomcat-1.5.14.RELEASE.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-tomcat/1.5.14.RELEASE/afb5b68f85732286043a965810ed000d4d086689/spring-boot-starter-tomcat-1.5.14.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.1.11/ccedfbacef4a6515d2983e3f89ed753d5d4fb665/logback-classic-1.1.11.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.1.11/2a2f78be7ef674b6486f7b5463f05f40da5e163/logback-classic-1.1.11-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.25/jcl-over-slf4j-1.7.25.jar" sourcepath="/home/prhodes/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.25/jcl-over-slf4j-1.7.25-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/slf4j/jul-to-slf4j/1.7.25/jul-to-slf4j-1.7.25.jar" sourcepath="/home/prhodes/.m2/repository/org/slf4j/jul-to-slf4j/1.7.25/jul-to-slf4j-1.7.25-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.slf4j/log4j-over-slf4j/1.7.25/a87bb47468f47ee7aabbd54f93e133d4215769c3/log4j-over-slf4j-1.7.25.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.slf4j/log4j-over-slf4j/1.7.25/42a10e06ab88cbe5f31253ffb8c0bca96b34f81d/log4j-over-slf4j-1.7.25-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/boot/spring-boot/1.5.14.RELEASE/spring-boot-1.5.14.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/codehaus/groovy/groovy/2.4.15/groovy-2.4.15.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar" sourcepath="/home/prhodes/.m2/repository/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/hibernate/javax/persistence/hibernate-jpa-2.1-api/1.0.0.Final/hibernate-jpa-2.1-api-1.0.0.Final.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.googlecode.concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.4.2/2eaf3d3c9746d526ff7e5b93931d482c3887e6ac/concurrentlinkedhashmap-lru-1.4.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.googlecode.concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.4.2/c23bcd315a38add461b942c9bb529ae260ff897c/concurrentlinkedhashmap-lru-1.4.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/spring-core/4.3.18.RELEASE/spring-core-4.3.18.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/spring-tx/4.3.18.RELEASE/spring-tx-4.3.18.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/spring-beans/4.3.18.RELEASE/spring-beans-4.3.18.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/spring-context/4.3.18.RELEASE/spring-context-4.3.18.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/grails/grails-bootstrap/3.3.6/grails-bootstrap-3.3.6.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-spring/3.3.6/e8302bff1146fbaacbee65cfc4c0e95d1fad0c8d/grails-spring-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-spring/3.3.6/6884c8135c7ec1636b9031a9d033cf694f0c054c/grails-spring-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-core/6.1.10.BUILD-SNAPSHOT/51519063ff57213023af96ae78c7c12766b0642/grails-datastore-core-6.1.10.BUILD-SNAPSHOT.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-core/6.1.10.BUILD-SNAPSHOT/3811636211d6218f5faad90420adc6b158a24d56/grails-datastore-core-6.1.10.BUILD-SNAPSHOT-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/xalan/serializer/2.7.2/serializer-2.7.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/boot/spring-boot-starter/1.5.14.RELEASE/spring-boot-starter-1.5.14.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/boot/spring-boot-actuator/1.5.14.RELEASE/spring-boot-actuator-1.5.14.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-common/3.3.6/9a183c501e9f1f6f8c670a6e65b5c57971777565/grails-web-common-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-common/3.3.6/1debe160af77ffeb17bc65b08f4ebdfb6738761c/grails-web-common-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web/3.3.6/d6f3959c07fea3dceebacc447faa61d1916db4d3/grails-web-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web/3.3.6/ead136f34e15322f88f00533320641556485fa57/grails-web-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-controllers/3.3.6/476c5fdcd754904b91ea10d030edffc5b6f1d796/grails-plugin-controllers-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-controllers/3.3.6/d5a2ebe01f2ac843fff9a48c82fa61794192564a/grails-plugin-controllers-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-datasource/3.3.6/184e181b2bcf494ca84e8f8f2cce85e4ea7976f2/grails-plugin-datasource-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-datasource/3.3.6/14fa0e06722492e89b614b722902224d565cb1f8/grails-plugin-datasource-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/converters/3.3.1/afc1ea5fa7d7d52e83017856fa5a651d38145048/converters-3.3.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/converters/3.3.1/cd9f91339fa97f2320b0399c8f70c4b13f96f141/converters-3.3.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-validation/3.3.6/7daaba89ea190c68d0693b1c37fbea6764213047/grails-validation-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-validation/3.3.6/b7646706648345a90afcb593ce83c0a6d85123f4/grails-validation-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.21.0-GA/598244f595db5c5fb713731eddbb1c91a58d959b/javassist-3.21.0-GA.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.21.0-GA/81fefbd46ba6a18fc7af83b9c60b28c0862cd492/javassist-3.21.0-GA-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-async/3.3.2/a559e36b754e744bad4b38efd28fd0b280155f64/grails-async-3.3.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-async/3.3.2/25d05626899ca1eb275ee8c89838e669f12c1c69/grails-async-3.3.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/fields/2.2.8/bfb21b4e1c05db9f105159d12bcac0389b1ac464/fields-2.2.8.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails.plugins/fields/2.2.8/12a8c8e0cbc47753f4bf9c256af20d2c3cf79146/fields-2.2.8-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-events/3.3.2/a4c70fc8c391d8060d715ea68bfe4ff87761fd02/grails-events-3.3.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-events/3.3.2/cb947efca1f0f82e5cb22211dce3f103a0726657/grails-events-3.3.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-events-transform/3.3.2/645c93ccb03ea27a23d6ac25265b01e5a63b9525/grails-events-transform-3.3.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-events-transform/3.3.2/c2008285351caad837afec31e80fec94a98c53dd/grails-events-transform-3.3.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-events-compat/3.3.2/ef55131439fb84dc71c7f372e7c9aaadd283a11b/grails-events-compat-3.3.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-events-compat/3.3.2/60fd9493f2f2619682a6a9510e134a685dfc01d7/grails-events-compat-3.3.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-web/6.1.10.BUILD-SNAPSHOT/4852d6e812e193a20b5adb9d124232d00e651f8b/grails-datastore-web-6.1.10.BUILD-SNAPSHOT.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-web/6.1.10.BUILD-SNAPSHOT/c5c36985649ab480124c77a16c3966617b24ca68/grails-datastore-web-6.1.10.BUILD-SNAPSHOT-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-gorm-support/6.1.10.BUILD-SNAPSHOT/8c63e5a8524a7026005ea1deb15cdfbe796ea55d/grails-datastore-gorm-support-6.1.10.BUILD-SNAPSHOT.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-gorm-support/6.1.10.BUILD-SNAPSHOT/4defedd04fa5702f0fa7203b10d7c118da5beb96/grails-datastore-gorm-support-6.1.10.BUILD-SNAPSHOT-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-gorm-hibernate5/6.1.10.BUILD-SNAPSHOT/9649617e617b466f3049bfe166718bc3610d5f88/grails-datastore-gorm-hibernate5-6.1.10.BUILD-SNAPSHOT.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-gorm-hibernate5/6.1.10.BUILD-SNAPSHOT/914fe540f2635b3af6b6ab60b5604651b603bfee/grails-datastore-gorm-hibernate5-6.1.10.BUILD-SNAPSHOT-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/spring-orm/4.3.18.RELEASE/spring-orm-4.3.18.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/jboss/logging/jboss-logging/3.3.2.Final/jboss-logging-3.3.2.Final.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/geronimo/specs/geronimo-jta_1.1_spec/1.1.1/geronimo-jta_1.1_spec-1.1.1.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/jboss/jandex/2.0.3.Final/jandex-2.0.3.Final.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.3.4/3d5f48f10bbe4eb7bd862f10c0583be2e0053c6/classmate-1.3.4.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.3.4/d5aa53c93626884209c1e82fdf44d2ccdaf8e9c2/classmate-1.3.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/hibernate/common/hibernate-commons-annotations/5.0.1.Final/hibernate-commons-annotations-5.0.1.Final.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-gsp-taglib/3.3.1/28e0c0776c9f5c6109b79a89860161db3369fe81/grails-web-gsp-taglib-3.3.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-gsp-taglib/3.3.1/be72e7c07b9624c4c4f6dbcb662b89bb1ee4aa24/grails-web-gsp-taglib-3.3.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/commons-lang/commons-lang/2.6/commons-lang-2.6.jar" sourcepath="/home/prhodes/.m2/repository/commons-lang/commons-lang/2.6/commons-lang-2.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-codecs/3.3.6/c9ce4ed7f1248f92d97a4419987eec0936cee3f5/grails-plugin-codecs-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-codecs/3.3.6/67eae75b4aa9c02a1726a04491ce06da082ff9da/grails-plugin-codecs-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-jsp/3.3.1/e45c3adb5f6fc6c7761227457d09114ec41c55fe/grails-web-jsp-3.3.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-jsp/3.3.1/4f4bc09798ca8685112acc2cb24df4a4dea50e30/grails-web-jsp-3.3.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sf.ehcache/ehcache/2.10.5/74c1ec0a88bf20a14edb1b30a92b4c33cc6ea6b0/ehcache-2.10.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sf.ehcache/ehcache/2.10.5/6e1237bc1d89722b2b949019e1860805461deb8/ehcache-2.10.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-core/4.2.7.RELEASE/3b74ac31cb84d1cab6dcc55887391dfe593a30f6/spring-security-core-4.2.7.RELEASE.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-core/4.2.7.RELEASE/29e49b7b509eddbfbaad3254ed02893c1f8cab4e/spring-security-core-4.2.7.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-web/4.2.7.RELEASE/d15e32de9efe00355f8cdd7cf61d98ae886dcd94/spring-security-web-4.2.7.RELEASE.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-web/4.2.7.RELEASE/e884f1d616280556153dae25555c6c51e2786a09/spring-security-web-4.2.7.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.jasig.cas.client/cas-client-core/3.4.1/a000397061c6c02fd695c706430ccbf439843008/cas-client-core-3.4.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.jasig.cas.client/cas-client-core/3.4.1/2933ce8675a39909e729cd2a9888e4be63107c0a/cas-client-core-3.4.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-cas/4.2.7.RELEASE/edd2f94647ce0e8fbf0a8f4cc6962177e3372126/spring-security-cas-4.2.7.RELEASE.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-cas/4.2.7.RELEASE/24af7ea0c91d7e4cf8677001960caf810febf34e/spring-security-cas-4.2.7.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar" sourcepath="/home/prhodes/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/commons-codec/commons-codec/1.10/commons-codec-1.10.jar" sourcepath="/home/prhodes/.m2/repository/commons-codec/commons-codec/1.10/commons-codec-1.10-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/commons/commons-lang3/3.7/commons-lang3-3.7.jar" sourcepath="/home/prhodes/.m2/repository/org/apache/commons/commons-lang3/3.7/commons-lang3-3.7-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/jena/jena-iri/3.5.0/jena-iri-3.5.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar" sourcepath="/home/prhodes/.m2/repository/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/commons-cli/commons-cli/1.4/commons-cli-1.4.jar" sourcepath="/home/prhodes/.m2/repository/commons-cli/commons-cli/1.4/commons-cli-1.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/jena/jena-base/3.5.0/jena-base-3.5.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/jena/jena-shaded-guava/3.5.0/jena-shaded-guava-3.5.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/com/github/jsonld-java/jsonld-java/0.11.1/jsonld-java-0.11.1.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/httpcomponents/httpclient-cache/4.5.5/httpclient-cache-4.5.5.jar" sourcepath="/home/prhodes/.m2/repository/org/apache/httpcomponents/httpclient-cache/4.5.5/httpclient-cache-4.5.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/thrift/libthrift/0.9.3/libthrift-0.9.3.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/jena/apache-jena-libs/3.5.0/apache-jena-libs-3.5.0.pom">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/commons-beanutils/commons-beanutils/1.9.3/commons-beanutils-1.9.3.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sf.ezmorph/ezmorph/1.0.6/1e55d2a0253ea37745d33062852fd2c90027432/ezmorph-1.0.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sf.ezmorph/ezmorph/1.0.6/298992280d62b944afd0ae9bfe3329f5487dd434/ezmorph-1.0.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.gagravarr/vorbis-java-tika/0.8/4ddbb27ac5884a0f0398a63d46a89d3bc87dc457/vorbis-java-tika-0.8.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.gagravarr/vorbis-java-tika/0.8/74c98e4a8e6c778acb9ff6210196a2f2cf8c98ad/vorbis-java-tika-0.8-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.healthmarketscience.jackcess/jackcess/2.1.10/4a10b9316831c2fc1f87853bb6745909dab5a8a5/jackcess-2.1.10.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.healthmarketscience.jackcess/jackcess/2.1.10/3bff6c0f203e86587e4763916ef13d805d0bf0e2/jackcess-2.1.10-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.healthmarketscience.jackcess/jackcess-encrypt/2.1.4/dfe7134b759597276ff87b7acf662bef1c1c4fd8/jackcess-encrypt-2.1.4.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.healthmarketscience.jackcess/jackcess-encrypt/2.1.4/fd9964d53fbb4425f6b484c7109a98cd36e58c5b/jackcess-encrypt-2.1.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.tallison/jmatio/1.2/69d8f2f49c1503f9b15b0eb50b1905a734a025e2/jmatio-1.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.tallison/jmatio/1.2/b87195e937ff2e6616a69c63cff06bdce0e33b87/jmatio-1.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.james/apache-mime4j-core/0.8.1/c62dfe18a3b827a2c626ade0ffba44562ddf3f61/apache-mime4j-core-0.8.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.james/apache-mime4j-core/0.8.1/440f21c0174b4df00767aa7ab014933da8d6d37c/apache-mime4j-core-0.8.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.james/apache-mime4j-dom/0.8.1/f2d653c617004193f3350330d907f77b60c88c56/apache-mime4j-dom-0.8.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.james/apache-mime4j-dom/0.8.1/1817da34b6384d59de53b3a7d4be34043b684396/apache-mime4j-dom-0.8.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/commons/commons-compress/1.16.1/commons-compress-1.16.1.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/tukaani/xz/1.8/xz-1.8.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.brotli/dec/0.1.2/c26a897ae0d524809eef1c786cc6183b4ddcc3b/dec-0.1.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.brotli/dec/0.1.2/c04c22a0f5a84e985bd04d2129638e590c1e5edc/dec-0.1.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.pdfbox/pdfbox/2.0.9/d0425578218624388f2ec84a0b3a11efd55df0f5/pdfbox-2.0.9.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.pdfbox/pdfbox/2.0.9/c789ea35f37601a8200bee9c9b49c6874308d72c/pdfbox-2.0.9-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.pdfbox/pdfbox-tools/2.0.9/90a58b4daf37697488339845e0a3e0d3609eb781/pdfbox-tools-2.0.9.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.pdfbox/pdfbox-tools/2.0.9/c462a79dcab72a13ff3f049d37691a49bbc787a2/pdfbox-tools-2.0.9-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.pdfbox/jempbox/1.8.13/a874cef0ed0e2a8c4cc5ed52c23ba3e6d78eca4e/jempbox-1.8.13.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.pdfbox/jempbox/1.8.13/bc8bb8448ae50c1a42a1f91fbacd44b30e825bbe/jempbox-1.8.13-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcmail-jdk15on/1.54/9d9b5432b4b29ef4a853223bc6e19379ef116cca/bcmail-jdk15on-1.54.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcmail-jdk15on/1.54/7ae978e9bce69450942cd8151caad55befedb667/bcmail-jdk15on-1.54-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.54/1acdedeb89f1d950d67b73d481eb7736df65eedb/bcprov-jdk15on-1.54.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.54/27cf7631a904e6b98d9842db13e09a22e524eee4/bcprov-jdk15on-1.54-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.poi/poi/3.17/ae92292a2043888b40d418da97dc0b669fde326/poi-3.17.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.poi/poi/3.17/9d185f2c484774285585e76f5f1d887208482f93/poi-3.17-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.poi/poi-scratchpad/3.17/85d86a0e26c7f5c0db4ee63e8c7728e51c5d64ce/poi-scratchpad-3.17.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.poi/poi-scratchpad/3.17/3c712c08982db354bd4e3212e01bd6b7a7375a49/poi-scratchpad-3.17-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.poi/poi-ooxml/3.17/7d8c44407178b73246462842bf1e206e99c8e0a/poi-ooxml-3.17.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.poi/poi-ooxml/3.17/c9967472b96ef92372352958dcfd3e8e0e5bd2d0/poi-ooxml-3.17-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.ccil.cowan.tagsoup/tagsoup/1.2.1/5584627487e984c03456266d3f8802eb85a9ce97/tagsoup-1.2.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.ccil.cowan.tagsoup/tagsoup/1.2.1/31cbf81bece906e382034d2b04e2e5c47e864c17/tagsoup-1.2.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/ow2/asm/asm/5.0.4/asm-5.0.4.jar" sourcepath="/home/prhodes/.m2/repository/org/ow2/asm/asm/5.0.4/asm-5.0.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.googlecode.mp4parser/isoparser/1.1.18/c74bdac64b22f1e245a7657149a43437aae4a9d3/isoparser-1.1.18.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.googlecode.mp4parser/isoparser/1.1.18/49328e3c6fdf06b7d875d01ea86051963494bceb/isoparser-1.1.18-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.drewnoakes/metadata-extractor/2.10.1/e1852a8f519dbb0196fdb41bf2c584a8858189f8/metadata-extractor-2.10.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.drewnoakes/metadata-extractor/2.10.1/1ae6c794cd3639597398b15df10f78b4d02f4323/metadata-extractor-2.10.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/de.l3s.boilerpipe/boilerpipe/1.1.0/f62cb75ed52455a9e68d1d05b84c500673340eb2/boilerpipe-1.1.0.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/de.l3s.boilerpipe/boilerpipe/1.1.0/769066c705b459351ad8b3a49d5e1581e5578157/boilerpipe-1.1.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.gagravarr/vorbis-java-core/0.8/7e9937c2575cda2e3fc116415117c74f23e43fa6/vorbis-java-core-0.8.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.gagravarr/vorbis-java-core/0.8/4a20b54b3f51be036a3ddafb20a7bb1a37ce3c8d/vorbis-java-core-0.8-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.googlecode.juniversalchardet/juniversalchardet/1.0.3/cd49678784c46aa8789c060538e0154013bb421b/juniversalchardet-1.0.3.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.googlecode.juniversalchardet/juniversalchardet/1.0.3/77979eaa98f90806f984155f44f63cc1fb60ac25/juniversalchardet-1.0.3-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.codelibs/jhighlight/1.0.2/992a8a8add10468930efc1f110f2895f68258a1e/jhighlight-1.0.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.codelibs/jhighlight/1.0.2/b721e136ac6ff410a5ebca2755d7d8c25e6adf7f/jhighlight-1.0.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.pff/java-libpst/0.8.1/ad31986653dac9cb5132ea5b2999c20b4b286255/java-libpst-0.8.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.pff/java-libpst/0.8.1/3c72ce76f314d442b65d06d005e8b0dab1b5078b/java-libpst-0.8.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.github.junrar/junrar/0.7/18cc717b85af0b12ba922abf415c2ff4716f8219/junrar-0.7.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.github.junrar/junrar/0.7/a2a861c38317e54e85798c83c9652d23f72e95aa/junrar-0.7-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.cxf/cxf-rt-rs-client/3.0.16/e28bf841ca74b6cec6a93a60885dbcd15690d1a8/cxf-rt-rs-client-3.0.16.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.cxf/cxf-rt-rs-client/3.0.16/1d4cde79c16d1aba009b63129a01d48cbac0aec7/cxf-rt-rs-client-3.0.16-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/commons/commons-exec/1.3/commons-exec-1.3.jar" sourcepath="/home/prhodes/.m2/repository/org/apache/commons/commons-exec/1.3/commons-exec-1.3-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.opennlp/opennlp-tools/1.8.4/dc1dd0bfdee4a4bc98924180da5a8e61b3a50bdd/opennlp-tools-1.8.4.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.opennlp/opennlp-tools/1.8.4/9db419a1cd3b8394126ce7a27ad23d7f7caa691c/opennlp-tools-1.8.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.googlecode.json-simple/json-simple/1.1.1/c9ad4a0850ab676c5c64461a05ca524cdfff59f1/json-simple-1.1.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.googlecode.json-simple/json-simple/1.1.1/15bba08e3a239d54b68209c001f9c911559d2fed/json-simple-1.1.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.github.openjson/openjson/1.0.10/8dcccbcc8bbfa15162cd7ca77bcf2b9daa90e70a/openjson-1.0.10.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.github.openjson/openjson/1.0.10/c91cae729fa4f541529ff3c3803f6e684f15fcbf/openjson-1.0.10-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.5/f645ed69d595b24d4cf8b3fbb64cc505bede8829/gson-2.8.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.5/c5b4c491aecb72e7c32a78da0b5c6b9cda8dee0f/gson-2.8.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/edu.ucar/netcdf4/4.5.5/675d63ecc857c50dd50858011b670160aa30b62/netcdf4-4.5.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/edu.ucar/netcdf4/4.5.5/f517b9f3aca305a58f357404fc9db784973f8fe8/netcdf4-4.5.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/edu.ucar/grib/4.5.5/cfe552910e9a8d57ce71134796abb281a74ead16/grib-4.5.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/edu.ucar/grib/4.5.5/92999d759e642bd9a287b63093564f6623259bad/grib-4.5.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.11.2/e3eeb8a0b4ce1db246059a41e353cd7413dad226/jsoup-1.11.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.11.2/f0f1f0d1ceb2cd515c98649d9ad6b8b9814899b2/jsoup-1.11.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/edu.ucar/cdm/4.5.5/af1748a3d024069cb7fd3fc2591efe806c914589/cdm-4.5.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/edu.ucar/cdm/4.5.5/a9963cd8953e705032bea062e83500f10a878921/cdm-4.5.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/edu.ucar/httpservices/4.5.5/ee5f217be599e5e03f7f0e55e03f9e721a154f62/httpservices-4.5.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/edu.ucar/httpservices/4.5.5/e02932eec7c1fa530dea643a8bfe22971e1b96c8/httpservices-4.5.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.5.5/8281b24b8a493374cd2aa8a90c4156588f7dbcb6/httpmime-4.5.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.5.5/71b1d0751e1beb9f815f26f2f23f304b162f70b1/httpmime-4.5.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.sis.core/sis-utility/0.8/4ad2d0805780c5a2cebc0dadbfb8307f94c91c4f/sis-utility-0.8.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.sis.core/sis-utility/0.8/97a0947fb604b9989b8838af7d7ccba4baa28a0a/sis-utility-0.8-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.sis.storage/sis-netcdf/0.8/aa44675239c11eeb598ef054efdf2673cd4953a/sis-netcdf-0.8.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.sis.storage/sis-netcdf/0.8/ded83ad0c19a643b005dd65d79ecf6cd9c8da3f8/sis-netcdf-0.8-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.sis.core/sis-metadata/0.8/b5d309428e78ebdaf1ea04aec8747a2093689e20/sis-metadata-0.8.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.sis.core/sis-metadata/0.8/f66abf0128df3d96d53f9bdd1d7be0620a24384/sis-metadata-0.8-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.opengis/geoapi/3.0.1/a69b261841b0794b82b8d42fcd6e9a370eb62809/geoapi-3.0.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.opengis/geoapi/3.0.1/8c56e525fe648bf5027320e0e67430b1836f4c40/geoapi-3.0.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/edu.usc.ir/sentiment-analysis-parser/0.1/20d1524a1270c1d26e3314d2ee71a12e6a29a27d/sentiment-analysis-parser-0.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/edu.usc.ir/sentiment-analysis-parser/0.1/aec4b4f0344bfff776b6bed33067b75cdf834eb6/sentiment-analysis-parser-0.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.uima/uimafit-core/2.2.0/db69a6b733d2ada643f46060e130eda47edd6e5a/uimafit-core-2.2.0.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.uima/uimafit-core/2.2.0/5567abf0d1ce744541c43306a04b64c151d62d41/uimafit-core-2.2.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.uima/uimaj-core/2.9.0/314390218c2f2d11089007719a5d4f39510d32f5/uimaj-core-2.9.0.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.uima/uimaj-core/2.9.0/8956dd43a8b7d1a33bae6d5f3ae31d9b02dfe443/uimaj-core-2.9.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/jdom/jdom2/2.0.6/jdom2-2.0.6.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.8.11/876ead1db19f0c9e79c9789273a3ef8c6fd6c29b/jackson-core-2.8.11.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.8.11/1e1df4d8c9ca05f1708e0ce1d842cf82931a7fc9/jackson-core-2.8.11-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.8.11.2/2c5051e8e84d2c16316b758ebf746f9e90bef5a4/jackson-databind-2.8.11.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.8.11.2/48264b5cd9206472c8ad6a0442c8acfcff1188e6/jackson-databind-2.8.11.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.8.0/45b426f7796b741035581a176744d91090e2e6fb/jackson-annotations-2.8.0.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.8.0/29a1a95363d497e856c0a7d682e4f7973e334068/jackson-annotations-2.8.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.pdfbox/jbig2-imageio/3.0.0/59cba3c1e9d11c790c27be31b311cd3d729ca900/jbig2-imageio-3.0.0.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.pdfbox/jbig2-imageio/3.0.0/f1ae11f9c9dc1d6d12347ec89f25d3a7dc3f7327/jbig2-imageio-3.0.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.github.jai-imageio/jai-imageio-core/1.3.1/300f3f0dedfca37b3278991f9397354971b37156/jai-imageio-core-1.3.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.github.jai-imageio/jai-imageio-core/1.3.1/8b3dbf7510367013dc5790a7d6e14dd7aa60e4e4/jai-imageio-core-1.3.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.api-client/google-api-client/1.24.1/37de23fb9b8b077de4ecec3192d98e752b0e5d72/google-api-client-1.24.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.api-client/google-api-client/1.24.1/9b7ae0b12fd15dcf5e03007cf1d83724be62b77d/google-api-client-1.24.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/javax/activation/activation/1.1/activation-1.1.jar" sourcepath="/home/prhodes/.m2/repository/javax/activation/activation/1.1/activation-1.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.oauth-client/google-oauth-client-java6/1.24.1/9e2e902651aa07e02be7d1dac8b473faf36cd6df/google-oauth-client-java6-1.24.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.oauth-client/google-oauth-client-java6/1.24.1/9606daf7d0123b219bc6bfde02807bc5939dfb84/google-oauth-client-java6-1.24.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.mortbay.jetty/jetty/6.1.26/2f546e289fddd5b1fab1d4199fbb6e9ef43ee4b0/jetty-6.1.26.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.mortbay.jetty/jetty/6.1.26/9e275882f6d3400b05674c79e97014a255dfaf43/jetty-6.1.26-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sourceforge.nekohtml/nekohtml/1.9.22/4f54af68ecb345f2453fb6884672ad08414154e3/nekohtml-1.9.22.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sourceforge.nekohtml/nekohtml/1.9.22/88eb858a017e4a4ba762a9968da59ed57fc08898/nekohtml-1.9.22-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/xml-resolver/xml-resolver/1.2/xml-resolver-1.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/spring-jms/4.3.18.RELEASE/spring-jms-4.3.18.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1.jar" sourcepath="/home/prhodes/.m2/repository/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.quartz-scheduler/quartz/2.2.3/d4d8ea088852beeb89f54d3040fe1cbaa8491dcd/quartz-2.2.3.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.quartz-scheduler/quartz/2.2.3/d082b56ad9a4b16c785979eb61f89ad000a075c6/quartz-2.2.3-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.codehaus.jackson/jackson-core-asl/1.9.13/3c304d70f42f832e0a86d45bd437f692129299a4/jackson-core-asl-1.9.13.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.codehaus.jackson/jackson-core-asl/1.9.13/6ed53c5ce78344e14296aa47769d67b10e1c7b2c/jackson-core-asl-1.9.13-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.rometools/rome-utils/1.11.0/a35a96278cb585b3875c25c45bd2b438058392a7/rome-utils-1.11.0.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.rometools/rome-utils/1.11.0/1e1d75cf40c8b75679814829fb37ed8210d4fffe/rome-utils-1.11.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/commons/commons-collections4/4.1/commons-collections4-4.1.jar" sourcepath="/home/prhodes/.m2/repository/org/apache/commons/commons-collections4/4.1/commons-collections4-4.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.ws.rs/jsr311-api/1.1.1/59033da2a1afd56af1ac576750a8d0b1830d59e6/jsr311-api-1.1.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.ws.rs/jsr311-api/1.1.1/bcc4b7b569ef8bb9b82e48cf23b5aaac29a4fb4e/jsr311-api-1.1.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.sun.jersey/jersey-servlet/1.19.4/fbdcb39db6a6976944a621fe11bf1d2ff048d7c2/jersey-servlet-1.19.4.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.sun.jersey/jersey-servlet/1.19.4/b5d47c7e48cdfd399ccf6adcc35efae179c4f2d1/jersey-servlet-1.19.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/spring-web/4.3.18.RELEASE/spring-web-4.3.18.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/spring-aop/4.3.18.RELEASE/spring-aop-4.3.18.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-core/8.5.31/f5adf7ed8c34aa005b22b6a2dc7b6796e10e9c79/tomcat-embed-core-8.5.31.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-core/8.5.31/5ade5e787bcaabb9d088d8e4b22a8edffa43a783/tomcat-embed-core-8.5.31-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-el/8.5.31/3a536e1ac71b82627c3a7408eb38fa0704cb9034/tomcat-embed-el-8.5.31.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-el/8.5.31/1b8618516d1303694a349116dae4a76dfe48e18d/tomcat-embed-el-8.5.31-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-websocket/8.5.31/6564e716b89de5eaa0dd234ae7989576503ddf3/tomcat-embed-websocket-8.5.31.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-websocket/8.5.31/53f579c94dc22c9b8b4e9ad4a7b2c4e4833bdd5a/tomcat-embed-websocket-8.5.31-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.1.11/88b8df40340eed549fb07e2613879bf6b006704d/logback-core-1.1.11.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.1.11/1b6214469321068fe4d58157768e1e039479fa1/logback-core-1.1.11-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/spring-expression/4.3.18.RELEASE/spring-expression-4.3.18.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/codehaus/groovy/groovy-xml/2.4.15/groovy-xml-2.4.15.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/codehaus/groovy/groovy-templates/2.4.15/groovy-templates-2.4.15.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/yaml/snakeyaml/1.17/snakeyaml-1.17.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/javax/transaction/jta/1.1/jta-1.1.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01.jar" sourcepath="/home/prhodes/.m2/repository/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-databinding/3.3.6/3cc975e8312823f5ef796f47e9fc96e2f1f22c6f/grails-databinding-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-databinding/3.3.6/62f60115772bf570a382f2093012cba271a4f78e/grails-databinding-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-encoder/3.3.6/d0d7449b6c3c825f1ef050e0f941cc2f8523aa3c/grails-encoder-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-encoder/3.3.6/775349b481e1878e42a796f180563c5f072daf98/grails-encoder-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-gsp/3.3.1/88115473871aeb898b590958ef2ba8a9cbd7dbb0/grails-gsp-3.3.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-gsp/3.3.1/a2448b18905adeac8c84fc2ad00d10f69984f23b/grails-gsp-3.3.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/spring-webmvc/4.3.18.RELEASE/spring-webmvc-4.3.18.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/spring-context-support/4.3.18.RELEASE/spring-context-support-4.3.18.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-databinding/3.3.6/e60e470c6923a351c907c61adf1aaafe6fdf88e2/grails-web-databinding-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-databinding/3.3.6/11bb5f2f4258db44c86aa7dbd37577d3a240aa6b/grails-web-databinding-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-url-mappings/3.3.6/9d5b6a04ecb647f035e1b00b58ce66a3e47f62be/grails-web-url-mappings-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-url-mappings/3.3.6/f7efd68d0d235f8f4737c65ac1fbae71260f63e7/grails-web-url-mappings-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-mvc/3.3.6/68033cb8af32ca35997ea02d04ccd9ce8e7d7c0d/grails-web-mvc-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-mvc/3.3.6/496c80d67c34b34c07c29a45a8f7c8308345ad25/grails-web-mvc-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-gsp/3.3.1/5670ed8376f739528fdb21de0514d2cc22c5a276/grails-web-gsp-3.3.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-gsp/3.3.1/f3f4b6aaf91ab581cd1cf1c2720c27b1b6c3b430/grails-web-gsp-3.3.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-sitemesh/3.3.1/d639808f26ff1e16e32cb86129fd847961575abe/grails-web-sitemesh-3.3.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-sitemesh/3.3.1/4831d9a62f5c8769de3cba9900a8e7d36f8eed48/grails-web-sitemesh-3.3.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-mimetypes/3.3.6/aae411e237c94b5d7e84cfeddbe158baaabc0f8a/grails-plugin-mimetypes-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-mimetypes/3.3.6/15a1970078d1b893693a77443766814fea98132/grails-plugin-mimetypes-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-validation/3.3.6/b72397566a917b35cad944f6dd5dda30dfff7b32/grails-plugin-validation-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-validation/3.3.6/d8f255037d388dc2a715b75aa24ecb9ce4f1f6b/grails-plugin-validation-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-domain-class/3.3.6/781790b82f7e61aca370934c558078ee0aed68b9/grails-plugin-domain-class-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-plugin-domain-class/3.3.6/25302ebc1601afd5413104bf1a3ee398ac1d5ec4/grails-plugin-domain-class-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/spring-jdbc/4.3.18.RELEASE/spring-jdbc-4.3.18.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy-sql/2.4.15/591ed2582868cb47fcac04eb50923faf52bfd231/groovy-sql-2.4.15.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy-sql/2.4.15/6372da3a7f77e67cd1b74e91d14499b0960bbc70/groovy-sql-2.4.15-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-gorm/6.1.10.BUILD-SNAPSHOT/536d0f140ec0661382672151a2dccd5c3272da32/grails-datastore-gorm-6.1.10.BUILD-SNAPSHOT.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-gorm/6.1.10.BUILD-SNAPSHOT/5906cba5fcae4103ec9c3fdb53c6bf849ac4577d/grails-datastore-gorm-6.1.10.BUILD-SNAPSHOT-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-logging-log4j/8.5.2/53bdd1eebc7393713261d178ac096a742423f940/tomcat-embed-logging-log4j-8.5.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-logging-log4j/8.5.2/6d2b745f9792a06a2bf291c91bae4d7948171cbc/tomcat-embed-logging-log4j-8.5.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-gorm-validation/6.1.10.BUILD-SNAPSHOT/8ac0ed249ca2b77baef1a3bb5cdecf78e6db5f40/grails-datastore-gorm-validation-6.1.10.BUILD-SNAPSHOT.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-gorm-validation/6.1.10.BUILD-SNAPSHOT/f002467bc8c05f4933ff16740ff8e117cf531cba/grails-datastore-gorm-validation-6.1.10.BUILD-SNAPSHOT-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/scaffolding-core/1.1.1/c79e9bd310896f3afbba331170c54fa2ce7f9a5d/scaffolding-core-1.1.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/scaffolding-core/1.1.1/6d02364e16e52ad2cb55cf5c5000d894ca786e04/scaffolding-core-1.1.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-gorm-hibernate-core/6.1.10.RELEASE/f9399493d6803451b6380b9b782e6435f7fb9971/grails-datastore-gorm-hibernate-core-6.1.10.RELEASE.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-gorm-hibernate-core/6.1.10.RELEASE/56c37522358c25dd10af11698cbe5106ad59baaa/grails-datastore-gorm-hibernate-core-6.1.10.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-validator/5.3.6.Final/4c730be8bf55a8e9a61e79a2f2c079abf48b718/hibernate-validator-5.3.6.Final.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-validator/5.3.6.Final/3186793fdb68b63a39f6974c525f552dcdbacca3/hibernate-validator-5.3.6.Final-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.el/javax.el-api/2.2.4/1287562cc3f0ff5439ded6f2949e73ce1c0edaab/javax.el-api-2.2.4.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.el/javax.el-api/2.2.4/1c1af37c1534e17fc67288ed439829a267a1f79e/javax.el-api-2.2.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-codecs/3.3.6/ee300aad1992055b459b9f7cf505a2ba6e4567ad/grails-codecs-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-codecs/3.3.6/715a6a319ad44b40d01072d31aba5f8a82856dc3/grails-codecs-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" sourcepath="/home/prhodes/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/com/github/andrewoma/dexx/collection/0.7/collection-0.7.jar" sourcepath="/home/prhodes/.m2/repository/com/github/andrewoma/dexx/collection/0.7/collection-0.7-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/jena/jena-tdb2/3.5.0/jena-tdb2-3.5.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/jena/jena-rdfconnection/3.5.0/jena-rdfconnection-3.5.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/objenesis/objenesis/2.6/objenesis-2.6.jar" sourcepath="/home/prhodes/.m2/repository/org/objenesis/objenesis/2.6/objenesis-2.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.pdfbox/fontbox/2.0.9/f961f17ebdbc307e9055e3cf7c0e207f0895ae55/fontbox-2.0.9.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.pdfbox/fontbox/2.0.9/c456a6b3f23a3fada6b5209784c6b1240cd4b848/fontbox-2.0.9-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.54/b11bfee99bb11eea344de6e4a07fe89212c55c02/bcpkix-jdk15on-1.54.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.54/d821c78eae9e1abe83ec52985a0f5e206bfd61ab/bcpkix-jdk15on-1.54-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.poi/poi-ooxml-schemas/3.17/890114bfa82f5b6380ea0e9b0bf49b0af797b414/poi-ooxml-schemas-3.17.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.github.virtuald/curvesapi/1.04/3386abf821719bc89c7685f9eaafaf4a842f0199/curvesapi-1.04.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.github.virtuald/curvesapi/1.04/5c01708d122c6a61e90716e931b58226d8261312/curvesapi-1.04-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.adobe.xmp/xmpcore/5.1.3/57e70c3b10ff269fff9adfa7a31d61af0df30757/xmpcore-5.1.3.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.adobe.xmp/xmpcore/5.1.3/908013b9ec0696467b3f0e4156b510ae0f6c84d/xmpcore-5.1.3-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.cxf/cxf-rt-transports-http/3.0.16/1a0efeee01ade848b3b086f5ad5d16eec6449517/cxf-rt-transports-http-3.0.16.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.cxf/cxf-rt-transports-http/3.0.16/136ee01019f9db642d7e52bf2adac01385207360/cxf-rt-transports-http-3.0.16-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.cxf/cxf-core/3.0.16/b6df2be09a3b9d8b30484e684bb6525b03fff2b2/cxf-core-3.0.16.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.cxf/cxf-core/3.0.16/adf7af81e7d02693062e425377a7e36294483e80/cxf-core-3.0.16-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.cxf/cxf-rt-frontend-jaxrs/3.0.16/28e963feb0546635f86bf7ebf32daa4b7676fd5f/cxf-rt-frontend-jaxrs-3.0.16.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.cxf/cxf-rt-frontend-jaxrs/3.0.16/6744358453f64795b971a3fab4139c494fe1b93b/cxf-rt-frontend-jaxrs-3.0.16-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.jcip/jcip-annotations/1.0/afba4942caaeaf46aab0b976afd57cc7c181467e/jcip-annotations-1.0.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.jcip/jcip-annotations/1.0/d853625d8001c00d40abed553e670279504699f9/jcip-annotations-1.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/4.2.2/5012450aee579c3118ff09461d5ce210e0cdc2a9/jna-4.2.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/4.2.2/948a9338b46e83bc029a0c500f1de0fc6eea8900/jna-4.2.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-java/2.5.0/a10732c76bfacdbd633a7eb0f7968b1059a65dfa/protobuf-java-2.5.0.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-java/2.5.0/7a27a7fc815e481b367ead5df19b4a71ace4a419/protobuf-java-2.5.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.itadaki/bzip2/0.9.1/47ca95f71e3ccae756c4a24354d48069c58f475c/bzip2-0.9.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.itadaki/bzip2/0.9.1/655282fbaee3bcd3b79d9383b0abff561bb496f0/bzip2-0.9.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/edu.ucar/udunits/4.5.5/d8c8d65ade13666eedcf764889c69321c247f153/udunits-4.5.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/edu.ucar/udunits/4.5.5/5c329e6f633c8ba20fc4d55ba046a40b92b0f6db/udunits-4.5.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/joda-time/joda-time/2.9.9/joda-time-2.9.9.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sf.ehcache/ehcache-core/2.6.2/3baecd92015a9f8fe4cf51c8b5d3a5bddcdd3e86/ehcache-core-2.6.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sf.ehcache/ehcache-core/2.6.2/1c03312f7cfdbe966f92524d3536255ff74d5d45/ehcache-core-2.6.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.beust/jcommander/1.35/47592e181b0bdbbeb63029e08c5e74f6803c4edd/jcommander-1.35.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.beust/jcommander/1.35/a80acda9d5c2aa80afb8b6f858968b24a178f4bc/jcommander-1.35-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.measure/unit-api/1.0/6b960260278588d7ff02fe376e5aad39a9c7440b/unit-api-1.0.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.measure/unit-api/1.0/8d60af295fc95714c210c795ce63b48b9d183213/unit-api-1.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.sis.storage/sis-storage/0.8/53b323f55881b4cd6fe1ecf9464a7066a3ae2eb6/sis-storage-0.8.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.sis.storage/sis-storage/0.8/7bc6ef3c4a76f56d84251a6eda59690bbad82f29/sis-storage-0.8-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.sis.core/sis-referencing/0.8/8c9eb6766665eea110f47c53787b7a9bc1310400/sis-referencing-0.8.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.sis.core/sis-referencing/0.8/40c8b9937291b6df24ec5b18a6a6b86b1c9139ab/sis-referencing-0.8-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/commons-logging/commons-logging-api/1.1/commons-logging-api-1.1.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.oauth-client/google-oauth-client/1.24.1/7b0e0218b96808868c23a7d0b40566a713931d9f/google-oauth-client-1.24.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.oauth-client/google-oauth-client/1.24.1/516ab7c76dfdb60452aec35738d68fcf72502b4c/google-oauth-client-1.24.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client-jackson2/1.24.1/2ad1dffd8a450055e68d8004fe003033b751d761/google-http-client-jackson2-1.24.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client-jackson2/1.24.1/fe3f9a3edc8138fe45786c2bca4d4ac05c86a2b4/google-http-client-jackson2-1.24.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.mortbay.jetty/jetty-util/6.1.26/e5642fe0399814e1687d55a3862aa5a3417226a9/jetty-util-6.1.26.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.mortbay.jetty/jetty-util/6.1.26/ca704dfc9e26567bd69ee3f065a1337fa6d296f/jetty-util-6.1.26-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.mortbay.jetty/servlet-api/2.5-20081211/22bff70037e1e6fa7e6413149489552ee2064702/servlet-api-2.5-20081211.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.mortbay.jetty/servlet-api/2.5-20081211/b0b7c1931bcdbeb25c2aa4aec14d7b979b53dc51/servlet-api-2.5-20081211-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/springframework/spring-messaging/4.3.18.RELEASE/spring-messaging-4.3.18.RELEASE.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.sun.jersey/jersey-server/1.19.4/44df9a1310c1278b62658509aca3ca53978e8822/jersey-server-1.19.4.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.sun.jersey/jersey-server/1.19.4/8d1bfd81e1f90be84b7a48add7a39acc2c7c2c04/jersey-server-1.19.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-annotations-api/8.5.31/f0758d8b5d1404cc25f98945bdd5959699658b4a/tomcat-annotations-api-8.5.31.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-annotations-api/8.5.31/c6c0273779c2cbdb1fe8a12dafe9f86abaa6c7fa/tomcat-annotations-api-8.5.31-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy-json/2.4.15/f6f6890181821246398cd44ba1fdf74f55717697/groovy-json-2.4.15.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy-json/2.4.15/6124961d17d362f40aff46b3d4bec572e7feda86/groovy-json-2.4.15-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-taglib/3.3.1/772e8b5f992f6602cab07c7a58ab2924f97eed02/grails-taglib-3.3.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-taglib/3.3.1/1357630ea5c20b8b64d741a7cf926e96592e12ff/grails-taglib-3.3.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-taglib/3.3.1/ca323146797a4ff2bb4f630890f4c400a0860395/grails-web-taglib-3.3.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-taglib/3.3.1/f9575c2f6de2abc1575977ee016d1fdb0a376ff3/grails-web-taglib-3.3.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/opensymphony/sitemesh/2.4/fa84c82cce30a9a632c08dd2277d63993d972cf5/sitemesh-2.4.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/commons-validator/commons-validator/1.5.1/86d05a46e8f064b300657f751b5a98c62807e2a0/commons-validator-1.5.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/commons-validator/commons-validator/1.5.1/1779e91e01dc506f388c350a8684f77c43943a08/commons-validator-1.5.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/jena/jena-dboe-trans-data/3.5.0/jena-dboe-trans-data-3.5.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.xmlbeans/xmlbeans/2.6.0/29e80d2dd51f9dcdef8f9ffaee0d4dc1c9bbfc87/xmlbeans-2.6.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/codehaus/woodstox/woodstox-core-asl/4.4.1/woodstox-core-asl-4.4.1.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.ws.xmlschema/xmlschema-core/2.2.2/3346ea4712a8bc80dbc1877628bfca1d6c4d55ef/xmlschema-core-2.2.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.ws.xmlschema/xmlschema-core/2.2.2/5c628671ae94d4175f0b4d3a43419e71b42ee1e3/xmlschema-core-2.2.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.ws.rs/javax.ws.rs-api/2.0.1/104e9c2b5583cfcfeac0402316221648d6d8ea6b/javax.ws.rs-api-2.0.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.ws.rs/javax.ws.rs-api/2.0.1/a20db7429fd8dfff74335ec867472b71c345049b/javax.ws.rs-api-2.0.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.annotation/javax.annotation-api/1.2/479c1e06db31c432330183f5cae684163f186146/javax.annotation-api-1.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.annotation/javax.annotation-api/1.2/ad18a02db08eaee697f812e333f692fc51129e4a/javax.annotation-api-1.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.sis.core/sis-feature/0.8/65ea6ab21713dee99a0d2fd7196b80dd631a7e02/sis-feature-0.8.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.sis.core/sis-feature/0.8/b4d46e7aa00f31203b2b3e8898259152484a02c9/sis-feature-0.8-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client/1.24.1/396eac8d3fb1332675f82b208f48a469d64f3b4a/google-http-client-1.24.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client/1.24.1/5b63466a6ed8d004d7f1ec5454e67aeb02857d05/google-http-client-1.24.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar" sourcepath="/home/prhodes/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.sun.jersey/jersey-core/1.19.4/21c5319c82ca29705715b315553a16f11b16655e/jersey-core-1.19.4.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.sun.jersey/jersey-core/1.19.4/e304b20bd0dfd07bb2afa90363b1faffb963bd4e/jersey-core-1.19.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/jena/jena-dboe-transaction/3.5.0/jena-dboe-transaction-3.5.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/jena/jena-dboe-index/3.5.0/jena-dboe-index-3.5.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/codehaus/woodstox/stax2-api/3.1.4/stax2-api-3.1.4.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/jena/jena-dboe-base/3.5.0/jena-dboe-base-3.5.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/commons-io/commons-io/2.6/commons-io-2.6.jar" sourcepath="/home/prhodes/.m2/repository/commons-io/commons-io/2.6/commons-io-2.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/commons/commons-csv/1.4/commons-csv-1.4.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/c3p0/c3p0/0.9.1.1/302704f30c6e7abb7a0457f7771739e03c973e80/c3p0-0.9.1.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/c3p0/c3p0/0.9.1.1/5a069468419fe3910c80d13a8971fd50ff2c77a6/c3p0-0.9.1.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/20.0/89507701249388e1ed5ddcf8c41f4ce1be7831ef/guava-20.0.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/20.0/9c8493c7991464839b612d7547d6c263adf08f75/guava-20.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.glassfish.web/el-impl/2.1.2-b03/6bab1211b6e6b191fdbf06067bd05d2f75a62ac0/el-impl-2.1.2-b03.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.h2database/h2/1.4.197/bb391050048ca8ae3e32451b5a3714ecd3596a46/h2-1.4.197.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.h2database/h2/1.4.197/23b998de929dba8b42a815057517f997d8b148e9/h2-1.4.197-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-jdbc/8.5.31/7caa97fbe2765d3ed89adc036b852cc46456e415/tomcat-jdbc-8.5.31.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-jdbc/8.5.31/459961ead772d8d67d1486623460d2dbd534eb78/tomcat-jdbc-8.5.31-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.bertramlabs.plugins/asset-pipeline-grails/2.14.8/b7a8bc6c1a6d7c499cd1a001d6d886365062b9e7/asset-pipeline-grails-2.14.8.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.bertramlabs.plugins/asset-pipeline-grails/2.14.8/3c3a04ff0181177bd1e3dedb67d9b0348115db6b/asset-pipeline-grails-2.14.8-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/com/github/jsonld-java/jsonld-java/0.12.0/jsonld-java-0.12.0.jar" sourcepath="/home/prhodes/.m2/repository/com/github/jsonld-java/jsonld-java/0.12.0/jsonld-java-0.12.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-spring/5.11.1/16d7543ede18777b326bdb33df4cf6ab68ada260/activemq-spring-5.11.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-spring/5.11.1/833c05550dae301db15eacd851627349aaedcb7c/activemq-spring-5.11.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-kahadb-store/5.11.1/3f80ca5ea2d1a393a5edf1d8544db9698150e273/activemq-kahadb-store-5.11.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-kahadb-store/5.11.1/8743c34f30c8145381cb8881962b5ab073ffe733/activemq-kahadb-store-5.11.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/javax.el/el-api/2.1.2-b03/1ac087d9d1a632d2ff82fa1e8b6610aca025ff2a/el-api-2.1.2-b03.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-juli/8.5.31/603fb6e0ddd216b53a803801561661ae9c294ff/tomcat-juli-8.5.31.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-juli/8.5.31/c7f114a680ed8f305b39ae54ac2387ccb3d2d7ff/tomcat-juli-8.5.31-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.bertramlabs.plugins/asset-pipeline-core/2.14.8/4e1c17bbfb623fc66df7e5577a0be11973749cd7/asset-pipeline-core-2.14.8.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/com.bertramlabs.plugins/asset-pipeline-core/2.14.8/c91d0a6dd4a32876fcb6f28c0eb317121f1e2738/asset-pipeline-core-2.14.8-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient-osgi/4.5.5/3879be205f3203302d2f5e16936c54c0ddb26d05/httpclient-osgi-4.5.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient-osgi/4.5.5/c3afeb8882fd1adc00a81d03477c46c1285816e1/httpclient-osgi-4.5.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore-osgi/4.4.9/ac82f2ca4fb7398a94506cd9b5d6fd825c276cb2/httpcore-osgi-4.4.9.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore-osgi/4.4.9/7b95a2c827bad2c4c050489297f814b0f030b5aa/httpcore-osgi-4.4.9-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.xbean/xbean-spring/3.18/63a35cfc4c0a786f86ebb9df0279b9e3b412c60/xbean-spring-3.18.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.xbean/xbean-spring/3.18/d8f4f5d5a7291a74e1e1852de666350b94dc3f7e/xbean-spring-3.18-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-broker/5.14.5/b0d4ab85db6ae612ad74fc7b489f17ac2599be9d/activemq-broker-5.14.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-broker/5.14.5/6ee89ae3d9acb6aade808984c29a0daa07eff20d/activemq-broker-5.14.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-pool/5.14.5/f7f81e9f647df881569d7c9f06ae323ef22bb778/activemq-pool-5.14.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-pool/5.14.5/25613a72a84457b50485fb152320e75a639b970c/activemq-pool-5.14.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.geronimo.specs/geronimo-jta_1.0.1B_spec/1.0.1/c9e67d21082a497f20e4ce87be1379faceb9c087/geronimo-jta_1.0.1B_spec-1.0.1.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/commons-pool/commons-pool/1.6/commons-pool-1.6.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq.protobuf/activemq-protobuf/1.1/26682eb801f70563511f7c424dc10e8b3e66340e/activemq-protobuf-1.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq.protobuf/activemq-protobuf/1.1/1a999c15504cdf0911f7fb333fdb1db6876020a0/activemq-protobuf-1.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/apache/geronimo/specs/geronimo-j2ee-management_1.1_spec/1.0.1/geronimo-j2ee-management_1.1_spec-1.0.1.jar" sourcepath="/home/prhodes/.m2/repository/org/apache/geronimo/specs/geronimo-j2ee-management_1.1_spec/1.0.1/geronimo-j2ee-management_1.1_spec-1.0.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/commons-net/commons-net/3.3/commons-net-3.3.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/fluent-hc/4.5.5/1af996e860dc8e246f4aca944f76f0513d41acc0/fluent-hc-4.5.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/fluent-hc/4.5.5/3ea3185508d7706730d770769dc17a6316fca066/fluent-hc-4.5.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore-nio/4.4.9/efd20e1f401d7464ffa7cce114f0bbbed8252a73/httpcore-nio-4.4.9.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore-nio/4.4.9/8b4cfc9d77196c76f962653ef5963ac996d2b272/httpcore-nio-4.4.9-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-client/5.14.5/91a01f066d436c26ae9e5bcc5c58787e639dbd84/activemq-client-5.14.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-client/5.14.5/552b053c8e6c9055d23d5b3d247e37b99ece02ea/activemq-client-5.14.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-openwire-legacy/5.14.5/1ae9906e9dae16ce4c46a2f86b283293bf8b453c/activemq-openwire-legacy-5.14.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-openwire-legacy/5.14.5/6a7d7122994f6a9d7f46c92ee6e7f90cf9da385b/activemq-openwire-legacy-5.14.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-jms-pool/5.14.5/a7a4ba9ed1ff10cba05bc4a56078e833d8ddbd0/activemq-jms-pool-5.14.5.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-jms-pool/5.14.5/bac9d6fd16b7e25ccb8e5fed1ada54e107014fa/activemq-jms-pool-5.14.5-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-pool2/2.4.3/e7ab2a5143cb4e0b21d8ca81c265095e4567dd22/commons-pool2-2.4.3.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-pool2/2.4.3/f25308f7512e59d78b24a058a30fc9d3af401690/commons-pool2-2.4.3-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/fusesource/hawtbuf/hawtbuf/1.11/hawtbuf-1.11.jar" sourcepath="/home/prhodes/.m2/repository/org/fusesource/hawtbuf/hawtbuf/1.11/hawtbuf-1.11-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-gorm-testing-support/1.1.4/b0bb89698013de97e7385fe166afbf44b44de32f/grails-gorm-testing-support-1.1.4.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-gorm-testing-support/1.1.4/b8335395aaf950b501fe3627e50d5e5b86e35992/grails-gorm-testing-support-1.1.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-testing-support/1.1.4/79e6a7a8fd5cdc30023e87119ae34282efbd54c9/grails-web-testing-support-1.1.4.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-web-testing-support/1.1.4/154e4430dda098a531399682a4fffff6561f452f/grails-web-testing-support-1.1.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-gorm-test/6.1.10.BUILD-SNAPSHOT/d31aaef079993bc74928a0c87abaf72a53911c10/grails-datastore-gorm-test-6.1.10.BUILD-SNAPSHOT.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-datastore-gorm-test/6.1.10.BUILD-SNAPSHOT/9ec0bd50a205de52a51f5f38ac985d646b466576/grails-datastore-gorm-test-6.1.10.BUILD-SNAPSHOT-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-testing-support/1.1.4/f4d1733d72f03684e7f44c844be4b943be7c0e96/grails-testing-support-1.1.4.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-testing-support/1.1.4/3e59dc74bf585c47f5bf6913874ee8efe1126162/grails-testing-support-1.1.4-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-support/2.53.1/af951906201e898e1d35a9ff63b297bb633d1d03/selenium-support-2.53.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-support/2.53.1/5977be74f325f044878c4ce6fa7d85f03da8af1/selenium-support-2.53.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-test/3.3.6/3fd981ae1aaa3b806db9765bfd24c444bcccedbb/grails-test-3.3.6.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.grails/grails-test/3.3.6/582e36cf1bfde3afaacc347054974379075318ed/grails-test-3.3.6-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/junit/junit/4.12/junit-4.12.jar" sourcepath="/home/prhodes/.m2/repository/junit/junit/4.12/junit-4.12-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework/spring-test/4.3.18.RELEASE/1995997f20dcb66d44c252bb6d1a06eff00b465e/spring-test-4.3.18.RELEASE.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework/spring-test/4.3.18.RELEASE/48451b2253130126b87ef9237fa1b580661ed459/spring-test-4.3.18.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test/1.5.14.RELEASE/4af443ced531a37da4a67274dac2a3464b8f74a1/spring-boot-test-1.5.14.RELEASE.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test/1.5.14.RELEASE/672b9b403feadac7b1e4edcd7fb3c1ad30e925b4/spring-boot-test-1.5.14.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-remote-driver/2.53.1/5b049195915b0120259a063db049e1ffa874550e/selenium-remote-driver-2.53.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-remote-driver/2.53.1/551f2f9a1f54f61c98860fbbec3ab919340ebc2f/selenium-remote-driver-2.53.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy-test/2.4.15/c87ff499c7c52f00efd6b9131320564124b93480/groovy-test-2.4.15.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy-test/2.4.15/16e1713fce004b94defb619a5971cecbd362785d/groovy-test-2.4.15-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" sourcepath="/home/prhodes/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.jodd/jodd-lagarto/3.7.1/5d6e6493b7cc10b24fdee3c37a652e19cbf7a10c/jodd-lagarto-3.7.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.jodd/jodd-lagarto/3.7.1/578e214a450b8577e75ded81285711b98f38432/jodd-lagarto-3.7.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.m2/repository/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-api/2.53.1/b00ff9f84bfa214fda742c1287a06d447e92910e/selenium-api-2.53.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-api/2.53.1/de4719beceae211f44c038c59691b4aea1b3ebd2/selenium-api-2.53.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna-platform/4.2.2/30fa67b23cf2c0327a02cfaecbef76a20160e7b/jna-platform-4.2.2.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna-platform/4.2.2/19ccc6c91d76b7a35d2a37c84b61ef58eab97c37/jna-platform-4.2.2-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.jodd/jodd-core/3.7.1/dfba4eec53cd5d4206d292171f59b1bdfa07b167/jodd-core-3.7.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.jodd/jodd-core/3.7.1/324867cf2e037561e135ab33568b7ae479b16353/jodd-core-3.7.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.jodd/jodd-log/3.7.1/82ffa458f1f0e9f48c22bff31bbd1f3635b44fc7/jodd-log-3.7.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.jodd/jodd-log/3.7.1/4fc7eecf3920fbfe2075f1e1c0aa7049c1aee562/jodd-log-3.7.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-chrome-driver/2.47.1/8af2ebc17784ce339c2541e86a30d4715a6e53c1/selenium-chrome-driver-2.47.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-chrome-driver/2.47.1/bb5c45973bbc48e2e8e79fbb47a4cd7e5c233ff0/selenium-chrome-driver-2.47.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-htmlunit-driver/2.47.1/e4a31a8f8c8a36074a506449c1b476af86de4a58/selenium-htmlunit-driver-2.47.1.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-htmlunit-driver/2.47.1/aa7ab068919b53730c868607fc1adab980ab5813/selenium-htmlunit-driver-2.47.1-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sourceforge.htmlunit/htmlunit/2.18/ec30f76601f7010abbc09cc8ec401cb183916371/htmlunit-2.18.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sourceforge.htmlunit/htmlunit/2.18/97102942534a45271e1f8d39bfa23d685b72c67e/htmlunit-2.18-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sourceforge.htmlunit/htmlunit-core-js/2.17/4316d68f449d42f69faf4ee255aa31b03e4f7dd5/htmlunit-core-js-2.17.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sourceforge.htmlunit/htmlunit-core-js/2.17/c54d38efe959a8c30336e6c8c671c05b0f99266a/htmlunit-core-js-2.17-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sourceforge.cssparser/cssparser/0.9.16/3f751904d467537b8ee99c612e69d4e79d6271cf/cssparser-0.9.16.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/net.sourceforge.cssparser/cssparser/0.9.16/3be2241a11dca58b1f752837c191b499bd90e719/cssparser-0.9.16-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-client/9.4.11.v20180605/22bbc54f86f7b6f56d7edd398ba1cc1e7bafe7ef/websocket-client-9.4.11.v20180605.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-client/9.4.11.v20180605/94df3dc8368d8f20a63a070f2676f7dffcbac69a/websocket-client-9.4.11.v20180605-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.w3c.css/sac/1.3/cdb2dcb4e22b83d6b32b93095f644c3462739e82/sac-1.3.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.w3c.css/sac/1.3/d0eab9163d161293dcd1e291bc2b6b09b4b5c717/sac-1.3-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-client/9.4.11.v20180605/be0622ef33de4239d0625c7a39c48a41c45d0675/jetty-client-9.4.11.v20180605.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-client/9.4.11.v20180605/b4dfcefee24babba9e01fd7e97d5b46c40aff601/jetty-client-9.4.11.v20180605-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-xml/9.4.11.v20180605/883cbf629ec797bd9d8833376a0feec461628f4f/jetty-xml-9.4.11.v20180605.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-xml/9.4.11.v20180605/cb5855889da4cb0ca0b6b3c44a0fc8045718436e/jetty-xml-9.4.11.v20180605-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-util/9.4.11.v20180605/f0f25aa2f27d618a04bc7356fa247ae4a05245b3/jetty-util-9.4.11.v20180605.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-util/9.4.11.v20180605/4e5c4c483cfd9804c2fc5d5751866243bbb9d740/jetty-util-9.4.11.v20180605-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-io/9.4.11.v20180605/d164de1dac18c4ca80a1b783d879c97449909c3b/jetty-io-9.4.11.v20180605.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-io/9.4.11.v20180605/2c0caba292b1cb74cec1d36c6f91dc863c89b5a/jetty-io-9.4.11.v20180605-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-common/9.4.11.v20180605/a2b63b34284eaf113026bddf712c9bd7708e4864/websocket-common-9.4.11.v20180605.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-common/9.4.11.v20180605/eb9ecbc90fba9e34107cbbca42c3d05a662070b2/websocket-common-9.4.11.v20180605-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-http/9.4.11.v20180605/20c35f5336befe35b0bd5c4a63e07170fe7872d7/jetty-http-9.4.11.v20180605.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-http/9.4.11.v20180605/5bc30d1f7e8c4456c22cc85999b8cafd3741bdff/jetty-http-9.4.11.v20180605-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-api/9.4.11.v20180605/8e993b4ade68d967e51ba3e2a8d18e4f96154ad7/websocket-api-9.4.11.v20180605.jar" sourcepath="/home/prhodes/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-api/9.4.11.v20180605/f0c1d33626ea15e4249e722e11963830a58f95cf/websocket-api-9.4.11.v20180605-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="GROOVY_SUPPORT"/>
+	<classpathentry kind="con" path="GROOVY_DSL_SUPPORT"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
