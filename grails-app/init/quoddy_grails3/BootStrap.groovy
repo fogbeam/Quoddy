@@ -36,10 +36,9 @@ class BootStrap
 		switch( Environment.current  )
 		{
 			case Environment.DEVELOPMENT:
-				 
+			case Environment.TEST:	 
 
 			   println "quoddy.hostName: ${grailsApplication.config.quoddy.hostName}"
-			   // println "fooHost: ${grailsApplication.config.fooHost}"
 			   
 				createRoles();
 				createSomeUsers();
