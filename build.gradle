@@ -12,6 +12,11 @@ buildscript {
     }
 }
 
+
+
+// ant.importBuild "help/webhelp/build.xml"
+
+
 version "0.1"
 group "quoddy_grails3"
 
@@ -205,3 +210,29 @@ assets {
     minifyJs = true
     minifyCss = true
 }
+
+
+
+task(webhelp) {
+    doLast {
+        // println 'Hello world!'
+        // String greeting = 'hello from Ant'
+        // ant.echo(message: greeting)
+
+        exec {
+            workingDir 'help/webhelp'
+            commandLine "ant", "webhelp"
+        }
+
+        exec {
+
+             workingDir "."
+             commandLine "sh", "-c", "cp -R help/webhelp/docs src/main/webapp/"
+        }
+
+    }
+}
+
+assemble.dependsOn webhelp
+
+

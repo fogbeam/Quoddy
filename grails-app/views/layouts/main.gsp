@@ -272,9 +272,14 @@
 					</li>
 					
 					<!-- Help menu -->
-					<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Help<b class="caret"></b></a>
+					<li class="dropdown" id="help-dropdown">
+					    <a id="help-dropdown-toggle" class="dropdown-toggle" data-toggle="dropdown" href="#">Help<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="docs/index.html">Help Contents</a></li>
+							<li>
+							     <!-- <a href="docs/index.html">Help Contents</a> -->
+							     <g:link elementId="help-contents" absolute="true" uri="/static/docs/index.html">Help Contents</g:link>
+							     
+							</li>
 							<li><a href="#" onclick="hopscotch.startTour(tour);">Interactive Tour</a></li>
 							<li><a href="#">Quoddy Admin Guide</a></li>
 							<li><a href="#">Quoddy Integration Guide</a></li>

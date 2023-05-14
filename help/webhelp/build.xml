@@ -24,7 +24,7 @@
     <xmlvalidate file="${input-xml}" classname="org.apache.xerces.parsers.SAXParser"/>
   </target>
 
-  <target name="chunk" depends="clean">
+  <target name="chunk" depends="clean-help">
 	
 	<mkdir dir="${output-dir}"/>
 	<tempfile destdir="${output-dir}" deleteonexit="true" property="xincluded-profiled.xml"/>
@@ -151,7 +151,7 @@
   <target name="webhelp" depends="validate,chunk,index"/>
 
 
-  <target name="clean">
+  <target name="clean-help">
 	<delete dir="${output-dir}"/>
   </target>
 
@@ -159,7 +159,7 @@
 	<echo>
 Usage:
 webhelp:       Generates the document in webhelp format and indexes the content.
-clean:         Deletes webhelp output directory.
+clean-help:         Deletes webhelp output directory.
 index:         Indexes the content.
 	</echo>
   </target>

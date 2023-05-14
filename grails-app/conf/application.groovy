@@ -15,7 +15,7 @@ grails.plugin.springsecurity.userLookup.usernamePropertyName = "userId"
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'org.fogbeam.quoddy.UserAccountRoleMapping'
 grails.plugin.springsecurity.authority.className = 'org.fogbeam.quoddy.AccountRole'
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
-	[pattern: '/',               access: ['permitAll']],
+	[pattern: '/**',             access: ['permitAll']],
 	[pattern: '/localLogin/**',  access: ['permitAll']],
 	[pattern: '/api/**',         access: ['permitAll']],
 	[pattern: '/error',          access: ['permitAll']],
@@ -26,11 +26,13 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/**/js/**',       access: ['permitAll']],
 	[pattern: '/**/css/**',      access: ['permitAll']],
 	[pattern: '/**/images/**',   access: ['permitAll']],
-	[pattern: '/**/favicon.ico', access: ['permitAll']]
+	[pattern: '/**/favicon.ico', access: ['permitAll']],
+	[pattern: '/**/static/docs/**', access: ['permitAll']]
 ]
 
 grails.plugin.springsecurity.filterChain.chainMap = [
     [pattern: '/api/**',         filters: 'none'],
+	[pattern: '/**/static/docs/**', filters: 'none'],
 	[pattern: '/assets/**',      filters: 'none'],
 	[pattern: '/**/js/**',       filters: 'none'],
 	[pattern: '/**/css/**',      filters: 'none'],
