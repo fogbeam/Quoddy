@@ -221,7 +221,7 @@ task(webhelp) {
 
         exec {
             workingDir 'help/webhelp'
-            commandLine "ant", "webhelp"
+            commandLine "ant", "-Djdk.xml.xpathExprGrpLimit=0", "-Djdk.xml.xpathExprOpLimit=0", "-Djdk.xml.xpathTotalOpLimit=0", "webhelp"
         }
 
         exec {
