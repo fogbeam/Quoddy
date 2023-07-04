@@ -22,7 +22,7 @@
 			
 				<!-- display discrete entries here -->
 				<li>
-					<span>${friendRequest.unconfirmedFriend.fullName}</span>: <span><g:link controller="user" action="confirmFriend" params="[confirmId:friendRequest.unconfirmedFriend.userId]">confirm</g:link>
+					<span>${friendRequest.unconfirmedFriend.fullName}</span>: <span><g:link controller="user" action="confirmFriend" params="[confirmId:friendRequest.unconfirmedFriend.userId]">confirm</g:link> <span><g:link controller="user" action="deleteFriendRequest" params="[confirmId:friendRequest.unconfirmedFriend.userId]">delete</g:link>
 				</li>
 			</g:each>
 		</ul>

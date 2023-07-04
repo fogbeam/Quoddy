@@ -13,9 +13,6 @@ import org.fogbeam.quoddy.profile.Skill
 import org.fogbeam.quoddy.search.SearchResult
 import org.fogbeam.quoddy.social.FriendRequest
 import org.fogbeam.quoddy.stream.ActivityStreamItem
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContext
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.commons.CommonsMultipartFile
 
@@ -423,6 +420,7 @@ public class UserController
 		render( "OK" );
 	}
 
+	// TODO: should probably rename this to "confirmFriendRequest" or something similar
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def confirmFriend()
 	{
@@ -435,6 +433,20 @@ public class UserController
 		userService.confirmFriend( currentUser, newFriend );
 		
 		redirect( controller:'home', action:'index')	
+	}
+	
+	@Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def deleteFriendRequest()
+	{
+		log.info( "deleteFriendRequest() called" );
+		
+		User currentUser = userService.getLoggedInUser();
+		
+		User newFriend = userService.findUserByUserId( params.confirmId )
+		
+		userService.deleteFriendRequest( currentUser, newFriend );
+		
+		redirect( controller:'home', action:'index')
 	}
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])

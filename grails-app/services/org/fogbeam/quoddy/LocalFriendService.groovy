@@ -45,8 +45,13 @@ class LocalFriendService
 		friendRequestsCU.save(flush:true);
 		friendCollectionCU.save(flush:true);
 		friendCollectionNF.save(flush:true);
-		
-
+	}
+	
+	public void deleteFriendRequest( final User currentUser, final User newFriend )
+	{
+		FriendRequestCollection friendRequestsCU = FriendRequestCollection.findByOwnerUuid( currentUser.uuid );
+		friendRequestsCU.removeFromFriendRequests( newFriend.uuid );
+		friendRequestsCU.save(flush:true);
 	}
 	
 	public void addToFriends( final User currentUser, final User newFriend )

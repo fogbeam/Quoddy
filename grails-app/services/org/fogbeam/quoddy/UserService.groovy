@@ -197,10 +197,16 @@ class UserService {
 	 * the requestee has confirmed, we have to update *both* users to show the
 	 * new confirmed friend connection.  We also have to remove the "pending" request.
 	 */
+	// NOTE: rename this to "confirmFriendRequest" to maintain correspondence with "deleteFriendRequest"
 	public void confirmFriend( User currentUser, User newFriend )
 	{
 		friendService.confirmFriend( currentUser, newFriend );
 		
+	}
+	
+	public void deleteFriendRequest( User currentUser, User newFriend )
+	{
+		friendService.deleteFriendRequest( currentUser, newFriend );
 	}
 	
 	public void addToFriends( User currentUser, User newFriend )

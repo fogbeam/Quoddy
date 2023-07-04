@@ -50,6 +50,38 @@ class LdapFriendService
 		ldapTemplate.modifyAttributes(followGroupDn, [item] as ModificationItem[] );
 	}
 
+	public void deleteFriendRequest( User currentUser, User newFriend )
+	{
+		// get the DNs of the Users
+		Name currentUserDn = PersonBuilder.buildDn( LdapPersonService.copyUserToPerson(currentUser), "o=quoddy" );
+		Name newFriendDn = PersonBuilder.buildDn( LdapPersonService.copyUserToPerson(newFriend), "o=quoddy" );
+		
+		// search for the group in the unconfirmedfriends tree, with  currentUser as the owner
+		AndFilter unconfirmedGroupOwnerFilter = new AndFilter();
+		unconfirmedGroupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
+		unconfirmedGroupOwnerFilter.and(new EqualsFilter("owner", currentUserDn.toString() ));
+		
+		List<Group> unconfirmedGroups = ldapTemplate.search( "ou=unconfirmedfriends,ou=groups,o=quoddy", unconfirmedGroupOwnerFilter.encode(),
+				 new GroupAttributeMapper(ldapTemplate));
+		
+		Group unconfirmedFriendsGroup = unconfirmedGroups.get(0);
+		
+		Name unconfirmedFriendsGroupDn = GroupBuilder.buildUnconfirmedFriendsGroupDn( unconfirmedFriendsGroup, , "o=quoddy" );
+		log.debug( "unconfirmedFriendsGroupDn: ${unconfirmedFriendsGroupDn}");
+		
+		Attribute removePendingAttr = new BasicAttribute("uniquemember");
+		removePendingAttr.add( newFriendDn.toString() );
+		
+		// create a modificationitem and update the attributes to add the new
+		// uniquemember attribute...
+		ModificationItem removePendingItem = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, removePendingAttr);
+		
+		log.debug( "remove pending friend request");
+		ldapTemplate.modifyAttributes(unconfirmedFriendsGroupDn, [removePendingItem] as ModificationItem[] );
+		
+	}
+	
+	
 	/* note: this is a "two way" operation, so to speak.  That is, the initial
 	 * request was half of the overall operation of adding a friend... now that
 	 * the requestee has confirmed, we have to update *both* users to show the
@@ -57,7 +89,6 @@ class LdapFriendService
 	 */
 	public void confirmFriend( User currentUser, User newFriend )
 	{
-		
 		// currentUser is the one confirming a request, newFriend is the one
 		// who requested it originally.  So, remove the "pending" request from
 		// currentUser, and then insert an entry for newUser into currentUser's
