@@ -260,7 +260,7 @@
                 
                 <ul class="nav navbar-nav navbar-right">
                 
-                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">My Account<b class="caret"></b></a>
+                    <li class="dropdown" id="account-dropdown" ><a id="account-dropdown-toggle" class="dropdown-toggle" data-toggle="dropdown" href="#">My Account<b class="caret"></b></a>
                         <ul class="dropdown-menu">      
                         
                             <li><a href="${createLink(controller:'user', action:'listOpenFriendRequests')}">Pending Friend Requests</a></li>
