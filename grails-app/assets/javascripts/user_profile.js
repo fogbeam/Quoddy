@@ -48,12 +48,11 @@ function followUser()
 		// alert( "success: " + JSON.stringify(data) );
 	})
 	.fail(function( jqXHR, textStatus, errorThrown) {
-		alert( "error: " + errorThrown );
+		alert( "textStatus: " + textStatus + ", errorThrown: " + errorThrown );
 	})
 	.always(function() {
 		// alert( "complete" );
 	});	
-	
 }
 
 function displayAnnotationDialog(btnId)

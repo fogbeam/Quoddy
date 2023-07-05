@@ -133,7 +133,7 @@ class LocalFriendService
 		List<User> peopleIFollow = new ArrayList<User>();
 		IFollowCollection iFollowCollection = IFollowCollection.findByOwnerUuid( user.uuid );
 		
-		Set<String> iFollowUuids = iFollowCollection.iFollow;
+		Set<String> iFollowUuids = iFollowCollection.IFollow;
 		
 		for( String iFollowUuid : iFollowUuids )
 		{

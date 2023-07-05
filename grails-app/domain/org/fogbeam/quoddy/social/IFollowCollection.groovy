@@ -5,8 +5,8 @@ public class IFollowCollection implements Serializable
 	String ownerUuid;
 	Date dateCreated;
 	
-	Set<String> iFollow;
+	Set<String> IFollow;
 	
-	static hasMany = [iFollow:String];
+	static hasMany = [IFollow:String];
 	
 }

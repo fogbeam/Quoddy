@@ -393,10 +393,18 @@ public class UserController
 	def addToFollow()
 	{ 
 	
+		// println( "addToFollow() called" );
+		
 		User currentUser = userService.getLoggedInUser();
+		
+		// println( "Found currentUser as: " + currentUser );
+		
+		// println( "Got userId as: " + params.userId );
 		
 		def targetUser = userService.findUserByUserId( params.userId );
 	
+		// println( "Found targetUser as: " + targetUser );
+		
 		userService.addToFollow( currentUser, targetUser );		
 		
 		render( "OK" );	
