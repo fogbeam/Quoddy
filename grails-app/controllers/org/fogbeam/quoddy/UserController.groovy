@@ -443,6 +443,40 @@ public class UserController
 		redirect( controller:'home', action:'index')	
 	}
 	
+	
+	@Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def removeFriend()
+	{
+		// remove an existing Friend relationship
+		log.info( "removeFriend() called!");
+		
+		log.info( "Received params as: " + params );
+		
+		User currentUser = userService.getLoggedInUser();
+		log.info( "currentUser: " + currentUser );
+		
+		log.info( "removeFriendId: \"" + params.removeFriendId + "\"");
+		
+		User friendToRemove = userService.findUserByUserId( params.removeFriendId );
+		if( friendToRemove != null )
+		{
+			log.info( "friendToRemove: " + friendToRemove );
+			
+			userService.removeFriend( currentUser, friendToRemove );
+			
+			redirect( controller:'home', action:'index');
+		}
+		else
+		{
+			// set error message in flash scope
+			flash.message = "Error removing User!";
+			
+			// and then redirect as normal
+			redirect( controller:'home', action:'index');
+		}
+		
+	}
+	
 	@Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def deleteFriendRequest()
 	{

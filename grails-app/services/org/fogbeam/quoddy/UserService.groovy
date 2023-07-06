@@ -30,6 +30,8 @@ class UserService {
 	
 	public User findUserByUserId( String userId )
 	{
+		log.info( "In findUserByUserId, userId = \"" + userId + "\"");
+		
 		User user = User.findByUserId( userId );
 		
 		return user;
@@ -214,6 +216,11 @@ class UserService {
 		friendService.addToFriends( currentUser, newFriend );
 	}
 		
+	public void removeFriend( currentUser, friendToRemove )
+	{
+		friendService.removeFriend( currentUser, friendToRemove );
+	}
+	
 	public List<User> findAllUsers() 
 	{
 		List<User> users = new ArrayList<User>();

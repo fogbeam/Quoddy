@@ -21,6 +21,19 @@ class LocalFriendService
 		iFollowCollection.save(flush:true);		
 	}
 
+	public void removeFriend( final User currentUser, final User friendToRemove )
+	{
+		FriendCollection friendCollectionCU = FriendCollection.findByOwnerUuid( currentUser.uuid );
+		FriendCollection friendCollectionFTR = FriendCollection.findByOwnerUuid( friendToRemove.uuid );
+	
+		friendCollectionCU.removeFromFriends( friendToRemove.uuid );
+		friendCollectionFTR.removeFromFriends( currentUser.uuid );
+		
+		friendCollectionCU.save( flush:true );
+		friendCollectionFTR.save( flush:true );
+			
+	}
+	
 	/* note: this is a "two way" operation, so to speak.  That is, the initial
 	 * request was half of the overall operation of adding a friend... now that
 	 * the requestee has confirmed, we have to update *both* users to show the

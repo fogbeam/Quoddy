@@ -20,7 +20,7 @@
 			
 				<!-- display discrete entries here -->
 				<li>
-					<g:link controller="user" action="viewUser" params="[userId:friend.userId]">${friend.fullName}</g:link>
+					<g:link controller="user" action="viewUser" params="[userId:friend.userId]">${friend.fullName}</g:link>   -- <span><g:link controller="user" action="removeFriend" params="[removeFriendId:friend.userId]">remove friend</g:link></span>     
 				</li>
 			</g:each>
 		</ul>

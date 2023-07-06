@@ -81,6 +81,68 @@ class LdapFriendService
 		
 	}
 	
+	/* NOTE: as of 07-06-2023 - this is untested and not confirmed to work. Need a setup 
+	 * of the smoketest suite that tests with the LDAP backend enabled. 
+	 */
+	public void removeFriend( final User currentUser, final User friendToRemove )
+	{
+
+		// get the DNs of the Users
+		Name currentUserDn = PersonBuilder.buildDn( LdapPersonService.copyUserToPerson(currentUser), "o=quoddy" );
+		Name friendToRemoveDn = PersonBuilder.buildDn( LdapPersonService.copyUserToPerson(friendToRemove), "o=quoddy" );
+		
+		
+		// search for the group in the confirmedfriends tree, with currentUser as the owner
+		AndFilter currentUserConfirmedGroupOwnerFilter = new AndFilter();
+		currentUserConfirmedGroupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
+		currentUserConfirmedGroupOwnerFilter.and(new EqualsFilter("owner", currentUserDn.toString() ));
+		
+		List<Group> currentUserConfirmedGroups = ldapTemplate.search( "ou=confirmedfriends,ou=groups,o=quoddy", currentUserConfirmedGroupOwnerFilter.encode(),
+				 new GroupAttributeMapper(ldapTemplate));
+		
+		Group currentUserConfirmedFriendsGroup = currentUserConfirmedGroups.get(0);
+		
+		Name currentUserConfirmedFriendsGroupDn = GroupBuilder.buildConfirmedFriendsGroupDn( currentUserConfirmedFriendsGroup, "o=quoddy" );
+		log.debug( "currentUserConfirmedFriendsGroupDn: ${currentUserConfirmedFriendsGroupDn}");
+		
+		// delete the uniquemember attribute with the dn of friendToRemove
+		Attribute currentUserConfirmedAttr = new BasicAttribute("uniquemember");
+		currentUserConfirmedAttr.remove( friendToRemoveDn.toString() );
+		
+		// create a modificationitem and update the attributes
+		ModificationItem currentUserConfirmedItem = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, currentUserConfirmedAttr);
+		
+		log.debug( "calling modifyAttributes");
+		ldapTemplate.modifyAttributes(currentUserConfirmedFriendsGroupDn, [currentUserConfirmedItem] as ModificationItem[] );
+		
+		
+		
+		// now do the same thing for the group with friendToRemove as the owner, and remove "currentUser" from the group
+		// search for the group in the confirmedfriends tree, with currentUser as the owner
+		AndFilter friendToRemoveConfirmedGroupOwnerFilter = new AndFilter();
+		friendToRemoveConfirmedGroupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
+		friendToRemoveConfirmedGroupOwnerFilter.and(new EqualsFilter("owner", friendToRemoveDn.toString() ));
+		
+		List<Group> friendToRemoveConfirmedGroups = ldapTemplate.search( "ou=confirmedfriends,ou=groups,o=quoddy", friendToRemoveConfirmedGroupOwnerFilter.encode(),
+				 new GroupAttributeMapper(ldapTemplate));
+		
+		Group friendToRemoveConfirmedFriendsGroup = friendToRemoveConfirmedGroups.get(0);
+		
+		Name friendToRemoveConfirmedFriendsGroupDn = GroupBuilder.buildConfirmedFriendsGroupDn( friendToRemoveConfirmedFriendsGroup, "o=quoddy" );
+		log.debug( "ConfirmedFriendsGroupDn: ${friendToRemoveConfirmedFriendsGroupDn}");
+		
+		// delete the uniquemember attribute with the dn of friendToRemove
+		Attribute friendToRemoveConfirmedAttr = new BasicAttribute("uniquemember");
+		friendToRemoveConfirmedAttr.remove( currentUserDn.toString() );
+		
+		// create a modificationitem and update the attributes
+		ModificationItem friendToRemoveConfirmedItem = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, friendToRemoveConfirmedAttr);
+		
+		log.debug( "calling modifyAttributes");
+		ldapTemplate.modifyAttributes(friendToRemoveConfirmedFriendsGroupDn, [friendToRemoveConfirmedItem] as ModificationItem[] );
+	
+	}
+	
 	
 	/* note: this is a "two way" operation, so to speak.  That is, the initial
 	 * request was half of the overall operation of adding a friend... now that
@@ -357,6 +419,10 @@ class LdapFriendService
 	}
 
 
+	/* NOTE to self, 07-06-2023: what were we using this for? The other (LocalDB) version seems to remove
+	 * all friends for a given user. Is that something that was just put in for testing purposes? Don't think
+	 * that would be an operation we'd expose to Users directly?? Or ... dunno. Check on this. SPR
+	 */
 	public void removeFriendRelations( final User user )
 	{
 		// NOP for right now...
