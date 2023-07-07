@@ -45,6 +45,7 @@ class BootStrap
 				createSystemUser();
                 createDummyUser();
 				createDummyGroup();
+				createSomeGroups();
 				createShareTargets();
 				createEventTypes();
                 
@@ -238,6 +239,52 @@ class BootStrap
 
 	}
 
+	void createSomeGroups()
+	{
+		
+		User groupOwnerUser = userService.findUserByUserId( "prhodes" );
+		
+		for( int i = 0; i < 5; i++ )
+		{
+			UserGroup testGroup = userGroupService.findUserGroupByName( "Test Group${i}" );
+			
+			if( testGroup == null )
+			{
+				// doesn't exist, we should create here
+				testGroup = new UserGroup();
+				testGroup.name = "Test Group${i}";
+				testGroup.description = "Test Group${i}";		
+				testGroup.owner = groupOwnerUser;
+				
+				userGroupService.save( testGroup );
+			}
+			else
+			{
+				log.info( "existing Test Group${i} found" );
+			}
+		}
+		
+		for( int i = 5; i < 10; i++ )
+		{
+			groupOwnerUser = userService.findUserByUserId( "testuser${i}" );
+			UserGroup testGroup = userGroupService.findUserGroupByName( "Test Group${i}" );
+			
+			if( testGroup == null )
+			{
+				// doesn't exist, we should create here
+				testGroup = new UserGroup();
+				testGroup.name = "Test Group${i}";
+				testGroup.description = "Test Group${i}";
+				testGroup.owner = groupOwnerUser;
+				
+				userGroupService.save( testGroup );
+			}
+			else
+			{
+				log.info( "existing Test Group${i} found" );
+			}
+		}
+	}
 
 	void createDummyGroup()
 	{
