@@ -10,8 +10,8 @@
 		<div class="subnav">
 			<ul class="nav nav-pills">
 
-				<li class="dropdown">
-					<a href="#" data-toggle="dropdown" class="dropdown-toggle">Streams
+				<li class="dropdown" id="streams-dropdown" >
+					<a href="#" id="streams-dropdown-toggle" data-toggle="dropdown" class="dropdown-toggle">Streams
 						<b class="caret"></b>
 					</a>
 					<ul class="dropdown-menu">
@@ -34,9 +34,9 @@
 					</ul>
 				</li>
 
-				<li class="dropdown">
+				<li class="dropdown" id="lists-dropdown" >
 
-					<a href="#" data-toggle="dropdown" class="dropdown-toggle">Lists<b class="caret"></b></a>
+					<a href="#" id="lists-dropdown-toggle" data-toggle="dropdown" class="dropdown-toggle">Lists<b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<g:link controller="userList" action="index">Manage Lists<i
 								class="icon-cog"></i>
@@ -50,8 +50,8 @@
 						</ul>
 			      	</li>
 
-					<li class="dropdown">
-						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Groups
+					<li class="dropdown" id="groups-dropdown">
+						<a href="#" id="groups-dropdown-toggle" data-toggle="dropdown" class="dropdown-toggle">Groups
 							<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu">
@@ -68,8 +68,8 @@
 						</ul>
 					</li>
 
-					<li class="dropdown">
-					<a href="#" data-toggle="dropdown" class="dropdown-toggle">Subscriptions<b class="caret"></b></a>
+					<li class="dropdown" id="subscriptions-dropdown">
+					<a href="#" id="subscriptions-dropdown-toggle" data-toggle="dropdown" class="dropdown-toggle">Subscriptions<b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<g:link controller="subscription" action="index">Manage Subscriptions<i class="icon-cog"></i></g:link>
 						<li class="divider"></li>
