@@ -182,7 +182,7 @@ public class UserGroupController
 		
 		group.addToGroupMembers( currentUser );
 		
-		usergroupService.save( group );        
+		userGroupService.save( group );        
         
 		redirect( controller:"userGroup", action:"display", params:['groupId':groupId]);	
 	}
