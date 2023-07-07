@@ -15,7 +15,7 @@
 						<b class="caret"></b>
 					</a>
 					<ul class="dropdown-menu">
-						<li><g:link controller="userStreamDefinition" action="index">Manage Streams<i
+						<li><g:link elementId="manage-streams-btn" controller="userStreamDefinition" action="index">Manage Streams<i
 									class="icon-cog"></i>
 							</g:link></li>
 
@@ -38,7 +38,7 @@
 
 					<a href="#" id="lists-dropdown-toggle" data-toggle="dropdown" class="dropdown-toggle">Lists<b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<g:link controller="userList" action="index">Manage Lists<i
+						<g:link elementId="manage-lists-btn" controller="userList" action="index">Manage Lists<i
 								class="icon-cog"></i>
 						</g:link>
 							<g:each var="list" in="${userLists}">
@@ -55,7 +55,7 @@
 							<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu">
-							<g:link controller="userGroup" action="index">Manage Groups<i
+							<g:link elementId="manage-groups-btn" controller="userGroup" action="index">Manage Groups<i
 									class="icon-cog"></i>
 							</g:link>
 
@@ -71,7 +71,7 @@
 					<li class="dropdown" id="subscriptions-dropdown">
 					<a href="#" id="subscriptions-dropdown-toggle" data-toggle="dropdown" class="dropdown-toggle">Subscriptions<b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<g:link controller="subscription" action="index">Manage Subscriptions<i class="icon-cog"></i></g:link>
+						<g:link elementId="manage-subscriptions-btn" controller="subscription" action="index">Manage Subscriptions<i class="icon-cog"></i></g:link>
 						<li class="divider"></li>
 						<g:each var="subscription" in="${businessEventSubscriptions}">
 							<li><g:link controller="subscription" action="displayBusinessEventSubscription"
