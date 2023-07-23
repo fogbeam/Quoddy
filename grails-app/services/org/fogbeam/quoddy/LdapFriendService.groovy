@@ -51,8 +51,36 @@ class LdapFriendService
 	}
 
 	public void unFollow( final User currentUser, final User userToUnfollow )
-	{
-		throw new UnsupportedOperationException( "Not implemented yet" );
+	{		
+		// get the DNs of the Users
+		Name currentUserDn = PersonBuilder.buildDn( LdapPersonService.copyUserToPerson(currentUser), "o=quoddy" );
+		Name userToUnfollowDn = PersonBuilder.buildDn( LdapPersonService.copyUserToPerson(userToUnfollow), "o=quoddy" );
+		
+		
+		
+		String dnString = currentUserDn.toString();
+		
+		// search for the group in the followgroups tree, with that user as the owner
+		AndFilter groupOwnerFilter = new AndFilter();
+		groupOwnerFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
+		groupOwnerFilter.and(new EqualsFilter("owner", dnString));
+		
+		List<Group> groups = ldapTemplate.search( "ou=followgroups,ou=groups,o=quoddy", groupOwnerFilter.encode(),
+				 new GroupAttributeMapper(ldapTemplate));
+		
+		Group followGroup = groups.get(0);
+		
+		Name followGroupDn = GroupBuilder.buildFollowGroupDn( followGroup, "o=quoddy" );
+
+		// delete the uniquemember attribute with the dn of userToUnfollow
+		Attribute userToUnfollowAttr = new BasicAttribute("uniquemember");
+		userToUnfollowAttr.remove( userToUnfollowDn.toString() );
+				
+		// create a modificationitem and update the attributes
+		ModificationItem userToUnfollowItem = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, userToUnfollowAttr);
+		
+		log.debug( "calling modifyAttributes");
+		ldapTemplate.modifyAttributes(followGroupDn, [userToUnfollowItem] as ModificationItem[] );
 	}
 	
 	public void deleteFriendRequest( User currentUser, User newFriend )
