@@ -21,7 +21,7 @@
 			
 				<!-- display discrete entries here -->
 				<li>
-					<g:link controller="user" action="viewUser" params="[userId:followee.userId]">${followee.fullName}</g:link>
+					<g:link controller="user" action="viewUser" params="[userId:followee.userId]">${followee.fullName}</g:link>  -- <span><g:link controller="user" action="unFollow" params="[unfollowId:followee.userId]">unfollow</g:link></span>
 				</li>
 			</g:each>
 		</ul>

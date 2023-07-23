@@ -194,6 +194,12 @@ class UserService {
 		friendService.addToFollow( destinationUser, targetUser );	
 	}
 
+	public void unFollow( User currentUser, User userToUnFollow )
+	{
+		friendService.unFollow( currentUser, userToUnFollow );
+	}
+	
+	
 	/* note: this is a "two way" operation, so to speak.  That is, the initial
 	 * request was half of the overall operation of adding a friend... now that
 	 * the requestee has confirmed, we have to update *both* users to show the

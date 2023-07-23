@@ -50,6 +50,11 @@ class LdapFriendService
 		ldapTemplate.modifyAttributes(followGroupDn, [item] as ModificationItem[] );
 	}
 
+	public void unFollow( final User currentUser, final User userToUnfollow )
+	{
+		throw new UnsupportedOperationException( "Not implemented yet" );
+	}
+	
 	public void deleteFriendRequest( User currentUser, User newFriend )
 	{
 		// get the DNs of the Users

@@ -21,6 +21,20 @@ class LocalFriendService
 		iFollowCollection.save(flush:true);		
 	}
 
+	
+	public void unFollow( final User currentUser, final User userToUnfollow )
+	{
+		IFollowCollection iFollowCollection = IFollowCollection.findByOwnerUuid( currentUser.uuid );
+		
+		if( iFollowCollection == null )
+		{
+			throw new RuntimeException( "can't get iFollowCollection for user: ${currentUser.userId}" );
+		}
+	
+		iFollowCollection.removeFromIFollow( userToUnfollow.uuid );	
+		iFollowCollection.save(flush:true);
+	}
+
 	public void removeFriend( final User currentUser, final User friendToRemove )
 	{
 		FriendCollection friendCollectionCU = FriendCollection.findByOwnerUuid( currentUser.uuid );

@@ -409,6 +409,28 @@ public class UserController
 		
 		render( "OK" );	
 	}
+
+	@Secured(["ROLE_USER", "ROLE_ADMIN"])
+	def unFollow()
+	{
+		println( "unFollow() called" );
+						
+		User currentUser = userService.getLoggedInUser();
+		
+		println( "Found currentUser as: " + currentUser );
+		
+		String unFollowId = params.unfollowId;
+		
+		log.info( "Unfollow User: " + unFollowId );
+		
+		def userToUnfollow = userService.findUserByUserId( unFollowId );
+	
+		println( "Found userToUnfollow as: " + userToUnfollow );
+		
+		userService.unFollow( currentUser, userToUnfollow );
+		
+		redirect( controller:'home', action:'index')
+	}
 	
     @Secured(["ROLE_USER", "ROLE_ADMIN"])
 	def addToFriends()
