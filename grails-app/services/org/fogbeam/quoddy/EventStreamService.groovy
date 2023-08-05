@@ -209,6 +209,10 @@ class EventStreamService
 			 */
 			
 			
+			List<User> followed = userService.listIFollow( user );
+			
+			
+			
 			User dummyUser = userService.findUserByUserId( "SYS_dummy_user" );
 			UserGroup dummyGroup = userGroupService.findUserGroupByName( "SYS_dummy_group" );
 
@@ -295,7 +299,22 @@ class EventStreamService
 								" and item.targetUuid = :targetUuid " +
 							") or ";
 	
-										
+							
+				if( followed != null && followed.size() > 0 )
+				{			
+					query = query +
+					" ( item.owner.id in (:followedIds) " +
+						" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypes.BUSINESS_EVENT_SUBSCRIPTION_ITEM.name}' ) " +
+						" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypes.CALENDAR_FEED_ITEM.name}' ) " +
+						" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypes.RSS_FEED_ITEM.name}' ) " +
+						" and not ( item.owner.id <> :ownerId and item.objectClass = '${EventTypes.ACTIVITI_USER_TASK.name}' ) " +
+						" and item.targetUuid = :targetUuid " +
+					") or ";
+							
+				}
+				
+				
+													
 				query = query +
 								
 						"(" +
@@ -320,7 +339,7 @@ class EventStreamService
 				// query = query + " and stream.id = :streamId "; 
 				query = query + " order by item.published desc";
 				
-				log.debug( "Final query before execution: $query" );
+				log.info( "*********\nFinal query before execution: $query\n**************" );
 				
 				log.debug( "Found ${friends.size()} friends");
 				List<Integer> friendIds = new ArrayList<Integer>();
@@ -330,13 +349,13 @@ class EventStreamService
 					log.debug( "Adding friend id: ${friendId}, userId: ${friend.userId} to list" );
 					friendIds.add( friendId );
 				}
-	
 								
 				// for the purpose of this query, treat a user as their own friend... that is, we
 				// will want to read Activities created by this user (we see our own updates in our
 				// own feed)
 				friendIds.add( user.id );
 				log.debug( "friendIds has ${friendIds.size()} entries!");
+								
 				
 				ShareTarget streamPublic = ShareTarget.findByName( ShareTarget.STREAM_PUBLIC );
 				
@@ -349,12 +368,34 @@ class EventStreamService
                          'includedGroups':includedGroups]
 			
 						log.debug( "Using parameters map: ${parameters}");
+						
 				if( !userStream.includeSelfOnly )
 				{
 					parameters << ['friendIds':friendIds];
+					
+					if( followed != null && followed.size() > 0 )
+					{
+						log.debug( "Found ${followed.size()} followed users");
+						List<Integer> followedIds = new ArrayList<Integer>();
+						for( User followedUser: followed )
+						{
+							def followedId = followedUser.id;
+							log.debug( "Adding followedUser id: ${followedId}, userId: ${followedUser.userId} to list" );
+							followedIds.add( followedId );
+						}
+	
+							
+						parameters << ['followedIds':followedIds];	
+					}
+					
 				}
 				
-				log.debug( "Using parameters map: ${parameters}");
+				
+				
+				log.info( "**********\nUsing parameters map: ${parameters}\n*****************");
+				
+				
+				
 				
 				if( userStream.includeSelfOnly || ( userStream.userUuidsIncluded == null || userStream.userUuidsIncluded.isEmpty() ) )
 				{
