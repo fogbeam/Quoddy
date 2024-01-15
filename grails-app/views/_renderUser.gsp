@@ -25,7 +25,7 @@
 		
 		<div style="display: inline-block; margin-left: 20px; margin-top: 15px; height: 60px; width: 150px; vertical-align: top;">
 			<label>Full Name:</label>
-			<span name="fullName id="fullName" >
+			<span name="fullName" id="fullName" >
 				<a href="${createLink(controller:'user', action:'viewUserProfile', params:[userId:item.userId])}">${item.fullName}</a>
 			</span>				
 		</div>		
